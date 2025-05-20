@@ -86,8 +86,15 @@ WSGI_APPLICATION = 'ticktackgo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('DATABASE_ENGINE' , 'django.db.backends.mysql'), 
+        'NAME': os.getenv('DATABASE_NAME' , Path(__file__).resolve().parent.name),
+        'USER': os.getenv('DATABASE_USER' , 'root'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD' , ''),
+        'HOST': os.getenv('DATABASE_HOST' , 'localhost'),   # Or an IP Address that your DB is hosted on
+        'PORT': os.getenv('DATABASE_PORT' , '3306'),
+        "OPTIONS": {
+            "init_command": "SET default_storage_engine=INNODB",
+        },
     }
 }
 
