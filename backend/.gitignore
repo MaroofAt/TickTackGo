@@ -1,0 +1,32 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+# media/
+env/
+###These are the venv files###
+venv/
+include/
+lib/
+Scripts/
+pyvenv.cfg
+##############################
+.env
+.env.local
+.env*.local
+
+# IDE & OS-specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
