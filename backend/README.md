@@ -10,7 +10,7 @@
 7. generate Secret Key using [Djecrety](https://djecrety.ir/) website, and place it in .env file
 8. Do migrate: ``` python manage.py migrate ```
 9. create superuser (admin): ``` python manage.py createsuperuser```
-10d. finally check if the project working: ``` python manage.py runserver ```
+10. finally check if the project working: ``` python manage.py runserver ```
 --------------------
 ## What to do after pulling the Back_End changes:
 1. Do migrate: ``` python manage.py migrate ```
