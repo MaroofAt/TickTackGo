@@ -45,8 +45,9 @@ class UserViewSet(viewsets.ModelViewSet):
                 user.is_email_verified = True
                 user.otp = None 
                 user.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
         except Exception as e:
             return Response(
-                {"message": "Internal server error"}, 
+                {"message": e}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
