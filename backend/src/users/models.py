@@ -38,7 +38,7 @@ def user_image_upload_path(instance, filename):
 class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
     class Meta:
         db_table = 'users'
-    fullname = models.CharField(max_length=100 , unique=True)
+    username = models.CharField(max_length=100 , unique=True)
     email = models.EmailField(unique=True)
     image = models.ImageField( 
         upload_to=user_image_upload_path,
