@@ -22,9 +22,9 @@ def send_otp_email(user):
 
     subject = 'Email Verification OTP'
     message = f'Your OTP for email verification is: {otp}\nThis OTP is valid for 5 minutes.'
-    # email_from = settings.DEFAULT_FROM_EMAIL
+    email_from = settings.DEFAULT_FROM_EMAIL
     recipient_list = [user.email]
 
-    email_from = settings.EMAIL_HOST_USER
+    # email_from = settings.EMAIL_HOST_USER
 
     send_mail(subject, message,email_from, recipient_list , fail_silently=False)
