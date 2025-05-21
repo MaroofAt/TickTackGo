@@ -2,6 +2,25 @@ from rest_framework import serializers
 from django.db import transaction
 from .models import User
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'username',
+            'email',
+            'image',
+            'created_at',
+            'updated_at'
+        ]
+        extra_kwargs = {
+            'image': {'required': False},
+            'email': {'read_only': True},
+            'username': {'required': True}
+        }
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True,required=True,style={'input_type': 'password'})
     
