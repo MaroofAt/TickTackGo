@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.db import transaction
 from .models import User
+from .utils import generate_otp , send_otp_email
+from datetime import datetime, timedelta
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -60,8 +62,11 @@ class RegisterSerializer(serializers.ModelSerializer):
                     password = validated_data['password'],
                     how_to_use_website = validated_data['how_to_use_website'],
                     what_do_you_do = validated_data['what_do_you_do'],
-                    how_did_you_get_here = validated_data['how_did_you_get_here']
+                    how_did_you_get_here = validated_data['how_did_you_get_here'],
                 )
+                
+                send_otp_email(user)
+
 
                 # TODO if we want to create Default workspace when the user Register
 
@@ -76,6 +81,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                 #     workspace=default_workspace,
                 #     user_role='owner'
                 # )
+
 
             return user
         except KeyError as e:
