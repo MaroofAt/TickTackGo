@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'dotenv',
     
     #own
+    'users',
+    'workspaces',
 
     
 ]
@@ -79,6 +81,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ticktackgo.wsgi.application'
+
+
+REST_FRAMEWORK= {
+    'DEFAULT_AUTHENTICATION_CLASSES': (  
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}
 
 
 # Database
@@ -117,6 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'users.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
