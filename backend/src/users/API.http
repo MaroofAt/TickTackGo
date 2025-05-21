@@ -3,8 +3,8 @@ Content-Type: application/json
 
 {
     "username": "Ali",
-    "email": "Alialmusfi@gmail.com",
-    "password": "12345678",
+    "email": "alialmusfi@gmail.com",
+    "password": "aloosh1234",
     "how_to_use_website": "small_team",
     "what_do_you_do": "software_or_it",
     "how_did_you_get_here": "friends"
