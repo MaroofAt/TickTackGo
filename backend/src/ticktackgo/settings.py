@@ -150,6 +150,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10  # 10MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10  # 10MB
 
+
+# CONSTANTS
+MAX_WORKSPACES_COUNT_FOR_SINGLE_USER = 10,
+MAX_MEMBERS_COUNT_FOR_SINGLE_WORKSPACE = 20
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
