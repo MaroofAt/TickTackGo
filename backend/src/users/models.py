@@ -43,7 +43,7 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
     image = models.ImageField( 
         upload_to=user_image_upload_path,
         default="defaults/user/default.png"
-    )
+    ) #TODO put default photo
     class HOW_TO_USE_WEBSITE(models.TextChoices):
         OWN_TASKS_MANAGEMENT = 'own_tasks_management'
         SMALL_TEAM = 'small_team'
@@ -84,6 +84,16 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
     REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager() # connect this class to the CustomUserManager
+
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        related_name="custom_user_set",  # Important to avoid reverse name clashes
+        related_query_name="user",
+    )
 
 
     def __str__(self):
