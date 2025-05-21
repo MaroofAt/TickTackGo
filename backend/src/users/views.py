@@ -20,7 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return qs
 
-    @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer)
+    @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer , url_path='register')
     def register(self , request):
         serializer = self.serializer_class(data = request.data)
         if serializer.is_valid():

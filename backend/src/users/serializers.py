@@ -27,10 +27,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email' , 'password']
+        fields = ['username', 'email' , 'password' , 'how_to_use_website' , 'what_do_you_do' , 'how_did_you_get_here']
         extra_kwargs = {
             'username': {'required': True},
-            'email': {'required': True}
+            'email': {'required': True},
         }
 
     def validate(self, attrs):
@@ -57,7 +57,10 @@ class RegisterSerializer(serializers.ModelSerializer):
                 user = User.objects.create_user(
                     username = validated_data['username'],
                     email = validated_data['email'],
-                    password = validated_data['password']
+                    password = validated_data['password'],
+                    how_to_use_website = validated_data['how_to_use_website'],
+                    what_do_you_do = validated_data['what_do_you_do'],
+                    how_did_you_get_here = validated_data['how_did_you_get_here']
                 )
 
                 # TODO if we want to create Default workspace when the user Register
