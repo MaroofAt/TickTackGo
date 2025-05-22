@@ -12,19 +12,43 @@ Content-Type: application/json
 
 ###
 
-POST http://127.0.0.1:8000/api/users/verify_otp/ HTTP/1.1
-Content-Type: application/json
+# POST http://127.0.0.1:8000/api/users/verify_otp/ HTTP/1.1
+# Content-Type: application/json
 
-{
-    "email": "alialmusfi@gmail.com",
-    "otp": "033260"
-}
+# {
+#     "email": "alialmusfi@gmail.com",
+#     "otp": "033260"
+# }
 
 ###
 
-POST http://127.0.0.1:8000/api/users/resend_otp/ HTTP/1.1
+# POST http://127.0.0.1:8000/api/users/resend_otp/ HTTP/1.1
+# Content-Type: application/json
+
+# {
+#     "email": "alialmusfi@gmail.com"
+# }
+
+
+POST http://127.0.0.1:8000/api/users/send_otp/ HTTP/1.1
 Content-Type: application/json
 
 {
     "email": "alialmusfi@gmail.com"
+}
+
+
+###
+
+POST http://127.0.0.1:8000/api/users/verify_register/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "Ali",
+    "email": "alialmusfi@gmail.com",
+    "password": "aloosh1234",
+    "how_to_use_website": "small_team",
+    "what_do_you_do": "software_or_it",
+    "how_did_you_get_here": "friends",
+    "otp": "476586"
 }
