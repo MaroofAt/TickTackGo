@@ -83,9 +83,9 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    otp = models.CharField(max_length=6, null=True, blank=True)
-    is_email_verified = models.BooleanField(default=False)
-    otp_created_at = models.DateTimeField(auto_now=False , auto_now_add=True , editable=False , null=True, blank=True)
+    # otp = models.CharField(max_length=6, null=True, blank=True)
+    # is_email_verified = models.BooleanField(default=False)
+    # otp_created_at = models.DateTimeField(auto_now=False , auto_now_add=True , editable=False , null=True, blank=True)
 
     objects = CustomUserManager() # connect this class to the CustomUserManager
 
@@ -103,3 +103,11 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
 
     def __str__(self):
         return self.fullname
+    
+
+
+class user_otp (TimeStampedModel):
+    class Meta:
+        db_table = 'user_otp'
+    otp = models.CharField(max_length=6, null=True, blank=True)
+    verified = models.BooleanField(default=False)
