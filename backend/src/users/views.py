@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.utils import timezone
 from datetime import timedelta
+from .utils import send_otp_email
 
 
 
@@ -35,6 +36,17 @@ class UserViewSet(viewsets.ModelViewSet):
     def verify_otp(self , request):
         email = request.data.get('email')
         otp = request.data.get('otp')
+        if not email:
+            return Response(
+                {'error': 'Email is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if not otp:
+            return Response(
+                {'error': 'OTP is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
         try:
             user = User.objects.get(email = email)
             print(user.otp_created_at)
@@ -51,3 +63,38 @@ class UserViewSet(viewsets.ModelViewSet):
                 {"message": e}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+    
+    @action(detail=False , methods=['post'] , url_path='resend_otp')
+    def resend_otp(self , request):
+        email = request.data.get('email')
+        if not email:
+            return Response(
+                {'error': 'Email is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user = User.objects.get(email=email)
+
+        if user.is_email_verified:
+            return Response(
+                {'message': 'This Email is already verified !!'},
+                status=status.HTTP_306_RESERVED
+            )
+
+
+        # TODO to prevent the user send for another otp until the previous one end 
+        if user.otp_created_at and (timezone.now() - user.otp_created_at) < timedelta(minutes=5):
+            return Response(
+                {'error': 'Please wait before requesting another OTP'},
+                status=status.HTTP_429_TOO_MANY_REQUESTS
+            )
+
+        send_otp_email(user)
+
+        return Response(
+            {'message': 'New OTP has been sent to your email'},
+            status=status.HTTP_200_OK
+        )
+        
+
+
+        
