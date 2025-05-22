@@ -65,7 +65,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                     how_did_you_get_here = validated_data['how_did_you_get_here'],
                 )
                 
-                send_otp_email(user)
+                # send_otp_email(user)
 
 
                 # TODO if we want to create Default workspace when the user Register

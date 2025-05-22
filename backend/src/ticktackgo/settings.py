@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,6 +90,13 @@ REST_FRAMEWORK= {
         'rest_framework.authentication.SessionAuthentication',
     ),
 }
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    'USER_ID_FIELD': 'id',        # Model field to use as user identifier
+    'USER_ID_CLAIM': 'user_id',   # Default claim name in token payload
+    # 'TOKEN_OBTAIN_SERIALIZER': 'users.serializers.CustomTokenObtainPairSerializer', # handle email as username
+}
 
 
 # Database
@@ -152,7 +160,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10  # 10MB
 
 
 # CONSTANTS
-MAX_WORKSPACES_COUNT_FOR_SINGLE_USER = 10,
+MAX_WORKSPACES_COUNT_FOR_SINGLE_USER = 10
 MAX_MEMBERS_COUNT_FOR_SINGLE_WORKSPACE = 20
 
 # Default primary key field type

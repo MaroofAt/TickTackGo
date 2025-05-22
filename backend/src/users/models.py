@@ -102,4 +102,4 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
 
 
     def __str__(self):
-        return self.fullname
+        return self.username
