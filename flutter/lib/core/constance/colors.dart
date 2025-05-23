@@ -15,4 +15,4 @@ const Color red = Color(0xffff0000);
 const Color green = Color(0xff00ff00);
 const Color blue = Color(0xff0000ff);
 const Color blueAccent = Colors.blueAccent;
-const Color opacity = Colors.transparent;
+const Color transparent = Colors.transparent;
