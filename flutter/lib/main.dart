@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/routes.dart';
-import 'package:pr1/presentation/screen/onbording/the_first_bording.dart';
+import 'package:pr1/presentation/screen/onbording/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
 
 void main() {
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme(),
       routes: routes,
-      home: Container(),
+      home: SplashScreen(),
     );
   }
 }
