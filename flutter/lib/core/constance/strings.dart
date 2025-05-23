@@ -2,6 +2,7 @@
 ///routes
 const String onboardingMainRoute = 'onboardingMainRoute';
 const String introQuestionsRoute = 'introQuestionsRoute';
+const String finalOnboardingPageRoute = 'finalOnboardingPageRoute';
 
 ///Splash screen strings
 const String splashScreenLogoPath = 'assets/images/logo_images/logoorgenal.png';
@@ -22,3 +23,12 @@ const String upperSecondText = 'Tasks';
 const String page2ImagePath = 'assets/images/welcome_screens_images/second welcome screen image.png';
 const String page2lowerFirstText = 'Get ready to organize your tasks';
 const String page2lowerSecondText = 'and achieve more every day.';
+
+///final onboarding page
+const String upperFirstTextForFinalPage = 'Get everything';
+const String upperSecondTextForFinalPage = 'Done';
+const String finalPageImagePath = 'assets/images/welcome_screens_images/final welcome screen image.png';
+const String finalPageLowerFirstText = 'Are you ready to boost your productivity?';
+const String finalPageLowerSecondText = 'Let’s get started!';
+const String finalPageButtonText = 'Go Now';
+

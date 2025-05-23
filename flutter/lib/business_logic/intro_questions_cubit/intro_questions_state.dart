@@ -8,3 +8,5 @@ final class IntroQuestionsInitial extends IntroQuestionsState {}
 class RefreshState extends IntroQuestionsState {}
 
 class RefreshedState extends IntroQuestionsState {}
+
+class QuestionsFinishedState extends IntroQuestionsState {}
