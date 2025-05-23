@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme(),
       routes: routes,
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

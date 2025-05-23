@@ -24,17 +24,20 @@ class MyText {
       FontWeight? fontWeight,
       TextAlign? textAlign,
       TextStyle? style,
+      double? letterSpacing,
       TextOverflow overflow = TextOverflow.clip}) {
     return Text(
       text,
       textAlign: textAlign,
-      style: style??TextStyle(
-        color: textColor,
-        fontSize: fontSize,
-        fontWeight: fontWeight ?? FontWeight.w500,
-        overflow: overflow,
-        fontFamily: 'Coda',
-      ),
+      style: style ??
+          TextStyle(
+            color: textColor,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            overflow: overflow,
+            fontFamily: 'Coda',
+            letterSpacing: letterSpacing,
+          ),
     );
   }
 }
