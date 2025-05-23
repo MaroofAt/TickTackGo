@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/core/variables/intro_questions_variables.dart';
 
 part 'intro_questions_state.dart';
@@ -17,15 +18,15 @@ class IntroQuestionsCubit extends Cubit<IntroQuestionsState> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOutCirc,
       );
+      emit(RefreshedState());
     } else {
-      //TODO navigate to register page
+      emit(QuestionsFinishedState());
     }
-    emit(RefreshedState());
   }
 
   void previousQuestion() {
     emit(RefreshState());
-    if(currentQuestionIndex != 0){
+    if (currentQuestionIndex != 0) {
       pageController.animateToPage(
         currentQuestionIndex - 1,
         duration: const Duration(seconds: 1),
@@ -35,5 +36,4 @@ class IntroQuestionsCubit extends Cubit<IntroQuestionsState> {
     }
     emit(RefreshedState());
   }
-
 }

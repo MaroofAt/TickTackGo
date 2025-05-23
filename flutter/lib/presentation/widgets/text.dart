@@ -25,6 +25,7 @@ class MyText {
       TextAlign? textAlign,
       TextStyle? style,
       double? letterSpacing,
+      double? wordSpacing,
       TextOverflow overflow = TextOverflow.clip}) {
     return Text(
       text,
@@ -37,6 +38,7 @@ class MyText {
             overflow: overflow,
             fontFamily: 'Coda',
             letterSpacing: letterSpacing,
+            wordSpacing: wordSpacing,
           ),
     );
   }

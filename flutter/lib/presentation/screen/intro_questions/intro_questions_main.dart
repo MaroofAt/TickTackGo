@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/core/variables/intro_questions_variables.dart';
 import 'package:pr1/presentation/screen/intro_questions/intro_questions_header.dart';
 import 'package:pr1/presentation/screen/intro_questions/questions_page_view.dart';
@@ -16,7 +18,6 @@ class IntroQuestionsMain extends StatefulWidget {
 }
 
 class _IntroQuestionsMainState extends State<IntroQuestionsMain> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +28,14 @@ class _IntroQuestionsMainState extends State<IntroQuestionsMain> {
           child: Column(
             children: [
               const IntroQuestionsHeader(),
-              const QuestionsPageView(),
+              BlocListener<IntroQuestionsCubit, IntroQuestionsState>(
+                listener: (context, state) {
+                  if(state is QuestionsFinishedState){
+                    pushReplacementNamed(context, finalOnboardingPageRoute);
+                  }
+                },
+                child: QuestionsPageView(),
+              ),
               buildNextButton(context),
             ],
           ),
