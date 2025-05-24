@@ -1,3 +1,4 @@
+###
 POST http://127.0.0.1:8000/api/users/register/ HTTP/1.1
 Content-Type: application/json
 
@@ -10,6 +11,7 @@ Content-Type: application/json
     "how_did_you_get_here": "friends"
 }
 
+###
 POST http://127.0.0.1:8000/api/users/send_otp/ HTTP/1.1
 Content-Type: application/json
 
@@ -30,7 +32,7 @@ Content-Type: application/json
     "how_to_use_website": "small_team",
     "what_do_you_do": "software_or_it",
     "how_did_you_get_here": "friends",
-    "otp": "476586"
+    "otp": "138182"
 }
 
 ###

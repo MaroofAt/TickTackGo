@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from django.db import transaction
-from .models import User , user_otp
-from .utils import generate_otp , send_otp_email
-from datetime import datetime, timedelta
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):

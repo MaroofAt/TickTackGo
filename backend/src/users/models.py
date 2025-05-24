@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager , AbstractBaseUser , PermissionsMixin
 from django.contrib.auth.hashers import make_password, check_password
+from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 
@@ -103,9 +104,10 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
 
     
 
-
+def otp_expires_date_time():
+    return timezone.now() + timezone.timedelta(hours=24)
 class User_OTP (TimeStampedModel):
     class Meta:
         db_table = 'user_otp'
     otp = models.CharField(max_length=6, null=True, blank=True)
-    verified = models.BooleanField(default=False)
+    expires_at = models.DateTimeField(default=otp_expires_date_time , editable=False)
