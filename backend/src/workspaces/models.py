@@ -14,6 +14,7 @@ def workspace_image_upload_path(instance , filename):
 class Workspace(TimeStampedModel):
     class Meta:
         db_table = 'workspaces'
+        unique_together = ["title","owner"]
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=65535) # "TEXT" length in mysql
     image = models.ImageField(
@@ -21,12 +22,12 @@ class Workspace(TimeStampedModel):
         blank=True,
         upload_to=workspace_image_upload_path
     ) #TODO put default photo
-    owner = models.ForeignKey(User , related_name='own_workspaces' , on_delete=models.CASCADE, null=False, blank=False)
+    owner = models.ForeignKey(User , related_name='owned_workspaces' , on_delete=models.CASCADE, null=False, blank=False)
     members = models.ManyToManyField(
         User,
         through= "Workspace_Membership",
         through_fields=("workspace", "member"),
-        related_name='workspaces'
+        related_name='joined_workspaces'
     )
     code = models.UUIDField(default=uuid.uuid4 , unique=True , editable=False)
 
@@ -38,8 +39,8 @@ class Workspace(TimeStampedModel):
 class Workspace_Membership(TimeStampedModel):
     class Meta:
         db_table = 'workspace_membership'
-    member = models.ForeignKey(User, related_name='own_workspace_memberships' , on_delete=models.CASCADE , null=False , blank=False)
-    workspace = models.ForeignKey(Workspace , on_delete=models.CASCADE , null=False , blank=False)
+    member = models.ForeignKey(User, related_name='workspace_memberships' , on_delete=models.CASCADE , null=False , blank=False)
+    workspace = models.ForeignKey(Workspace , on_delete=models.CASCADE, related_name='workspace_members', null=False , blank=False)
     class WORKSPACE_MEMBERSHIP_ROLES(models.TextChoices):
         MEMBER = 'member'
         OWNER = 'owner'

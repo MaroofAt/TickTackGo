@@ -10,26 +10,6 @@ Content-Type: application/json
     "how_did_you_get_here": "friends"
 }
 
-###
-
-# POST http://127.0.0.1:8000/api/users/verify_otp/ HTTP/1.1
-# Content-Type: application/json
-
-# {
-#     "email": "alialmusfi@gmail.com",
-#     "otp": "033260"
-# }
-
-###
-
-# POST http://127.0.0.1:8000/api/users/resend_otp/ HTTP/1.1
-# Content-Type: application/json
-
-# {
-#     "email": "alialmusfi@gmail.com"
-# }
-
-
 POST http://127.0.0.1:8000/api/users/send_otp/ HTTP/1.1
 Content-Type: application/json
 
@@ -51,4 +31,32 @@ Content-Type: application/json
     "what_do_you_do": "software_or_it",
     "how_did_you_get_here": "friends",
     "otp": "476586"
+}
+
+###
+POST http://127.0.0.1:8000/api/users/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "alialmusfi@gmail.com",
+    "password": "aloosh1234"
+}
+
+
+###
+
+POST http://127.0.0.1:8000/api/users/token/refresh/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0ODAwNjc5MCwiaWF0IjoxNzQ3OTIwMzkwLCJqdGkiOiIzNzU4ODIzZWYyMTE0YzZkYmY2MjA5YWM1ZWZkYTEzYyIsInVzZXJfaWQiOjZ9.zQJ-FsRXGGeywDzpifc2ngona2rLjatRwWFWyB0uPVY"
+}
+
+###
+POST http://127.0.0.1:8000/api/workspaces/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTQ0NjE4LCJpYXQiOjE3NDc5NDEwMTgsImp0aSI6IjY2MjlhNjYwZmM2MDQ1MzU5ODU2NDNjNmVhNDFiYzE1IiwidXNlcl9pZCI6Nn0.wlh9QayWdbelRbCiEs8Wbyg6QTZ-CfCfudwojqznY6c
+
+{
+    "title": "Workspace 10"
 }

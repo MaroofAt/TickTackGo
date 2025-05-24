@@ -21,9 +21,13 @@ class LocalUserSerializer(serializers.ModelSerializer):
         ]
 
 class WorkspaceMembershipSerializer(serializers.ModelSerializer):
+    member = serializers.PrimaryKeyRelatedField(read_only=True)
+    workspace = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Workspace_Membership
         fields = [
+            'member',
+            'workspace',
             'role',
             'created_at',
             'updated_at',
@@ -31,30 +35,20 @@ class WorkspaceMembershipSerializer(serializers.ModelSerializer):
     
     def __init__(self, instance=None, data=serializers.empty, **kwargs):
         super().__init__(instance, data, **kwargs)
-
-        if self.context.get('add_member' , False):
-            if self.context.get('extend_member' , False):
-                self.fields['member'] = LocalUserSerializer(read_only=True)
-            else:
-                self.fields['member'] = serializers.PrimaryKeyRelatedField(read_only=True)
-        if self.context.get('add_workspace' , False):
-            if self.context.get('extend_workspace' , False):
-                self.fields['workspace'] = WorkspaceSerializer(read_only=True)
-            else:
-                self.fields['workspace'] = serializers.PrimaryKeyRelatedField(read_only=True)
+        
+        if not self.context.get('add_member' , False):
+            self.fields.pop('member')
+        if self.context.get('extend_member' , False):
+            self.fields['member'] = LocalUserSerializer(read_only=True)
+        
+        if not self.context.get('add_workspace' , False):
+            self.fields.pop('workspace')
+        if self.context.get('extend_workspace' , False):
+            self.fields['workspace'] = WorkspaceSerializer(read_only=True)
 
 class WorkspaceSerializer(serializers.ModelSerializer):
     owner = LocalUserSerializer(read_only=True)
-    members = WorkspaceMembershipSerializer(
-        many=True,
-        context={
-            'add_member': True,
-            'extend_member': True,
-            'add_workspace': False,
-            'extend_workspace': False
-        },
-        read_only=True
-    )
+    members = serializers.SerializerMethodField()
     class Meta:
         model = Workspace
         fields = [
@@ -70,18 +64,39 @@ class WorkspaceSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'image': {
                 'required': False
+            },
+            'description': {
+                'required': False
             }
         }
+
+    def get_members(self,obj):
+        non_owner_memberships = obj.workspace_members.exclude(role='owner')
+        return WorkspaceMembershipSerializer(
+            non_owner_memberships,
+            many=True,
+            source='workspace_members',
+            context={
+                'add_member': True,
+                'extend_member': True,
+                'add_workspace': False,
+                'extend_workspace': False
+                },
+                read_only=True
+            ).data
 
     def create(self, validated_data):
         try:
             owner = self.context['request'].user
-            owner_workspaces = Workspace.objects.filter(owner=owner)
-            if len(owner_workspaces) >= settings.MAX_WORKSPACES_COUNT_FOR_SINGLE_USER:
+            owner_workspaces = Workspace.objects.filter(owner_id=owner.id)
+            if (len(owner_workspaces) >= settings.MAX_WORKSPACES_COUNT_FOR_SINGLE_USER):
                 raise serializers.ValidationError(f'User {str(owner)} has reached the allowed limit of workspaces count !')
             with transaction.atomic():
+                if not ('description' in validated_data):
+                    validated_data['description'] = ""
                 if 'image' in validated_data:
                     image = validated_data.pop('image')
+                validated_data['owner'] = owner
                 instance = super().create(validated_data)
                 if 'image' in validated_data:
                     instance.image = image
