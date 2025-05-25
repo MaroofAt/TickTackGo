@@ -63,6 +63,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        old_otps = User_OTP.objects.filter(expires_at__lt = timezone.now()).delete()
         
         if not User_OTP.objects.filter(otp=otp).exists():
             return Response(
