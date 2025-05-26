@@ -18,7 +18,7 @@ class _QuestionsPageViewState extends State<QuestionsPageView> {
     return Expanded(
       child: PageView.builder(
         physics: const NeverScrollableScrollPhysics(),
-        controller: pageController,
+        controller: introQuestionsPageController,
         itemCount: introQuestions.length,
         itemBuilder: (context, index) {
           return SizedBox(

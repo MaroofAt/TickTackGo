@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/core/variables/intro_questions_variables.dart';
 
 part 'intro_questions_state.dart';
@@ -14,7 +13,7 @@ class IntroQuestionsCubit extends Cubit<IntroQuestionsState> {
     if (currentQuestionIndex < introQuestions.length - 1) {
       currentQuestionIndex++;
       selectedOption = '';
-      pageController.nextPage(
+      introQuestionsPageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOutCirc,
       );
@@ -27,12 +26,13 @@ class IntroQuestionsCubit extends Cubit<IntroQuestionsState> {
   void previousQuestion() {
     emit(RefreshState());
     if (currentQuestionIndex != 0) {
-      pageController.animateToPage(
+      introQuestionsPageController.animateToPage(
         currentQuestionIndex - 1,
         duration: const Duration(seconds: 1),
         curve: Curves.easeOutBack,
       );
       currentQuestionIndex--;
+      selectedOption = '';
     }
     emit(RefreshedState());
   }

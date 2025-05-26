@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/data/models/intro_questions_model.dart';
 
-final PageController pageController = PageController();
+final PageController introQuestionsPageController = PageController();
 
 int currentQuestionIndex = 0;
 String selectedOption = '';
