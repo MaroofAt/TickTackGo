@@ -77,8 +77,8 @@ class UserViewSet(viewsets.ModelViewSet):
             )
         table_otp = User_OTP.objects.get(otp=otp)
         if table_otp.created_at < timezone.now() - timedelta(minutes=5):
-                return Response(status=status.HTTP_410_GONE)
-        table_otp.delete()
+            table_otp.delete()
+            return Response(status=status.HTTP_410_GONE)
 
         serializer = self.serializer_class(data = request.data)
         if serializer.is_valid():
