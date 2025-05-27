@@ -116,6 +116,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',      # Save extra data (e.g., profile picture)
 )
 SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = False
+SOCIAL_AUTH_RAISE_EXCEPTIONS = True
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

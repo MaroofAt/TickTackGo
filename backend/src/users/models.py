@@ -98,6 +98,11 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
     )
 
 
+    def has_email_provider(self):
+        return self.social_auth.filter(provider='email').exists()
+    def has_google_provider(self):
+        return self.social_auth.filter(provider='google').exists()
+
 
     def __str__(self):
         return self.username
