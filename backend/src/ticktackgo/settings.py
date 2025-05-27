@@ -113,6 +113,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.create_user',             # Create user if doesn't exist
     'social_core.pipeline.social_auth.associate_user',   # Link social account to user
     'social_core.pipeline.social_auth.load_extra_data',  # Save extra data (e.g., profile picture)
+    'users.pipeline.save_extra_data_from_state', # Save the extra data from state (save_extra_data_from_state, how_did_you_get_here, what_do_you_do)
 )
 
 # Database
