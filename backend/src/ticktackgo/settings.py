@@ -108,7 +108,6 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_uid',           # Get unique ID from provider
     'social_core.pipeline.social_auth.auth_allowed',         # Check if auth is allowed
     'social_core.pipeline.social_auth.social_user',          # Check if user exists in DB
-    'social_core.pipeline.social_auth.associate_by_email',   # Link to existing user by email
     'users.pipeline.block_existing_emails',                  # Don't Allow user to use the same email in two different ways to register
     'social_core.pipeline.user.get_username',                # Generate username
     'social_core.pipeline.user.create_user',                 # Create user if doesn't exist
