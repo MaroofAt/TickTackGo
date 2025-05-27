@@ -1,6 +1,11 @@
 import json
 import base64
 
+from social_core.exceptions import AuthAlreadyAssociated
+
+from .models import User
+
+
 def save_extra_data_from_state(strategy, details, user=None, *args, **kwargs):
     # Extract the raw state parameter from the OAuth2 response
     raw_state = strategy.session_get('state')
@@ -23,3 +28,9 @@ def save_extra_data_from_state(strategy, details, user=None, *args, **kwargs):
             raise e
 
     return {'user': user}
+
+def block_existing_emails(strategy, details, user=None, *args, **kwargs):
+    email = details['email']
+    if email and User.objects.filter(email=email).exists():
+        raise AuthAlreadyAssociated('This email is already registered!')
+    return None

@@ -104,17 +104,19 @@ SIMPLE_JWT = {
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/auth/success/' # Custom success endpoint
 # Pipeline to associate users by email
 SOCIAL_AUTH_PIPELINE = (
-    'social_core.pipeline.social_auth.social_details',  # Fetch user details (email, name)
-    'social_core.pipeline.social_auth.social_uid',       # Get unique ID from provider
-    'social_core.pipeline.social_auth.auth_allowed',     # Check if auth is allowed
-    'social_core.pipeline.social_auth.social_user',      # Check if user exists in DB
-    'social_core.pipeline.social_auth.associate_by_email',  # Link to existing user by email
-    'social_core.pipeline.user.get_username',            # Generate username
-    'social_core.pipeline.user.create_user',             # Create user if doesn't exist
-    'social_core.pipeline.social_auth.associate_user',   # Link social account to user
-    'social_core.pipeline.social_auth.load_extra_data',  # Save extra data (e.g., profile picture)
-    'users.pipeline.save_extra_data_from_state', # Save the extra data from state (save_extra_data_from_state, how_did_you_get_here, what_do_you_do)
+    'social_core.pipeline.social_auth.social_details',       # Fetch user details (email, name)
+    'social_core.pipeline.social_auth.social_uid',           # Get unique ID from provider
+    'social_core.pipeline.social_auth.auth_allowed',         # Check if auth is allowed
+    'social_core.pipeline.social_auth.social_user',          # Check if user exists in DB
+    'social_core.pipeline.social_auth.associate_by_email',   # Link to existing user by email
+    'users.pipeline.block_existing_emails',                  # Don't Allow user to use the same email in two different ways to register
+    'social_core.pipeline.user.get_username',                # Generate username
+    'social_core.pipeline.user.create_user',                 # Create user if doesn't exist
+    'users.pipeline.save_extra_data_from_state',             # Save the extra data from state (save_extra_data_from_state, how_did_you_get_here, what_do_you_do)
+    'social_core.pipeline.social_auth.associate_user',       # Link social account to user
+    'social_core.pipeline.social_auth.load_extra_data',      # Save extra data (e.g., profile picture)
 )
+SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = False
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
