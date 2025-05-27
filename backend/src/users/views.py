@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import action
-from .models import User , User_OTP
-from .serializers import UserSerializer , RegisterSerializer
 from rest_framework import status 
 from rest_framework.response import Response
-from django.utils import timezone
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from datetime import timedelta
+
+from .models import User , User_OTP
+from .serializers import UserSerializer , RegisterSerializer
+from django.utils import timezone
 from .utils import send_otp_email_to_user
 
 
@@ -80,3 +85,13 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data , status = status.HTTP_201_CREATED)
         return Response(serializer.data , status = status.HTTP_400_BAD_REQUEST)
+    
+
+class GoogleAuthView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(request):
+        refresh = RefreshToken.for_user(request.user)
+        return Response({
+            'refresh_token': str(refresh),
+            'access_token': str(refresh.access_token)
+        }, status.HTTP_202_ACCEPTED)
