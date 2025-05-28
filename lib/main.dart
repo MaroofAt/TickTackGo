@@ -3,6 +3,7 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/auth/signin.dart';
 import 'package:pr1/presentation/screen/auth/signup.dart';
+import 'package:pr1/presentation/screen/auth/verifypage.dart';
 import 'package:pr1/presentation/screen/onbording/the_first_bording.dart';
 import 'package:pr1/themes/themes.dart';
 
@@ -18,6 +19,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme(),
         routes: routes,
-      home:SignUp() );
+      home:Verifypage() );
   }
 }
