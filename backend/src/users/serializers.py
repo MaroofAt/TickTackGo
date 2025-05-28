@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.db import transaction
+from social_django.models import UserSocialAuth
+
 from .models import User
 
 
@@ -62,7 +64,10 @@ class RegisterSerializer(serializers.ModelSerializer):
                     what_do_you_do = validated_data['what_do_you_do'],
                     how_did_you_get_here = validated_data['how_did_you_get_here'],
                 )
-                
+
+                # for social-auth providers table
+                UserSocialAuth.objects.create(user=user, provider='email', uid=validated_data['email'])
+
                 # send_otp_email(user)
 
 

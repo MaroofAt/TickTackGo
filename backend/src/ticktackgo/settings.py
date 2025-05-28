@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     #installed
     'rest_framework',
     'dotenv',
+    'django_extensions',
+    'social_django',
     
     #own
     'users',
@@ -98,6 +100,23 @@ SIMPLE_JWT = {
     # 'TOKEN_OBTAIN_SERIALIZER': 'users.serializers.CustomTokenObtainPairSerializer', # handle email as username
 }
 
+# Redirect URL after successful login
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/auth/success/' # Custom success endpoint
+# Pipeline to associate users by email
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',       # Fetch user details (email, name)
+    'social_core.pipeline.social_auth.social_uid',           # Get unique ID from provider
+    'social_core.pipeline.social_auth.auth_allowed',         # Check if auth is allowed
+    'social_core.pipeline.social_auth.social_user',          # Check if user exists in DB
+    'users.pipeline.block_existing_emails',                  # Don't Allow user to use the same email in two different ways to register
+    'social_core.pipeline.user.get_username',                # Generate username
+    'social_core.pipeline.user.create_user',                 # Create user if doesn't exist
+    'users.pipeline.save_extra_data_from_state',             # Save the extra data from state (save_extra_data_from_state, how_did_you_get_here, what_do_you_do)
+    'social_core.pipeline.social_auth.associate_user',       # Link social account to user
+    'social_core.pipeline.social_auth.load_extra_data',      # Save extra data (e.g., profile picture)
+)
+SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = False
+SOCIAL_AUTH_RAISE_EXCEPTIONS = True
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -137,6 +156,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'users.User'
 
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',  # Google
+    'django.contrib.auth.backends.ModelBackend',  # Default
+]
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -175,3 +200,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'alialmsfi09@gmail.com'
 EMAIL_HOST_PASSWORD = 'yzsz kcxr kkpm mxtk'
 DEFAULT_FROM_EMAIL = 'Tick Tack Go'
+
+# Third Party Credentials
+# Google OAuth2 credentials (from Google Cloud Console)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY' , '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET' , '')
+
