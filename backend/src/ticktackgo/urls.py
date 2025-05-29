@@ -18,19 +18,23 @@ from django.contrib import admin
 from django.urls import path , include
 
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from drf_spectacular.utils import extend_schema , extend_schema_view
 
 from users.views import GoogleAuthView
 
 api_patterns = [
-    path('users/token/' , TokenObtainPairView.as_view() , name='token_obtain_pair'),
-    path('users/token/refresh/' , TokenRefreshView.as_view() , name='token_refresh'),
+    path('users/token/' , extend_schema_view(post=extend_schema(tags=['Users/Auth'], summary="Token"))(TokenObtainPairView.as_view()) , name='token_obtain_pair'),
+    path('users/token/refresh/' , extend_schema_view(post=extend_schema(tags=['Users/Auth'], summary="Refresh Token"))(TokenRefreshView.as_view()) , name='token_refresh'),
     path('' , include('users.urls') ),
     path('' , include('workspaces.urls') ),
 ]
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('auth/' , include('social_django.urls', namespace='social')),
     path('auth/success/' , GoogleAuthView.as_view() , name='google_auth_view'),
     path('api/' , include(api_patterns)),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.decorators import action
@@ -6,6 +5,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from drf_spectacular.utils import extend_schema
 
 from datetime import timedelta
 
@@ -28,7 +29,33 @@ class UserViewSet(viewsets.ModelViewSet):
             qs = qs.filter(username = self.request.user.username)
 
         return qs
+    
+    @extend_schema(exclude=True)
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    @extend_schema(exclude=True)
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    @extend_schema(exclude=True)
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    @extend_schema(exclude=True)
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    @extend_schema(exclude=True)
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    @extend_schema(exclude=True)
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
+
+    @extend_schema(
+        summary="Register",
+        operation_id="register",
+        description="registering the user (just for testing [without verification] )",
+        tags=["Users/Auth"],
+    )
     @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer , url_path='register')
     def register(self , request):
         serializer = self.serializer_class(data = request.data)
@@ -37,7 +64,12 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.data , status = status.HTTP_201_CREATED)
         return Response(serializer.data , status = status.HTTP_400_BAD_REQUEST)
     
-
+    @extend_schema(
+        summary="Send OTP",
+        operation_id="send_otp",
+        description="sending otp for the specified email in the request (to check that the user is the email owner) ",
+        tags=["Users/Auth"],
+    )
     @action(detail=False , methods=['post'] ,url_path='send_otp')
     def send_otp(self , request):
         email = request.data.get('email')
@@ -53,6 +85,12 @@ class UserViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
     
+    @extend_schema(
+        summary="Verify And Register",
+        operation_id="verify_register",
+        description="verifying the otp and register the user (for production) ",
+        tags=["Users/Auth"],
+    )
     @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer ,url_path='verify_register')
     def verify_register(self , request):
         email = request.data.get('email')
@@ -89,6 +127,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GoogleAuthView(APIView):
     permission_classes = [IsAuthenticated]
+    
+    @extend_schema(exclude=True)
     def post(request):
         refresh = RefreshToken.for_user(request.user)
         return Response({
