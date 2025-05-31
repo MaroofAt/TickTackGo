@@ -109,7 +109,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   if (erroremail != null)
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 5),
+                      padding: const EdgeInsets.only(left: 200, top: 5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -147,18 +147,6 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                     ),
-                 Positioned(child:  Container(
-                    margin: EdgeInsets.only(top: 60),
-                    padding: EdgeInsets.only(right: 180),
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        fontSize: 28,
-                        color: Colors.white.withOpacity(1),
-                        fontFamily: "DMSerifText",
-                      ),
-                    ),
-                  ),)
                 ],
               ),
             ),
@@ -274,6 +262,23 @@ class _SignUpState extends State<SignUp> {
               right: 0,
               bottom: 0,
             ),
+         
+             Positioned(child:  Container(
+                    margin: EdgeInsets.only(top: 60),
+                    padding: EdgeInsets.only(right: 180),
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        fontSize: 28,
+                        color: Colors.white.withOpacity(1),
+                        fontFamily: "DMSerifText",
+                      ),
+                    ),
+                  ),
+                  bottom: height(context)*0.21,right: width(context)*0.19,)
+         
+         
+         
           ],
         ),
       ),

@@ -13,15 +13,21 @@ ThemeData theme() {
       scaffoldBackgroundColor: primaryColor,
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
-            fontSize: 50.0,
+            fontSize: 30.0,
             fontWeight: FontWeight.bold,
-            color: primaryColor,
-            fontFamily: 'Coda'),
+            color: white,
+            fontFamily: 'PTSerif'),
         headlineMedium: TextStyle(
             fontSize: 24.0,
             fontWeight: FontWeight.bold,
             color: black,
-            fontFamily: 'Coda'),
+            fontFamily: 'PTSerif'),headlineSmall: TextStyle(
+        fontSize: 20,
+        color: white,
+        fontFamily: "PTSerif",
+        fontWeight: FontWeight.normal
+      )
+
 
       ),
     );
