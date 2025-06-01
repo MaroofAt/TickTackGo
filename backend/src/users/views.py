@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.decorators import action
@@ -6,6 +7,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
+
+
+
 
 from datetime import timedelta
 
@@ -13,6 +19,7 @@ from .models import User , User_OTP
 from .serializers import UserSerializer , RegisterSerializer
 from django.utils import timezone
 from .utils import send_otp_email_to_user
+from .filters import UserFilter
 
 
 
@@ -20,6 +27,20 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    # Pagination
+    pagination_class = PageNumberPagination
+    pagination_class.page_size=50
+    pagination_class.max_page_size=120
+    pagination_class.page_size_query_param='size'
+    # filtering/searching/ordering
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_class = UserFilter
+    search_fields = ['username', 'email']
+    ordering_fields = ['username', 'email', 'created_at', 'updated_at']
 
     def get_queryset(self):
         qs = super().get_queryset()

@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'dotenv',
     'django_extensions',
     'social_django',
-    
+    'django_filters',
+
     #own
     'users',
     'workspaces',
