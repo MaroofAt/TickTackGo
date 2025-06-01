@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'dotenv',
     'django_extensions',
     'social_django',
+    'drf_spectacular',
     'django_filters',
 
     #own
@@ -92,6 +93,7 @@ REST_FRAMEWORK= {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
@@ -118,6 +120,15 @@ SOCIAL_AUTH_PIPELINE = (
 )
 SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = False
 SOCIAL_AUTH_RAISE_EXCEPTIONS = True
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Tick Tack Go',
+    'DESCRIPTION': 'Our Task Management API Documentation',
+    'VERSION': '1.0.0',
+
+    'EXCLUDE_PATH': [r'^auth/']
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
