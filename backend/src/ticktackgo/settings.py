@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'social_django',
     'drf_spectacular',
-    
+    'django_filters',
+
     #own
     'users',
     'workspaces',
