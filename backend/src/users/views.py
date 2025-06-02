@@ -180,7 +180,7 @@ class UserViewSet(viewsets.ModelViewSet):
         invite.save()
 
         Workspace_Membership.objects.create(
-            member = request.user.id
+            member = request.user.id,
             workspace = invite.workspace,
             role = 'member'
         )
