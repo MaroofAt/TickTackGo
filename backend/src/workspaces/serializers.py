@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.conf import settings
 from django.db import transaction
 
-from .models import Workspace , Workspace_Membership
+from .models import Workspace , Workspace_Membership , Invite
 from users.models import User
 
 
@@ -109,3 +109,23 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             return instance
         except Exception as e:
             raise e
+
+
+class InviteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invite
+        fields = [
+            'id',
+            'sender',
+            'receiver',
+            'workspace',
+            'status',
+            'expire_date',
+            'created_at',
+            'updated_at'
+        ]
+        extra_kwargs = {
+            'expire_date': {'read_only':True},
+            'id': {'read_only':True},
+            # 'sender': {'read_only':True},
+        }
