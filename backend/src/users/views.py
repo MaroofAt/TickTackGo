@@ -11,7 +11,6 @@ from rest_framework import filters
 
 
 
-
 from drf_spectacular.utils import extend_schema
 
 from datetime import timedelta
@@ -22,6 +21,8 @@ from django.utils import timezone
 from .utils import send_otp_email_to_user
 from .filters import UserFilter
 
+from workspaces.serializers import InviteSerializer
+from workspaces.models import Invite , Workspace_Membership
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -59,7 +60,10 @@ class UserViewSet(viewsets.ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+             return Response(
+            {"detail": "Method not allowed"},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
@@ -146,6 +150,65 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data , status = status.HTTP_400_BAD_REQUEST)
     
 
+    # Invite section
+    
+    @action(detail=False , methods=['get'] , serializer_class=InviteSerializer)
+    def show_invites(self , request):
+        Invite.objects.filter(expire_date__lt = timezone.now).delete()
+
+        invites = Invite.objects.filter(receiver=request.user).all()
+
+        return Response({"receiver_id": request.user.id , "invites": invites} , status=status.HTTP_200_OK)
+
+
+    @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
+    def accept_invite(self , request):
+        Invite.objects.filter(expire_date__lt = timezone.now).delete()
+        if not request.data.get('invite_id'):
+            return Response({"message": "the invite_id is required!"}, status.HTTP_400_BAD_REQUEST)
+        
+        invite = Invite.objects.filter(id=request.data.get('invite_id')).first()
+        
+        if not invite:
+            return Response({"message": "the invite specified doesn't exist!  maybe it expired :( "}, status.HTTP_400_BAD_REQUEST)
+        if not invite.receiver == request.user:
+            return Response({"message": "the invite specified doesn't belong to the authenticated user!"}, status.HTTP_400_BAD_REQUEST)
+        if not invite.valid_invite():
+            return Response({"message": "the invite specified status isn't pending! it can't be updated"}, status.HTTP_400_BAD_REQUEST)
+        
+        invite.status = 'accepted'
+        invite.save()
+
+        Workspace_Membership.objects.create(
+            member = request.user.id
+            workspace = invite.workspace,
+            role = 'member'
+        )
+
+        serializer = self.get_serializer(invite)
+        return Response(serializer.data , status=status.HTTP_201_CREATED)
+
+    @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
+    def reject_invite(self , request):
+        Invite.objects.filter(expire_date__lt = timezone.now).delete()
+        if not request.data.get('invite_id'):
+            return Response({"message": "the invite_id is required!"}, status.HTTP_400_BAD_REQUEST)
+        
+        invite = Invite.objects.filter(id=request.data.get('invite_id')).first()
+        
+        if not invite:
+            return Response({"message": "the invite specified doesn't exist!  maybe it expired :( "}, status.HTTP_400_BAD_REQUEST)
+        if not invite.receiver == request.user:
+            return Response({"message": "the invite specified doesn't belong to the authenticated user!"}, status.HTTP_400_BAD_REQUEST)
+        if not invite.valid_invite():
+            return Response({"message": "the invite specified status isn't pending! it can't be updated"}, status.HTTP_400_BAD_REQUEST)
+        
+        invite.delete()
+        return(None , status.HTTP_202_ACCEPTED)
+
+              
+
+
 class GoogleAuthView(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -156,3 +219,4 @@ class GoogleAuthView(APIView):
             'refresh_token': str(refresh),
             'access_token': str(refresh.access_token)
         }, status.HTTP_202_ACCEPTED)
+    

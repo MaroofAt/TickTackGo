@@ -102,3 +102,8 @@ class Invite(TimeStampedModel):
         super().save(*args,**kwargs)
         return True
     
+    def valid_invite(self):
+        if self.status == 'pending':
+            return True
+        return False
+    

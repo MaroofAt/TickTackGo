@@ -3,11 +3,12 @@ from django.shortcuts import render
 from rest_framework import viewsets , status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 from drf_spectacular.utils import extend_schema
 
-from .models import Workspace
-from .serializers import WorkspaceSerializer
+from .models import Workspace , Workspace_Membership
+from .serializers import WorkspaceSerializer , InviteSerializer
 
 # Create your views here.
 class WorkspaceViewSet(viewsets.ModelViewSet):
@@ -62,3 +63,26 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             status=status.HTTP_405_METHOD_NOT_ALLOWED
         )
         return super().destroy(request, *args, **kwargs)
+    
+    # Invite section
+
+    @action(detail=True , methods=['post'] , serializer_class=InviteSerializer)
+    def invite_user(self , request ,pk):
+        if request.data.get('receiver') == request.user.id:
+            return Response({"message": "User can not invite himself :) "} , status=status.HTTP_400_BAD_REQUEST)
+        member = Workspace_Membership.objects.filter(member = request.data.get('receiver') , workspace = request.data.get('workspace'))
+        if member.exists():
+            return Response({'message': 'User you invite is already a member in this workspace'} , status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(
+            data={
+                'sender':request.user.id,
+                'status': 'pending',
+                **request.data
+            }
+        )    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data , status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
