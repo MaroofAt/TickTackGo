@@ -75,7 +75,7 @@ class Invite(TimeStampedModel):
         CANCELLED = 'cancelled'
 
     status = models.CharField(
-        max_length=8,
+        max_length=9,
         choices=Status_Choices,
         default=Status_Choices.PENDING
     )
