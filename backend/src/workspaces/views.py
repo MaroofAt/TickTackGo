@@ -7,6 +7,8 @@ from rest_framework.decorators import action
 
 from drf_spectacular.utils import extend_schema
 
+from tools.responses import method_not_allowed
+
 from .models import Workspace , Workspace_Membership
 from .serializers import WorkspaceSerializer , InviteSerializer
 
@@ -28,40 +30,26 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
+    
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return Response(
-            {"detail": "Method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
+        return method_not_allowed()
         return super().update(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def partial_update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return Response(
-            {"detail": "Method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
+        return method_not_allowed()
         return super().partial_update(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def list(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return Response(
-            {"detail": "Method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
+        return method_not_allowed()
         return super().list(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def retrieve(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return Response(
-            {"detail": "Method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
+        return method_not_allowed()
         return super().retrieve(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return Response(
-            {"detail": "Method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
+        return method_not_allowed()
         return super().destroy(request, *args, **kwargs)
     
     # Invite section

@@ -30,3 +30,8 @@ Thumbs.db
 *.egg-info/
 dist/
 build/
+
+# Temp
+src/projects/migrations/*
+src/users/migrations/*
+src/workspaces/migrations/*
