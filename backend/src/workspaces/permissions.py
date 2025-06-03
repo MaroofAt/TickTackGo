@@ -2,7 +2,7 @@ from rest_framework import permissions
 from .models import Workspace , Workspace_Membership
 
 
-class IsOwner(permissions.BasePermission):
+class IsWorkspaceOwner(permissions.BasePermission):
     message = 'Authenticated User is not the Workspace Owner'
 
     def has_permission(self, request, view):
@@ -14,7 +14,7 @@ class IsOwner(permissions.BasePermission):
         return Workspace.objects.filter(owner = request.user , id = workspace_id).exists()
     
 
-class IsMember(permissions.BasePermission):
+class IsWorkspaceMember(permissions.BasePermission):
     message = "Authenticated User is not Member in the Required Workspace"
 
     def has_permission(self, request, view):
