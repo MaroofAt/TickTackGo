@@ -6,8 +6,6 @@ from workspaces.models import Workspace
 from users.models import User
 
 # Create your models here.
-def get_Project_class():
-    return Project
 class Project(TimeStampedModel):
     class Meta:
         db_table = 'projects'
@@ -24,7 +22,7 @@ class Project(TimeStampedModel):
         blank=False
     )
     parent_project = models.ForeignKey( # if this is null so the project doesn't have parent_project it is directly inside the workspace
-        get_Project_class, # Project
+        'self', # Project
         related_name='sub_projects',
         on_delete=models.CASCADE,
         null=True,

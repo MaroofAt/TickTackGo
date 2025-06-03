@@ -52,6 +52,7 @@ class WorkspaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workspace
         fields = [
+            'id',
             'title',
             'description',
             'image',
