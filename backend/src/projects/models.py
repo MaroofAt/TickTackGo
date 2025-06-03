@@ -24,11 +24,17 @@ class Project(TimeStampedModel):
         blank=False
     )
     parent_project = models.ForeignKey( # if this is null so the project doesn't have parent_project it is directly inside the workspace
-        get_Project_class,
+        get_Project_class, # Project
         related_name='sub_projects',
         on_delete=models.CASCADE,
         null=True,
         blank=True
+    )
+    members = models.ManyToManyField(
+        User,
+        through= "Project_Membership",
+        through_fields= ('project','member'),
+        related_name= 'joined_projects'
     )
 
     def validate_color(self):
@@ -50,7 +56,7 @@ class Project(TimeStampedModel):
 class Project_Membership(TimeStampedModel):
     class Meta:
         db_table = 'project_memberships'
-    user = models.ForeignKey(User, related_name='project_memberships', on_delete=models.CASCADE, null=False , blank=False)
+    member = models.ForeignKey(User, related_name='project_memberships', on_delete=models.CASCADE, null=False , blank=False)
     project = models.ForeignKey(Project, related_name='memberships', on_delete=models.CASCADE, null=False , blank=False)
     class PROJECT_MEMBERSHIP_ROLE(models.TextChoices):
         OWNER = 'owner'
@@ -61,3 +67,11 @@ class Project_Membership(TimeStampedModel):
         choices=PROJECT_MEMBERSHIP_ROLE,
         default=PROJECT_MEMBERSHIP_ROLE.VIEWER
     )
+
+    def save(self, *args , **kwargs):
+        try:
+            if((self.project.workspace.owner == self.member) and (self.role != 'owner')):
+                raise Exception('Owner Can\'t Be With Another Role Inside The Project! (owner must be owner!).')
+        except Exception as e:
+            raise e
+        return super().save(*args , **kwargs)
