@@ -1,36 +1,36 @@
 from rest_framework import permissions
 from .models import Workspace , Workspace_Membership
 
-class IsWorkspaceOwner (permissions.BasePermission):
-    message = 'Authenticated User is not the Workespace Owner'
+class IsOwner(permissions.BasePermission):
+    message = 'Authenticated User is not the Workspace Owner'
 
     def has_permission(self, request, view):
         # return super().has_permission(request, view)
-        workespace_id = self.kwargs.get('pk')
+        workspace_id = request.data.get('workspace')
+        if not workspace_id:
+            workspace_id = view.kwargs.get('workspace_id')
 
-        if not workespace_id:
-            workespace_id = request.data.get('workespace')
-            if not workespace_id:
-                workespace_id = view.kwargs.get('workespace_id')
-
-        return Workspace.objects.filter(owner = request.user , id = workespace_id).exists()
+        return Workspace.objects.filter(owner = request.user , id = workspace_id).exists()
     
 
-class IsWorkspaceMembre (permissions.BasePermission):
-    message = "Authenticated User is not Member in the Required Workespace"
+class IsMember(permissions.BasePermission):
+    message = "Authenticated User is not Member in the Required Workspace"
 
     def has_permission(self, request, view):
         # return super().has_permission(request, view)
-        workespace_id = self.kwargs.get('pk')
+        workspace_id = request.data.get('workspace')
+        if not workspace_id:
+            try:
+                workspace_id = request.GET['workspace']
+            except Exception as e:
+                workspace_id = view.kwargs.get('workspace_id')
+        if not workspace_id: # for debugging
+            raise Exception('can\'t fetch workspace id from request or view in permissions.py in IsMember')
 
-        if not workespace_id:
-            workespace_id = request.data.get('workespace')
-            if not workespace_id:
-                workespace_id = view.kwargs.get('workespace_id')
-
-        membership = Workspace_Membership.objects.filter(user = request.user , workespace_id = workespace_id)
+        membership = Workspace_Membership.objects.filter(member = request.user , workspace_id = workspace_id)
         if membership.exists():
-            # membership = membership.get()
-            # if membership.workespace_membership_roles == "member":
             return True
+            # membership = membership.get()
+            # if membership.workspace_membership_roles == "member":
+            #     return True
         return False

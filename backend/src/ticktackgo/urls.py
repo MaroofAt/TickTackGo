@@ -28,6 +28,7 @@ api_patterns = [
     path('users/token/refresh/' , extend_schema_view(post=extend_schema(tags=['Users/Auth'], summary="Refresh Token"))(TokenRefreshView.as_view()) , name='token_refresh'),
     path('' , include('users.urls') ),
     path('' , include('workspaces.urls') ),
+    path('' , include('projects.urls') ),
 ]
 
 urlpatterns = [
