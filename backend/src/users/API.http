@@ -3,7 +3,7 @@ POST http://127.0.0.1:8000/api/users/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "Ali",
+    "username": "Ali2",
     "email": "alialmusfi@gmail.com",
     "password": "aloosh1234",
     "how_to_use_website": "small_team",
@@ -40,7 +40,7 @@ POST http://127.0.0.1:8000/api/users/token/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "alialmusfi@gmail.com",
+    "email": "alialmusfi2@gmail.com",
     "password": "aloosh1234"
 }
 
@@ -57,8 +57,59 @@ Content-Type: application/json
 ###
 POST http://127.0.0.1:8000/api/workspaces/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTQ0NjE4LCJpYXQiOjE3NDc5NDEwMTgsImp0aSI6IjY2MjlhNjYwZmM2MDQ1MzU5ODU2NDNjNmVhNDFiYzE1IiwidXNlcl9pZCI6Nn0.wlh9QayWdbelRbCiEs8Wbyg6QTZ-CfCfudwojqznY6c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4OTYwNjAyLCJpYXQiOjE3NDg5NTcwMDIsImp0aSI6IjhlODk5MmI0YWQyYzQ2ZjNhNjE4MzFmY2ViNDU1M2Y1IiwidXNlcl9pZCI6MX0.Y5Mqk8OszKoPC3cQi55BOY0_ykPDD00C5njk-gVMON0
 
 {
-    "title": "Workspace 10"
+    "title": "Workspace 1"
+}
+
+###
+
+GET http://127.0.0.1:8000/api/users/ HTTP/1.1
+Content-Type: application/json
+
+###
+
+GET http://127.0.0.1:8000/api/users/1/ HTTP/1.1
+Content-Type: application/json
+
+
+###
+#invite user#
+POST http://127.0.0.1:8000/api/workspaces/1/invite_user/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4OTY5NDIyLCJpYXQiOjE3NDg5NjU4MjIsImp0aSI6IjRjZDQ2ZDliZjNlNTQ5ZDdiNTdiN2NjY2RhZWI2MTRhIiwidXNlcl9pZCI6MX0.u6028D07pggCAZMT-oD73WmUBHhaQYdFiiUTpkjtPNw
+
+{
+    "receiver": 2
+
+}
+
+###
+
+GET http://127.0.0.1:8000/api/users/show_invites/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4OTY1NzM5LCJpYXQiOjE3NDg5NjIxMzksImp0aSI6ImU2NWIwZjEyYjZhMTRmZTk5ZDk2MmYwNjI3ZTFhYzMzIiwidXNlcl9pZCI6Mn0.AVmTMpmeQincyiy5oNXoB5h8RTiSignfn0A11QKHVzU
+
+
+###
+
+POST http://127.0.0.1:8000/api/users/accept_invite/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4OTY1NzM5LCJpYXQiOjE3NDg5NjIxMzksImp0aSI6ImU2NWIwZjEyYjZhMTRmZTk5ZDk2MmYwNjI3ZTFhYzMzIiwidXNlcl9pZCI6Mn0.AVmTMpmeQincyiy5oNXoB5h8RTiSignfn0A11QKHVzU
+
+{
+    "invite_id": 2
+
+}
+
+###
+
+POST http://127.0.0.1:8000/api/users/reject_invite/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4OTY5NDY2LCJpYXQiOjE3NDg5NjU4NjYsImp0aSI6IjhhYjUxNjU1YTFhZDRlNjc4NGU4YjkzMjk3NGQ0OWVjIiwidXNlcl9pZCI6Mn0.xyPRnQ2TSwOi1fADLxPppjglNIYzP1gx1BEx6-m7iCk
+
+{
+    "invite_id": 5
+
 }

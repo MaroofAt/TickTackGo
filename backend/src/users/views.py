@@ -52,12 +52,35 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return qs
     
-    @extend_schema(exclude=True)
+    @extend_schema(
+        summary="List",
+        operation_id="list",
+        description="get all users",
+        tags=["Users"],
+    )
     def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-    @extend_schema(exclude=True)
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
+        # return super().list(request, *args, **kwargs)
+        qr = User.objects.filter().all()
+
+        page = self.paginate_queryset(qr)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(qr, many=True)
+        return Response(serializer.data)
+    
+    @extend_schema(
+        summary="Retrieve",
+        operation_id="retrieve",
+        description="get one user",
+        tags=["Users"],
+    )
+    def retrieve(self, request, pk , *args, **kwargs):
+        # return super().retrieve(request, *args, **kwargs)
+        qr = User.objects.filter(id=pk).first()
+        serializer = self.get_serializer(qr)
+        return Response(serializer.data)
     @extend_schema(exclude=True)
     def create(self, request, *args, **kwargs):
              return Response(
@@ -160,11 +183,13 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     @action(detail=False , methods=['get'] , serializer_class=InviteSerializer)
     def show_invites(self , request):
-        Invite.objects.filter(expire_date__lt = timezone.now).delete()
+        Invite.objects.filter(expire_date__lt = timezone.now()).delete()
 
         invites = Invite.objects.filter(receiver=request.user).all()
-
-        return Response({"receiver_id": request.user.id , "invites": invites} , status=status.HTTP_200_OK)
+        serializer = self.get_serializer(invites , many = True)
+        
+        # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
+        return Response(serializer.data , status=status.HTTP_200_OK)
 
 
     @extend_schema(
@@ -175,7 +200,8 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
     def accept_invite(self , request):
-        Invite.objects.filter(expire_date__lt = timezone.now).delete()
+        # print("Aliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+        Invite.objects.filter(expire_date__lt = timezone.now()).delete()
         if not request.data.get('invite_id'):
             return Response({"message": "the invite_id is required!"}, status.HTTP_400_BAD_REQUEST)
         
@@ -192,7 +218,7 @@ class UserViewSet(viewsets.ModelViewSet):
         invite.save()
 
         Workspace_Membership.objects.create(
-            member = request.user.id,
+            member = request.user,
             workspace = invite.workspace,
             role = 'member'
         )
@@ -208,7 +234,7 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
     def reject_invite(self , request):
-        Invite.objects.filter(expire_date__lt = timezone.now).delete()
+        Invite.objects.filter(expire_date__lt = timezone.now()).delete()
         if not request.data.get('invite_id'):
             return Response({"message": "the invite_id is required!"}, status.HTTP_400_BAD_REQUEST)
         
@@ -222,7 +248,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "the invite specified status isn't pending! it can't be updated"}, status.HTTP_400_BAD_REQUEST)
         
         invite.delete()
-        return(None , status.HTTP_202_ACCEPTED)
+        return Response(None , status.HTTP_202_ACCEPTED)
 
               
 

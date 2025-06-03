@@ -73,20 +73,21 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         tags=["Workspaces/Invite"],
     )
     @action(detail=True , methods=['post'] , serializer_class=InviteSerializer)
-    def invite_user(self , request ,pk):
+    def invite_user(self , request , pk):
         if request.data.get('receiver') == request.user.id:
             return Response({"message": "User can not invite himself :) "} , status=status.HTTP_400_BAD_REQUEST)
         member = Workspace_Membership.objects.filter(member = request.data.get('receiver') , workspace = request.data.get('workspace'))
         if member.exists():
             return Response({'message': 'User you invite is already a member in this workspace'} , status=status.HTTP_400_BAD_REQUEST)
 
-        sender = Workspace_Membership.objects.filter(member = request.user.id)
+        sender = Workspace_Membership.objects.filter(member = request.user.id).first()
 
         if sender.role != 'owner':
             return Response({'message': 'Sender is not the Owner of the workspace'} , status=status.HTTP_400_BAD_REQUEST)
 
         serializer = self.get_serializer(
             data={
+                'workspace':pk,
                 'sender':request.user.id,
                 'status': 'pending',
                 **request.data
