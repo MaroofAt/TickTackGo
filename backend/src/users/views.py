@@ -151,7 +151,13 @@ class UserViewSet(viewsets.ModelViewSet):
     
 
     # Invite section
-    
+
+    @extend_schema(
+        summary="Show Invites ",
+        operation_id="show_invites",
+        description="show all invites for the user  ",
+        tags=["Users/Invite"],
+    )
     @action(detail=False , methods=['get'] , serializer_class=InviteSerializer)
     def show_invites(self , request):
         Invite.objects.filter(expire_date__lt = timezone.now).delete()
@@ -161,6 +167,12 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({"receiver_id": request.user.id , "invites": invites} , status=status.HTTP_200_OK)
 
 
+    @extend_schema(
+        summary="Accept Invite",
+        operation_id="accept_invite",
+        description="user can accept the invite (just send the invite_id to make the specific invite accepted ) ",
+        tags=["Users/Invite"],
+    )
     @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
     def accept_invite(self , request):
         Invite.objects.filter(expire_date__lt = timezone.now).delete()
@@ -187,7 +199,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(invite)
         return Response(serializer.data , status=status.HTTP_201_CREATED)
-
+    
+    @extend_schema(
+        summary="Reject Invite",
+        operation_id="reject_invite",
+        description="user can reject the invite (just send the invite_id to make the specific invite rejected ) ",
+        tags=["Users/Invite"],
+    )
     @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
     def reject_invite(self , request):
         Invite.objects.filter(expire_date__lt = timezone.now).delete()
