@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from .models import Workspace , Workspace_Membership
 
+
 class IsOwner(permissions.BasePermission):
     message = 'Authenticated User is not the Workspace Owner'
 
@@ -33,4 +34,5 @@ class IsMember(permissions.BasePermission):
             # membership = membership.get()
             # if membership.workspace_membership_roles == "member":
             #     return True
+
         return False
