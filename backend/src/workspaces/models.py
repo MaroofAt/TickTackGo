@@ -33,13 +33,14 @@ class Workspace(TimeStampedModel):
     code = models.UUIDField(default=uuid.uuid4 , unique=True , editable=False)
 
     def __str__(self):
-        return self.name
+        return self.title
     
 
 
 class Workspace_Membership(TimeStampedModel):
     class Meta:
         db_table = 'workspace_membership'
+        unique_together = ['member', 'workspace']
     member = models.ForeignKey(User, related_name='workspace_memberships' , on_delete=models.CASCADE , null=False , blank=False)
     workspace = models.ForeignKey(Workspace , on_delete=models.CASCADE, related_name='workspace_members', null=False , blank=False)
     class WORKSPACE_MEMBERSHIP_ROLES(models.TextChoices):

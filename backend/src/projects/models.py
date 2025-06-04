@@ -12,7 +12,7 @@ class Project(TimeStampedModel):
         unique_together = ['title', 'workspace']
     
     title = models.CharField(max_length=255)
-    color = models.CharField(max_length=10) # color code is 6 digits
+    color = models.CharField(max_length=10 , default='#ffffff') # color code is 6 digits
     ended = models.BooleanField(default=False)
     workspace = models.ForeignKey(
         Workspace,
@@ -44,7 +44,7 @@ class Project(TimeStampedModel):
         try:
             if (self.ended == True):
                 raise Exception('This Project Has Ended! User Can\'t Edit It Anymore')
-            if (self.validate_color()):
+            if (not self.validate_color()):
                 raise Exception('Color Code is Not Valid! ( it does not start with "#" )')
         except Exception as e:
             raise e
@@ -54,6 +54,7 @@ class Project(TimeStampedModel):
 class Project_Membership(TimeStampedModel):
     class Meta:
         db_table = 'project_memberships'
+        unique_together = ['member' , 'project']
     member = models.ForeignKey(User, related_name='project_memberships', on_delete=models.CASCADE, null=False , blank=False)
     project = models.ForeignKey(Project, related_name='memberships', on_delete=models.CASCADE, null=False , blank=False)
     class PROJECT_MEMBERSHIP_ROLE(models.TextChoices):
@@ -68,8 +69,10 @@ class Project_Membership(TimeStampedModel):
 
     def save(self, *args , **kwargs):
         try:
-            if((self.project.workspace.owner == self.member) and (self.role != 'owner')):
-                raise Exception('Owner Can\'t Be With Another Role Inside The Project! (owner must be owner!).')
+            # if((self.project.workspace.owner == self.member) and (self.role != 'owner')): #TODO
+            #     raise Exception('Owner Can\'t Be With Another Role Inside The Project! (owner must be owner!).')
+            if((self.role == 'owner') and (Project_Membership.objects.filter(project=self.project, role='owner').exists())):
+                raise Exception('There Can\'t Be More Than One Owner For The Project !')
         except Exception as e:
             raise e
         return super().save(*args , **kwargs)
