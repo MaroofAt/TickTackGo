@@ -21,7 +21,7 @@ from django.utils import timezone
 from .utils import send_otp_email_to_user
 from .filters import UserFilter
 
-from workspaces.serializers import InviteSerializer
+from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
 from workspaces.models import Invite , Workspace_Membership
 
 
@@ -181,11 +181,11 @@ class UserViewSet(viewsets.ModelViewSet):
         description="show all invites for the user  ",
         tags=["Users/Invite"],
     )
-    @action(detail=False , methods=['get'] , serializer_class=InviteSerializer)
+    @action(detail=False , methods=['get'] , serializer_class=ShowInvitesSerializer)
     def show_invites(self , request):
         Invite.objects.filter(expire_date__lt = timezone.now()).delete()
 
-        invites = Invite.objects.filter(receiver=request.user).all()
+        invites = Invite.objects.filter(receiver=request.user , status = 'pending').all()
         serializer = self.get_serializer(invites , many = True)
         
         # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
@@ -197,15 +197,24 @@ class UserViewSet(viewsets.ModelViewSet):
         operation_id="accept_invite",
         description="user can accept the invite (just send the invite_id to make the specific invite accepted ) ",
         tags=["Users/Invite"],
+        request= {
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'invite': {'type':'integer' , 'example':1}
+                },
+                'required':['invite']
+            }
+        }
     )
     @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
     def accept_invite(self , request):
         # print("Aliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
         Invite.objects.filter(expire_date__lt = timezone.now()).delete()
-        if not request.data.get('invite_id'):
-            return Response({"message": "the invite_id is required!"}, status.HTTP_400_BAD_REQUEST)
+        if not request.data.get('invite'):
+            return Response({"message": "the invite is required!"}, status.HTTP_400_BAD_REQUEST)
         
-        invite = Invite.objects.filter(id=request.data.get('invite_id')).first()
+        invite = Invite.objects.filter(id=request.data.get('invite')).first()
         
         if not invite:
             return Response({"message": "the invite specified doesn't exist!  maybe it expired :( "}, status.HTTP_400_BAD_REQUEST)
@@ -231,14 +240,23 @@ class UserViewSet(viewsets.ModelViewSet):
         operation_id="reject_invite",
         description="user can reject the invite (just send the invite_id to make the specific invite rejected ) ",
         tags=["Users/Invite"],
+        request= {
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'invite': {'type':'integer' , 'example':1}
+                },
+                'required':['invite']
+            }
+        }
     )
     @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
     def reject_invite(self , request):
         Invite.objects.filter(expire_date__lt = timezone.now()).delete()
-        if not request.data.get('invite_id'):
-            return Response({"message": "the invite_id is required!"}, status.HTTP_400_BAD_REQUEST)
+        if not request.data.get('invite'):
+            return Response({"message": "the invite is required!"}, status.HTTP_400_BAD_REQUEST)
         
-        invite = Invite.objects.filter(id=request.data.get('invite_id')).first()
+        invite = Invite.objects.filter(id=request.data.get('invite')).first()
         
         if not invite:
             return Response({"message": "the invite specified doesn't exist!  maybe it expired :( "}, status.HTTP_400_BAD_REQUEST)
