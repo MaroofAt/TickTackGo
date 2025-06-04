@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema , OpenApiParameter , OpenApiExample
 
 from workspaces.permissions import IsMember
 
@@ -29,6 +29,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
         operation_id="list_projects",
         description="Listing Authenticated User Project",
         tags=["Projects"],
+        parameters=[
+            OpenApiParameter(
+                name='workspace',
+                type=int,
+                description='workspace id that u wants to get its projects (authenticated user must be a member of this workspace)',
+                required=True
+            )
+        ]
     )
     def list(self, request, *args, **kwargs):
         try:
@@ -38,20 +46,22 @@ class ProjectViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
     
+    @extend_schema(exclude=True)
     def retrieve(self, request, *args, **kwargs):
         return method_not_allowed()
         return super().retrieve(request, *args, **kwargs)
     
-    @extend_schema(
-        summary="Create Project",
-        operation_id="create_project",
-        description="Creating new project inside the workspace",
-        tags=["Projects"],
-    )
+    # @extend_schema(
+    #     summary="Create Project",
+    #     operation_id="create_project",
+    #     description="Creating new project inside the workspace",
+    #     tags=["Projects"],
+    # )
+    @extend_schema(exclude=True)
     def create(self, request, *args, **kwargs):
         return method_not_allowed()
         return super().create(request, *args, **kwargs)
-    
+    @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs):
         return method_not_allowed()
         return super().destroy(request, *args, **kwargs)
@@ -60,6 +70,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         return method_not_allowed()
         return super().update(request, *args, **kwargs)
+    
     @extend_schema(exclude=True)
     def partial_update(self, request, *args, **kwargs):
         return method_not_allowed()

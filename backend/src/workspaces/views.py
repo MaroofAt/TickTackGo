@@ -29,6 +29,17 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         operation_id="create_workspace",
         description="Creating new workspace and setting the authenticated user as its owner | user has limited workspace count allowed",
         tags=["Workspaces"],
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Team Workspace 1'},
+                    'description': {'type': 'string', 'example': 'Our Team Workspace'},
+                    'image': {'type': 'string' , 'format': 'binary'}
+                },
+                'required': ['title']
+            }
+        }
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
