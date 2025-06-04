@@ -69,8 +69,8 @@ class Project_Membership(TimeStampedModel):
 
     def save(self, *args , **kwargs):
         try:
-            if((self.project.workspace.owner == self.member) and (self.role != 'owner')):
-                raise Exception('Owner Can\'t Be With Another Role Inside The Project! (owner must be owner!).')
+            # if((self.project.workspace.owner == self.member) and (self.role != 'owner')): #TODO
+            #     raise Exception('Owner Can\'t Be With Another Role Inside The Project! (owner must be owner!).')
             if((self.role == 'owner') and (Project_Membership.objects.filter(project=self.project, role='owner').exists())):
                 raise Exception('There Can\'t Be More Than One Owner For The Project !')
         except Exception as e:

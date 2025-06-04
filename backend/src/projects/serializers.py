@@ -9,8 +9,8 @@ from .models import Project , Project_Membership
 
 
 class ProjectMembershipSerializer(serializers.ModelSerializer):
-    member = serializers.PrimaryKeyRelatedField(read_only=True)
-    project = serializers.PrimaryKeyRelatedField(read_only=True)
+    member = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
     class Meta:
         model = Project_Membership
         fields = [

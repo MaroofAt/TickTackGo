@@ -35,3 +35,14 @@ class IsProjectWorkspaceMember(permissions.BasePermission):
         if Workspace_Membership.objects.filter(member = request.user , workspace = project.workspace).exists():
             return True
         return False
+class IsProjectWorkspaceOwner(permissions.BasePermission):
+    message = "Authenticated User is not the Workspace Owner"
+
+    def has_permission(self, request, view):
+        project_id = fetch_project_id(request, view, "IsProjectWorkspaceOwner", fetch_from_pk=True)
+        if not Project.objects.filter(id=project_id).exists():
+            return False
+        project = Project.objects.get(id=project_id)
+        if Workspace_Membership.objects.filter(member=request.user , workspace=project.workspace, role='owner').exists():
+            return True
+        return False

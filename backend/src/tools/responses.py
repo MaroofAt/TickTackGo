@@ -4,7 +4,7 @@ from rest_framework import status
 
 def exception_response(e):
     return Response(
-        {'detail': str(e)},
+        {'Exception': str(e)},
         status=status.HTTP_500_INTERNAL_SERVER_ERROR
     )
 

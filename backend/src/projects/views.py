@@ -7,11 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema , OpenApiParameter , OpenApiExample
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
-from projects.permissions import IsProjectWorkspaceMember
+from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner
 
 from users.models import User
 
 from tools.responses import exception_response , required_response , method_not_allowed
+from tools.roles_check import is_project_workspace_member , is_project_member
 
 from .models import Project, Project_Membership
 from .serializers import ProjectSerializer , ProjectMembershipSerializer
@@ -28,6 +29,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             self.permission_classes.append(IsWorkspaceMember)
         if self.action == 'retrieve' or self.action == 'destroy':
             self.permission_classes.append(IsProjectWorkspaceMember)
+        if self.action == 'change_user_role' or self.action == 'add_user_to_project':
+            self.permission_classes.append(IsProjectWorkspaceOwner)
         if self.action == 'create':
             self.permission_classes.append(IsWorkspaceOwner)
         return super().get_permissions()
@@ -128,9 +131,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
         },
         responses={202: ProjectMembershipSerializer(context={'add_member':True, 'extend_member':True, 'add_project':True})}
     )
-    @action(detail=True, methods=['post'], serializer_class=ProjectMembershipSerializer)
+    @action(detail=True, methods=['patch'], serializer_class=ProjectMembershipSerializer)
     def change_user_role(self, request, pk):
-        try:
+        # try:
             if not request.data.get('user'):
                 return required_response('user')
             if request.data.get('user') == request.user:
@@ -152,7 +155,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 )
             
             # get the user object
-            user = User.objects.get(request.data.get('user'))
+            user = User.objects.filter(id=request.data.get('user'))
+            if not user.exists():
+                return Response(
+                    {'detail': 'user does not exist!'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            user = user.first()
             
             # get the project membership
             project_membership = Project_Membership.objects.filter(member=user, project_id=pk)
@@ -180,8 +189,71 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 serializer.data,
                 status=status.HTTP_202_ACCEPTED
             )
+        # except Exception as e:
+        #     return exception_response(e)
+
+    @extend_schema(
+        summary="Add User To Project",
+        operation_id="add_user_to_project",
+        description="Adding user as member of the specified Project",
+        tags=["Projects"],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'user': {'type':'integer' , 'example':1 , 'description': 'the user must be a workspace member'},
+                },
+                'required':['user']
+            }
+        },
+        responses={202: ProjectMembershipSerializer(context={'add_member':True, 'extend_member':False, 'add_project':True})}
+    )
+    @action(detail=True, methods=['post'], serializer_class=ProjectMembershipSerializer)
+    def add_user_to_project(self, request, pk):
+        try:
+            if not request.data.get('user'):
+                return required_response('user')
+            if request.data.get('user') == request.user:
+                return Response(
+                    {'detail': 'User Can\'t Add Himself To The Project (He Will Be a Member Twice!) !!!'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            if not is_project_workspace_member(user_id=request.data.get('user'), project_id=pk):
+                return Response(
+                    {'detail': 'User u Want To Add To This Project Must Be A Workspace Member Before!'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            if is_project_member(user_id=request.data.get('user'), project_id=pk):
+                return Response(
+                    {'detail': 'User Already A Member Of This Project'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            # serializer
+            serializer = self.get_serializer(
+                data={
+                    "member":request.data.get('user'),
+                    "project":pk
+                },
+                context={
+                    "add_member":True,
+                    "add_project":True,
+                }
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
         except Exception as e:
             return exception_response(e)
+
+
+
+
+
+
+
 
 
 
