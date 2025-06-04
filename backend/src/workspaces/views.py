@@ -72,8 +72,11 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             return Response({'message': 'User you invite is already a member in this workspace'} , status=status.HTTP_400_BAD_REQUEST)
 
 
+        sender = Workspace_Membership.objects.filter(member = request.user.id)
+        if not sender.exists():
+            return Response({'message': 'Sender is not in workspace'} , status=status.HTTP_400_BAD_REQUEST)
+        
         sender = Workspace_Membership.objects.filter(member = request.user.id).first()
-
         if sender.role != 'owner':
             return Response({'message': 'Sender is not the Owner of the workspace'} , status=status.HTTP_400_BAD_REQUEST)
 
