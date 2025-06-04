@@ -47,10 +47,15 @@ INSTALLED_APPS = [
     'dotenv',
     'django_extensions',
     'social_django',
-    
+    'drf_spectacular',
+    'django_filters',
+
     #own
     'users',
     'workspaces',
+
+    'projects',
+
 
     
 ]
@@ -91,6 +96,7 @@ REST_FRAMEWORK= {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
@@ -117,6 +123,15 @@ SOCIAL_AUTH_PIPELINE = (
 )
 SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = False
 SOCIAL_AUTH_RAISE_EXCEPTIONS = True
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Tick Tack Go',
+    'DESCRIPTION': 'Our Task Management API Documentation',
+    'VERSION': '1.0.0',
+
+    'EXCLUDE_PATH': [r'^auth/']
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -197,9 +212,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'alialmsfi09@gmail.com'
-EMAIL_HOST_PASSWORD = 'yzsz kcxr kkpm mxtk'
-DEFAULT_FROM_EMAIL = 'Tick Tack Go'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+
 
 # Third Party Credentials
 # Google OAuth2 credentials (from Google Cloud Console)
