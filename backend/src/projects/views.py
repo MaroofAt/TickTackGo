@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema , OpenApiParameter , OpenApiExample
 
-from workspaces.permissions import IsMember
+from workspaces.permissions import IsWorkspaceMember
 
 from tools.responses import exception_response , required_response , method_not_allowed
 
@@ -16,7 +16,7 @@ from .serializers import ProjectSerializer
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, IsMember]
+    permission_classes = [IsAuthenticated, IsWorkspaceMember]
 
 
     def get_queryset(self):
