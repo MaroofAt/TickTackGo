@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
-import 'package:pr1/presentation/screen/onbording/onboarding_main.dart';
 import 'package:pr1/presentation/widgets/images.dart';
 
 class SplashScreen extends StatefulWidget {

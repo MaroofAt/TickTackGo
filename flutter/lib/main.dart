@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/auth/verifypage.dart';
-import 'package:pr1/presentation/screen/onbording/splash_screen.dart';
+import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
 
 void main() {
