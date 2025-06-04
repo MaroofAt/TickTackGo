@@ -5,10 +5,10 @@ import 'package:pr1/core/constance/constance.dart';
 
 class Verifypage extends StatefulWidget {
   @override
-  Verifypagestate createState() => Verifypagestate();
+  VerifypageState createState() => VerifypageState();
 }
 
-class Verifypagestate extends State<Verifypage> {
+class VerifypageState extends State<Verifypage> {
   final pincontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class Verifypagestate extends State<Verifypage> {
                   ),
                   Container(
                     child: Image.asset(
-                      "assets/images/verfiy.png",
+                      "assets/images/verify_page_images/verfiy.png",
                       height: height(context) * 0.48,
                     ),
                   ),
