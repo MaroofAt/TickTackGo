@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from workspaces.serializers import WorkspaceSerializer , LocalUserSerializer
@@ -37,7 +38,7 @@ class ProjectMembershipSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     
-    workspace = serializers.PrimaryKeyRelatedField(read_only=True)
+    workspace = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all())
     parent_project = serializers.PrimaryKeyRelatedField(read_only=True)
     members = serializers.SerializerMethodField()
     class Meta:
@@ -86,3 +87,17 @@ class ProjectSerializer(serializers.ModelSerializer):
             self.fields['workspace'] = WorkspaceSerializer(read_only=True)
         if self.context.get('extend_parent_project' , False):
             self.fields['parent_project'] = ProjectSerializer(read_only=True)
+        
+        self.fields['workspace'].queryset = Workspace.objects.filter(owner=self.context['request'].user) # just workspaces that the user owns, so he can't assign to other workspaces
+    
+
+    def create(self, validated_data):
+        print(f'\n\nvalidated_data = {validated_data}\n\n')
+        with transaction.atomic():
+            instance = super().create(validated_data)
+            Project_Membership.objects.create(
+                member = self.context['request'].user,
+                project = instance,
+                role = 'owner'
+            )
+        return instance

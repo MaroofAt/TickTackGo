@@ -12,7 +12,7 @@ class Project(TimeStampedModel):
         unique_together = ['title', 'workspace']
     
     title = models.CharField(max_length=255)
-    color = models.CharField(max_length=10) # color code is 6 digits
+    color = models.CharField(max_length=10 , default='#ffffff') # color code is 6 digits
     ended = models.BooleanField(default=False)
     workspace = models.ForeignKey(
         Workspace,
@@ -44,7 +44,7 @@ class Project(TimeStampedModel):
         try:
             if (self.ended == True):
                 raise Exception('This Project Has Ended! User Can\'t Edit It Anymore')
-            if (self.validate_color()):
+            if (not self.validate_color()):
                 raise Exception('Color Code is Not Valid! ( it does not start with "#" )')
         except Exception as e:
             raise e

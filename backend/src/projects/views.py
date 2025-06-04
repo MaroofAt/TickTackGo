@@ -5,7 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema , OpenApiParameter , OpenApiExample
 
-from workspaces.permissions import IsWorkspaceMember
+from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
+from projects.permissions import IsProjectWorkspaceMember
 
 from tools.responses import exception_response , required_response , method_not_allowed
 
@@ -16,13 +17,30 @@ from .serializers import ProjectSerializer
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, IsWorkspaceMember]
 
-
+    
+    def get_permissions(self):
+        self.permission_classes = [IsAuthenticated]
+        if self.action == 'list':
+            self.permission_classes.append(IsWorkspaceMember)
+        if self.action == 'retrieve' or self.action == 'destroy':
+            self.permission_classes.append(IsProjectWorkspaceMember)
+        if self.action == 'create':
+            self.permission_classes.append(IsWorkspaceOwner)
+        return super().get_permissions()
     def get_queryset(self):
         qs = super().get_queryset()
-        qs = qs.filter(workspace_id=self.request.data.get('workspace'))
         return qs
+    def get_serializer_context(self):
+        """
+        if self.action == 'retrieve':
+            return {
+                
+            }.update(super().get_serializer_context())
+        """
+        return super().get_serializer_context()
+        
+    
 
     @extend_schema(
         summary="List Projects",
@@ -46,24 +64,49 @@ class ProjectViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
     
-    @extend_schema(exclude=True)
+
+    @extend_schema(
+        summary="Retrieve Projects",
+        operation_id="retrieve_projects",
+        description="Retrieve Project (the authenticated user must be a workspace member) ",
+        tags=["Projects"],
+    )
     def retrieve(self, request, *args, **kwargs):
-        return method_not_allowed()
         return super().retrieve(request, *args, **kwargs)
     
-    # @extend_schema(
-    #     summary="Create Project",
-    #     operation_id="create_project",
-    #     description="Creating new project inside the workspace",
-    #     tags=["Projects"],
-    # )
-    @extend_schema(exclude=True)
+    @extend_schema(
+        summary="Create Project",
+        operation_id="create_project",
+        description="Creating new project inside the workspace",
+        tags=["Projects"],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'title': {'type':'string' , 'example':'Project 1'},
+                    'color': {'type':'string' , 'example':'#ff0000'},
+                    'workspace': {'type':'integer' , 'example':'1'},
+                    'parent_project': {'type':'integer' , 'example':'1'},
+                },
+                'required':['title','workspace']
+            }
+        }
+    )
     def create(self, request, *args, **kwargs):
-        return method_not_allowed()
+        print(f'\n\nrequest.data = {request.data}\n\n')
+        if not request.data.get('title'):
+            return required_response('title')
+        if not request.data.get('workspace'):
+            return required_response('workspace')
         return super().create(request, *args, **kwargs)
-    @extend_schema(exclude=True)
+    
+    @extend_schema(
+        summary="Delete Project",
+        operation_id="delete_project",
+        description="Deleting the specified project",
+        tags=["Projects"],
+    )
     def destroy(self, request, *args, **kwargs):
-        return method_not_allowed()
         return super().destroy(request, *args, **kwargs)
     
     @extend_schema(exclude=True)
