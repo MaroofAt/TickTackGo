@@ -31,12 +31,12 @@ class FinalOnboardingPage extends StatelessWidget {
               ),
               Column(
                 children: [
-                  _buildText(finalPageLowerFirstText, 20),
-                  _buildText(finalPageLowerSecondText, 20),
+                  _buildText(finalPageLowerFirstText, width(context) < 400 ? 16 : 20),
+                  _buildText(finalPageLowerSecondText, width(context) < 400 ? 16 : 20),
                 ],
               ),
               SizedBox(
-                width: width(context) * 0.3,
+                width: width(context) * 0.35,
                 child: MyButtons.primaryButton(
                   () {
                     pushNamed(context, signinRoute);

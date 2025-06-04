@@ -1,11 +1,12 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/routes.dart';
-import 'package:pr1/presentation/screen/auth/verifypage.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(DevicePreview(builder: (context) => MyApp()));
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -14,10 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       theme: theme(),
       routes: routes,
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
