@@ -54,6 +54,7 @@ class Project(TimeStampedModel):
 class Project_Membership(TimeStampedModel):
     class Meta:
         db_table = 'project_memberships'
+        unique_together = ['member' , 'project']
     member = models.ForeignKey(User, related_name='project_memberships', on_delete=models.CASCADE, null=False , blank=False)
     project = models.ForeignKey(Project, related_name='memberships', on_delete=models.CASCADE, null=False , blank=False)
     class PROJECT_MEMBERSHIP_ROLE(models.TextChoices):
@@ -70,6 +71,8 @@ class Project_Membership(TimeStampedModel):
         try:
             if((self.project.workspace.owner == self.member) and (self.role != 'owner')):
                 raise Exception('Owner Can\'t Be With Another Role Inside The Project! (owner must be owner!).')
+            if((self.role == 'owner') and (Project_Membership.objects.filter(project=self.project, role='owner').exists())):
+                raise Exception('There Can\'t Be More Than One Owner For The Project !')
         except Exception as e:
             raise e
         return super().save(*args , **kwargs)

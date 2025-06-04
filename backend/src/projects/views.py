@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema , OpenApiParameter , OpenApiExample
@@ -8,10 +9,12 @@ from drf_spectacular.utils import extend_schema , OpenApiParameter , OpenApiExam
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
 from projects.permissions import IsProjectWorkspaceMember
 
+from users.models import User
+
 from tools.responses import exception_response , required_response , method_not_allowed
 
-from .models import Project
-from .serializers import ProjectSerializer
+from .models import Project, Project_Membership
+from .serializers import ProjectSerializer , ProjectMembershipSerializer
 
 # Create your views here.
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -64,7 +67,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
     
-
     @extend_schema(
         summary="Retrieve Projects",
         operation_id="retrieve_projects",
@@ -85,8 +87,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 'properties':{
                     'title': {'type':'string' , 'example':'Project 1'},
                     'color': {'type':'string' , 'example':'#ff0000'},
-                    'workspace': {'type':'integer' , 'example':'1'},
-                    'parent_project': {'type':'integer' , 'example':'1'},
+                    'workspace': {'type':'integer' , 'example':1},
+                    'parent_project': {'type':'integer' , 'example':1},
                 },
                 'required':['title','workspace']
             }
@@ -109,6 +111,81 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
     
+    @extend_schema(
+        summary="Change User Role In Project",
+        operation_id="change_user_role",
+        description="Changing the user Role in the specified Project",
+        tags=["Projects"],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'user': {'type':'integer' , 'example':1 , 'description': 'the user u want to change his role in this project'},
+                    'role': {'type':'string' , 'example':'editor' , 'description': 'the new role, it is an enum [editor/viewer]'}
+                },
+                'required':['user', 'role']
+            }
+        },
+        responses={202: ProjectMembershipSerializer(context={'add_member':True, 'extend_member':True, 'add_project':True})}
+    )
+    @action(detail=True, methods=['post'], serializer_class=ProjectMembershipSerializer)
+    def change_user_role(self, request, pk):
+        try:
+            if not request.data.get('user'):
+                return required_response('user')
+            if request.data.get('user') == request.user:
+                return Response(
+                    {'detail': 'User Can\'t Change His Own Role From OWNER To Anything Else !!!'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            if not request.data.get('role'):
+                return required_response('role')
+            if request.data.get('role') == 'owner':
+                return Response(
+                    {'detail': 'Can\'t Change The User Role To OWNER !!!'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            if not User.objects.filter(id=request.data.get('user')).exists():
+                return Response(
+                    {'detail': 'User Not Found'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            # get the user object
+            user = User.objects.get(request.data.get('user'))
+            
+            # get the project membership
+            project_membership = Project_Membership.objects.filter(member=user, project_id=pk)
+            if not project_membership.exists():
+                return Response(
+                    {'detail': 'the user specified is not a member of this project'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            project_membership = project_membership.first()
+
+            # update role using serializer
+            serializer = self.get_serializer(
+                instance=project_membership,
+                data={'role': request.data.get('role')},
+                partial=True,
+                context={
+                    'add_member':True,
+                    'extend_member':True,
+                    'add_project':True,
+                }
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
+        except Exception as e:
+            return exception_response(e)
+
+
+
+    # Update
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
         return method_not_allowed()
