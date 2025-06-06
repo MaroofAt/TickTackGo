@@ -5,6 +5,7 @@ from workspaces.models import Workspace
 from projects.models import Project
 
 from datetime import date
+from django.utils import timezone
 
 
 
@@ -31,7 +32,7 @@ class Task(TimeStampedModel):
     image = models.ImageField(null=True,blank=True , upload_to=user_image_upload_path , default="defaults/task/task.png")
     out_dated = models.BooleanField(default = False)
     parent_task = models.ForeignKey( # if this is null so the task doesn't have parent_task it is directly inside the project
-        'self', # Project
+        'self', 
         related_name='sub_tasks',
         on_delete=models.CASCADE,
         null=True,
@@ -66,3 +67,7 @@ class Task(TimeStampedModel):
 
         return super().save(force_insert, force_update, using, update_fields)
     
+    def change_status_when_start(self):
+        if self.start_date <= timezone.now().date():
+            self.status = 'in_progress'
+            self.save()
