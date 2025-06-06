@@ -87,12 +87,13 @@ class TaskViewSet(viewsets.ModelViewSet):
         )
         if serializer.is_valid():
             serializer.save()
-            ### check for the start time (we have to change it and do it in celery)
-            tasks = Task.objects.filter(start_date__lte = timezone.now().date())
-            for task in tasks:
-                task.status = 'in_progress'
-                task.save()
-            ###            
+            # ### check for the start time (we have to change it and do it in celery)
+            # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
+            # for task in tasks:
+            #     if task.status == 'pending':
+            #         task.status = 'in_progress'
+            #         task.save()
+            # ###            
             return Response(serializer.data , status=status.HTTP_201_CREATED)
         
 
@@ -119,6 +120,13 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response({"detail": "User is not the Owner of the workspace"} , status=status.HTTP_400_BAD_REQUEST)
 
         task.delete()
+        # ### check for the start time (we have to change it and do it in celery)
+        # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
+        # for task in tasks:
+        #     if task.status == 'pending':
+        #         task.status = 'in_progress'
+        #         task.save()
+        # ### 
         return Response({'detail': 'Task Deleted'} , status=status.HTTP_200_OK)
     
 
@@ -131,6 +139,13 @@ class TaskViewSet(viewsets.ModelViewSet):
     )
     @action(detail=False , methods=['post'] , serializer_class = TaskSerializer)
     def mark_as_completed(self , request , pk):
+        # ### check for the start time (we have to change it and do it in celery)
+        # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
+        # for task in tasks:
+        #     if task.status == 'pending':
+        #         task.status = 'in_progress'
+        #         task.save()
+        # ###        
         task = Task.objects.filter(pk=pk)
         if not task.exists():
             return Response({"detail": "Task existe"} , status=status.HTTP_404_NOT_FOUND)
