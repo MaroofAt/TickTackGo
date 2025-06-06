@@ -13,6 +13,23 @@ class WorkspaceImagePickedState extends WorkspaceState {
   WorkspaceImagePickedState(this.image);
 }
 
+class PermissionPermanentlyDeniedState extends WorkspaceState {}
+
+class SomethingWentWrongState extends WorkspaceState {}
+
+class CreatingWorkspaceState extends WorkspaceState {}
+
+class CreatedWorkspaceState extends WorkspaceState {
+  CreateWorkspaceModel createWorkspaceModel;
+
+  CreatedWorkspaceState(this.createWorkspaceModel);
+}
+
+class CreateWorkspaceFailedState extends WorkspaceState {
+  String errorMessage;
+
+  CreateWorkspaceFailedState(this.errorMessage);
+}
 
 
 

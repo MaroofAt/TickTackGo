@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
+import 'package:pr1/data/workspace/create_workspace_model.dart';
 
 part 'workspace_state.dart';
 
@@ -12,7 +14,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
   WorkspaceCubit() : super(WorkspaceInitial());
   File? image;
 
-  Future<void> getUserImage() async {
+  Future<void> getWorkspaceImage() async {
     PermissionStatus checkStoragePermissionStatus =
         await checkPermissionStatus(Permission.storage);
 
@@ -21,18 +23,30 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     } else if (checkStoragePermissionStatus.isDenied) {
       PermissionStatus storageStatus =
           await requestPermission(Permission.storage);
-      getUserImage();
+      getWorkspaceImage();
       return;
     } else if (checkStoragePermissionStatus.isPermanentlyDenied) {
-      //TODO show alert dialog to alert the user that he permanently denied this permission
+      emit(PermissionPermanentlyDeniedState());
     } else {
-      //TODO show something went wrong alert dialog
+      emit(SomethingWentWrongState());
     }
 
     if (image != null) {
       emit(WorkspaceImagePickedState(image!));
     } else {
       emit(WorkspaceInitial());
+    }
+  }
+
+  createWorkSpace(String title, String description) async {
+    emit(CreatingWorkspaceState());
+    //TODO send user token
+    CreateWorkspaceModel createWorkspaceModel =
+        await WorkspaceApi.createWorkspace(title, description, '');
+    if (createWorkspaceModel.errorMessage.isEmpty) {
+      emit(CreatedWorkspaceState(createWorkspaceModel));
+    } else {
+      emit(CreateWorkspaceFailedState(createWorkspaceModel.errorMessage));
     }
   }
 }

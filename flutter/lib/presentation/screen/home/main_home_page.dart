@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/screen/home/card_builder.dart';
 import 'package:pr1/presentation/screen/home/task_card.dart';
 import 'package:pr1/presentation/widgets/animated_dropdown.dart';
 import 'package:pr1/presentation/widgets/dropdown_button2.dart';
+import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class MainHomePage extends StatelessWidget {
@@ -20,13 +23,14 @@ class MainHomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 // backgroundImage: AssetImage(''),
                 radius: 30,
+                child: MyIcons.icon(Icons.person,size: 40),
               ),
               const SizedBox(height: 16),
               MyText.text1(
-                'Hi,\nUser Name',
+                '$hiText,\nUser Name',
                 textColor: Colors.white,
                 fontSize: 24,
               ),
@@ -35,15 +39,17 @@ class MainHomePage extends StatelessWidget {
                 children: [
                   CardBuilder(
                     color: sleekCyan,
-                    label: 'Workspaces',
+                    label: workspaceText,
                     content: 'current Workspace',
                     icon: Icons.work,
-                    onTap: () {},
+                    onTap: () {
+                      pushNamed(context, workspacesShowPageRoute);
+                    },
                   ),
                   CardBuilder(
                     color: greatMagenda,
-                    label: 'Projects',
-                    content: '5 projects',
+                    label: projectText,
+                    content: '5 $projectText',
                     icon: Icons.auto_awesome,
                     onTap: () {},
                   ),
@@ -53,8 +59,8 @@ class MainHomePage extends StatelessWidget {
                 children: [
                   CardBuilder(
                     color: parrotGreen,
-                    label: 'Inbox',
-                    content: '17 tasks',
+                    label: inboxText,
+                    content: '17 $tasksText',
                     icon: Icons.folder_copy,
                     onTap: () {},
                   ),
@@ -70,11 +76,11 @@ class MainHomePage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               MyText.text1(
-                'All Tasks',
+                allTasksText,
                 textColor: Colors.white,
                 fontSize: 18,
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Expanded(
                 child: ListView(
                   children: const [
