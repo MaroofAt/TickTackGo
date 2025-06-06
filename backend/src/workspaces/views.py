@@ -13,6 +13,7 @@ from tools.responses import method_not_allowed
 
 from .models import Workspace , Workspace_Membership
 from .serializers import WorkspaceSerializer , InviteSerializer
+from .permissions import IsWorkspaceMember
 
 # Create your views here.
 class WorkspaceViewSet(viewsets.ModelViewSet):
@@ -21,8 +22,16 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
-        
+        self.permission_classes = [IsAuthenticated]
+        if self.action == 'retrieve':
+            self.permission_classes.append(IsWorkspaceMember)
+
         return super().get_permissions()
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.action == 'list' or self.action == 'retrieve':
+            qs = qs.filter(members=self.request.user)
+        return qs
 
     @extend_schema(
         summary="Create Workspace",
@@ -45,6 +54,24 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
     
+    @extend_schema(
+        summary="List Workspaces",
+        operation_id="list_workspaces",
+        description="Getting All Workspaces Which The Authenticated-User Is A Member Of",
+        tags=["Workspaces"],
+    )
+    def list(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+        return super().list(request, *args, **kwargs)
+    @extend_schema(
+        summary="Retrieve Workspace",
+        operation_id="retrieve_workspaces",
+        description="Retrieving The Workspace Specified",
+        tags=["Workspaces"],
+    )
+    def retrieve(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+        return super().retrieve(request, *args, **kwargs)
+    
+    
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
         return method_not_allowed()
@@ -53,14 +80,6 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
         return method_not_allowed()
         return super().partial_update(request, *args, **kwargs)
-    @extend_schema(exclude=True)
-    def list(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return method_not_allowed()
-        return super().list(request, *args, **kwargs)
-    @extend_schema(exclude=True)
-    def retrieve(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return method_not_allowed()
-        return super().retrieve(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
         return method_not_allowed()

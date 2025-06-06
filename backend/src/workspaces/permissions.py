@@ -7,7 +7,7 @@ class IsWorkspaceOwner(permissions.BasePermission):
     message = 'Authenticated User is not the Workspace Owner'
 
     def has_permission(self, request, view):
-        workspace_id = fetch_workspace_id(request, view, "IsWorkspaceOwner")
+        workspace_id = fetch_workspace_id(request, view, "IsWorkspaceOwner", fetch_from_pk=True)
 
         return Workspace.objects.filter(owner = request.user , id = workspace_id).exists()
     
@@ -16,7 +16,7 @@ class IsWorkspaceMember(permissions.BasePermission):
     message = "Authenticated User is not Member in the Required Workspace"
 
     def has_permission(self, request, view):
-        workspace_id = fetch_workspace_id(request, view, "IsWorkspaceMember")
+        workspace_id = fetch_workspace_id(request, view, "IsWorkspaceMember", fetch_from_pk=True)
 
         if Workspace_Membership.objects.filter(member = request.user , workspace_id = workspace_id).exists():
             return True
