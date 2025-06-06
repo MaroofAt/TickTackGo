@@ -79,27 +79,6 @@ class WorkspacePage extends StatelessWidget {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (context) => AlertDialog(
-                  //     backgroundColor: Colors.grey[900],
-                  //     // Dark theme dialog
-                  //     title: MyText.text1(confirmDeletion,
-                  //         textColor: Colors.white),
-                  //     content: MyText.text1(alertDialogQuestion,
-                  //         textColor: Colors.grey[400]),
-                  //     actions: [
-                  //       TextButton(
-                  //           onPressed: () => Navigator.pop(context),
-                  //           child: MyText.text1(cancelText,
-                  //               textColor: Colors.grey[400])),
-                  //       TextButton(
-                  //           onPressed: () {},
-                  //           child: MyText.text1(deleteText,
-                  //               textColor: Colors.red)),
-                  //     ],
-                  //   ),
-                  // );
                   MyAlertDialog.showAlertDialog(
                     context,
                     content: alertDialogQuestion,
