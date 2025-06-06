@@ -7,12 +7,17 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from .models import Task
 from .serializers import TaskSerializer
+from .permissions import IsTaskProjectMember
+
 
 from tools.roles_check import can_edit_project , is_creator ,is_project_owner
+
+from tools.responses import method_not_allowed, exception_response
+
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -21,8 +26,21 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return super().get_queryset()
-    
+        qs = super().get_queryset()
+        if self.action == 'list':
+            qs = qs.filter(project=self.request.GET['project'])
+            if not self.request.GET.get('pending', True):
+                qs = qs.exclude(status='pending')
+            if not self.request.GET.get('in_progress', True):
+                qs = qs.exclude(status='in_progress')
+            if not self.request.GET.get('completed', True):
+                qs = qs.exclude(status='completed')
+        return qs
+    def get_permissions(self):
+        self.permission_classes = [IsAuthenticated]
+        if self.action == 'list' or self.action == 'retrieve':
+            self.permission_classes.append(IsTaskProjectMember)
+        return super().get_permissions()
 
     @extend_schema(
         summary="Create Task",
@@ -104,6 +122,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         return Response({'detail': 'Task Deleted'} , status=status.HTTP_200_OK)
     
 
+
     @extend_schema(
         summary="Mark The task Completed ",
         operation_id="mark_as_completed",
@@ -124,3 +143,70 @@ class TaskViewSet(viewsets.ModelViewSet):
         return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_200_OK)
 
             
+    @extend_schema(
+        summary="List Tasks",
+        operation_id="list_tasks",
+        description="Listing All Tasks in the Project",
+        tags=["Tasks"],
+        parameters=[
+            OpenApiParameter(
+                name='project',
+                type=int,
+                required=True,
+                description='project id that u wants to get its s (authenticated user must be a member of this project)'
+            ),
+            OpenApiParameter(
+                name='pending',
+                type=bool,
+                required=False,
+                description='Do you want to show the pending tasks?',
+                default=True
+            ),
+            OpenApiParameter(
+                name='in_progress',
+                type=bool,
+                required=False,
+                description='Do you want to show the in_progress tasks?',
+                default=True
+            ),
+            OpenApiParameter(
+                name='completed',
+                type=bool,
+                required=False,
+                description='Do you want to show the completed tasks?',
+                default=True
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        try:
+            return super().list(request, *args, **kwargs)
+        except Exception as e:
+            return exception_response(e)
+    
+    @extend_schema(
+        summary="Retrieve Tasks",
+        operation_id="retrieve_tasks",
+        description="Retrieving Specified Task",
+        tags=["Tasks"]
+    )
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            return super().retrieve(request, *args, **kwargs)
+        except Exception as e:
+            return exception_response(e)
+    
+    
+    @extend_schema(exclude=True)
+    def update(self, request, *args, **kwargs):
+        return method_not_allowed()
+        return super().update(request, *args, **kwargs)
+    @extend_schema(exclude=True)
+    def partial_update(self, request, *args, **kwargs):
+        return method_not_allowed()
+        return super().partial_update(request, *args, **kwargs)
+    @extend_schema(exclude=True)
+    def destroy(self, request, *args, **kwargs):
+        return method_not_allowed()
+        return super().destroy(request, *args, **kwargs)
+
