@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/routes.dart';
+import 'package:pr1/presentation/screen/home/main_home_page.dart';
 import 'package:pr1/presentation/screen/workspace/create_workspace_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 import 'package:pr1/themes/themes.dart';
@@ -22,10 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme(),
       routes: routes,
-      home: BlocProvider(
-        create: (context) => WorkspaceCubit(),
-        child: WorkspacePage(),
-      ),
+      home: const MainHomePage(),
     );
   }
 }

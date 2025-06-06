@@ -11,6 +11,7 @@ ThemeData theme() {
       disabledColor: darkGrey,
       indicatorColor: sleek_cyan,
       scaffoldBackgroundColor: primaryColor,
+      dialogBackgroundColor: primaryColor,
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
             fontSize: 30.0,
