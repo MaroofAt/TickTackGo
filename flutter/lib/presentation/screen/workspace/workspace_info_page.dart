@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:pr1/core/constance/colors.dart';
+import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-class WorkspacePage extends StatelessWidget {
+class WorkspaceInfoPage extends StatelessWidget {
   final String workspaceName = "Project Alpha";
   final String description =
       "A task management workspace for team collaboration.";
-  final String imageUrl =
-      "assets/images/logo_images/logo100.png"; // Replace with actual image URL
+  final String imageUrl = "assets/images/logo_images/logo100.png";
   final List<String> members = ["Alice", "Bob", "Charlie"];
 
-  WorkspacePage({super.key});
+  WorkspaceInfoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,10 @@ class WorkspacePage extends StatelessWidget {
                     height: 150, width: 150, fit: BoxFit.cover),
               ),
             ),
+            SizedBox(
+                width: width(context),
+                child: MyText.text1('workspace image',
+                    textColor: white, textAlign: TextAlign.center)),
             const SizedBox(height: 16),
 
             MyText.text1(
@@ -92,7 +97,7 @@ class WorkspacePage extends StatelessWidget {
                     },
                   );
                 },
-                child: MyText.text1(deleteButtonText),
+                child: MyText.text1(deleteButtonText,fontSize: 18),
               ),
             ),
           ],
