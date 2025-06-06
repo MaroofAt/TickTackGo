@@ -98,7 +98,7 @@ class VerifypageState extends State<Verifypage> {
                     width: width(context) * 0.8,
                     height: height(context) * 0.2,
                     decoration: BoxDecoration(
-                        color: Ample_orang,
+                        color: ampleOrange,
                         borderRadius: BorderRadius.all(Radius.circular(40))),
                   ),
                   Column(
@@ -111,7 +111,7 @@ class VerifypageState extends State<Verifypage> {
                             style: TextStyle(
                                 fontSize: 14,
                                 color: white,
-                                decorationColor: parrot_green,
+                                decorationColor: parrotGreen,
                                 decorationThickness: 3,
                                ),
                             text: 'Did not receive code?',
