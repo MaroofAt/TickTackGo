@@ -58,7 +58,6 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             'image',
             'owner',
             'members',
-            'code',
             'created_at',
             'updated_at',
         ]
