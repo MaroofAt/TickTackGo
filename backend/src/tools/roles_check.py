@@ -97,4 +97,11 @@ def is_task_project_member(user_id, task_id):
             return True
     return False
 
-
+def is_task_pending(task_id):
+    task = Task.objects.filter(id=task_id)
+    if not task.exists():
+        raise Exception('Task Doesn\'t exists (not Found)!')
+    task = task.first()
+    
+    return task.is_pending()
+        

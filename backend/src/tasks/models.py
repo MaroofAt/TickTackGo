@@ -62,6 +62,11 @@ class Task(TimeStampedModel):
     locked = models.BooleanField(default=False)
     reminder = models.DateField(null=True, blank=True)
 
+    def is_pending(self):
+        if self.status == 'pending':
+            return True
+        return False
+
     def save(self, force_insert = ..., force_update = ..., using = ..., update_fields = ...):
 
         return super().save(force_insert, force_update, using, update_fields)
