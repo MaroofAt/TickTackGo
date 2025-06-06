@@ -48,3 +48,8 @@ const String cancelText = 'Cancel';
 const String deleteText = 'Delete';
 const String deleteButtonText = 'Delete Workspace';
 
+
+
+const String warning = 'warning';
+
+
