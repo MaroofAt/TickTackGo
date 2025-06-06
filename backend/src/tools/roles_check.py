@@ -57,6 +57,16 @@ def can_edit_task(user_id , task_id):
         return True
     return False
 
+
+def is_creator(user_id , task_id):
+    task = Task.objects.filter(id = task_id)
+    if not task.exists():
+        return False
+    task = task.first()
+    if user_id == task.creator:
+        return True
+    return False
+
 def is_task_project_owner(user_id, task_id):
     task = Task.objects.filter(id=task_id)
     if not task.exists():
@@ -86,4 +96,5 @@ def is_task_project_member(user_id, task_id):
     if Project_Membership.objects.filter(member_id=user_id, project=project).exists():
             return True
     return False
+
 
