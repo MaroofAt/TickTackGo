@@ -35,3 +35,4 @@ build/
 src/projects/migrations/*
 src/users/migrations/*
 src/workspaces/migrations/*
+src/tasks/migrations/*

@@ -24,6 +24,9 @@ from .filters import UserFilter
 from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
 from workspaces.models import Invite , Workspace_Membership
 
+from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
+from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , CanEditProject
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -43,6 +46,16 @@ class UserViewSet(viewsets.ModelViewSet):
     filterset_class = UserFilter
     search_fields = ['username', 'email']
     ordering_fields = ['username', 'email', 'created_at', 'updated_at']
+
+    def get_permissions(self):
+        self.permission_classes = [IsAuthenticated]
+        if self.action == 'list':
+            self.permission_classes.append(IsWorkspaceMember)
+        if self.action == 'retrieve' :
+            self.permission_classes.append(IsProjectWorkspaceMember)
+        if self.action == 'create':
+            self.permission_classes.append(IsProjectWorkspaceOwner)
+        return super().get_permissions()
 
     def get_queryset(self):
         qs = super().get_queryset()
