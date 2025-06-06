@@ -5,6 +5,10 @@ const String signupRoute = 'signup';
 const String onboardingMainRoute = 'onboardingMainRoute';
 const String introQuestionsRoute = 'introQuestionsRoute';
 const String finalOnboardingPageRoute = 'finalOnboardingPageRoute';
+const String workspaceCreatePageRoute = 'workspaceCreatePageRoute';
+const String workspaceInfoRoute = 'workspaceInfoRoute';
+const String workspacesShowPageRoute = 'workspacesShowPageRoute';
+
 
 ///Splash screen strings
 const String splashScreenLogoPath = 'assets/images/logo_images/logoorgenal.png';
@@ -39,17 +43,26 @@ const String pageTitle = 'Create your Own workspace!';
 const String titleHint = 'Title';
 const String descriptionHint = 'description';
 const String createButtonText = 'Create';
+const String permissionPermanentlyDeniedContent = 'Storage permission is permanently denied. Please enable it in the app settings';
 
 ///workspace info page
 const String membersText = 'Members:';
 const String confirmDeletion = 'Confirm Deletion';
 const String alertDialogQuestion = 'Are you sure you want to delete this workspace?';
 const String cancelText = 'Cancel';
+const String openSettingsString = 'open settings';
 const String deleteText = 'Delete';
 const String deleteButtonText = 'Delete Workspace';
 
+///main home page
+const String workspaceText = 'Workspaces';
+const String projectText = 'Projects';
+const String inboxText = 'Inbox';
+const String allTasksText = 'All Tasks';
+const String tasksText = 'tasks';
 
-
+const String hiText = 'Hi';
 const String warning = 'warning';
+const String okText = 'Ok';
 
 
