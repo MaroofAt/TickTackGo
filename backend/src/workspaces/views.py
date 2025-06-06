@@ -46,8 +46,16 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
                     'description': {'type': 'string', 'example': 'Our Team Workspace'},
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
+                'required': ['title', 'image']
+            },
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Team Workspace 1'},
+                    'description': {'type': 'string', 'example': 'Our Team Workspace'},
+                },
                 'required': ['title']
-            }
+            },
         }
     )
     def create(self, request, *args, **kwargs):
