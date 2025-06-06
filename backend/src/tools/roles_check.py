@@ -1,5 +1,6 @@
 from workspaces.models import Workspace_Membership
 from projects.models import Project_Membership , Project
+from tasks.models import Task
 
 def is_workspace_member(user_id,workspace_id):
     if Workspace_Membership.objects.filter(member_id=user_id,workspace_id=workspace_id).exists():
@@ -33,4 +34,11 @@ def is_project_workspace_owner_or_editor(user_id , project_id):
         return True
     return False
 
-
+def is_creator(user_id , task_id):
+    task = Task.objects.filter(id = task_id)
+    if not task.exists():
+        return False
+    task = task.first()
+    if user_id == task.creator:
+        return True
+    return False

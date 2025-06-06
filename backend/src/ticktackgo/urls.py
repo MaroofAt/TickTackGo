@@ -29,6 +29,7 @@ api_patterns = [
     path('' , include('users.urls') ),
     path('' , include('workspaces.urls') ),
     path('' , include('projects.urls') ),
+    path('' , include('tasks.urls') ),
 ]
 
 urlpatterns = [
