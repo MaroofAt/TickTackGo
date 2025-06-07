@@ -17,6 +17,7 @@ class TaskSerializer(serializers.ModelSerializer):
             'image',
             'out_dated',
             'parent_task',
+            'assignees',
             'status',
             'priority',
             'locked',
