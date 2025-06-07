@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'workspaces',
 
     'projects',
-
+    'tasks',
 
     
 ]
