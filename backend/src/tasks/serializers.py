@@ -27,5 +27,5 @@ class TaskSerializer(serializers.ModelSerializer):
             'id': {'read_only':True},
             'complete_date': {'read_only': True},
             'out_dated': {'read_only': True},
-            'creator': {'read_only': True},
+            # 'creator': {'read_only': True},
         }

@@ -63,7 +63,6 @@ INSTALLED_APPS = [
     'projects',
     'tasks',
 
-
     
 ]
 

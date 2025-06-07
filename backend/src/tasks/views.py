@@ -78,24 +78,23 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         if not can_edit_project(request.user.id , request.data.get('project')):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
+        data = request.data.copy()
+        data.update({
+            'creator': request.user.id,
+            'status': 'pending'  
+        })
 
-
-        serializer = self.get_serializer(
-            data = {
-                'creator': request.user.id,
-                'status': 'pending',
-                **request.data
-            }
-        )
+        serializer = self.get_serializer(data=data)
+        # serializer = self.get_serializer(
+        #     data = {
+        #         'creator': request.user.id,
+        #         'status': 'pending',
+        #         **request.data
+        #     }
+        # )
         if serializer.is_valid():
             serializer.save()
-            # ### check for the start time (we have to change it and do it in celery)
-            # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
-            # for task in tasks:
-            #     if task.status == 'pending':
-            #         task.status = 'in_progress'
-            #         task.save()
-            # ###            
+         
             return Response(serializer.data , status=status.HTTP_201_CREATED)
         
 
@@ -109,27 +108,26 @@ class TaskViewSet(viewsets.ModelViewSet):
         description="Owner or can_edite who is the creator of the task can can cancel task ",
         tags=["Tasks"]
     )
-    @action(detail=False , methods=['post'] , serializer_class = TaskSerializer)
+    @action(detail=True , methods=['get'] , serializer_class = TaskSerializer)
     def cancel(self,request , pk):
-        if not is_creator(request.user.id , pk):
-            return Response({"detail": "User is not the creator of the task"} , status=status.HTTP_400_BAD_REQUEST)
+        # if not is_creator(request.user.id , pk) :
+        #     return Response({"detail": "User is not the creator of the task"} , status=status.HTTP_400_BAD_REQUEST)
+
         task = Task.objects.filter(pk = pk)
         if not task.exists():
             return Response({"detail": "Task already not existe"} , status=status.HTTP_404_NOT_FOUND)
         task = task.first()
 
-        if not is_project_owner(request.user.id , task.project):
-            return Response({"detail": "User is not the Owner of the workspace"} , status=status.HTTP_400_BAD_REQUEST)
+        # if not is_project_owner(request.user.id , task.project):
+        #     return Response({"detail": "User is not the Owner of the workspace"} , status=status.HTTP_400_BAD_REQUEST)
 
-        task.delete()
-        # ### check for the start time (we have to change it and do it in celery)
-        # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
-        # for task in tasks:
-        #     if task.status == 'pending':
-        #         task.status = 'in_progress'
-        #         task.save()
-        # ### 
-        return Response({'detail': 'Task Deleted'} , status=status.HTTP_200_OK)
+
+        if is_project_owner(request.user.id , task.project) or is_creator(request.user.id , pk) :
+            task.delete()
+            return Response({'detail': 'Task Deleted'} , status=status.HTTP_200_OK)
+        
+        return Response({"detail": "User is not the Owner of the workspace or not the Creator of the Task"} , status=status.HTTP_400_BAD_REQUEST)
+
     
 
 
@@ -139,7 +137,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         description="Owner Edite any task status from in_progress to completed just | editor and viewer can edit the status of Their tasks only and from in_progress to completed just ",
         tags=["Tasks"]
     )
-    @action(detail=False , methods=['post'] , serializer_class = TaskSerializer)
+    @action(detail=True , methods=['get'] , serializer_class = TaskSerializer)
     def mark_as_completed(self , request , pk):
         # ### check for the start time (we have to change it and do it in celery)
         # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
@@ -155,9 +153,10 @@ class TaskViewSet(viewsets.ModelViewSet):
         if task.status == 'in_progress':
             if is_project_owner(request.user.id , task.project) or is_creator(request.user.id , pk) :
                task.status = 'completed' 
+               task.save()
                return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
         
-        return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_200_OK)
+        return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_400_BAD_REQUEST)
 
             
     @extend_schema(

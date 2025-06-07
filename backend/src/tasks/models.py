@@ -74,9 +74,9 @@ class Task(TimeStampedModel):
             return True
         return False
 
-    def save(self, force_insert = ..., force_update = ..., using = ..., update_fields = ...):
+    def save(self, *args , **kwargs):
 
-        return super().save(force_insert, force_update, using, update_fields)
+        return super().save(*args , **kwargs)
     
     def change_status_when_start(self):
         if self.start_date <= timezone.now().date():
