@@ -1,6 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
-from .models import Task, Assignee
+from .models import Task, Assignee, Comment
 from users.models import User
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -64,3 +64,15 @@ class TaskSerializer(serializers.ModelSerializer):
             return instance
         else:
             return super().update(instance=instance,validated_data=validated_data)
+        
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Comment
+        fields= [
+            'task',
+            'user',
+            'body',
+            'created_at',
+            'updated_at',
+        ]

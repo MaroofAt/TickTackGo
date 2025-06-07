@@ -9,8 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from .models import Task
-from .serializers import TaskSerializer
+from .models import Task, Comment
+from .serializers import TaskSerializer, CommentSerializer
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner
 
 from projects.permissions import IsProjectMember
@@ -40,7 +40,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         self.permission_classes = [IsAuthenticated]
         if self.action == 'list':
             self.permission_classes.append(IsProjectMember)
-        if self.action == 'retrieve':
+        if self.action == 'retrieve' or self.action == 'create_comment' or self.action == 'list_comment':
             self.permission_classes.append(IsTaskProjectMember)
         if self.action == 'assign_task_to_user':
             self.permission_classes.append(IsTaskProjectOwner)
@@ -218,11 +218,20 @@ class TaskViewSet(viewsets.ModelViewSet):
         summary="Assign Task To User",
         operation_id="assign_task_to_user",
         description="Assigning Task To User Or Multiple Users",
-        tags=["Tasks"]
+        tags=["Tasks"],
+        request={
+            "application/json":{
+                'type': 'object',
+                "properties":{
+                    "assignees":{"type":"[integer]", "example":"[1,2,3,4]"}
+                },
+                "required": ["assignees"]
+            }
+        }
     )
     @action(detail=True, methods=['patch'])
     def assign_task_to_user(self, request, pk):
-        # try:
+        try:
             a = {**request.data}
             print(f"\n\n{a}\n\n")
             if not request.data.get('assignees'):
@@ -249,8 +258,8 @@ class TaskViewSet(viewsets.ModelViewSet):
                 serializer.data,
                 status=status.HTTP_202_ACCEPTED
             )
-        # except Exception as e:
-        #     return exception_response(e)
+        except Exception as e:
+            return exception_response(e)
 
 
     @extend_schema(exclude=True)
@@ -265,4 +274,70 @@ class TaskViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         return method_not_allowed()
         return super().destroy(request, *args, **kwargs)
+    
+    ## Comments Section
+
+    @extend_schema(
+        summary="Create Comment",
+        operation_id="create_comment",
+        description="Creating A Comment On The Specified Task",
+        tags=["Tasks/Comments"],
+        request={
+            "application/json":{
+                'type': 'object',
+                "properties":{
+                    "body":{"type":"string", "example":"Can u provide me with the progress u made on this task till now?"}
+                },
+                "required": ["body"]
+            }
+        }
+    )
+    @action(detail=True, methods=['post'], serializer_class=CommentSerializer)
+    def create_comment(self, request, pk):
+        try:
+            if not request.data.get('body'):
+                return required_response('body')
+            serializer = self.get_serializer(
+                data={
+                    **request.data,
+                    "user": request.user.pk,
+                    "task": pk
+                }
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return exception_response(e)
+        
+    @extend_schema(
+        summary="List Comments",
+        operation_id="list_comments",
+        description="Listing Comments On The Specified Task",
+        tags=["Tasks/Comments"],
+    )
+    @action(detail=True, methods=['get'], serializer_class=CommentSerializer)
+    def list_comments(self, request, pk):
+        try:
+            task = Task.objects.filter(id=pk)
+            if not task.exists():
+                return False
+            task = task.first()
+
+            comments = Comment.objects.filter(task=pk)
+
+            serializer = self.get_serializer(instance=comments, many=True)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return exception_response(e)
+    
+
+    
+
 
