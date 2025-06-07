@@ -86,5 +86,6 @@ class Task(TimeStampedModel):
 class Assignee(TimeStampedModel):
     class Meta:
         db_table= 'assignees'
+        unique_together = ['assignee', 'task']
     assignee = models.ForeignKey(User, related_name='assignments', on_delete=models.CASCADE, null=False, blank=False)
     task = models.ForeignKey(Task, related_name='assignees_assignments', on_delete=models.CASCADE, null=False, blank=False)

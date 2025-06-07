@@ -11,12 +11,12 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from .models import Task
 from .serializers import TaskSerializer
-from .permissions import IsTaskProjectMember
+from .permissions import IsTaskProjectMember, IsTaskProjectOwner
 
 from projects.permissions import IsProjectMember
 
 from tools.roles_check import can_edit_project , is_creator ,is_project_owner
-from tools.responses import method_not_allowed, exception_response
+from tools.responses import method_not_allowed, exception_response, required_response
 
 
 
@@ -42,6 +42,8 @@ class TaskViewSet(viewsets.ModelViewSet):
             self.permission_classes.append(IsProjectMember)
         if self.action == 'retrieve':
             self.permission_classes.append(IsTaskProjectMember)
+        if self.action == 'assign_task_to_user':
+            self.permission_classes.append(IsTaskProjectOwner)
         return super().get_permissions()
 
     @extend_schema(
@@ -218,9 +220,37 @@ class TaskViewSet(viewsets.ModelViewSet):
         description="Assigning Task To User Or Multiple Users",
         tags=["Tasks"]
     )
-    @action(detail=True, methods=['post'])
-    def assign_task_to_user(self, request):
-        pass
+    @action(detail=True, methods=['patch'])
+    def assign_task_to_user(self, request, pk):
+        # try:
+            a = {**request.data}
+            print(f"\n\n{a}\n\n")
+            if not request.data.get('assignees'):
+                return required_response('assignees')
+            # Get The Task
+            task = Task.objects.filter(id=pk)
+            if not task.exists():
+                return False
+            task = task.first()
+
+            serializer = self.get_serializer(
+                instance = task,
+                data= {
+                    **request.data,
+                    "title":task.title,
+                    "creator":task.creator.pk,
+                    "workspace":task.workspace.pk,
+                    "project":task.project.pk
+                }
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
+        # except Exception as e:
+        #     return exception_response(e)
 
 
     @extend_schema(exclude=True)
