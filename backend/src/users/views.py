@@ -23,6 +23,8 @@ from .filters import UserFilter
 
 from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
 from workspaces.models import Invite , Workspace_Membership
+from tasks.models import Task
+from tools.responses import exception_response
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
 from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , CanEditProject
@@ -281,6 +283,28 @@ class UserViewSet(viewsets.ModelViewSet):
         
         invite.delete()
         return Response(None , status.HTTP_202_ACCEPTED)
+    
+
+    
+    @extend_schema(
+        summary="Entro To The App",
+        operation_id="start_app",
+        description="this API delete the expired OTP and change the status of the task Automatically when you call it",
+        tags=["Starter"],
+    )
+    @action(detail=False , methods=['post'])
+    def start_app(self):
+        try:
+            User_OTP.objects.filter(expires_at__lt = timezone.now()).delete()
+            tasks = Task.objects.filter(start_date__lte = timezone.now().date())
+            for task in tasks:
+                if task.status == 'pending':
+                    task.status = 'in_progress'
+                    task.save()
+        except Exception as e:
+            return exception_response(e)
+        
+
 
               
 
