@@ -44,12 +44,12 @@ def can_edit_task(user_id , task_id):
         return False
     task = task.first()
     
-    project = Project.objects.filter(id=task.project)
+    project = Project.objects.filter(id=task.project.id)
     if not project.exists():
         return False
     project = project.first()
 
-    user = Project_Membership.objects.filter(user_id = user_id , project_id = project)
+    user = Project_Membership.objects.filter(user_id = user_id , project_id = project.id)
     if not user.exists():
         return False
     user = user.first()
@@ -73,7 +73,7 @@ def is_task_project_owner(user_id, task_id):
         return False
     task = task.first()
     
-    project = Project.objects.filter(id=task.project)
+    project = Project.objects.filter(id=task.project.id)
     if not project.exists():
         return False
     project = project.first()

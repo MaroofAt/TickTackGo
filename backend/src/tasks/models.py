@@ -86,5 +86,15 @@ class Task(TimeStampedModel):
 class Assignee(TimeStampedModel):
     class Meta:
         db_table= 'assignees'
+        unique_together = ['assignee', 'task']
     assignee = models.ForeignKey(User, related_name='assignments', on_delete=models.CASCADE, null=False, blank=False)
     task = models.ForeignKey(Task, related_name='assignees_assignments', on_delete=models.CASCADE, null=False, blank=False)
+
+
+class Comment(TimeStampedModel):
+    class Meta:
+        db_table= 'comments'
+    
+    task = models.ForeignKey(Task, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='own_comments', on_delete=models.CASCADE)
+    body= models.CharField(max_length=65535) # "TEXT" length in mysql
