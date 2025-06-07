@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework import status 
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
@@ -50,13 +50,13 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering_fields = ['username', 'email', 'created_at', 'updated_at']
 
     def get_permissions(self):
-        self.permission_classes = [IsAuthenticated]
+        # self.permission_classes = [IsAuthenticated]
+        # if self.action == 'start_app':
+        #     self.permission_classes = [AllowAny]
         if self.action == 'list':
             self.permission_classes.append(IsAuthenticated)
         if self.action == 'retrieve' :
             self.permission_classes.append(IsAuthenticated)
-        if self.action == 'create':
-            self.permission_classes.append(IsProjectWorkspaceOwner)
         return super().get_permissions()
 
     def get_queryset(self):
@@ -292,8 +292,8 @@ class UserViewSet(viewsets.ModelViewSet):
         description="this API delete the expired OTP and change the status of the task Automatically when you call it",
         tags=["Starter"],
     )
-    @action(detail=False , methods=['post'])
-    def start_app(self):
+    @action(detail=False , methods=['get'] , permission_classes=[AllowAny] , authentication_classes=[] )
+    def start_app(self ,request):
         try:
             User_OTP.objects.filter(expires_at__lt = timezone.now()).delete()
             tasks = Task.objects.filter(start_date__lte = timezone.now().date())
@@ -301,6 +301,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 if task.status == 'pending':
                     task.status = 'in_progress'
                     task.save()
+            return Response(status=status.HTTP_200_OK)
         except Exception as e:
             return exception_response(e)
         

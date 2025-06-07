@@ -3,8 +3,8 @@ POST http://127.0.0.1:8000/api/users/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "Ali3",
-    "email": "alialmusfi3@gmail.com",
+    "username": "Ali4",
+    "email": "alialmusfi4@gmail.com",
     "password": "aloosh1234",
     "how_to_use_website": "small_team",
     "what_do_you_do": "software_or_it",
@@ -67,13 +67,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 GET http://127.0.0.1:8000/api/users/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzAwMDQyLCJpYXQiOjE3NDkyOTY0NDIsImp0aSI6IjRkMWZmY2ZhNmQ2ZTQ1NjBiNWMzOWQwYjBhZDYyNDAzIiwidXNlcl9pZCI6MX0.gtOVh0GeJFxC_7xjXrzc0G5v6fJrV97VIV8GUQ19aKo 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzA1MTA3LCJpYXQiOjE3NDkzMDE1MDcsImp0aSI6ImRmNGM5MzAwNjRlZjQ3ZWU4M2I4MDAyOGRiY2QwNTIyIiwidXNlcl9pZCI6MX0.rPkb4dPLbwX5cYDyC4tUr8ZGp_rgYwkTCQhl3NksTHs
 
 ###
 
 GET http://127.0.0.1:8000/api/users/1/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzAwMDQyLCJpYXQiOjE3NDkyOTY0NDIsImp0aSI6IjRkMWZmY2ZhNmQ2ZTQ1NjBiNWMzOWQwYjBhZDYyNDAzIiwidXNlcl9pZCI6MX0.gtOVh0GeJFxC_7xjXrzc0G5v6fJrV97VIV8GUQ19aKo 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzA1MTA3LCJpYXQiOjE3NDkzMDE1MDcsImp0aSI6ImRmNGM5MzAwNjRlZjQ3ZWU4M2I4MDAyOGRiY2QwNTIyIiwidXNlcl9pZCI6MX0.rPkb4dPLbwX5cYDyC4tUr8ZGp_rgYwkTCQhl3NksTHs
 
 
 ###
@@ -115,3 +115,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
     "invite_id": 5
 
 }
+
+###
+
+GET http://127.0.0.1:8000/api/users/start_app/ HTTP/1.1
+Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5Mjk3MTk5LCJpYXQiOjE3NDkyOTM1OTksImp0aSI6IjRmYTgwMzgyNTFiOTRhNDRiYzMwYWU3NTU1ZTQ4MjhhIiwidXNlcl9pZCI6Mn0.2FrXWHiOZRlfuWS9dBBiw__3MsQTA-TTvXrQCvxN5-E
