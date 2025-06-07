@@ -13,9 +13,9 @@ from .models import Task
 from .serializers import TaskSerializer
 from .permissions import IsTaskProjectMember
 
+from projects.permissions import IsProjectMember
 
 from tools.roles_check import can_edit_project , is_creator ,is_project_owner
-
 from tools.responses import method_not_allowed, exception_response
 
 
@@ -38,7 +38,9 @@ class TaskViewSet(viewsets.ModelViewSet):
         return qs
     def get_permissions(self):
         self.permission_classes = [IsAuthenticated]
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == 'list':
+            self.permission_classes.append(IsProjectMember)
+        if self.action == 'retrieve':
             self.permission_classes.append(IsTaskProjectMember)
         return super().get_permissions()
 
@@ -211,7 +213,17 @@ class TaskViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
     
-    
+    @extend_schema(
+        summary="Assign Task To User",
+        operation_id="assign_task_to_user",
+        description="Assigning Task To User Or Multiple Users",
+        tags=["Tasks"]
+    )
+    @action(detail=True, methods=['post'])
+    def assign_task_to_user(self, request):
+        pass
+
+
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
         return method_not_allowed()

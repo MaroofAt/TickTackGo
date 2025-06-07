@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework import status 
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
@@ -50,12 +50,15 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering_fields = ['username', 'email', 'created_at', 'updated_at']
 
     def get_permissions(self):
-        self.permission_classes = [IsAuthenticated]
+        self.permission_classes = [AllowAny]
         if self.action == 'list':
+            self.permission_classes.append(IsAuthenticated)
             self.permission_classes.append(IsWorkspaceMember)
         if self.action == 'retrieve' :
+            self.permission_classes.append(IsAuthenticated)
             self.permission_classes.append(IsProjectWorkspaceMember)
         if self.action == 'create':
+            self.permission_classes.append(IsAuthenticated)
             self.permission_classes.append(IsProjectWorkspaceOwner)
         return super().get_permissions()
 

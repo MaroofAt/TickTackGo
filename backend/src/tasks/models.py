@@ -38,6 +38,12 @@ class Task(TimeStampedModel):
         null=True,
         blank=True
     )
+    assignees = models.ManyToManyField(
+        User,
+        through="Assignee",
+        through_fields=('task', 'assignee'),
+        related_name='tasks'
+    )
     class Task_Status(models.TextChoices):
         PENDING = 'pending'
         IN_PROGRESS = 'in_progress'
@@ -76,3 +82,9 @@ class Task(TimeStampedModel):
         if self.start_date <= timezone.now().date():
             self.status = 'in_progress'
             self.save()
+
+class Assignee(TimeStampedModel):
+    class Meta:
+        db_table= 'assignees'
+    assignee = models.ForeignKey(User, related_name='assignments', on_delete=models.CASCADE, null=False, blank=False)
+    task = models.ForeignKey(Task, related_name='assignees_assignments', on_delete=models.CASCADE, null=False, blank=False)
