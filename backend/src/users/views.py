@@ -52,9 +52,9 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         self.permission_classes = [IsAuthenticated]
         if self.action == 'list':
-            self.permission_classes.append(IsWorkspaceMember)
+            self.permission_classes.append(IsAuthenticated)
         if self.action == 'retrieve' :
-            self.permission_classes.append(IsProjectWorkspaceMember)
+            self.permission_classes.append(IsAuthenticated)
         if self.action == 'create':
             self.permission_classes.append(IsProjectWorkspaceOwner)
         return super().get_permissions()
@@ -75,6 +75,7 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         # return super().list(request, *args, **kwargs)
+        
         qr = User.objects.filter().all()
 
         page = self.paginate_queryset(qr)

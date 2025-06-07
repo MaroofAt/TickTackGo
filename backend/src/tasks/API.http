@@ -1,0 +1,29 @@
+POST http://127.0.0.1:8000/api/tasks/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5Mjk3NTk4LCJpYXQiOjE3NDkyOTM5OTgsImp0aSI6IjJiODNhNjdiZGE2MTRmYWE4MTY4MGY1NDljOTNlYWFiIiwidXNlcl9pZCI6MX0.kI3JFAS9UullfV46PMYxEC-X-7I2sNlbqYCexpMvjGA
+
+{
+    "title": "Task 1",
+    "description": "ABU Alish AMAK",
+    "start_date": "2025-6-6",
+    "due_date": "2025-6-9",
+    "workspace": 1,
+    "project": 1,
+    "perent_task": null,
+    "status": "completed",
+    "priority": "high",
+    "locked": false,
+    "reminder": "2025-6-9"
+}
+
+###
+
+GET http://127.0.0.1:8000/api/tasks/2/cancel/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzAxNjEyLCJpYXQiOjE3NDkyOTgwMTIsImp0aSI6IjlkZWFhNzEyNzBmYTRiYjA5YTE2ODg3MDkzYWMyMjlhIiwidXNlcl9pZCI6MX0.FjHA1rnqawgesbNopRm_YeIRITplIjfYIyPvf8duJpE
+
+###
+
+GET http://127.0.0.1:8000/api/tasks/4/mark_as_completed/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzAxNjEyLCJpYXQiOjE3NDkyOTgwMTIsImp0aSI6IjlkZWFhNzEyNzBmYTRiYjA5YTE2ODg3MDkzYWMyMjlhIiwidXNlcl9pZCI6MX0.FjHA1rnqawgesbNopRm_YeIRITplIjfYIyPvf8duJpE

@@ -30,7 +30,7 @@ def is_project_workspace_member(user_id, project_id):
     return False
 
 def can_edit_project(user_id , project_id):
-    user = Project_Membership.objects.filter(user_id = user_id , project_id = project_id)
+    user = Project_Membership.objects.filter(member = user_id , project = project_id)
     if not user.exists():
         return False
     user = user.first()
