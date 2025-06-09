@@ -6,7 +6,9 @@ import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/screen/home/card_builder.dart';
 import 'package:pr1/presentation/screen/home/task_card.dart';
 import 'package:pr1/presentation/widgets/animated_dropdown.dart';
+import 'package:pr1/presentation/widgets/circle.dart';
 import 'package:pr1/presentation/widgets/dropdown_button2.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
@@ -23,10 +25,32 @@ class MainHomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                // backgroundImage: AssetImage(''),
-                radius: 30,
-                child: MyIcons.icon(Icons.person,size: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleAvatar(
+                    // backgroundImage: AssetImage(''),
+                    radius: width(context) * 0.1,
+                    child:
+                        MyIcons.icon(Icons.person, size: width(context) * 0.1),
+                  ),
+                  MyGestureDetector.gestureDetector(
+                    onTap: () {
+                      pushNamed(context, receivedInvitationPageRoute);
+                    },
+                    child: MyCircle.circle(
+                      width(context) * 0.18,
+                      color: transparent,
+                      child: Center(
+                        child: MyIcons.icon(
+                          Icons.notifications,
+                          color: white,
+                          size: width(context) * 0.1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               MyText.text1(

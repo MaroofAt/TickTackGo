@@ -66,7 +66,7 @@ class WorkspaceInfoPage extends StatelessWidget {
                 ),
                 MyGestureDetector.gestureDetector(
                   onTap: () {
-                    //TODO go to invite people page
+                    pushNamed(context, invitationSearchPageRoute);
                   },
                   child: Container(
                     height: width(context) * 0.1,

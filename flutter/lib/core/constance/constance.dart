@@ -9,9 +9,3 @@ double width(BuildContext context) {
   return MediaQuery.of(context).size.width;
 }
 
-
-List<dynamic>pages=[
- "",
-  "",
-  ""
-];
