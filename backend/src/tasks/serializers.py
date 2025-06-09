@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Task
+from .models import Task , Inbox_Tasks
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,3 +28,34 @@ class TaskSerializer(serializers.ModelSerializer):
             'out_dated': {'read_only': True},
             # 'creator': {'read_only': True},
         }
+
+class InboxTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inbox_Tasks
+        fields = [
+            'id',
+            'title',
+            'description',
+            'user',
+            'status',
+            'priority',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+        }        
+
+class UpdateInboxTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inbox_Tasks
+        fields = [
+            'id',
+            'title',
+            'description',
+            'user',
+            'status',
+            'priority',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+            'user': {'read_only':True},
+        }  
