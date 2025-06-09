@@ -38,6 +38,12 @@ class Task(TimeStampedModel):
         null=True,
         blank=True
     )
+    assignees = models.ManyToManyField(
+        User,
+        through="Assignee",
+        through_fields=('task', 'assignee'),
+        related_name='tasks'
+    )
     class Task_Status(models.TextChoices):
         PENDING = 'pending'
         IN_PROGRESS = 'in_progress'
@@ -78,7 +84,23 @@ class Task(TimeStampedModel):
             self.save()
 
 
+class Assignee(TimeStampedModel):
+    class Meta:
+        db_table= 'assignees'
+        unique_together = ['assignee', 'task']
+    assignee = models.ForeignKey(User, related_name='assignments', on_delete=models.CASCADE, null=False, blank=False)
+    task = models.ForeignKey(Task, related_name='assignees_assignments', on_delete=models.CASCADE, null=False, blank=False)
 
+
+class Comment(TimeStampedModel):
+    class Meta:
+        db_table= 'comments'
+    
+    task = models.ForeignKey(Task, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='own_comments', on_delete=models.CASCADE)
+    body= models.CharField(max_length=65535) # "TEXT" length in mysql
+
+    
 class Inbox_Tasks(TimeStampedModel):
     class Meta:
         # app_label = "inbox_tasks"
@@ -112,6 +134,3 @@ class Inbox_Tasks(TimeStampedModel):
     def save(self, *args , **kwargs):
 
         return super().save(*args , **kwargs)
-        
-    
-    

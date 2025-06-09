@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     #own
     'users',
     'workspaces',
-
     'projects',
     'tasks',
 

@@ -9,14 +9,16 @@ from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from .models import Task , Inbox_Tasks
-from .serializers import TaskSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer
-from .permissions import IsTaskProjectMember
 
+from .models import Task, Comment , Inbox_Tasks
+from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer
+from .permissions import IsTaskProjectMember, IsTaskProjectOwner
+
+
+from projects.permissions import IsProjectMember
 
 from tools.roles_check import can_edit_project , is_creator ,is_project_owner
-
-from tools.responses import method_not_allowed, exception_response
+from tools.responses import method_not_allowed, exception_response, required_response
 
 
 
@@ -38,8 +40,12 @@ class TaskViewSet(viewsets.ModelViewSet):
         return qs
     def get_permissions(self):
         self.permission_classes = [IsAuthenticated]
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == 'list':
+            self.permission_classes.append(IsProjectMember)
+        if self.action == 'retrieve' or self.action == 'create_comment' or self.action == 'list_comment':
             self.permission_classes.append(IsTaskProjectMember)
+        if self.action == 'assign_task_to_user':
+            self.permission_classes.append(IsTaskProjectOwner)
         return super().get_permissions()
 
     @extend_schema(
@@ -210,7 +216,54 @@ class TaskViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
     
-    
+    @extend_schema(
+        summary="Assign Task To User",
+        operation_id="assign_task_to_user",
+        description="Assigning Task To User Or Multiple Users",
+        tags=["Tasks"],
+        request={
+            "application/json":{
+                'type': 'object',
+                "properties":{
+                    "assignees":{"type":"[integer]", "example":"[1,2,3,4]"}
+                },
+                "required": ["assignees"]
+            }
+        }
+    )
+    @action(detail=True, methods=['patch'])
+    def assign_task_to_user(self, request, pk):
+        try:
+            a = {**request.data}
+            print(f"\n\n{a}\n\n")
+            if not request.data.get('assignees'):
+                return required_response('assignees')
+            # Get The Task
+            task = Task.objects.filter(id=pk)
+            if not task.exists():
+                return False
+            task = task.first()
+
+            serializer = self.get_serializer(
+                instance = task,
+                data= {
+                    **request.data,
+                    "title":task.title,
+                    "creator":task.creator.pk,
+                    "workspace":task.workspace.pk,
+                    "project":task.project.pk
+                }
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
+        except Exception as e:
+            return exception_response(e)
+
+
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
         return method_not_allowed()
@@ -223,6 +276,72 @@ class TaskViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         return method_not_allowed()
         return super().destroy(request, *args, **kwargs)
+    
+    ## Comments Section
+
+    @extend_schema(
+        summary="Create Comment",
+        operation_id="create_comment",
+        description="Creating A Comment On The Specified Task",
+        tags=["Tasks/Comments"],
+        request={
+            "application/json":{
+                'type': 'object',
+                "properties":{
+                    "body":{"type":"string", "example":"Can u provide me with the progress u made on this task till now?"}
+                },
+                "required": ["body"]
+            }
+        }
+    )
+    @action(detail=True, methods=['post'], serializer_class=CommentSerializer)
+    def create_comment(self, request, pk):
+        try:
+            if not request.data.get('body'):
+                return required_response('body')
+            serializer = self.get_serializer(
+                data={
+                    **request.data,
+                    "user": request.user.pk,
+                    "task": pk
+                }
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return exception_response(e)
+        
+    @extend_schema(
+        summary="List Comments",
+        operation_id="list_comments",
+        description="Listing Comments On The Specified Task",
+        tags=["Tasks/Comments"],
+    )
+    @action(detail=True, methods=['get'], serializer_class=CommentSerializer)
+    def list_comments(self, request, pk):
+        try:
+            task = Task.objects.filter(id=pk)
+            if not task.exists():
+                return False
+            task = task.first()
+
+            comments = Comment.objects.filter(task=pk)
+
+            serializer = self.get_serializer(instance=comments, many=True)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return exception_response(e)
+    
+
+    
+
 
 
 class InboxTaskViewSet(viewsets.ModelViewSet):

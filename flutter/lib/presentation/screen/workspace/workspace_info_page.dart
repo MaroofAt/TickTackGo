@@ -4,6 +4,7 @@ import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
@@ -54,11 +55,39 @@ class WorkspaceInfoPage extends StatelessWidget {
             ),
 
             Divider(color: Colors.grey[700]),
-
-            MyText.text1(membersText,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                textColor: Colors.white),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MyText.text1(
+                  membersText,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  textColor: Colors.white,
+                ),
+                MyGestureDetector.gestureDetector(
+                  onTap: () {
+                    //TODO go to invite people page
+                  },
+                  child: Container(
+                    height: width(context) * 0.1,
+                    width: width(context) * 0.3,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: MyText.text1(
+                        'Invite',
+                        textColor: Theme.of(context).scaffoldBackgroundColor,
+                        fontSize: 20,
+                        letterSpacing: 2,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: members.length,
@@ -97,7 +126,7 @@ class WorkspaceInfoPage extends StatelessWidget {
                     },
                   );
                 },
-                child: MyText.text1(deleteButtonText,fontSize: 18),
+                child: MyText.text1(deleteButtonText, fontSize: 18),
               ),
             ),
           ],
