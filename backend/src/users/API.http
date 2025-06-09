@@ -3,8 +3,8 @@ POST http://127.0.0.1:8000/api/users/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "Ali4",
-    "email": "alialmusfi4@gmail.com",
+    "username": "Shadi",
+    "email": "shadi@gmail.com",
     "password": "aloosh1234",
     "how_to_use_website": "small_team",
     "what_do_you_do": "software_or_it",

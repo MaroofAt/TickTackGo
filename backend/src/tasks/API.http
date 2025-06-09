@@ -27,3 +27,61 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 GET http://127.0.0.1:8000/api/tasks/4/mark_as_completed/ HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzAxNjEyLCJpYXQiOjE3NDkyOTgwMTIsImp0aSI6IjlkZWFhNzEyNzBmYTRiYjA5YTE2ODg3MDkzYWMyMjlhIiwidXNlcl9pZCI6MX0.FjHA1rnqawgesbNopRm_YeIRITplIjfYIyPvf8duJpE
+
+
+###
+
+#Inpox Task
+
+GET http://127.0.0.1:8000/api/inbox_tasks/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NDY2NzkxLCJpYXQiOjE3NDk0NjMxOTEsImp0aSI6IjgzNGM3MzQ4NjIwZTQyMzdhNzgyODlhOTcyYTdiODA1IiwidXNlcl9pZCI6MX0.8LCUvOk5gfB35ICnxCj1_kJnVKideKM-ecBSMrCTpw4
+
+###
+
+GET http://127.0.0.1:8000/api/inbox_tasks/4/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NDY3MjQ5LCJpYXQiOjE3NDk0NjM2NDksImp0aSI6ImE3N2U5ODQwZTM0NzRkNDNhNzYwODA2NWRjOThlZmNlIiwidXNlcl9pZCI6MX0.RrGIRI1uSHcQzj467kBxDjCwtRqcuwlozYVKnbmTEdo
+
+###
+
+POST http://127.0.0.1:8000/api/inbox_tasks/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NDY2NzkxLCJpYXQiOjE3NDk0NjMxOTEsImp0aSI6IjgzNGM3MzQ4NjIwZTQyMzdhNzgyODlhOTcyYTdiODA1IiwidXNlcl9pZCI6MX0.8LCUvOk5gfB35ICnxCj1_kJnVKideKM-ecBSMrCTpw4
+
+{
+    "title": "inbox task 1",
+    "description": "ABU Alish AMAK",
+    "status": "in_progress",
+    "priority": "low"
+}
+
+###
+
+DELETE http://127.0.0.1:8000/api/inbox_tasks/3/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzkyMTkyLCJpYXQiOjE3NDkzODg1OTIsImp0aSI6IjI4YmFjOWYyOTgwOTQ3YjZiZmYzY2JiMmQ3NjYzMzliIiwidXNlcl9pZCI6Mn0.v3V1Nd4YqK1fLee63rvr8TrhKClow2KBndhI3hc01r8
+
+
+###
+
+PUT http://127.0.0.1:8000/api/inbox_tasks/5/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NDY3MjQ5LCJpYXQiOjE3NDk0NjM2NDksImp0aSI6ImE3N2U5ODQwZTM0NzRkNDNhNzYwODA2NWRjOThlZmNlIiwidXNlcl9pZCI6MX0.RrGIRI1uSHcQzj467kBxDjCwtRqcuwlozYVKnbmTEdo
+
+{   
+    "title": "inbox task 1 updated",
+    "description": "ABU Alish AMAK updated",
+    "status": "in_progress",
+    "priority": "low"
+}
+
+###
+
+PATCH http://127.0.0.1:8000/api/inbox_tasks/5/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NDY3MjQ5LCJpYXQiOjE3NDk0NjM2NDksImp0aSI6ImE3N2U5ODQwZTM0NzRkNDNhNzYwODA2NWRjOThlZmNlIiwidXNlcl9pZCI6MX0.RrGIRI1uSHcQzj467kBxDjCwtRqcuwlozYVKnbmTEdo
+
+{   
+    "status": "pending"
+}

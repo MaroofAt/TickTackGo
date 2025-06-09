@@ -11,7 +11,7 @@ from django.utils import timezone
 
 # Create your models here.
 
-def user_image_upload_path(instance, filename):
+def task_image_upload_path(instance, filename):
     if not instance.id:
         # Handle case where instance isn't saved yet
         return f'Tasks/temp/{filename}'
@@ -29,7 +29,7 @@ class Task(TimeStampedModel):
     creator = models.ForeignKey(User , on_delete=models.CASCADE )
     workspace = models.ForeignKey(Workspace , on_delete=models.CASCADE )
     project = models.ForeignKey(Project , on_delete=models.CASCADE )
-    image = models.ImageField(null=True,blank=True , upload_to=user_image_upload_path , default="defaults/task/task.png")
+    image = models.ImageField(null=True,blank=True , upload_to= task_image_upload_path , default="defaults/task/task.png")
     out_dated = models.BooleanField(default = False)
     parent_task = models.ForeignKey( # if this is null so the task doesn't have parent_task it is directly inside the project
         'self', 
@@ -83,6 +83,7 @@ class Task(TimeStampedModel):
             self.status = 'in_progress'
             self.save()
 
+
 class Assignee(TimeStampedModel):
     class Meta:
         db_table= 'assignees'
@@ -98,3 +99,38 @@ class Comment(TimeStampedModel):
     task = models.ForeignKey(Task, related_name='comments', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='own_comments', on_delete=models.CASCADE)
     body= models.CharField(max_length=65535) # "TEXT" length in mysql
+
+    
+class Inbox_Tasks(TimeStampedModel):
+    class Meta:
+        # app_label = "inbox_tasks"
+        db_table = "inbox_tasks"
+    
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=2000 , default= "There is no description")
+    class Task_Status(models.TextChoices):
+        PENDING = 'pending'
+        IN_PROGRESS = 'in_progress'
+        COMPLETED = 'completed'
+
+    status = models.CharField(
+        max_length=11,
+        choices=Task_Status,
+        default=Task_Status.PENDING
+    )
+
+    class Task_Priority(models.TextChoices):
+        HIGH = 'high'
+        MEDIUM = 'medium'
+        LOW = 'low'
+
+    priority = models.CharField(
+        max_length=6,
+        choices=Task_Priority,
+        default=Task_Priority.MEDIUM
+    ) 
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+
+    def save(self, *args , **kwargs):
+
+        return super().save(*args , **kwargs)
