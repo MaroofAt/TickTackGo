@@ -1,5 +1,6 @@
+import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
-import 'package:pr1/data/workspace/create_workspace_model.dart';
+import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:dio/dio.dart';
 
 class WorkspaceApi {
@@ -24,7 +25,7 @@ class WorkspaceApi {
         createWorkspaceModel = CreateWorkspaceModel.onError(response.data);
       }
     } on DioException catch (e) {
-      createWorkspaceModel = CreateWorkspaceModel.onError(e.response!.data);
+      createWorkspaceModel = CreateWorkspaceModel.error(handleDioError(e));
     }
     return createWorkspaceModel;
   }

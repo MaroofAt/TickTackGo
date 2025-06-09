@@ -14,6 +14,7 @@ class MyTextField {
     Widget? prefixIcon,
     Widget? suffixIcon,
     String? hint,
+    Function(String query)? onChanged,
     int maxLines = 1,
     int minLines = 1,
   }) {
@@ -21,6 +22,7 @@ class MyTextField {
       textAlign: textAlign ?? TextAlign.start,
       controller: controller,
       keyboardType: type,
+      onChanged: onChanged,
       style: TextStyle(color: textColor),
       obscureText: obscure,
       maxLines: maxLines,

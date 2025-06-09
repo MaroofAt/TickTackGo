@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
-import 'package:pr1/data/workspace/create_workspace_model.dart';
+import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 
 part 'workspace_state.dart';
 
