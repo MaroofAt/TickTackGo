@@ -6,6 +6,7 @@ import 'package:pr1/core/API/invitation.dart';
 import 'package:pr1/data/models/invitation/accept_invite_model.dart';
 import 'package:pr1/data/models/invitation/invitation_search_model.dart';
 import 'package:pr1/data/models/invitation/reject_invite_model.dart';
+import 'package:pr1/data/models/invitation/send_invite_model.dart';
 import 'package:pr1/data/models/invitation/user_invites_model.dart';
 
 part 'invitation_state.dart';
@@ -27,7 +28,6 @@ class InvitationCubit extends Cubit<InvitationState> {
 
       InvitationSearchModel invitationSearchModel =
           await InvitationApi.invitationSearch(query);
-      print(invitationSearchModel.errorMessage);
 
       if (invitationSearchModel.errorMessage.isEmpty) {
         emit(SearchSuccessState(invitationSearchModel));
@@ -41,7 +41,7 @@ class InvitationCubit extends Cubit<InvitationState> {
     emit(GettingInvitesState());
     //TODO pass user token
     List<dynamic> userInvitesList = await InvitationApi.fetchUserInvites('');
-    if (userInvitesList.isEmpty || userInvitesList[0].errorMessage.isNotEmpty) {
+    if (userInvitesList.isEmpty || userInvitesList[0].errorMessage.isEmpty) {
       emit(GetInvitesSucceededState(userInvitesList));
     } else {
       emit(GetInvitesFailedState(userInvitesList[0].errorMessage));
@@ -62,11 +62,21 @@ class InvitationCubit extends Cubit<InvitationState> {
   Future<void> rejectInvite(int inviteId) async {
     emit(RejectingInviteState());
     RejectInviteModel rejectInviteModel =
-    await InvitationApi.rejectInvite(inviteId, '');
+        await InvitationApi.rejectInvite(inviteId, '');
     if (rejectInviteModel.errorMessage.isEmpty) {
       fetchUserInvites();
     } else {
       emit(RespondingToInviteFailedState(rejectInviteModel.errorMessage));
+    }
+  }
+
+  Future<void> inviteUser() async {
+    emit(SendingInviteState());
+    SendInviteModel sendInviteModel = await InvitationApi.sendInvite(1, 3, 1);
+    if (sendInviteModel.errorMessage.isEmpty) {
+      emit(SendingInviteSuccessfullyState(sendInviteModel));
+    } else {
+      emit(SendingInviteFailedState(sendInviteModel.errorMessage));
     }
   }
 

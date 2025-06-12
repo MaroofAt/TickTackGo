@@ -42,3 +42,17 @@ class RespondingToInviteFailedState extends InvitationState {
 
   RespondingToInviteFailedState(this.errorMessage);
 }
+
+class SendingInviteState extends InvitationState {}
+
+class SendingInviteSuccessfullyState extends InvitationState {
+  SendInviteModel sendInviteModel;
+
+  SendingInviteSuccessfullyState(this.sendInviteModel);
+}
+
+class SendingInviteFailedState extends InvitationState {
+  String errorMessage;
+
+  SendingInviteFailedState(this.errorMessage);
+}

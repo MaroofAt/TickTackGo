@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/screen/invitation/invites_list.dart';
 import 'package:pr1/presentation/screen/invitation/section_list.dart';
+import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/app_bar.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
@@ -41,16 +43,30 @@ class _ReceivedInvitationsState extends State<ReceivedInvitations> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
-        child: BlocBuilder<InvitationCubit, InvitationState>(
+        child: BlocConsumer<InvitationCubit, InvitationState>(
+          listener: (context, state) {
+            if (state is GetInvitesFailedState) {
+              MyAlertDialog.showAlertDialog(
+                context,
+                content: state.errorMessage,
+                firstButtonText: 'go back',
+                firstButtonAction: () {
+                  popScreen(context);
+                  popScreen(context);
+                },
+                secondButtonText: '',
+                secondButtonAction: () {},
+              );
+            }
+          },
           builder: (context, state) {
-            print(state is GetInvitesSucceededState);
             if (state is GetInvitesSucceededState) {
-              print(state.userInvitesList.isEmpty);
-              if(state.userInvitesList.isEmpty){
+              if (state.userInvitesList.isEmpty) {
                 return Center(
-                  child: MyText.text1('No Received Invites',textColor: white,fontSize: 20),
+                  child: MyText.text1('No Received Invites',
+                      textColor: white, fontSize: 20),
                 );
-              }else {
+              } else {
                 return InvitesList(state.userInvitesList);
               }
             }
@@ -63,5 +79,4 @@ class _ReceivedInvitationsState extends State<ReceivedInvitations> {
       ),
     );
   }
-
 }
