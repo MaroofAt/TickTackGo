@@ -15,8 +15,12 @@ class WorkspacesShowPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar.appBar(context,
-          title: MyText.text1('Workspaces'), foregroundColor: white),
+      appBar: MyAppBar.appBar(
+        context,
+        title: MyText.text1('Workspaces'),
+        foregroundColor: white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           pushNamed(context, workspaceCreatePageRoute);
@@ -42,7 +46,7 @@ class WorkspacesShowPage extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 height: height(context) * 0.1,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  color: transparent,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -62,13 +66,15 @@ class WorkspacesShowPage extends StatelessWidget {
                                     'assets/images/workspace_images/img.png'),
                           ),
                         ),
-                        MyText.text1('workspace name', fontSize: 18),
+                        MyText.text1('workspace name',
+                            fontSize: 18, textColor: white),
                       ],
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        MyText.text1(index == 1 ? 'current workspace' : ''),
+                        MyText.text1(index == 1 ? 'current workspace' : '',
+                            textColor: Colors.grey[400]),
                       ],
                     ),
                   ],

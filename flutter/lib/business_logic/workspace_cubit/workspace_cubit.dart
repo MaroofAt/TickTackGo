@@ -38,7 +38,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     }
   }
 
-  createWorkSpace(String title, String description) async {
+  Future<void> createWorkSpace(String title, String description) async {
     emit(CreatingWorkspaceState());
     //TODO send user token
     CreateWorkspaceModel createWorkspaceModel =
