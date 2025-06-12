@@ -3,7 +3,7 @@ class RejectInviteModel {
 
   RejectInviteModel({required this.errorMessage});
 
-  factory RejectInviteModel.onSuccess(Map<String, dynamic> json) =>
+  factory RejectInviteModel.onSuccess() =>
       RejectInviteModel(errorMessage: '');
 
   factory RejectInviteModel.onError(Map<String, dynamic> json) =>

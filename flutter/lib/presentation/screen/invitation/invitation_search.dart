@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
@@ -40,10 +43,46 @@ class _InvitationSearchState extends State<InvitationSearch> {
               ),
             ),
             BlocConsumer<InvitationCubit, InvitationState>(
-              listener: (context, state) {},
+              listener: (context, state) {
+                if (state is SendingInviteFailedState) {
+                  MyAlertDialog.showAlertDialog(
+                    context,
+                    content: state.errorMessage,
+                    firstButtonText: okText,
+                    firstButtonAction: () {
+                      popScreen(context);
+                    },
+                    secondButtonText: '',
+                    secondButtonAction: () {},
+                  );
+                } else if (state is SearchFailedState) {
+                  MyAlertDialog.showAlertDialog(
+                    context,
+                    content: state.errorMessage,
+                    firstButtonText: okText,
+                    firstButtonAction: () {
+                      popScreen(context);
+                      popScreen(context);
+                    },
+                    secondButtonText: '',
+                    secondButtonAction: () {},
+                  );
+                } else if (state is SendingInviteSuccessfullyState) {
+                  MyAlertDialog.showAlertDialog(
+                    context,
+                    content: 'Invite Sent Successfully',
+                    firstButtonText: okText,
+                    firstButtonAction: () {
+                      popScreen(context);
+                      popScreen(context);
+                    },
+                    secondButtonText: '',
+                    secondButtonAction: () {},
+                  );
+                }
+              },
               builder: (context, state) {
                 if (state is SearchSuccessState) {
-                  print(state.invitationSearchModel);
                   return Expanded(
                     child: ListView.builder(
                       itemCount: state.invitationSearchModel.count,
@@ -51,40 +90,76 @@ class _InvitationSearchState extends State<InvitationSearch> {
                         return Container(
                           width: width(context) * 0.9,
                           height: height(context) * 0.08,
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
                           margin: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             color: Theme.of(context).scaffoldBackgroundColor,
-                            border: Border.all(color: ampleOrange),
+                            // border: Border.all(color: ampleOrange),
                             borderRadius: BorderRadius.circular(24),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: darkGrey,
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: Offset(5, 5),
+                              )
+                            ],
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              MyText.text1(
-                                state.invitationSearchModel.results[index]
-                                    .username,
-                                textColor: Colors.white,
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  MyText.text1(
+                                    state.invitationSearchModel.results[index]
+                                        .username,
+                                    textColor: white,
+                                    fontSize: 18,
+                                  ),
+                                  MyText.text1(
+                                      state.invitationSearchModel.results[index]
+                                          .email,
+                                      textColor: Colors.grey[400]),
+                                ],
                               ),
                               MyGestureDetector.gestureDetector(
                                 onTap: () {
+                                  BlocProvider.of<InvitationCubit>(context)
+                                      .inviteUser();
                                 },
-                                child: Container(
-                                  height: height(context) * 0.04,
-                                  width: width(context) * 0.25,
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .secondaryHeaderColor,
-                                      borderRadius: BorderRadius.circular(16)),
-                                  child: Center(
-                                    child: MyText.text1(
-                                      'invite',
-                                      textColor: Theme.of(context)
-                                          .scaffoldBackgroundColor,
-                                      fontSize: 18,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
+                                child: BlocBuilder<InvitationCubit,
+                                    InvitationState>(
+                                  builder: (context, state) {
+                                    if (state is SendingInviteState) {
+                                      return LoadingIndicator
+                                          .circularProgressIndicator(
+                                        color: Theme.of(context)
+                                            .secondaryHeaderColor,
+                                      );
+                                    }
+                                    return Container(
+                                      height: height(context) * 0.04,
+                                      width: width(context) * 0.25,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .secondaryHeaderColor,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Center(
+                                        child: MyText.text1(
+                                          'invite',
+                                          textColor: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                          fontSize: 18,
+                                          letterSpacing: 2,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ],

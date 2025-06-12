@@ -5,13 +5,14 @@ import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/models/invitation/accept_invite_model.dart';
 import 'package:pr1/data/models/invitation/invitation_search_model.dart';
 import 'package:pr1/data/models/invitation/reject_invite_model.dart';
+import 'package:pr1/data/models/invitation/send_invite_model.dart';
 import 'package:pr1/data/models/invitation/user_invites_model.dart';
 
 class InvitationApi {
   static Future<InvitationSearchModel> invitationSearch(String query) async {
     var headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5MzYzMjMyLCJpYXQiOjE3NDkzNTk2MzIsImp0aSI6IjIzZTVhMjRlNzgyZDQzMGY4YWUxNjdlNTRkOTdmOWU2IiwidXNlcl9pZCI6MX0.kqu4l2N0-7gA_qT85WO86TC-11_4RbH4nv_OsuqQ_6w'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE3NjY2LCJpYXQiOjE3NDk3MTQwNjYsImp0aSI6IjRlMTMyYTk3ZTY4ZjRkMDM5ZTZkMDg1MzhhMTQxNmM0IiwidXNlcl9pZCI6MX0.5Vla8JP8vqpVpkTTS2TvrVYRZQdg1xh4L6MhOUtlk24'
     };
 
     late InvitationSearchModel invitationSearchModel;
@@ -40,7 +41,7 @@ class InvitationApi {
   static Future<List<dynamic>> fetchUserInvites(String token) async {
     var headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NDc4NzM1LCJpYXQiOjE3NDk0NzUxMzUsImp0aSI6IjYxYTQ5ZGQ3Njk1YTQ4YzZhMWYwNTJlMjYwMmM5MmFkIiwidXNlcl9pZCI6Mn0.Hn8ikBhFL9TXmBzFJ5R41BiQT4pjP-WZCLkyRwTmdc0',
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE3ODc5LCJpYXQiOjE3NDk3MTQyNzksImp0aSI6ImEyYTBhN2Q2MGYyMDQzYjVhYjg0M2M4Y2YwYzAzNzI5IiwidXNlcl9pZCI6M30.8dZ1wnWAMnFfOFxuPC-wdmd12N6S4E3_zkiijr3aOI0',
     };
 
     late List<dynamic> userInvitesList;
@@ -71,7 +72,7 @@ class InvitationApi {
     var headers = {
       'Content-Type': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NDc4NzM1LCJpYXQiOjE3NDk0NzUxMzUsImp0aSI6IjYxYTQ5ZGQ3Njk1YTQ4YzZhMWYwNTJlMjYwMmM5MmFkIiwidXNlcl9pZCI6Mn0.Hn8ikBhFL9TXmBzFJ5R41BiQT4pjP-WZCLkyRwTmdc0'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzEzODg5LCJpYXQiOjE3NDk3MTAyODksImp0aSI6IjM0NzVkZTVhNjhkMjRhZjNiN2M4OTc4MTBlN2FhNGQ5IiwidXNlcl9pZCI6M30.P9eshfzlNrS2bQibqkR5u0laZcL5tx5sF3_9DtqOxXY'
     };
     var data = {"invite": inviteId};
 
@@ -103,7 +104,7 @@ class InvitationApi {
     var headers = {
       'Content-Type': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NDc4NzM1LCJpYXQiOjE3NDk0NzUxMzUsImp0aSI6IjYxYTQ5ZGQ3Njk1YTQ4YzZhMWYwNTJlMjYwMmM5MmFkIiwidXNlcl9pZCI6Mn0.Hn8ikBhFL9TXmBzFJ5R41BiQT4pjP-WZCLkyRwTmdc0'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE3ODc5LCJpYXQiOjE3NDk3MTQyNzksImp0aSI6ImEyYTBhN2Q2MGYyMDQzYjVhYjg0M2M4Y2YwYzAzNzI5IiwidXNlcl9pZCI6M30.8dZ1wnWAMnFfOFxuPC-wdmd12N6S4E3_zkiijr3aOI0'
     };
 
     var data = {"invite": inviteId};
@@ -118,14 +119,50 @@ class InvitationApi {
         data: data,
       );
 
-      if (response.statusCode == 200) {
-        rejectInviteModel = RejectInviteModel.onSuccess(response.data);
+      if (response.statusCode == 202) {
+        rejectInviteModel = RejectInviteModel.onSuccess();
       } else {
+
         rejectInviteModel = RejectInviteModel.onError(response.data);
       }
     } on DioException catch (e) {
       rejectInviteModel = RejectInviteModel.error(handleDioError(e));
     }
     return rejectInviteModel;
+  }
+
+  static Future<SendInviteModel> sendInvite(int senderId, int receiverId, int workspaceId) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE4MTY1LCJpYXQiOjE3NDk3MTQ1NjUsImp0aSI6IjRkMGRlM2Q0YjgwMzQyMzU5YjY5NjkzNWUwYzA1NTIxIiwidXNlcl9pZCI6MX0.7paAg7tL7_ot9O0EskjHFZHmqa2jjFtNAETNUCFiz1w'
+    };
+    var data = {
+      "sender": senderId,
+      "receiver": receiverId,
+      "workspace": workspaceId,
+      "status": "pending"
+    };
+
+    late SendInviteModel sendInviteModel;
+
+    try {
+      var response = await dio.request(
+        '/workspaces/$senderId/invite_user/',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 201) {
+        sendInviteModel = SendInviteModel.onSuccess(response.data);
+      } else {
+        sendInviteModel = SendInviteModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      sendInviteModel = SendInviteModel.error(handleDioError(e));
+    }
+    return sendInviteModel;
   }
 }
