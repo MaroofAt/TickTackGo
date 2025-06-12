@@ -80,8 +80,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         page = self.paginate_queryset(qr)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            serializer = self.get_serializer(page, many=True)  
+            filter = self.filter_queryset(qr)
+            if filter is not None:
+                serializer = self.get_serializer(filter, many=True)
+            # return self.get_paginated_response(serializer.data)        
             return self.get_paginated_response(serializer.data)
+
 
         serializer = self.get_serializer(qr, many=True)
         return Response(serializer.data)
