@@ -85,7 +85,7 @@ class _InvitationSearchState extends State<InvitationSearch> {
                 if (state is SearchSuccessState) {
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: state.invitationSearchModel.count,
+                      itemCount: state.invitationSearchModel.results.length,
                       itemBuilder: (context, index) {
                         return Container(
                           width: width(context) * 0.9,
