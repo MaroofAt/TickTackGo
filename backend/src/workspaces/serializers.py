@@ -58,7 +58,6 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             'image',
             'owner',
             'members',
-            'code',
             'created_at',
             'updated_at',
         ]
@@ -130,3 +129,31 @@ class InviteSerializer(serializers.ModelSerializer):
             'id': {'read_only':True},
             # 'sender': {'read_only':True},
         }
+
+
+class UserNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User  # Your User model
+        fields = ['id', 'username'] 
+
+
+class WorkspaceNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workspace 
+        fields = ['id', 'title']
+
+class ShowInvitesSerializer(serializers.ModelSerializer):
+    sender = UserNameSerializer(read_only=True)  
+    workspace = WorkspaceNameSerializer(read_only=True) 
+    class Meta:
+        model = Invite
+        fields = [
+            'id',
+            'sender',
+            'receiver',
+            'workspace',
+            'status',
+            'expire_date',
+            'created_at',
+            'updated_at'
+        ]

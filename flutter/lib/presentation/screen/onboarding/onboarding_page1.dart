@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
+import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/text.dart';
@@ -12,12 +13,17 @@ class OnboardingPage1 extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildText(
-          upperText,
-          28,
-          FontWeight.bold,
+        SizedBox(
+          height: height(context) * 0.1,
+          child: _buildText(
+            upperText,
+            28,
+            FontWeight.bold,
+          ),
         ),
-        Container(
+        SizedBox(
+          width: width(context),
+          height: width(context),
           child: MyImages.assetImage(page1ImagePath),
         ),
         Column(

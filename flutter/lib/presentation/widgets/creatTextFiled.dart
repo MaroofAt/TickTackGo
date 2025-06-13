@@ -27,7 +27,7 @@ class CreateTextField extends StatelessWidget {
           prefixIcon: icon?? null,
           suffixIcon: iconsuf ?? const SizedBox(),
           filled: true,
-          fillColor: Ample_orang.withOpacity(0.5),
+          fillColor: ampleOrange.withOpacity(0.5),
           hintText: text,
           hintStyle: TextStyle(
             fontSize: 16,

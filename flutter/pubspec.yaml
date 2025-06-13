@@ -38,6 +38,10 @@ dependencies:
   pinput: ^5.0.1
   flutter_bloc: ^9.1.1
   device_preview: ^1.2.0
+  permission_handler: ^12.0.0+1
+  image_picker: ^1.1.2
+  dropdown_button2: ^2.3.9
+  dio: ^5.8.0+1
  
 
 
@@ -70,6 +74,7 @@ flutter:
     - assets/images/verify_page_images/
     - assets/images/welcome_screens_images/
     - assets/images/auth_page_images/
+    - assets/images/workspace_images/
     - assets/fonts/
     
   #   - images/a_dot_ham.jpeg

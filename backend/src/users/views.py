@@ -4,7 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework import status 
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
@@ -21,8 +23,13 @@ from django.utils import timezone
 from .utils import send_otp_email_to_user
 from .filters import UserFilter
 
-from workspaces.serializers import InviteSerializer
+from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
 from workspaces.models import Invite , Workspace_Membership
+from tasks.models import Task
+from tools.responses import exception_response
+
+from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
+from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , CanEditProject
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -44,6 +51,14 @@ class UserViewSet(viewsets.ModelViewSet):
     search_fields = ['username', 'email']
     ordering_fields = ['username', 'email', 'created_at', 'updated_at']
 
+    def get_permissions(self):
+        self.permission_classes = [AllowAny]
+        if self.action == 'list':
+            self.permission_classes.append(IsAuthenticated)
+        if self.action == 'retrieve' :
+            self.permission_classes.append(IsAuthenticated)
+        return super().get_permissions()
+
     def get_queryset(self):
         qs = super().get_queryset()
 
@@ -60,12 +75,18 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         # return super().list(request, *args, **kwargs)
+        
         qr = User.objects.filter().all()
 
         page = self.paginate_queryset(qr)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            serializer = self.get_serializer(page, many=True)  
+            filter = self.filter_queryset(qr)
+            if filter is not None:
+                serializer = self.get_serializer(filter, many=True)
+            # return self.get_paginated_response(serializer.data)        
             return self.get_paginated_response(serializer.data)
+
 
         serializer = self.get_serializer(qr, many=True)
         return Response(serializer.data)
@@ -181,11 +202,11 @@ class UserViewSet(viewsets.ModelViewSet):
         description="show all invites for the user  ",
         tags=["Users/Invite"],
     )
-    @action(detail=False , methods=['get'] , serializer_class=InviteSerializer)
+    @action(detail=False , methods=['get'] , serializer_class=ShowInvitesSerializer)
     def show_invites(self , request):
         Invite.objects.filter(expire_date__lt = timezone.now()).delete()
 
-        invites = Invite.objects.filter(receiver=request.user).all()
+        invites = Invite.objects.filter(receiver=request.user , status = 'pending').all()
         serializer = self.get_serializer(invites , many = True)
         
         # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
@@ -197,15 +218,24 @@ class UserViewSet(viewsets.ModelViewSet):
         operation_id="accept_invite",
         description="user can accept the invite (just send the invite_id to make the specific invite accepted ) ",
         tags=["Users/Invite"],
+        request= {
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'invite': {'type':'integer' , 'example':1}
+                },
+                'required':['invite']
+            }
+        }
     )
     @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
     def accept_invite(self , request):
         # print("Aliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
         Invite.objects.filter(expire_date__lt = timezone.now()).delete()
-        if not request.data.get('invite_id'):
-            return Response({"message": "the invite_id is required!"}, status.HTTP_400_BAD_REQUEST)
+        if not request.data.get('invite'):
+            return Response({"message": "the invite is required!"}, status.HTTP_400_BAD_REQUEST)
         
-        invite = Invite.objects.filter(id=request.data.get('invite_id')).first()
+        invite = Invite.objects.filter(id=request.data.get('invite')).first()
         
         if not invite:
             return Response({"message": "the invite specified doesn't exist!  maybe it expired :( "}, status.HTTP_400_BAD_REQUEST)
@@ -231,14 +261,23 @@ class UserViewSet(viewsets.ModelViewSet):
         operation_id="reject_invite",
         description="user can reject the invite (just send the invite_id to make the specific invite rejected ) ",
         tags=["Users/Invite"],
+        request= {
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'invite': {'type':'integer' , 'example':1}
+                },
+                'required':['invite']
+            }
+        }
     )
     @action(detail=False , methods=['post'] , serializer_class=InviteSerializer)
     def reject_invite(self , request):
         Invite.objects.filter(expire_date__lt = timezone.now()).delete()
-        if not request.data.get('invite_id'):
-            return Response({"message": "the invite_id is required!"}, status.HTTP_400_BAD_REQUEST)
+        if not request.data.get('invite'):
+            return Response({"message": "the invite is required!"}, status.HTTP_400_BAD_REQUEST)
         
-        invite = Invite.objects.filter(id=request.data.get('invite_id')).first()
+        invite = Invite.objects.filter(id=request.data.get('invite')).first()
         
         if not invite:
             return Response({"message": "the invite specified doesn't exist!  maybe it expired :( "}, status.HTTP_400_BAD_REQUEST)
@@ -249,6 +288,29 @@ class UserViewSet(viewsets.ModelViewSet):
         
         invite.delete()
         return Response(None , status.HTTP_202_ACCEPTED)
+    
+
+    
+    @extend_schema(
+        summary="Entro To The App",
+        operation_id="start_app",
+        description="this API delete the expired OTP and change the status of the task Automatically when you call it",
+        tags=["Starter"],
+    )
+    @action(detail=False , methods=['get'] , permission_classes=[AllowAny] , authentication_classes=[] )
+    def start_app(self ,request):
+        try:
+            User_OTP.objects.filter(expires_at__lt = timezone.now()).delete()
+            tasks = Task.objects.filter(start_date__lte = timezone.now().date())
+            for task in tasks:
+                if task.status == 'pending':
+                    task.status = 'in_progress'
+                    task.save()
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            return exception_response(e)
+        
+
 
               
 
