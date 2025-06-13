@@ -5,7 +5,9 @@ import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/presentation/screen/auth/signin.dart';
+import 'package:pr1/presentation/screen/auth/signinnew.dart';
 import 'package:pr1/presentation/screen/auth/signup.dart';
+import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import 'package:pr1/presentation/screen/intro_questions/intro_questions_main.dart';
 import 'package:pr1/presentation/screen/invitation/invitation_search.dart';
 import 'package:pr1/presentation/screen/invitation/received_invitations.dart';
@@ -16,8 +18,8 @@ import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspaces_show_page.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
-  signupRoute: (context) => SignUp(),
-  signinRoute: (context) => SignIn(),
+  signupRoute: (context) => Signupnew(),
+  signinRoute: (context) => Signinnew(),
   onboardingMainRoute: (context) => const OnboardingMain(),
   introQuestionsRoute: (context) => BlocProvider(
         create: (context) => IntroQuestionsCubit(),
