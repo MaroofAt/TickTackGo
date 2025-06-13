@@ -12,7 +12,7 @@ class InvitationApi {
   static Future<InvitationSearchModel> invitationSearch(String query) async {
     var headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE3NjY2LCJpYXQiOjE3NDk3MTQwNjYsImp0aSI6IjRlMTMyYTk3ZTY4ZjRkMDM5ZTZkMDg1MzhhMTQxNmM0IiwidXNlcl9pZCI6MX0.5Vla8JP8vqpVpkTTS2TvrVYRZQdg1xh4L6MhOUtlk24'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzMxMjE4LCJpYXQiOjE3NDk3Mjc2MTgsImp0aSI6IjhjNTcxNThmNTlmNTQwMDk5ZmUxZjY2MmUxMGY2YTE3IiwidXNlcl9pZCI6MX0._PCsIn52kKNgvqm9UreFNvyb1YZpgn7gUdvlRb1k-A8'
     };
 
     late InvitationSearchModel invitationSearchModel;

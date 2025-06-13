@@ -30,6 +30,8 @@ class InvitationCubit extends Cubit<InvitationState> {
           await InvitationApi.invitationSearch(query);
 
       if (invitationSearchModel.errorMessage.isEmpty) {
+        //TODO
+        // invitationSearchModel.results.removeWhere((element) => element.id == user.id,);
         emit(SearchSuccessState(invitationSearchModel));
       } else {
         emit(SearchFailedState(invitationSearchModel.errorMessage));
