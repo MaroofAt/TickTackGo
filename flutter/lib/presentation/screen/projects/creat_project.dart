@@ -45,6 +45,8 @@ class CreatProject extends StatefulWidget {
              ///// TODO add image
              Image.asset( "assets/images/verify_page_images/verfiy.png"),
              const Center(child: Text("create your owner project",style: TextStyle(color: white,fontSize: 18,fontFamily: 'PTSerif'),),),
+             const Center(child: Text("on workspace",style: TextStyle(color: white,fontSize: 18,fontFamily: 'PTSerif'),),),
+
              const SizedBox(
                height: 20,
              ),
