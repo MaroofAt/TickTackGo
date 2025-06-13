@@ -59,7 +59,7 @@ class CreatProject extends StatefulWidget {
              SizedBox(height: 3,),
              Container(
                  margin: EdgeInsets.only(left: 15,top:20,bottom: 40),
-                 decoration:BoxDecoration(color:parrotGreen,borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.4,
+                 decoration:BoxDecoration(color:parrot_green,borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.4,
                  child: IconButton(onPressed: (){
                   }, icon: Center(child: Text("Create",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif'))))),
 

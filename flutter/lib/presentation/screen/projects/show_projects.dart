@@ -37,7 +37,7 @@ class _ShowProjectsState extends State<ShowProjects>  {
 
           ],
         ),
-        backgroundColor: ampleOrange.withOpacity(0.5),
+        backgroundColor: ample_orange.withOpacity(0.5),
       ),
       backgroundColor: primaryColor,
       body: SingleChildScrollView(
