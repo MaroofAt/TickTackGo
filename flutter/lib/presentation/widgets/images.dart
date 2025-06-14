@@ -1,25 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class MyImages {
-  static Widget assetImage(String image,
-      {double? height, double? width, BoxFit fit = BoxFit.cover}) {
+  static Widget assetImage(String image, {double? height, double? width}) {
     return Image.asset(
       height: height,
       width: width,
       image,
-      fit: fit,
-    );
-  }
-
-  static Widget fileImage(File file,
-      {double? height, double? width, BoxFit fit = BoxFit.cover}) {
-    return Image.file(
-      file,
-      height: height,
-      width: width,
-      fit: fit,
+      fit: BoxFit.cover,
     );
   }
 
@@ -27,7 +14,7 @@ class MyImages {
       {required bool isAssetImage, required String image, BoxFit? fit}) {
     return DecorationImage(
       image: isAssetImage ? AssetImage(image) : NetworkImage(image),
-      fit: fit ?? BoxFit.cover,
+      fit: fit?? BoxFit.cover,
     );
   }
 
@@ -40,10 +27,5 @@ class MyImages {
       image: imageUrl,
       fit: BoxFit.cover,
     );
-  }
-
-  static DecorationImage decorationFileImage(
-      {required File image, BoxFit fit = BoxFit.cover}) {
-    return DecorationImage(image: FileImage(image), fit: fit);
   }
 }
