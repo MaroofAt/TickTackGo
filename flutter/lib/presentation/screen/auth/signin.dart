@@ -133,7 +133,7 @@ bool _validateFields() {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: ampleOrange,
+                        color: Ample_orang,
                         borderRadius: BorderRadius.all(Radius.circular(400)),
                       ),
                       child: IconButton(
@@ -165,7 +165,7 @@ bool _validateFields() {
                           icon:RichText(
                             text: TextSpan(
                               style: TextStyle(fontSize: 20, color: white,  decoration: TextDecoration.underline,
-                                  decorationColor: parrotGreen, decorationThickness: 2,fontFamily: "DMSerifText"),
+                                  decorationColor: parrot_green, decorationThickness: 2,fontFamily: "DMSerifText"),
                               text: 'Sign Up',
                             ),
                           ),
@@ -178,7 +178,7 @@ bool _validateFields() {
                             style: TextStyle(fontSize: 16,
                                 color: white,
                                 decoration: TextDecoration.underline,
-                                decorationColor: parrotGreen,
+                                decorationColor: parrot_green,
                                 decorationThickness: 3,
                                 fontFamily: "DMSerifText"),
                             text: 'Forgot Passwords',
@@ -197,7 +197,7 @@ bool _validateFields() {
                   width: width(context) - 200,
                   height:height(context) - 350,
                   decoration: BoxDecoration(
-                    color:  parrotGreen,
+                    color:  parrot_green,
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(600)),
                   ),
@@ -210,7 +210,7 @@ bool _validateFields() {
                     width: width(context),
                     height: height(context) - 450,
                     decoration: BoxDecoration(
-                      color: ampleOrange,
+                      color: Ample_orang,
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.elliptical(600, 400),
                       ),
@@ -246,7 +246,7 @@ bool _validateFields() {
                   width: width(context) - 180,
                   height: height(context) - 680,
                   decoration: BoxDecoration(
-                    color:  parrotGreen,
+                    color:  parrot_green,
                     borderRadius:
                     BorderRadius.only(bottomRight: Radius.elliptical(600, 500)),
                   ),

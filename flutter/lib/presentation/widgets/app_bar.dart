@@ -7,17 +7,15 @@ class MyAppBar {
       Color? backgroundColor,
       bool? centerTitle,
       List<Widget>? actions,
-      Color? foregroundColor,
-      PreferredSizeWidget? bottom}) {
+      Color? foregroundColor}) {
     return AppBar(
       backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
-      centerTitle: centerTitle ?? true,
+      centerTitle: centerTitle?? true,
       title: title,
       titleTextStyle: TextStyle(color: foregroundColor, fontSize: 20),
       leading: leading,
-      foregroundColor: foregroundColor ?? Theme.of(context).primaryColor,
+      foregroundColor: foregroundColor??Theme.of(context).primaryColor,
       actions: actions,
-      bottom: bottom,
     );
   }
 }
