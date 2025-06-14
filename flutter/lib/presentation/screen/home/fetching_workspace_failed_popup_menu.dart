@@ -7,6 +7,7 @@ import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
+// ignore: must_be_immutable
 class FetchingWorkspaceFailedPopupMenu extends StatelessWidget {
   String errorMessage;
 
