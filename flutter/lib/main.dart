@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
@@ -6,8 +7,8 @@ import 'package:pr1/presentation/screen/home/main_home_page.dart';
 import 'package:pr1/themes/themes.dart';
 
 void main() {
-  // runApp(DevicePreview(builder: (context) => MyApp()));
-  runApp(const MyApp());
+  runApp(DevicePreview(builder: (context) => const MyApp()));
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // builder: DevicePreview.appBuilder,
+      builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       theme: theme(),
       routes: routes,
