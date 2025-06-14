@@ -31,6 +31,19 @@ class CreateWorkspaceFailedState extends WorkspaceState {
   CreateWorkspaceFailedState(this.errorMessage);
 }
 
+class WorkspacesFetchingState extends WorkspaceState {}
+
+class WorkspacesFetchingSucceededState extends WorkspaceState {
+  List<dynamic> fetchWorkspacesModel;
+
+  WorkspacesFetchingSucceededState(this.fetchWorkspacesModel);
+}
+
+class WorkspacesFetchingFailedState extends WorkspaceState {
+  String errorMessage;
+
+  WorkspacesFetchingFailedState(this.errorMessage);
+}
 
 
 

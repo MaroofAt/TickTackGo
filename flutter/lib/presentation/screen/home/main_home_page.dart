@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/screen/home/card_builder.dart';
+import 'package:pr1/presentation/screen/home/fetching_workspace_failed_popup_menu.dart';
+import 'package:pr1/presentation/screen/home/home_popup_menu_button.dart';
 import 'package:pr1/presentation/screen/home/task_card.dart';
 import 'package:pr1/presentation/widgets/animated_dropdown.dart';
 import 'package:pr1/presentation/widgets/circle.dart';
@@ -12,8 +16,23 @@ import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-class MainHomePage extends StatelessWidget {
+class MainHomePage extends StatefulWidget {
   const MainHomePage({super.key});
+
+  @override
+  State<MainHomePage> createState() => _MainHomePageState();
+}
+
+class _MainHomePageState extends State<MainHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    getWorkspaces();
+  }
+
+  getWorkspaces() {
+    BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces(1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,21 +53,17 @@ class MainHomePage extends StatelessWidget {
                     child:
                         MyIcons.icon(Icons.person, size: width(context) * 0.1),
                   ),
-                  MyGestureDetector.gestureDetector(
-                    onTap: () {
-                      pushNamed(context, receivedInvitationPageRoute);
+                  BlocBuilder<WorkspaceCubit, WorkspaceState>(
+                    builder: (context, state) {
+                      if (state is WorkspacesFetchingSucceededState) {
+                        return HomePopupMenuButton(state.fetchWorkspacesModel);
+                      } else if (state is WorkspacesFetchingFailedState) {
+                        return FetchingWorkspaceFailedPopupMenu(
+                            state.errorMessage);
+                      } else {
+                        return FetchingWorkspaceFailedPopupMenu('something went wrong\nrefresh?');
+                      }
                     },
-                    child: MyCircle.circle(
-                      width(context) * 0.18,
-                      color: transparent,
-                      child: Center(
-                        child: MyIcons.icon(
-                          Icons.notifications,
-                          color: white,
-                          size: width(context) * 0.1,
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -72,10 +87,12 @@ class MainHomePage extends StatelessWidget {
                   ),
                   CardBuilder(
                     color: greatMagenda,
-                    label: projectText,
-                    content: '5 $projectText',
+                    label: invitesText,
+                    content: receivedInviteText,
                     icon: Icons.auto_awesome,
-                    onTap: () {},
+                    onTap: () {
+                      pushNamed(context, receivedInvitationPageRoute);
+                    },
                   ),
                 ],
               ),
