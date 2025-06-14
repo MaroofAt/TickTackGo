@@ -4,14 +4,13 @@ import '../core/constance/colors.dart';
 
 ThemeData theme() {
     return ThemeData(
-      primaryColor: greatMagenda,
-      secondaryHeaderColor: parrotGreen,
+      primaryColor: creat_magenda,
+      secondaryHeaderColor: parrot_green,
       hintColor: ash,
-      dividerColor: ampleOrange,
+      dividerColor: Ample_orang,
       disabledColor: darkGrey,
-      indicatorColor: sleekCyan,
+      indicatorColor: sleek_cyan,
       scaffoldBackgroundColor: primaryColor,
-      dialogBackgroundColor: primaryColor,
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
             fontSize: 30.0,

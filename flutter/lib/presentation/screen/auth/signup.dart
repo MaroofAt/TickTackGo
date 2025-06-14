@@ -184,7 +184,7 @@ class _SignUpState extends State<SignUp> {
                 width: width(context),
                 height: height(context) - 520,
                 decoration: BoxDecoration(
-                  color: ampleOrange,
+                  color: Ample_orang,
                   borderRadius: BorderRadius.only(bottomRight: Radius.circular(400)),
                 ),
               ),
@@ -198,7 +198,7 @@ class _SignUpState extends State<SignUp> {
                 width: width(context) - 100,
                 height: height(context) - 610,
                 decoration: BoxDecoration(
-                  color: ampleOrange,
+                  color: Ample_orang,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(400)),
                 ),
                 child: Column(
@@ -246,7 +246,7 @@ class _SignUpState extends State<SignUp> {
                               fontSize: 20,
                               color: Colors.white,
                               decoration: TextDecoration.underline,
-                              decorationColor: parrotGreen,
+                              decorationColor: parrot_green,
                               decorationThickness: 2,
                               fontFamily: "DMSerifText",
                             ),
