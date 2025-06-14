@@ -7,6 +7,7 @@ import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
+import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
 
 part 'workspace_state.dart';
 
@@ -47,6 +48,18 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
       emit(CreatedWorkspaceState(createWorkspaceModel));
     } else {
       emit(CreateWorkspaceFailedState(createWorkspaceModel.errorMessage));
+    }
+  }
+
+  Future<void> fetchWorkspaces(int userId) async {
+    emit(WorkspacesFetchingState());
+    List<dynamic> fetchWorkspacesModel =
+        await WorkspaceApi.fetchWorkspaces(userId);
+
+    if (fetchWorkspacesModel[0].errorMessage.isEmpty) {
+      emit(WorkspacesFetchingSucceededState(fetchWorkspacesModel));
+    } else {
+      emit(WorkspacesFetchingFailedState(fetchWorkspacesModel[0].errorMessage));
     }
   }
 }

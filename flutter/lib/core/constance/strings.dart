@@ -10,6 +10,7 @@ const String workspaceInfoRoute = 'workspaceInfoRoute';
 const String workspacesShowPageRoute = 'workspacesShowPageRoute';
 const String invitationSearchPageRoute = 'invitationSearchPageRoute';
 const String receivedInvitationPageRoute = 'receivedInvitationPageRoute';
+const String mainHomePageRoute = 'mainHomePageRoute';
 
 
 ///Splash screen strings
@@ -58,7 +59,8 @@ const String deleteButtonText = 'Delete Workspace';
 
 ///main home page
 const String workspaceText = 'Workspaces';
-const String projectText = 'Projects';
+const String invitesText = 'Invites';
+const String receivedInviteText = 'received Invites';
 const String inboxText = 'Inbox';
 const String allTasksText = 'All Tasks';
 const String tasksText = 'tasks';

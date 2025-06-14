@@ -25,7 +25,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme(),
       routes: routes,
-      home: const MainHomePage(),
+      home: BlocProvider(
+        create: (context) => WorkspaceCubit(),
+        child: const MainHomePage(),
+      ),
     );
   }
 }

@@ -74,7 +74,7 @@ class InvitationCubit extends Cubit<InvitationState> {
 
   Future<void> inviteUser() async {
     emit(SendingInviteState());
-    SendInviteModel sendInviteModel = await InvitationApi.sendInvite(1, 3, 1);
+    SendInviteModel sendInviteModel = await InvitationApi.sendInvite(1, 5, 1);
     if (sendInviteModel.errorMessage.isEmpty) {
       emit(SendingInviteSuccessfullyState(sendInviteModel));
     } else {
