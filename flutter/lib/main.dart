@@ -1,10 +1,12 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/home/main_home_page.dart';
 import 'package:pr1/themes/themes.dart';
 
 void main() {
-  runApp(DevicePreview(builder: (context) => MyApp()));
+  runApp(DevicePreview(builder: (context) => const MyApp()));
+
   // runApp(const MyApp());
 }
 
