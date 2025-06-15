@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:pr1/data/models/intro_questions_model.dart';
+import 'package:pr1/data/models/local_models/intro_questions_model.dart';
 
 final PageController introQuestionsPageController = PageController();
 
