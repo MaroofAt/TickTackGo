@@ -72,9 +72,14 @@ class InvitationCubit extends Cubit<InvitationState> {
     }
   }
 
-  Future<void> inviteUser() async {
+  Future<void> inviteUser(
+      {required int senderId,
+      required int receiverId,
+      required int workspaceId}) async {
+
     emit(SendingInviteState());
-    SendInviteModel sendInviteModel = await InvitationApi.sendInvite(1, 5, 1);
+    SendInviteModel sendInviteModel =
+        await InvitationApi.sendInvite(senderId, receiverId, workspaceId);
     if (sendInviteModel.errorMessage.isEmpty) {
       emit(SendingInviteSuccessfullyState(sendInviteModel));
     } else {

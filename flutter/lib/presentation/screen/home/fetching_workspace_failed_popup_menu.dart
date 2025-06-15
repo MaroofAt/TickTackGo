@@ -24,7 +24,7 @@ class FetchingWorkspaceFailedPopupMenu extends StatelessWidget {
           PopupMenuItem(
             child: MyGestureDetector.gestureDetector(
                 onTap: () {
-                  BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces(1);
+                  BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
                   popScreen(context);
                 },
                 child: MyIcons.icon(Icons.refresh,color: white)),

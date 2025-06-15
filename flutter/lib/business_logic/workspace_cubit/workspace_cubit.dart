@@ -7,6 +7,7 @@ import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
+import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
 
 part 'workspace_state.dart';
@@ -51,15 +52,27 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     }
   }
 
-  Future<void> fetchWorkspaces(int userId) async {
+  Future<void> fetchWorkspaces() async {
     emit(WorkspacesFetchingState());
-    List<dynamic> fetchWorkspacesModel =
-        await WorkspaceApi.fetchWorkspaces(userId);
+    List<dynamic> fetchWorkspacesModel = await WorkspaceApi.fetchWorkspaces();
 
     if (fetchWorkspacesModel[0].errorMessage.isEmpty) {
       emit(WorkspacesFetchingSucceededState(fetchWorkspacesModel));
     } else {
       emit(WorkspacesFetchingFailedState(fetchWorkspacesModel[0].errorMessage));
+    }
+  }
+
+  Future<void> fetchWorkspace(int workspaceId) async {
+    emit(WorkspaceRetrievingState());
+
+    RetrieveWorkspace retrieveWorkspace =
+        await WorkspaceApi.retrieveWorkspace(workspaceId);
+
+    if (retrieveWorkspace.errorMessage.isEmpty) {
+      emit(WorkspaceRetrievingSucceededState(retrieveWorkspace));
+    } else {
+      emit(WorkspaceRetrievingFailedState(retrieveWorkspace.errorMessage));
     }
   }
 }
