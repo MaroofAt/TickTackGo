@@ -16,23 +16,8 @@ import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-class MainHomePage extends StatefulWidget {
+class MainHomePage extends StatelessWidget {
   const MainHomePage({super.key});
-
-  @override
-  State<MainHomePage> createState() => _MainHomePageState();
-}
-
-class _MainHomePageState extends State<MainHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    getWorkspaces();
-  }
-
-  getWorkspaces() {
-    BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces(1);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,18 +38,18 @@ class _MainHomePageState extends State<MainHomePage> {
                     child:
                         MyIcons.icon(Icons.person, size: width(context) * 0.1),
                   ),
-                  BlocBuilder<WorkspaceCubit, WorkspaceState>(
-                    builder: (context, state) {
-                      if (state is WorkspacesFetchingSucceededState) {
-                        return HomePopupMenuButton(state.fetchWorkspacesModel);
-                      } else if (state is WorkspacesFetchingFailedState) {
-                        return FetchingWorkspaceFailedPopupMenu(
-                            state.errorMessage);
-                      } else {
-                        return FetchingWorkspaceFailedPopupMenu('something went wrong\nrefresh?');
-                      }
-                    },
-                  ),
+                  // BlocBuilder<WorkspaceCubit, WorkspaceState>(
+                  //   builder: (context, state) {
+                  //     if (state is WorkspacesFetchingSucceededState) {
+                  //       return HomePopupMenuButton(state.fetchWorkspacesModel);
+                  //     } else if (state is WorkspacesFetchingFailedState) {
+                  //       return FetchingWorkspaceFailedPopupMenu(
+                  //           state.errorMessage);
+                  //     } else {
+                  //       return FetchingWorkspaceFailedPopupMenu('something went wrong\nrefresh?');
+                  //     }
+                  //   },
+                  // ),
                 ],
               ),
               const SizedBox(height: 16),

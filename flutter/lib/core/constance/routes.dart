@@ -25,14 +25,9 @@ Map<String, Widget Function(BuildContext)> routes = {
         create: (context) => WorkspaceCubit(),
         child: CreateWorkspacePage(),
       ),
-  workspaceInfoRoute: (context) => WorkspaceInfoPage(),
   workspacesShowPageRoute: (context) => BlocProvider(
         create: (context) => WorkspaceCubit(),
         child: const WorkspacesShowPage(),
-      ),
-  invitationSearchPageRoute: (context) => BlocProvider(
-        create: (context) => InvitationCubit(),
-        child: const InvitationSearch(),
       ),
   receivedInvitationPageRoute: (context) => BlocProvider(
         create: (context) => InvitationCubit(),
