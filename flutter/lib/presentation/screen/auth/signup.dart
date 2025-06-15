@@ -91,7 +91,7 @@ class _SignUpState extends State<SignUp> {
                   if (errorname != null)
                    Center(
                     child:  Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 5),
+                      padding: const EdgeInsets.only(left: 200, top: 5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -109,7 +109,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   if (erroremail != null)
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 5),
+                      padding: const EdgeInsets.only(left: 200, top: 5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -184,7 +184,7 @@ class _SignUpState extends State<SignUp> {
                 width: width(context),
                 height: height(context) - 520,
                 decoration: BoxDecoration(
-                  color: Ample_orang,
+                  color: ampleOrange,
                   borderRadius: BorderRadius.only(bottomRight: Radius.circular(400)),
                 ),
               ),
@@ -198,7 +198,7 @@ class _SignUpState extends State<SignUp> {
                 width: width(context) - 100,
                 height: height(context) - 610,
                 decoration: BoxDecoration(
-                  color: Ample_orang,
+                  color: ampleOrange,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(400)),
                 ),
                 child: Column(
@@ -246,7 +246,7 @@ class _SignUpState extends State<SignUp> {
                               fontSize: 20,
                               color: Colors.white,
                               decoration: TextDecoration.underline,
-                              decorationColor: parrot_green,
+                              decorationColor: parrotGreen,
                               decorationThickness: 2,
                               fontFamily: "DMSerifText",
                             ),
