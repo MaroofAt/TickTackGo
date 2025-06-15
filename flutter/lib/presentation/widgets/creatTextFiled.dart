@@ -4,14 +4,14 @@ import '../../core/constance/colors.dart';
 
 class CreateTextField extends StatelessWidget {
   final String text;
-  final Icon icon;
+  final Icon? icon;
   final IconButton? iconsuf;
   final bool obscureText;
   final TextEditingController controller;
   
   CreateTextField({
     required this.text,
-    required this.icon,
+    this.icon,
     this.iconsuf,
     this.obscureText = false,
     required this.controller,
