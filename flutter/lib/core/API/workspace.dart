@@ -32,13 +32,13 @@ class WorkspaceApi {
     return createWorkspaceModel;
   }
 
-  static Future<List<dynamic>> fetchWorkspaces() async {
+  static Future<List<FetchWorkspacesModel>> fetchWorkspaces() async {
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDA5NDY3LCJpYXQiOjE3NTAwMDU4NjcsImp0aSI6ImRmOTdhMzk1NjkzYzRkOTU5MGUzYjdhZDBmZTQxYWM5IiwidXNlcl9pZCI6MX0.L_42v_cahm3bfjJotQSKdGH9Id_XrtfEj_S6qGqqpug'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDgzMzA0LCJpYXQiOjE3NTAwNzk3MDQsImp0aSI6IjM0YTRkM2I0ZDJjNTQ2YTJiMGM1YWE0NzliOTQyNjA5IiwidXNlcl9pZCI6MX0.kpXp1mDWuxnZck5k5X22h4K_qBOFBg0GHUh7qhSfhGc'
     };
 
-      late List<dynamic> getWorkspacesModel;
+      late List<FetchWorkspacesModel> getWorkspacesModel;
 
     try {
       var response = await dio.request(
@@ -50,7 +50,8 @@ class WorkspaceApi {
       );
 
       if (response.statusCode == 200) {
-        getWorkspacesModel = response.data
+        List<dynamic> data = response.data;
+        getWorkspacesModel = data
             .map((json) => FetchWorkspacesModel.onSuccess(json))
             .toList();
       } else {

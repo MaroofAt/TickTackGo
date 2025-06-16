@@ -54,7 +54,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
 
   Future<void> fetchWorkspaces() async {
     emit(WorkspacesFetchingState());
-    List<dynamic> fetchWorkspacesModel = await WorkspaceApi.fetchWorkspaces();
+    List<FetchWorkspacesModel> fetchWorkspacesModel = await WorkspaceApi.fetchWorkspaces();
 
     if (fetchWorkspacesModel[0].errorMessage.isEmpty) {
       emit(WorkspacesFetchingSucceededState(fetchWorkspacesModel));
