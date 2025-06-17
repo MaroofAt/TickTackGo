@@ -10,8 +10,13 @@ class MyAlertDialog {
     required void Function() firstButtonAction,
     required String secondButtonText,
     required void Function() secondButtonAction,
+    String title = warning,
+    IconData icon = Icons.warning,
+    Color iconColor = yellow,
     bool contentIsTranslated = false,
     bool reverseColors = false,
+    Color? secondButtonColor,
+    Color? firstButtonColor,
   }) {
     showDialog(
       barrierDismissible: false,
@@ -19,14 +24,14 @@ class MyAlertDialog {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Theme.of(context).dialogBackgroundColor,
-          title: const Row(
+          title: Row(
             children: [
               Icon(
-                Icons.warning,
-                color: yellow,
+                icon,
+                color: iconColor,
               ),
-              SizedBox(width: 10),
-              Text(warning),
+              const SizedBox(width: 10),
+              Text(title),
             ],
           ),
           content: Text(
@@ -40,7 +45,8 @@ class MyAlertDialog {
                     child: Text(
                       secondButtonText,
                       style: TextStyle(
-                        color: reverseColors ? red : Colors.grey[400],
+                        color: secondButtonColor ??
+                            (reverseColors ? red : Colors.grey[400]),
                       ),
                     ),
                   )

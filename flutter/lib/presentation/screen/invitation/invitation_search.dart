@@ -75,12 +75,16 @@ class _InvitationSearchState extends State<InvitationSearch> {
                 } else if (state is SendingInviteSuccessfullyState) {
                   MyAlertDialog.showAlertDialog(
                     context,
+                    title: 'Done',
+                      icon: Icons.check_circle_outline,
+                    iconColor: sleekCyan,
                     content: 'Invite Sent Successfully',
                     firstButtonText: okText,
                     firstButtonAction: () {
                       popScreen(context);
                       popScreen(context);
                     },
+                    secondButtonColor: sleekCyan,
                     secondButtonText: '',
                     secondButtonAction: () {},
                   );
