@@ -9,6 +9,7 @@ from drf_spectacular.utils import extend_schema
 
 
 from tools.responses import method_not_allowed
+from tools.roles_check import is_workspace_owner
 
 
 from .models import Workspace , Workspace_Membership
@@ -80,18 +81,33 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
     
     
-    @extend_schema(exclude=True)
-    def update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return method_not_allowed()
-        return super().update(request, *args, **kwargs)
+    # @extend_schema(exclude=True)
+    # def update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+    #     return method_not_allowed()
+    #     return super().update(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def partial_update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return method_not_allowed()
+        pk = kwargs.get('pk')
+        if not is_workspace_owner(request.user.id,pk):
+            return Response(
+            {"detail": "User is not the owner"},
+            status=status.HTTP_400_BAD_REQUEST
+            )
+        if ( request.data.get('members') and request.data.get('owner')):
+            return Response(
+            {"detail": "you can't change members or owners"},
+            status=status.HTTP_400_BAD_REQUEST
+            )
         return super().partial_update(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
-        return method_not_allowed()
-        return super().destroy(request, *args, **kwargs)
+        pk = kwargs.get('pk')
+        if is_workspace_owner(request.user.id,pk):
+            return super().destroy(request, *args, **kwargs)
+        return Response(
+        {"detail": "User is not the owner"},
+        status=status.HTTP_400_BAD_REQUEST
+    )
     
     # Invite section
     
