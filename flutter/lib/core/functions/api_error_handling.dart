@@ -2,7 +2,11 @@ import 'package:dio/dio.dart';
 
 String handleDioError(DioException e) {
   if (e.response != null) {
-  print(e.response!.data);
+    if (e.response!.data.runtimeType == String) {
+      return 'something went wrong please Try again later';
+    }
+
+    print(e.response!.data);
     return e.response!.data["detail"] ??
         e.response!.data["message"] ??
         'something went wrong please Try again later';
