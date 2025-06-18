@@ -27,6 +27,7 @@ from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
 from workspaces.models import Invite , Workspace_Membership
 from tasks.models import Task
 from tools.responses import exception_response
+from tools.roles_check import is_workspace_owner
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
 from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , CanEditProject
@@ -289,7 +290,24 @@ class UserViewSet(viewsets.ModelViewSet):
         invite.delete()
         return Response(None , status.HTTP_202_ACCEPTED)
     
-
+    @extend_schema(
+        summary="Show Sent Invites ",
+        operation_id="show_sent_invites",
+        description="show all invites that aare sent by the user ",
+        tags=["Users/Invite"],
+    )
+    @action(detail=False , methods=['get'] , serializer_class=ShowInvitesSerializer)
+    def show_sent_invites(self , request):
+        workspace_id = request.data.get('workspace')
+        if is_workspace_owner(request.user.id,workspace_id):
+            invites = Invite.objects.filter(sender=request.user).all()
+            serializer = self.get_serializer(invites , many = True)
+            # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
+            return Response(serializer.data , status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "User is not the owner"},
+            status=status.HTTP_400_BAD_REQUEST
+            )
     
     @extend_schema(
         summary="Entro To The App",
