@@ -42,7 +42,7 @@ dependencies:
   image_picker: ^1.1.2
   dropdown_button2: ^2.3.9
   dio: ^5.8.0+1
- 
+
 
 
 dev_dependencies:

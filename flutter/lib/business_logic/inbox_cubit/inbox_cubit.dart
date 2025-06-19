@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/API/inbox.dart';
+import 'package:pr1/core/constance/enums.dart';
 import 'package:pr1/data/models/inbox/create_inbox_task_model.dart';
 import 'package:pr1/data/models/inbox/destroy_inbox_task_model.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
@@ -29,7 +30,9 @@ class InboxCubit extends Cubit<InboxState> {
 
     List<InboxTasksModel> inboxTasksList = await InboxApi.fetchInboxTasks();
     if (inboxTasksList[0].errorMessage.isEmpty) {
-      emit(InboxFetchingTasksSucceededState(inboxTasksList));
+      List<List<InboxTasksModel>> allInboxTasks =
+          filterInboxTasks(inboxTasksList);
+      emit(InboxFetchingTasksSucceededState(allInboxTasks));
     } else {
       emit(InboxFetchingTasksFailedState(inboxTasksList[0].errorMessage));
     }
@@ -83,5 +86,27 @@ class InboxCubit extends Cubit<InboxState> {
     } else {
       emit(InboxTaskDestroyingFailedState(destroyInboxTaskModel.errorMessage));
     }
+  }
+
+  List<List<InboxTasksModel>> filterInboxTasks(
+      List<InboxTasksModel> inboxTasks) {
+    List<InboxTasksModel> pendingTasks = [];
+    List<InboxTasksModel> inProgressTasks = [];
+    List<InboxTasksModel> completedTasks = [];
+    for (InboxTasksModel item in inboxTasks) {
+      if (item.status == TaskStatus.pending.name.toString()) {
+        pendingTasks.add(item);
+      } else if (item.status == TaskStatus.in_progress.name.toString()) {
+        inProgressTasks.add(item);
+      } else {
+        completedTasks.add(item);
+      }
+    }
+    List<List<InboxTasksModel>> allTasks = [
+      pendingTasks,
+      inProgressTasks,
+      completedTasks
+    ];
+    return allTasks;
   }
 }

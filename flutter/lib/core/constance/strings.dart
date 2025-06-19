@@ -10,6 +10,7 @@ const String workspaceInfoRoute = 'workspaceInfoRoute';
 const String workspacesShowPageRoute = 'workspacesShowPageRoute';
 const String receivedInvitationPageRoute = 'receivedInvitationPageRoute';
 const String mainHomePageRoute = 'mainHomePageRoute';
+const String mainInboxPage = 'MainInboxPage';
 
 
 ///Splash screen strings
@@ -62,7 +63,7 @@ const String invitesText = 'Invites';
 const String receivedInviteText = 'received Invites';
 const String inboxText = 'Inbox';
 const String allTasksText = 'All Tasks';
-const String tasksText = 'tasks';
+
 
 const String hiText = 'Hi';
 const String warning = 'warning';

@@ -35,7 +35,7 @@ class WorkspaceApi {
   static Future<List<FetchWorkspacesModel>> fetchWorkspaces() async {
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMTc0ODc2LCJpYXQiOjE3NTAxNzEyNzYsImp0aSI6IjE4NGVlNzAxYzcwNjQyMGJiNGVjYjNlNjYxYzk2M2ZjIiwidXNlcl9pZCI6MX0.VOV_Cyi3Ln0zYWuHXnIN16FgQUgO55001N8iHo2hRCI'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMjI3NTY2LCJpYXQiOjE3NTAyMjM5NjYsImp0aSI6IjkxYzI0MjdiM2NmMjQ3ZWM4NTBjM2UwNGM3ZmEzMDI4IiwidXNlcl9pZCI6MX0.0Lbkqzrk9KpsjqjXMpq6k4R3Egjj_YQz2JwCi5rLgRw'
     };
 
       late List<FetchWorkspacesModel> getWorkspacesModel;
@@ -66,7 +66,7 @@ class WorkspaceApi {
   static Future<RetrieveWorkspace> retrieveWorkspace (int workspaceId) async {
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMTc0ODc2LCJpYXQiOjE3NTAxNzEyNzYsImp0aSI6IjE4NGVlNzAxYzcwNjQyMGJiNGVjYjNlNjYxYzk2M2ZjIiwidXNlcl9pZCI6MX0.VOV_Cyi3Ln0zYWuHXnIN16FgQUgO55001N8iHo2hRCI'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMjI3NTY2LCJpYXQiOjE3NTAyMjM5NjYsImp0aSI6IjkxYzI0MjdiM2NmMjQ3ZWM4NTBjM2UwNGM3ZmEzMDI4IiwidXNlcl9pZCI6MX0.0Lbkqzrk9KpsjqjXMpq6k4R3Egjj_YQz2JwCi5rLgRw'
     };
 
     late RetrieveWorkspace retrieveWorkspace;
