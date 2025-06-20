@@ -13,7 +13,7 @@ class InboxApi {
       'Content-Type': 'multipart/form-data',
       'Accept': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDc0MDY5LCJpYXQiOjE3NTAwNzA0NjksImp0aSI6Ijc2MDdjZTllN2IxYzQ3MjhhNjdkZGU5YWVkN2JlNzJkIiwidXNlcl9pZCI6MX0.u5tfOHuIqT8OnMqw7BmA2n6SlA2zRtiq_AqUyQMrTh4'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
     };
 
     var data = FormData.fromMap({
@@ -50,7 +50,7 @@ class InboxApi {
     var headers = {
       'Accept': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMzYxMzYzLCJpYXQiOjE3NTAzNTc3NjMsImp0aSI6IjY4MWM5MmQzMjMxODQ5ZjI4ZDE1MDBkZmU1NjY2MDA2IiwidXNlcl9pZCI6MX0.K7QtYwvPng9WVDmjujAjtPSYMlxWHoLuGS3sFw_eoW0'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
     };
 
     late List<InboxTasksModel> inboxTasksModelList;
@@ -81,7 +81,7 @@ class InboxApi {
     var headers = {
       'Accept': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDc0MDY5LCJpYXQiOjE3NTAwNzA0NjksImp0aSI6Ijc2MDdjZTllN2IxYzQ3MjhhNjdkZGU5YWVkN2JlNzJkIiwidXNlcl9pZCI6MX0.u5tfOHuIqT8OnMqw7BmA2n6SlA2zRtiq_AqUyQMrTh4'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
     };
 
     late RetrieveInboxTaskModel retrieveInboxTaskModel;
@@ -116,7 +116,7 @@ class InboxApi {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDc5MTc4LCJpYXQiOjE3NTAwNzU1NzgsImp0aSI6IjU5YWI2NzQ5MDFhZDQ3M2JhZDMxZGJjMWEzOWI0ZTMzIiwidXNlcl9pZCI6MX0.RQjMYI2_SZu_-kokp97y4W2tLICFWRHAXAqYw8a_Rmo'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
     };
     var data = {
       "title": title,
@@ -152,7 +152,7 @@ class InboxApi {
   static Future<DestroyInboxTaskModel> destroyTaskModel(int taskId) async {
     var headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDc5MTc4LCJpYXQiOjE3NTAwNzU1NzgsImp0aSI6IjU5YWI2NzQ5MDFhZDQ3M2JhZDMxZGJjMWEzOWI0ZTMzIiwidXNlcl9pZCI6MX0.RQjMYI2_SZu_-kokp97y4W2tLICFWRHAXAqYw8a_Rmo'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
     };
 
     late DestroyInboxTaskModel destroyInboxTaskModel;

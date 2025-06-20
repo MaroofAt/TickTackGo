@@ -12,8 +12,7 @@ part 'inbox_state.dart';
 class InboxCubit extends Cubit<InboxState> {
   InboxCubit() : super(InboxInitial());
 
-  Future<void> createInboxTask(
-      String title, String description, String priority) async {
+  Future<void> createInboxTask(String title, String description, String priority) async {
     emit(InboxCreatingState());
 
     CreateInboxTaskModel createInboxTaskModel =
@@ -88,8 +87,7 @@ class InboxCubit extends Cubit<InboxState> {
     }
   }
 
-  List<List<InboxTasksModel>> filterInboxTasks(
-      List<InboxTasksModel> inboxTasks) {
+  List<List<InboxTasksModel>> filterInboxTasks(List<InboxTasksModel> inboxTasks) {
     List<InboxTasksModel> pendingTasks = [];
     List<InboxTasksModel> inProgressTasks = [];
     List<InboxTasksModel> completedTasks = [];
@@ -109,4 +107,5 @@ class InboxCubit extends Cubit<InboxState> {
     ];
     return allTasks;
   }
+
 }

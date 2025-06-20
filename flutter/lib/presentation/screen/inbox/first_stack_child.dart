@@ -11,17 +11,16 @@ class FirstStackChild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: TabBarView(
-        children: List.generate(3, (index) {
-          if (allInboxTasks[index].isEmpty) {
-            return Center(
-              child: MyText.text1('No tasks here ',textColor: white,fontSize: 22),
-            );
-          }
-          return TaskList(allInboxTasks[index]);
-        }),
-      ),
+    return TabBarView(
+      physics: const NeverScrollableScrollPhysics(),
+      children: List.generate(3, (index) {
+        if (allInboxTasks[index].isEmpty) {
+          return Center(
+            child: MyText.text1('No tasks here ',textColor: white,fontSize: 22),
+          );
+        }
+        return TaskList(allInboxTasks[index]);
+      }),
     );
   }
 }

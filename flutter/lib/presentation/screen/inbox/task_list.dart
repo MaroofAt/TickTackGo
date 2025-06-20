@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
+import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class TaskList extends StatelessWidget {
@@ -65,6 +66,7 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const Spacer(),
+            MyIcons.icon(Icons.arrow_circle_down,color: white)
           ],
         ),
       ),
