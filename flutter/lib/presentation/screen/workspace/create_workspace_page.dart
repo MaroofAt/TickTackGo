@@ -39,7 +39,6 @@ class CreateWorkspacePage extends StatelessWidget {
                         textColor: Theme.of(context).secondaryHeaderColor),
                     SizedBox(height: height(context) * 0.02),
                     Column(
-                      spacing: height(context) * 0.05,
                       children: [
                         BlocBuilder<WorkspaceCubit, WorkspaceState>(
                           builder: (context, state) {
@@ -119,7 +118,6 @@ class CreateWorkspacePage extends StatelessWidget {
                           width: width(context) * 0.9,
                           height: height(context) * 0.2,
                           child: Column(
-                            spacing: height(context) * 0.02,
                             children: [
                               MyTextField.textField(
                                 context,

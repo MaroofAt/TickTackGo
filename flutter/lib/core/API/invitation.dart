@@ -12,7 +12,7 @@ class InvitationApi {
   static Future<InvitationSearchModel> invitationSearch(String query) async {
     var headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMTc0ODc2LCJpYXQiOjE3NTAxNzEyNzYsImp0aSI6IjE4NGVlNzAxYzcwNjQyMGJiNGVjYjNlNjYxYzk2M2ZjIiwidXNlcl9pZCI6MX0.VOV_Cyi3Ln0zYWuHXnIN16FgQUgO55001N8iHo2hRCI'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODIzMTY2LCJpYXQiOjE3NDk4MTk1NjYsImp0aSI6IjQ1NjE5MTIwMTdmYjRjYTQ4ODc4Yzg4NTJmMWUwODMxIiwidXNlcl9pZCI6MX0.e2uSWvp1a-Y503CaOQzvzJqNU21lDbIkRkfScAX91C0'
     };
 
     late InvitationSearchModel invitationSearchModel;
@@ -134,7 +134,7 @@ class InvitationApi {
   static Future<SendInviteModel> sendInvite(int senderId, int receiverId, int workspaceId) async {
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMTc0ODc2LCJpYXQiOjE3NTAxNzEyNzYsImp0aSI6IjE4NGVlNzAxYzcwNjQyMGJiNGVjYjNlNjYxYzk2M2ZjIiwidXNlcl9pZCI6MX0.VOV_Cyi3Ln0zYWuHXnIN16FgQUgO55001N8iHo2hRCI'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODIzMTY2LCJpYXQiOjE3NDk4MTk1NjYsImp0aSI6IjQ1NjE5MTIwMTdmYjRjYTQ4ODc4Yzg4NTJmMWUwODMxIiwidXNlcl9pZCI6MX0.e2uSWvp1a-Y503CaOQzvzJqNU21lDbIkRkfScAX91C0'
     };
     var data = {
       "sender": senderId,
@@ -143,13 +143,11 @@ class InvitationApi {
       "status": "pending"
     };
 
-    print(data);
-
     late SendInviteModel sendInviteModel;
 
     try {
       var response = await dio.request(
-        '/workspaces/$receiverId/invite_user/',
+        '/workspaces/$senderId/invite_user/',
         options: Options(
           method: 'POST',
           headers: headers,

@@ -1,58 +1,152 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+import 'package:pr1/core/API/auth.dart';
+import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/data/models/auth/sign_up_model.dart';
+import 'package:pr1/presentation/screen/auth/signupnew.dart';
+
+import '../../core/functions/navigation_functions.dart';
+import '../../core/variables/api_variables.dart';
+import '../../core/variables/global_var.dart';
+import '../../data/local_data/local_data.dart';
+import '../../data/models/auth/sign-up-model-withoutotp.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
+  bool isloading=false;
 
-  // Future<void> loginUser( String email, String password) async {
-  //   emit(LoginLoadingState());
-  //   try {
-  //     final response = await dio.post(
-  //       '/login',
-  //       data: {
-  //         'email': email,
-  //         'password': password,
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //
-  //       emit(SuccessfulyLoginState());
-  //     } else {
-  //       emit(FailedLoginState());
-  //     }
-  //   }on DioException catch (e) {
-//     final errorMessage = e.response?.data['message'] ?? 'Something happen';
-//     emit(FailedLoginState(errorMessage));
-//   } catch (e) {
-//     emit(FailedLoginState(''));
-//   }
-  // }
-  // Future<void> signupUser(String name, String email, String password, Emitter<AuthState> emit) async {
-  //   emit(SignupLoadingState());
-  //   try {
-  //     final response = await dio.post(
-  //       '/register',
-  //       data: {
-  //         'name': name,
-  //         'email': email,
-  //         'password': password,
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       emit(SuccessfulySignupState());
-  //     } else {
-  //       emit(FailedSignupState());
-  //     }
-  //   }  on DioException catch (e) {
-//     final errorMessage = e.response?.data['message'] ?? '';
-//     emit(FailedSignupState(errorMessage));
-//   } catch (e) {
-//     emit(FailedSignupState(''));
-//   }
-  // }
+
+  ///////////SignUp
+  Future<void> sendEmailForOTP(String email , BuildContext context) async {
+    emit(SignupLoadingState());
+    isloading=true;
+
+    print("trying...");
+    var data = FormData.fromMap({
+      'email': email
+    });
+    try {
+      var response = await dio.request(
+        '/users/send_otp/',
+        options: Options(
+          method: 'POST',
+        ),
+        data: data,
+      );
+  if (response.statusCode == 200 && response.data.isNotEmpty) {
+    print("sucesss");
+    print(response.data);
+    pushReplacementNamed(context, verfiyeRoute);
+    emit(OTPSentSuccess ());
+  } else {
+    isloading=false;
+  print('Error: ${response.data}');
+  emit(FailedSignupState(response.data));
+
+  } } catch (e) {
+      isloading=false;
+      print("Field");
+      emit(FailedSignupState("$e"));
+    }
+
+  }
+  void initializeModel(String name, String password, String email) {
+    globalSignUpModel = SignUpModel(
+      username: name,
+      email: email,
+      password: password,
+      howToUseWebsite: "small_team",
+      whatDoYouDo: "software_or_it",
+      howDidYouGetHere: "friends",
+    );
+  }
+  Future<void> verify_SignUp(String otpCode, BuildContext context) async {
+    if (globalSignUpModel == null) {
+      emit(FailedSignupState("SignUp process not started properly"));
+      print("Model initialized: ${globalSignUpModel?.toJson()}");
+      print("no model there");
+    }
+
+    emit(SignupLoadingState());
+    isloading = true;
+    print("trying verify...");
+
+    try {
+
+      final requestData = {
+        "username": globalSignUpModel!.username,
+        "email": globalSignUpModel!.email,
+        "password": globalSignUpModel!.password,
+        "how_to_use_website": globalSignUpModel!.howToUseWebsite.isNotEmpty
+            ? globalSignUpModel!.howToUseWebsite
+            : "small_team",
+        "what_do_you_do": globalSignUpModel!.whatDoYouDo.isNotEmpty
+            ? globalSignUpModel!.whatDoYouDo
+            : "software_or_it",
+        "how_did_you_get_here": globalSignUpModel!.howDidYouGetHere.isNotEmpty
+            ? globalSignUpModel!.howDidYouGetHere
+            : "friends",
+        "otp": otpCode,
+      };
+
+      print("Request Data: $requestData");
+
+      var response = await dio.post(
+        '/users/verify_register/',
+        data: requestData,
+      );
+
+      print("Response: ${response.data}");
+
+      if (response.statusCode == 200) {
+        print("Verification success!");
+        pushNamed(context, mainHomePageRoute);
+        emit(SignupVerifiedSuccessState());
+      } else {
+        print('Error: ${response.statusCode} - ${response.data}');
+        emit(FailedSignupState(response.data.toString()));
+      }
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}");
+      emit(FailedSignupState(e.response?.data?['message'] ?? "Verification failed"));
+    } finally {
+      isloading = false;
+    }
+  }
+
+
+
+  ///////login
+Future<void>login(String email, String password,BuildContext context)async{
+    emit(LoginLoadingState());
+      try {
+        final response = await dio.post(
+          '/users/token/refresh/',
+          data: {
+            'email': email,
+            'password': password,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final token = response.data['token'];
+          print("Login success, token: $token");
+          await saveToken(token);
+
+          emit(SuccessfulyLoginState());
+          pushNamed(context, mainHomePageRoute);
+        } else {
+          emit(FailedLoginState("Invalid credentials"));
+        }
+      } on DioException catch (e) {
+        print("Login error: ${e.response?.data}");
+        emit(FailedLoginState(e.response?.data.toString() ?? "Login failed"));
+      }
+    }
 
 }
+

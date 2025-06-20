@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 
@@ -55,7 +58,9 @@ class _SigninnewState extends State<Signinnew>  {
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: primaryColor,
       body: SingleChildScrollView(
-        child: Column(
+        child: BlocBuilder<AuthCubit, AuthState>(
+  builder: (context, state) {
+    return Column(
           crossAxisAlignment:CrossAxisAlignment.start,
           children: [
             SizedBox(height: 100,),
@@ -118,13 +123,8 @@ class _SigninnewState extends State<Signinnew>  {
               margin: EdgeInsets.only(left: 15,top:20,bottom: 40),
               decoration:BoxDecoration(color:parrotGreen,borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
                 child: IconButton(onPressed: (){
-    if (_validateFields()) {
-    print("All fields are valid");
-
-    print("Email: ${_emailController.text}");
-    print("Password: ${_passwordController.text}");
-
-    }}, icon: Text("Sign in",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
+                  context.read<AuthCubit>().login(_emailController.text,_passwordController.text,context);
+  }, icon: Text("Sign in",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
          Row(
            children: [
 Container(child: Icon(Icons.key_sharp,color: lightGrey),margin:EdgeInsets.only(left: width(context)*0.354
@@ -136,19 +136,21 @@ Container(child: Icon(Icons.key_sharp,color: lightGrey),margin:EdgeInsets.only(l
          ),
             Container(
 
-              padding: EdgeInsets.only(left: 50),
+              padding: EdgeInsets.only(left: 80),
                 margin: EdgeInsets.only(left: 15,top:40,bottom: 40),
                 decoration:BoxDecoration(color:ampleOrange.withOpacity(0.5),borderRadius: BorderRadius.all(Radius.circular(10) )),width: width(context)*0.9,
                 child: IconButton(onPressed: (){}, icon:Row(
                   children: [
-  Container(child: Image.asset("google.png"),width: 25,height: 25,),
+  Container(child: Image.asset("assets/images/auth_page_images/google.png"),width: 25,height: 25,),
                     SizedBox(width: 10,),
                     Text("Sign in with Google",style: TextStyle(color:white,fontSize: 20,fontFamily: 'PTSerif'))
                   ],
                 ))),
 
           ],
-        ),
+        );
+  },
+),
       ),
     );
   }

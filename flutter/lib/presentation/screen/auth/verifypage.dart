@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 
@@ -16,13 +19,16 @@ class VerifypageState extends State<Verifypage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Stack(
+          child: BlocBuilder<AuthCubit, AuthState>(
+  builder: (context, state) {
+    bool isloading=BlocProvider.of<AuthCubit>(context).isloading;
+    return Stack(
             children: [
               Positioned(
                 top: height(context)*0.49,left: width(context)*0.25,
                 child:  Center(
                 child: Text(
-                    "We have just send 4 degit\n code via your email",
+                    "We have just send 6 degit\n code via your email",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(color: white,fontSize: 17)
                 ),),),
@@ -59,7 +65,7 @@ class VerifypageState extends State<Verifypage> {
                         ),
                         Pinput(
                           showCursor: true,
-                          length: 4,
+                          length: 6,
                           controller: pincontroller,
                           defaultPinTheme: PinTheme(
                             decoration: BoxDecoration(
@@ -80,13 +86,14 @@ class VerifypageState extends State<Verifypage> {
                         IconButton(
                             onPressed: () {
                               print(pincontroller.text);
+                              context.read<AuthCubit>().verify_SignUp(pincontroller.text,context);
                             },
                             icon: Container(
                               margin: EdgeInsets.all(10),
                               width: width(context) * 0.3,
                               height: height(context) * 0.04,
                               child: Center(
-                                child: Text("Verify"),
+                                child: isloading?CircularProgressIndicator(color: ampleOrange,strokeWidth:3):Text("Verify"),
                               ),
                               decoration: BoxDecoration(
                                   color: white,
@@ -132,7 +139,9 @@ SizedBox(height: 10,),
                 ],
               ),
             ],
-          ),
+          );
+  },
+),
         ),
       ),
       backgroundColor: primaryColor,

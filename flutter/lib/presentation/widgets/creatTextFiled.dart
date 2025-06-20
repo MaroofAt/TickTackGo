@@ -40,7 +40,7 @@ class CreateTextField extends StatelessWidget {
           ),
         ),
       ),
-      width: width(context) - 100,
+      width: width(context) *0.9,
       height: 50,
       margin: EdgeInsets.only(top: 10),
     );
