@@ -42,8 +42,8 @@ class CreateProject extends StatefulWidget {
          backgroundColor: primaryColor,
          child: Column(
            children: [
-             ///// TODO add image
-             Image.asset( "assets/images/verify_page_images/verfiy.png"),
+             // SizedBox(h:20),
+             Container(child: Image.asset( "assets/images/verify_page_images/project.png"),),
              const Center(child: Text("create your owner project",style: TextStyle(color: white,fontSize: 18,fontFamily: 'PTSerif'),),),
              const Center(child: Text("on workspace",style: TextStyle(color: white,fontSize: 18,fontFamily: 'PTSerif'),),),
 
@@ -51,11 +51,11 @@ class CreateProject extends StatefulWidget {
                height: 20,
              ),
              Container(child:  CreateTextField(
-               text: "name's project",
+               text: "title",
                controller: _name_project,
              ),margin: EdgeInsets.all(15)),
              Container(child:  CreateTextField(
-               text: "describtion's project",
+               text: "description",
                controller: _name_project,
              ),margin: EdgeInsets.all(15)),
              SizedBox(height: 3,),

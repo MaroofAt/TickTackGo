@@ -54,7 +54,6 @@ class InvitesList extends StatelessWidget {
                     fontSize: 18,
                   ),
                   Row(
-                    spacing: width(context) * 0.12,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       MyGestureDetector.gestureDetector(

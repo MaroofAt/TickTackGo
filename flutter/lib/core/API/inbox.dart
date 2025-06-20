@@ -50,7 +50,7 @@ class InboxApi {
     var headers = {
       'Accept': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMzYxMzYzLCJpYXQiOjE3NTAzNTc3NjMsImp0aSI6IjY4MWM5MmQzMjMxODQ5ZjI4ZDE1MDBkZmU1NjY2MDA2IiwidXNlcl9pZCI6MX0.K7QtYwvPng9WVDmjujAjtPSYMlxWHoLuGS3sFw_eoW0'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDgzMzA0LCJpYXQiOjE3NTAwNzk3MDQsImp0aSI6IjM0YTRkM2I0ZDJjNTQ2YTJiMGM1YWE0NzliOTQyNjA5IiwidXNlcl9pZCI6MX0.kpXp1mDWuxnZck5k5X22h4K_qBOFBg0GHUh7qhSfhGc'
     };
 
     late List<InboxTasksModel> inboxTasksModelList;

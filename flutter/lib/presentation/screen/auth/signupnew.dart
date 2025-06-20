@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
 
 import '../../../core/constance/strings.dart';
 import '../../../core/functions/navigation_functions.dart';
@@ -15,9 +18,9 @@ class Signupnew extends StatefulWidget {
 }
 
 class SignUpnewstate extends State<Signupnew>  {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   String? erroremail;
   String? errorpassword;
   String? errorname;
@@ -34,28 +37,28 @@ class SignUpnewstate extends State<Signupnew>  {
   bool _validateFields() {
     setState(() {
       //// Name validation
-      if (_nameController.text.isEmpty) {
+      if (nameController.text.isEmpty) {
         errorname = 'Please enter your name';
-      } else if (_nameController.text.length < 3) {
+      } else if (nameController.text.length < 3) {
         errorname = 'Name must be at least 3 characters';
-      } else if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(_nameController.text)) {
+      } else if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(nameController.text)) {
         errorname = 'Name can only contain letters and spaces';
       } else {
         errorname = null;
       }
       // Email validation
-      if (_emailController.text.isEmpty) {
+      if (emailController.text.isEmpty) {
         erroremail = 'Please enter your email';
-      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text)) {
+      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(emailController.text)) {
         erroremail = 'Please enter a valid email';
       } else {
         erroremail = null;
       }
 
       // Password validation
-      if (_passwordController.text.isEmpty) {
+      if (passwordController.text.isEmpty) {
         errorpassword = 'Please enter your password';
-      } else if (_passwordController.text.length < 8) {
+      } else if (passwordController.text.length < 8) {
         errorpassword = 'Password must be at least 8 characters';
       } else {
         errorpassword = null;
@@ -67,7 +70,10 @@ class SignUpnewstate extends State<Signupnew>  {
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: primaryColor,
-      body: SingleChildScrollView(
+      body: BlocBuilder<AuthCubit,AuthState>(
+  builder: (context, state) {
+    bool isloading=BlocProvider.of<AuthCubit>(context).isloading;
+    return SingleChildScrollView(
         child: Column(
           crossAxisAlignment:CrossAxisAlignment.start,
           children: [
@@ -81,7 +87,7 @@ class SignUpnewstate extends State<Signupnew>  {
            Container(child:  CreateTextField(
              text: "Your name",
              icon: Icon(Icons.person_2_outlined),
-             controller: _nameController,
+             controller: nameController,
            ),margin: EdgeInsets.only(left: 15),),
             if (errorname != null)
               Center(
@@ -101,7 +107,7 @@ class SignUpnewstate extends State<Signupnew>  {
             , Container(child:  CreateTextField(
               text: "Your Email",
               icon: Icon(Icons.email),
-              controller: _emailController,
+              controller: emailController,
             ),margin: EdgeInsets.only(left: 15,),), if (erroremail != null)
               Padding(
                 padding: const EdgeInsets.only(left:20,bottom: 5,top:3),
@@ -119,7 +125,7 @@ class SignUpnewstate extends State<Signupnew>  {
               text: "Your Password",
               icon: Icon(Icons.lock_outline_rounded),
               obscureText: _obscurePassword,
-              controller: _passwordController,
+              controller: passwordController,
               iconsuf: IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -150,10 +156,17 @@ class SignUpnewstate extends State<Signupnew>  {
                   if (_validateFields()) {
                     print("All fields are valid");
 
-                    print("Email: ${_emailController.text}");
-                    print("Password: ${_passwordController.text}");
+                    print("Email: ${emailController.text}");
+                    print("Password: ${passwordController.text}");
 
-                  }}, icon: Text("Sign Up",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
+                  }
+                  context.read<AuthCubit>().initializeModel(nameController.text,passwordController.text, emailController.text);
+
+                  context.read<AuthCubit>().sendEmailForOTP( emailController.text,context
+                  );
+
+                  }, icon:isloading? CircularProgressIndicator(color: ampleOrange,strokeWidth:3)
+                    : Text("Sign Up",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
             Container(child: Text("Or",style: TextStyle(color: lightGrey,fontSize: 14,fontFamily: 'PTSerif'),textAlign:TextAlign.end),margin:EdgeInsets.only(left:width(context)*0.48))
             , Container(
                 margin: EdgeInsets.only(left: 15,top:20,bottom: 20),
@@ -165,7 +178,9 @@ class SignUpnewstate extends State<Signupnew>  {
 
           ],
         ),
-      ),
+      );
+  },
+),
     );
   }
 }

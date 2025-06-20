@@ -38,7 +38,7 @@ Icon(Icons.arrow_back_sharp,color: white,size: 24,),
             IconButton(onPressed: (){}, icon: Icon(Icons.menu,color: white,))
           ],
         ),
-        backgroundColor: ampleOrange.withOpacity(0.5),
+        backgroundColor: primaryColor,
       ),
       backgroundColor: primaryColor,
       body: SingleChildScrollView(

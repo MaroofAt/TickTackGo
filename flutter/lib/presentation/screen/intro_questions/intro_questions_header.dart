@@ -21,7 +21,6 @@ class _IntroQuestionsHeaderState extends State<IntroQuestionsHeader> {
     return Padding(
       padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
       child: Row(
-        spacing: 25,
         children: [
           MyGestureDetector.gestureDetector(
             onTap: () {

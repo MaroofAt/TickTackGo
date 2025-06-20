@@ -42,7 +42,7 @@ dependencies:
   image_picker: ^1.1.2
   dropdown_button2: ^2.3.9
   dio: ^5.8.0+1
-
+ 
 
 
 dev_dependencies:
@@ -71,8 +71,10 @@ flutter:
   assets:
     - assets/images/logo_images/
     - assets/images/verify_page_images/
+    - assets/images/verify_page_images/project.png
     - assets/images/welcome_screens_images/
     - assets/images/workspace_images/
+    - assets/images/auth_page_images/
     - assets/fonts/
     
   #   - images/a_dot_ham.jpeg

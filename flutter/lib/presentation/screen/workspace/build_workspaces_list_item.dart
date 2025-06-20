@@ -31,7 +31,6 @@ class BuildListItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-              spacing: 10,
               children: [
                 Container(
                   height: height(context) * 0.1,

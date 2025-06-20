@@ -14,9 +14,11 @@ final class FailedLoginState extends AuthState {
 
 //// signup state
 final class SignupLoadingState extends AuthState{}
-final class SuccessfulySignupState extends AuthState{}
+final class OTPSentSuccess  extends AuthState{}
+final class SignupVerifiedSuccessState  extends AuthState{}
+
 final class FailedSignupState extends AuthState {
-  final String errorMessage;
-  FailedSignupState(this.errorMessage);
+  final String message;
+  FailedSignupState(this.message);
 }
 
