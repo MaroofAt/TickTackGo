@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/API/inbox.dart';
+import 'package:pr1/core/enums/task_status_enum.dart';
 import 'package:pr1/data/models/inbox/create_inbox_task_model.dart';
 import 'package:pr1/data/models/inbox/destroy_inbox_task_model.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
