@@ -38,6 +38,18 @@ class MainHomePage extends StatelessWidget {
                     child:
                         MyIcons.icon(Icons.person, size: width(context) * 0.1),
                   ),
+                  // BlocBuilder<WorkspaceCubit, WorkspaceState>(
+                  //   builder: (context, state) {
+                  //     if (state is WorkspacesFetchingSucceededState) {
+                  //       return HomePopupMenuButton(state.fetchWorkspacesModel);
+                  //     } else if (state is WorkspacesFetchingFailedState) {
+                  //       return FetchingWorkspaceFailedPopupMenu(
+                  //           state.errorMessage);
+                  //     } else {
+                  //       return FetchingWorkspaceFailedPopupMenu('something went wrong\nrefresh?');
+                  //     }
+                  //   },
+                  // ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -74,11 +86,9 @@ class MainHomePage extends StatelessWidget {
                   CardBuilder(
                     color: parrotGreen,
                     label: inboxText,
-                    content: '',
+                    content: '17 $tasksText',
                     icon: Icons.folder_copy,
-                    onTap: () {
-                      pushNamed(context, mainInboxPage);
-                    },
+                    onTap: () {},
                   ),
                   // CardBuilder(
                   //   color: ampleOrange,

@@ -49,8 +49,7 @@ class InboxApi {
   static Future<List<InboxTasksModel>> fetchInboxTasks() async {
     var headers = {
       'Accept': 'application/json',
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDgzMzA0LCJpYXQiOjE3NTAwNzk3MDQsImp0aSI6IjM0YTRkM2I0ZDJjNTQ2YTJiMGM1YWE0NzliOTQyNjA5IiwidXNlcl9pZCI6MX0.kpXp1mDWuxnZck5k5X22h4K_qBOFBg0GHUh7qhSfhGc'
     };
 
     late List<InboxTasksModel> inboxTasksModelList;

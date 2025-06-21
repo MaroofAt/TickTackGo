@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/API/inbox.dart';
-import 'package:pr1/core/constance/enums.dart';
 import 'package:pr1/data/models/inbox/create_inbox_task_model.dart';
 import 'package:pr1/data/models/inbox/destroy_inbox_task_model.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
@@ -29,9 +28,7 @@ class InboxCubit extends Cubit<InboxState> {
 
     List<InboxTasksModel> inboxTasksList = await InboxApi.fetchInboxTasks();
     if (inboxTasksList[0].errorMessage.isEmpty) {
-      List<List<InboxTasksModel>> allInboxTasks =
-          filterInboxTasks(inboxTasksList);
-      emit(InboxFetchingTasksSucceededState(allInboxTasks));
+      emit(InboxFetchingTasksSucceededState(inboxTasksList));
     } else {
       emit(InboxFetchingTasksFailedState(inboxTasksList[0].errorMessage));
     }
@@ -107,5 +104,4 @@ class InboxCubit extends Cubit<InboxState> {
     ];
     return allTasks;
   }
-
 }
