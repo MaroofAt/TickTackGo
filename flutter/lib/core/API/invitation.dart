@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
+import 'package:pr1/data/local_data/local_data.dart';
 import 'package:pr1/data/models/invitation/accept_invite_model.dart';
 import 'package:pr1/data/models/invitation/invitation_search_model.dart';
 import 'package:pr1/data/models/invitation/reject_invite_model.dart';
@@ -10,9 +11,10 @@ import 'package:pr1/data/models/invitation/user_invites_model.dart';
 
 class InvitationApi {
   static Future<InvitationSearchModel> invitationSearch(String query) async {
+    String? token = await getRefreshToken();
     var headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODIzMTY2LCJpYXQiOjE3NDk4MTk1NjYsImp0aSI6IjQ1NjE5MTIwMTdmYjRjYTQ4ODc4Yzg4NTJmMWUwODMxIiwidXNlcl9pZCI6MX0.e2uSWvp1a-Y503CaOQzvzJqNU21lDbIkRkfScAX91C0'
+          'Bearer $token'
     };
 
     late InvitationSearchModel invitationSearchModel;
@@ -39,9 +41,10 @@ class InvitationApi {
   }
 
   static Future<List<dynamic>> fetchUserInvites(String token) async {
+    String? token = await getRefreshToken();
     var headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODI1NzExLCJpYXQiOjE3NDk4MjIxMTEsImp0aSI6IjBkNzRiYmYzYmEwNjQyMDU4ODMzZjY4MTg2NzBiNzZjIiwidXNlcl9pZCI6NX0.szn0HrpzlZkZswiGvz0UGzPdttQX_g1O_J9Sl7UMet0',
+          'Bearer $token',
     };
 
     late List<dynamic> userInvitesList;
@@ -69,10 +72,12 @@ class InvitationApi {
 
   static Future<AcceptInviteModel> acceptInvite(
       int inviteId, String token) async {
+
+    String? token = await getRefreshToken();
     var headers = {
       'Content-Type': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODI1NzExLCJpYXQiOjE3NDk4MjIxMTEsImp0aSI6IjBkNzRiYmYzYmEwNjQyMDU4ODMzZjY4MTg2NzBiNzZjIiwidXNlcl9pZCI6NX0.szn0HrpzlZkZswiGvz0UGzPdttQX_g1O_J9Sl7UMet0'
+          'Bearer $token'
     };
     var data = {"invite": inviteId};
 
@@ -101,10 +106,12 @@ class InvitationApi {
 
   static Future<RejectInviteModel> rejectInvite(
       int inviteId, String token) async {
+    String? token = await getRefreshToken();
+
     var headers = {
       'Content-Type': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODI1NzExLCJpYXQiOjE3NDk4MjIxMTEsImp0aSI6IjBkNzRiYmYzYmEwNjQyMDU4ODMzZjY4MTg2NzBiNzZjIiwidXNlcl9pZCI6NX0.szn0HrpzlZkZswiGvz0UGzPdttQX_g1O_J9Sl7UMet0'
+          'Bearer $token'
     };
 
     var data = {"invite": inviteId};
@@ -132,9 +139,11 @@ class InvitationApi {
   }
 
   static Future<SendInviteModel> sendInvite(int senderId, int receiverId, int workspaceId) async {
+
+String? token = await getRefreshToken();
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5ODIzMTY2LCJpYXQiOjE3NDk4MTk1NjYsImp0aSI6IjQ1NjE5MTIwMTdmYjRjYTQ4ODc4Yzg4NTJmMWUwODMxIiwidXNlcl9pZCI6MX0.e2uSWvp1a-Y503CaOQzvzJqNU21lDbIkRkfScAX91C0'
+      'Authorization': 'Bearer $token'
     };
     var data = {
       "sender": senderId,

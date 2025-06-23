@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/presentation/screen/auth/signinnew.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
 
 import '../../../core/constance/strings.dart';
@@ -172,8 +173,10 @@ class SignUpnewstate extends State<Signupnew>  {
                 margin: EdgeInsets.only(left: 15,top:20,bottom: 20),
                 decoration:BoxDecoration(color:ampleOrange, borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
                 child: IconButton(onPressed: (){
-                  pushReplacementNamed(context, signinRoute);
-                 }, icon: Text("Sign In",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
+                  pushReplacementScreen(context, BlocProvider(
+                    create: (context) => AuthCubit(),
+                    child:Signinnew(),
+                  ));                 }, icon: Text("Sign In",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
 
 
           ],

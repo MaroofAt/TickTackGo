@@ -1,5 +1,6 @@
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
+import 'package:pr1/data/local_data/local_data.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:dio/dio.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
@@ -7,7 +8,8 @@ import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
 
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
-      String title, String description, String token) async {
+      String title, String description) async {
+    String? token = await getRefreshToken();
     var headers = {'Authorization': 'Bearer $token'};
     var data = FormData.fromMap({'title': title, 'description': description});
 
@@ -33,9 +35,10 @@ class WorkspaceApi {
   }
 
   static Future<List<FetchWorkspacesModel>> fetchWorkspaces() async {
+    String? token = await getRefreshToken();
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDgzMzA0LCJpYXQiOjE3NTAwNzk3MDQsImp0aSI6IjM0YTRkM2I0ZDJjNTQ2YTJiMGM1YWE0NzliOTQyNjA5IiwidXNlcl9pZCI6MX0.kpXp1mDWuxnZck5k5X22h4K_qBOFBg0GHUh7qhSfhGc'
+      'Authorization': 'Bearer $token'
     };
 
       late List<FetchWorkspacesModel> getWorkspacesModel;
@@ -64,9 +67,10 @@ class WorkspaceApi {
   }
 
   static Future<RetrieveWorkspace> retrieveWorkspace (int workspaceId) async {
+    String? token = await getRefreshToken();
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDA5NDY3LCJpYXQiOjE3NTAwMDU4NjcsImp0aSI6ImRmOTdhMzk1NjkzYzRkOTU5MGUzYjdhZDBmZTQxYWM5IiwidXNlcl9pZCI6MX0.L_42v_cahm3bfjJotQSKdGH9Id_XrtfEj_S6qGqqpug'
+      'Authorization': 'Bearer $token'
     };
 
     late RetrieveWorkspace retrieveWorkspace;

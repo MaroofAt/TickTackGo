@@ -17,13 +17,13 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
-  bool isloading=false;
+  bool isloading = false;
 
 
   ///////////SignUp
-  Future<void> sendEmailForOTP(String email , BuildContext context) async {
+  Future<void> sendEmailForOTP(String email, BuildContext context) async {
     emit(SignupLoadingState());
-    isloading=true;
+    isloading = true;
 
     print("trying...");
     var data = FormData.fromMap({
@@ -31,29 +31,29 @@ class AuthCubit extends Cubit<AuthState> {
     });
     try {
       var response = await dio.request(
-        '/users/send_otp/',
+        'http://192.168.230.106:8000/api/users/send_otp/',
         options: Options(
           method: 'POST',
         ),
         data: data,
       );
-  if (response.statusCode == 200 && response.data.isNotEmpty) {
-    print("sucesss");
-    print(response.data);
-    pushReplacementNamed(context, verfiyeRoute);
-    emit(OTPSentSuccess ());
-  } else {
-    isloading=false;
-  print('Error: ${response.data}');
-  emit(FailedSignupState(response.data));
-
-  } } catch (e) {
-      isloading=false;
+      if (response.statusCode == 200 && response.data.isNotEmpty) {
+        print("sucesss");
+        print(response.data);
+        pushReplacementNamed(context, verfiyeRoute);
+        emit(OTPSentSuccess());
+      } else {
+        isloading = false;
+        print('Error: ${response.data}');
+        emit(FailedSignupState(response.data));
+      }
+    } catch (e) {
+      isloading = false;
       print("Field");
       emit(FailedSignupState("$e"));
     }
-
   }
+
   void initializeModel(String name, String password, String email) {
     globalSignUpModel = SignUpModel(
       username: name,
@@ -64,6 +64,7 @@ class AuthCubit extends Cubit<AuthState> {
       howDidYouGetHere: "friends",
     );
   }
+
   Future<void> verify_SignUp(String otpCode, BuildContext context) async {
     if (globalSignUpModel == null) {
       emit(FailedSignupState("SignUp process not started properly"));
@@ -76,7 +77,6 @@ class AuthCubit extends Cubit<AuthState> {
     print("trying verify...");
 
     try {
-
       final requestData = {
         "username": globalSignUpModel!.username,
         "email": globalSignUpModel!.email,
@@ -112,41 +112,47 @@ class AuthCubit extends Cubit<AuthState> {
       }
     } on DioException catch (e) {
       print("Dio Error: ${e.response?.data}");
-      emit(FailedSignupState(e.response?.data?['message'] ?? "Verification failed"));
+      emit(FailedSignupState(
+          e.response?.data?['message'] ?? "Verification failed"));
     } finally {
       isloading = false;
     }
   }
 
 
-
   ///////login
-Future<void>login(String email, String password,BuildContext context)async{
+  Future<void> login(String email, String password, BuildContext context) async {
+    isloading = true;
     emit(LoginLoadingState());
-      try {
-        final response = await dio.post(
-          '/users/token/refresh/',
-          data: {
-            'email': email,
-            'password': password,
-          },
-        );
 
-        if (response.statusCode == 200) {
-          final token = response.data['token'];
-          print("Login success, token: $token");
-          await saveToken(token);
+    try {
+      final response = await dio.post(
+        'http://192.168.230.106:8000/api/users/token/',
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
 
-          emit(SuccessfulyLoginState());
-          pushNamed(context, mainHomePageRoute);
-        } else {
-          emit(FailedLoginState("Invalid credentials"));
-        }
-      } on DioException catch (e) {
-        print("Login error: ${e.response?.data}");
-        emit(FailedLoginState(e.response?.data.toString() ?? "Login failed"));
+      if (response.statusCode == 200) {
+          final accessToken = response.data['access'];
+          final refreshToken = response.data['refresh'];
+          await saveTokens(accessToken, refreshToken);
+          print("Login success: ${response.data}");
+          pushReplacementNamed(context, mainHomePageRoute);
+        emit(SuccessfulyLoginState());
+      } else {
+        print("Login failed: ${response.data}");
+        emit(FailedLoginState(response.data.toString()));
       }
+    } on DioException catch (e) {
+      print("Dio Error: ${e.type} - ${e.message}");
+      emit(FailedLoginState("Failed to connect to server"));
+    } catch (e) {
+      print("General Error: $e");
+      emit(FailedLoginState("An unexpected error occurred"));
+    } finally {
+      isloading = false;
     }
-
+  }
 }
-
