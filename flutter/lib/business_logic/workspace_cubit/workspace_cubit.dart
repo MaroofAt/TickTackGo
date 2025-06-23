@@ -44,7 +44,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     emit(CreatingWorkspaceState());
     //TODO send user token
     CreateWorkspaceModel createWorkspaceModel =
-        await WorkspaceApi.createWorkspace(title, description, '');
+        await WorkspaceApi.createWorkspace(title, description);
     if (createWorkspaceModel.errorMessage.isEmpty) {
       emit(CreatedWorkspaceState(createWorkspaceModel));
     } else {

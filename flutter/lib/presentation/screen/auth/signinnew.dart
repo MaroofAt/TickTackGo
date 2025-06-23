@@ -60,6 +60,7 @@ class _SigninnewState extends State<Signinnew>  {
       body: SingleChildScrollView(
         child: BlocBuilder<AuthCubit, AuthState>(
   builder: (context, state) {
+    bool isloading =context.read<AuthCubit>().isloading;
     return Column(
           crossAxisAlignment:CrossAxisAlignment.start,
           children: [
@@ -124,7 +125,7 @@ class _SigninnewState extends State<Signinnew>  {
               decoration:BoxDecoration(color:parrotGreen,borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
                 child: IconButton(onPressed: (){
                   context.read<AuthCubit>().login(_emailController.text,_passwordController.text,context);
-  }, icon: Text("Sign in",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
+  }, icon:isloading?CircularProgressIndicator(color:white,): Text("Sign in",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
          Row(
            children: [
 Container(child: Icon(Icons.key_sharp,color: lightGrey),margin:EdgeInsets.only(left: width(context)*0.354

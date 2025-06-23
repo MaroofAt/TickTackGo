@@ -36,7 +36,7 @@ class MyText {
             fontSize: fontSize,
             fontWeight: fontWeight,
             overflow: overflow,
-            fontFamily: 'Coda',
+            fontFamily: 'DMSerifText',
             letterSpacing: letterSpacing,
             wordSpacing: wordSpacing,
           ),

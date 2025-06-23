@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/routes.dart';
+import 'package:pr1/presentation/screen/auth/signinnew.dart';
 import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import 'package:pr1/presentation/screen/home/main_home_page.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // builder: DevicePreview.appBuilder,
+      builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       theme: theme(),
       routes: routes,
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => AuthCubit()),
         ],
-        child: const Signupnew(),
+        child: const SplashScreen(),
       ),
     );
   }
