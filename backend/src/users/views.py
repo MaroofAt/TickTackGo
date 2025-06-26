@@ -125,6 +125,20 @@ class UserViewSet(viewsets.ModelViewSet):
         operation_id="register",
         description="registering the user (just for testing [without verification] )",
         tags=["Users/Auth"],
+        # request={
+        #     'multipart/form-data': {
+        #         'type': 'object',
+        #         'properties': {
+        #             'username': {'type': 'string', 'example': 'Aloosh'},
+        #             'email': {'type': 'eamil', 'example': 'aloosh@gmail.com'},
+        #             'password': {'type': 'string', 'example': 'ABU_alish09'},
+        #             'how_to_use_website': {'type': 'choice', 'example': 'small_team'},
+        #             'what_do_you_do': {'type':'choice' , 'example':'software_or_it'},
+        #             'how_did_you_get_here': {'type':'choice' , 'example':'friends'}
+        #         },
+        #         # 'required': ['title']
+        #     }
+        # }
     )
     @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer , url_path='register')
     def register(self , request):
@@ -140,7 +154,7 @@ class UserViewSet(viewsets.ModelViewSet):
         description="sending otp for the specified email in the request (to check that the user is the email owner) ",
         tags=["Users/Auth"],
     )
-    @action(detail=False , methods=['post'] ,url_path='send_otp')
+    @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer ,url_path='send_otp')
     def send_otp(self , request):
         email = request.data.get('email')
         if not email:
@@ -148,12 +162,16 @@ class UserViewSet(viewsets.ModelViewSet):
                 {'error': 'Email is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        send_otp_email_to_user(email)
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            send_otp_email_to_user(email)
+            return Response(
+                {'message': 'OTP has been sent to your email'},
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
 
-        return Response(
-            {'message': 'OTP has been sent to your email'},
-            status=status.HTTP_200_OK
-        )
+
     
     @extend_schema(
         summary="Verify And Register",
