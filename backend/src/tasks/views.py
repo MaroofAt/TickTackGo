@@ -71,7 +71,23 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
                 # 'required': ['title']
-            }
+            },
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Task 1'},
+                    'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
+                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
+                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
+                    'workspace': {'type':'integer' , 'example':1},
+                    'project': {'type':'integer' , 'example':1},
+                    'perent_task': {'type':'integer' , 'example':1 or None},
+                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
+                    'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'locked': {'type':'boolean' , 'example':False},
+                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
+                }
+            }            
         }
     )
     # @action(detail=True , methods=['post'] , serializer_class=TaskSerializer)
