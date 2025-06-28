@@ -8,18 +8,18 @@ import 'package:pr1/data/models/inbox/retrieve_inbox_task_model.dart';
 
 class InboxApi {
   static Future<CreateInboxTaskModel> createInboxTask(
-      String title, String description, String priority) async {
+      String title, String description, String priority,String status,String token) async {
     var headers = {
       'Content-Type': 'multipart/form-data',
       'Accept': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
+          'Bearer $token'
     };
 
     var data = FormData.fromMap({
       'title': title,
       'description': description,
-      'status': 'pending',
+      'status': status,
       'priority': priority,
     });
 
@@ -46,10 +46,10 @@ class InboxApi {
     return createInboxTaskModel;
   }
 
-  static Future<List<InboxTasksModel>> fetchInboxTasks() async {
+  static Future<List<InboxTasksModel>> fetchInboxTasks(String token) async {
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwMDgzMzA0LCJpYXQiOjE3NTAwNzk3MDQsImp0aSI6IjM0YTRkM2I0ZDJjNTQ2YTJiMGM1YWE0NzliOTQyNjA5IiwidXNlcl9pZCI6MX0.kpXp1mDWuxnZck5k5X22h4K_qBOFBg0GHUh7qhSfhGc'
+      'Authorization': 'Bearer $token'
     };
 
     late List<InboxTasksModel> inboxTasksModelList;
@@ -71,16 +71,17 @@ class InboxApi {
         inboxTasksModelList = [InboxTasksModel.onError(response.data)];
       }
     } on DioException catch (e) {
+      print(e.toString());
       inboxTasksModelList = [InboxTasksModel.error(handleDioError(e))];
     }
     return inboxTasksModelList;
   }
 
-  static Future<RetrieveInboxTaskModel> retrieveInboxTask(int taskId) async {
+  static Future<RetrieveInboxTaskModel> retrieveInboxTask(int taskId,String token) async {
     var headers = {
       'Accept': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
+          'Bearer $token'
     };
 
     late RetrieveInboxTaskModel retrieveInboxTaskModel;
@@ -106,7 +107,7 @@ class InboxApi {
     return retrieveInboxTaskModel;
   }
 
-  static Future<RetrieveInboxTaskModel> updateInboxTask(int taskId,
+  static Future<RetrieveInboxTaskModel> updateInboxTask(int taskId,String token,
       {required String title,
       required String description,
       required String priority,
@@ -115,7 +116,7 @@ class InboxApi {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
+          'Bearer $token'
     };
     var data = {
       "title": title,

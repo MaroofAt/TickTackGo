@@ -8,6 +8,7 @@ class MyAppBar {
       bool? centerTitle,
       List<Widget>? actions,
       Color? foregroundColor,
+      double? elevation,
       PreferredSizeWidget? bottom}) {
     return AppBar(
       backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
@@ -17,6 +18,7 @@ class MyAppBar {
       leading: leading,
       foregroundColor: foregroundColor ?? Theme.of(context).primaryColor,
       actions: actions,
+      elevation: elevation,
       bottom: bottom,
     );
   }

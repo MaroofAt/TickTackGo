@@ -5,9 +5,11 @@ class MyText {
       {Color? textColor,
       double? fontSize,
       FontWeight? fontWeight,
+      int? maxLines,
       TextOverflow overflow = TextOverflow.clip}) {
     return Text(
       text,
+      maxLines: maxLines,
       style: TextStyle(
         color: textColor,
         fontSize: fontSize,
@@ -24,11 +26,15 @@ class MyText {
       FontWeight? fontWeight,
       TextAlign? textAlign,
       TextStyle? style,
+      int? maxLines,
       double? letterSpacing,
       double? wordSpacing,
+      bool? softWrap,
       TextOverflow overflow = TextOverflow.clip}) {
     return Text(
       text,
+      softWrap: softWrap,
+      maxLines: maxLines,
       textAlign: textAlign,
       style: style ??
           TextStyle(

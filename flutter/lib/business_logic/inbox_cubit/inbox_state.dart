@@ -21,7 +21,7 @@ class InboxCreatingFailedState extends InboxState {
 //list inbox tasks
 class InboxFetchingTasksState extends InboxState {}
 class InboxFetchingTasksSucceededState extends InboxState {
-  List<InboxTasksModel> inboxTasksModelList;
+  List<List<InboxTasksModel>> inboxTasksModelList;
 
   InboxFetchingTasksSucceededState(this.inboxTasksModelList);
 }
@@ -47,9 +47,9 @@ class RetrieveInboxTaskFailedState extends InboxState {
 //update inbox task
 class InboxTaskUpdatingState extends InboxState {}
 class InboxTaskUpdatingSucceededState extends InboxState {
-  RetrieveInboxTaskModel retrieveInboxTaskModel;
+  InboxTasksModel inboxTasksModel;
 
-  InboxTaskUpdatingSucceededState(this.retrieveInboxTaskModel);
+  InboxTaskUpdatingSucceededState(this.inboxTasksModel);
 }
 class InboxTaskUpdatingFailedState extends InboxState {
   String errorMessage;
