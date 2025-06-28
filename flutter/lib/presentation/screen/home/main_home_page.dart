@@ -64,7 +64,7 @@ class MainHomePage extends StatelessWidget {
                   CardBuilder(
                     color: sleekCyan,
                     label: workspaceText,
-                    content: 'current Workspace',
+                    content: '',
                     icon: Icons.work,
                     onTap: () {
                       pushNamed(context, workspacesShowPageRoute);
@@ -88,7 +88,9 @@ class MainHomePage extends StatelessWidget {
                     label: inboxText,
                     content: '17 $tasksText',
                     icon: Icons.folder_copy,
-                    onTap: () {},
+                    onTap: () {
+                      pushNamed(context, mainInboxPage);
+                    },
                   ),
                   // CardBuilder(
                   //   color: ampleOrange,

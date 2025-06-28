@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
-import 'package:pr1/presentation/screen/inbox/first_stack_child.dart';
-import 'package:pr1/presentation/screen/inbox/second_stack_child.dart';
-import 'package:pr1/presentation/screen/inbox/task_list.dart';
+import 'package:pr1/presentation/screen/inbox/inbox_tasks_list.dart';
+import 'package:pr1/presentation/widgets/text.dart';
 
+// ignore: must_be_immutable
 class InboxBody extends StatelessWidget {
   List<List<InboxTasksModel>> allInboxTasks;
 
@@ -11,11 +12,21 @@ class InboxBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        FirstStackChild(allInboxTasks),
-        const Positioned(bottom: 2, child: SecondStackChild()),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: TabBarView(
+        children: List.generate(
+          allInboxTasks.length,
+              (index) {
+            if (allInboxTasks.isEmpty) {
+              return Center(
+                child: MyText.text1('No Tasks here', textColor: white, fontSize: 22),
+              );
+            }
+            return InboxTasksList(allInboxTasks[index]);
+          },
+        ),
+      ),
     );
   }
 }

@@ -9,3 +9,5 @@ double width(BuildContext context) {
   return MediaQuery.of(context).size.width;
 }
 
+
+final List<String> taskStatuses = ['pending', 'in_progress', 'completed'];
