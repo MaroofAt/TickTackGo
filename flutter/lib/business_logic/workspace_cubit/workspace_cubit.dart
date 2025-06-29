@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
+import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
@@ -42,9 +43,8 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
 
   Future<void> createWorkSpace(String title, String description) async {
     emit(CreatingWorkspaceState());
-    //TODO send user token
     CreateWorkspaceModel createWorkspaceModel =
-        await WorkspaceApi.createWorkspace(title, description);
+        await WorkspaceApi.createWorkspace(title, description, token);
     if (createWorkspaceModel.errorMessage.isEmpty) {
       emit(CreatedWorkspaceState(createWorkspaceModel));
     } else {
@@ -54,7 +54,8 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
 
   Future<void> fetchWorkspaces() async {
     emit(WorkspacesFetchingState());
-    List<FetchWorkspacesModel> fetchWorkspacesModel = await WorkspaceApi.fetchWorkspaces();
+    List<FetchWorkspacesModel> fetchWorkspacesModel =
+        await WorkspaceApi.fetchWorkspaces(token);
 
     if (fetchWorkspacesModel[0].errorMessage.isEmpty) {
       emit(WorkspacesFetchingSucceededState(fetchWorkspacesModel));
@@ -67,7 +68,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     emit(WorkspaceRetrievingState());
 
     RetrieveWorkspace retrieveWorkspace =
-        await WorkspaceApi.retrieveWorkspace(workspaceId);
+        await WorkspaceApi.retrieveWorkspace(workspaceId, token);
 
     if (retrieveWorkspace.errorMessage.isEmpty) {
       emit(WorkspaceRetrievingSucceededState(retrieveWorkspace));

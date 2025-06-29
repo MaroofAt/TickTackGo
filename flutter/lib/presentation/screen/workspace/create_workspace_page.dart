@@ -17,8 +17,8 @@ import 'package:pr1/presentation/widgets/text_field.dart';
 class CreateWorkspacePage extends StatelessWidget {
   CreateWorkspacePage({super.key});
 
-  final controller = TextEditingController();
-  final controller1 = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -121,13 +121,15 @@ class CreateWorkspacePage extends StatelessWidget {
                             children: [
                               MyTextField.textField(
                                 context,
-                                controller,
+                                _titleController,
                                 hint: titleHint,
+                                textColor: white,
                                 borderColor: Theme.of(context).primaryColor,
                               ),
+                              const SizedBox(height: 20),
                               MyTextField.textField(
                                 context,
-                                controller1,
+                                _descriptionController,
                                 hint: descriptionHint,
                                 type: TextInputType.multiline,
                                 textColor: white,
@@ -148,7 +150,10 @@ class CreateWorkspacePage extends StatelessWidget {
                   height: height(context) * 0.06,
                   child: MyButtons.primaryButton(
                     () {
-                      //TODO create workspace
+                      BlocProvider.of<WorkspaceCubit>(context).createWorkSpace(
+                        _titleController.text,
+                        _descriptionController.text,
+                      );
                     },
                     Theme.of(context).secondaryHeaderColor,
                     child: MyText.text1(
