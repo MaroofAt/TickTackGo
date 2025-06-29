@@ -8,8 +8,7 @@ import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
 
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
-      String title, String description) async {
-    String? token = await getRefreshToken();
+      String title, String description,String token) async {
     var headers = {'Authorization': 'Bearer $token'};
     var data = FormData.fromMap({'title': title, 'description': description});
 
@@ -34,8 +33,7 @@ class WorkspaceApi {
     return createWorkspaceModel;
   }
 
-  static Future<List<FetchWorkspacesModel>> fetchWorkspaces() async {
-    String? token = await getRefreshToken();
+  static Future<List<FetchWorkspacesModel>> fetchWorkspaces(String token) async {
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -66,8 +64,8 @@ class WorkspaceApi {
     return getWorkspacesModel;
   }
 
-  static Future<RetrieveWorkspace> retrieveWorkspace (int workspaceId) async {
-    String? token = await getRefreshToken();
+  static Future<RetrieveWorkspace> retrieveWorkspace (int workspaceId,String token) async {
+
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
