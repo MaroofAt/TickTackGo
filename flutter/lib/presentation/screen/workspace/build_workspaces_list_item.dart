@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
@@ -10,10 +11,14 @@ import 'package:pr1/presentation/widgets/text.dart';
 class BuildListItem extends StatelessWidget {
   Function() onWorkspaceTap;
   Function() onArrowTap;
-  String workspaceName;
+  int? openedWorkspace;
+  FetchWorkspacesModel fetchWorkspacesModel;
 
-  BuildListItem(this.workspaceName,
-      {required this.onWorkspaceTap, required this.onArrowTap, super.key});
+  BuildListItem(this.fetchWorkspacesModel,
+      {required this.onWorkspaceTap,
+      required this.onArrowTap,
+      required this.openedWorkspace,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +47,17 @@ class BuildListItem extends StatelessWidget {
                         image: 'assets/images/workspace_images/img.png'),
                   ),
                 ),
-                MyText.text1(workspaceName, fontSize: 18, textColor: white),
+                MyText.text1(fetchWorkspacesModel.title,
+                    fontSize: 18, textColor: white),
               ],
             ),
             MyButtons.primaryButton(
               onArrowTap,
               Theme.of(context).scaffoldBackgroundColor,
               child: MyIcons.icon(
-                Icons.keyboard_arrow_down_outlined,
+                openedWorkspace != null && fetchWorkspacesModel.id == openedWorkspace
+                    ? Icons.keyboard_arrow_right
+                    : Icons.keyboard_arrow_down_outlined,
                 color: lightGrey,
               ),
             ),

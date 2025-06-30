@@ -42,9 +42,10 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
   }
 
   Future<void> createWorkSpace(String title, String description) async {
+    if(title.isEmpty || description.isEmpty) return;
     emit(CreatingWorkspaceState());
     CreateWorkspaceModel createWorkspaceModel =
-        await WorkspaceApi.createWorkspace(title, description, token);
+        await WorkspaceApi.createWorkspace(title, description, image, token);
     if (createWorkspaceModel.errorMessage.isEmpty) {
       emit(CreatedWorkspaceState(createWorkspaceModel));
     } else {

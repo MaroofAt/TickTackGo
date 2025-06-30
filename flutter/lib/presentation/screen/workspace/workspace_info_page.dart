@@ -100,33 +100,13 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                     ],
                   ),
                   Expanded(
-                    child: BuildMembersList(retrieveWorkspace),
-                  ),
-
-                  // Delete Button
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () {
-                        MyAlertDialog.showAlertDialog(
-                          context,
-                          content: alertDialogQuestion,
-                          firstButtonText: deleteText,
-                          firstButtonAction: () {
-                            //TODO delete workspace request
-                          },
-                          secondButtonText: cancelText,
-                          secondButtonAction: () {
-                            popScreen(context);
-                          },
-                        );
-                      },
-                      child: MyText.text1(deleteButtonText, fontSize: 18),
+                    child: BuildMembersList(
+                      retrieveWorkspace,
                     ),
                   ),
+                  // Delete Button
+                  // todo compare between user id and owner id
+                  buildDeleteButton(context),
                 ],
               ),
             );
@@ -138,6 +118,32 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
             );
           }
         },
+      ),
+    );
+  }
+
+  Center buildDeleteButton(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: () {
+          MyAlertDialog.showAlertDialog(
+            context,
+            content: alertDialogQuestion,
+            firstButtonText: deleteText,
+            firstButtonAction: () {
+              //TODO delete workspace request
+            },
+            secondButtonText: cancelText,
+            secondButtonAction: () {
+              popScreen(context);
+            },
+          );
+        },
+        child: MyText.text1(deleteButtonText, fontSize: 18),
       ),
     );
   }

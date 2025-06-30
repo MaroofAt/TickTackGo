@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
+import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
@@ -10,27 +11,42 @@ class BuildMembersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return retrieveWorkspace.members.isEmpty
-        ? Center(
-            child: MyText.text1(
-              'No members here',
-              textColor: white,
-              fontSize: 20,
+    return ListView.builder(
+      itemCount: retrieveWorkspace.members.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return buildOneMemberCard(
+              context, retrieveWorkspace.owner!.username, true);
+        }
+        return buildOneMemberCard(
+            context, retrieveWorkspace.members[index - 1].member.username);
+      },
+    );
+  }
+
+  Container buildOneMemberCard(BuildContext context, String name,
+      [bool showOwner = false]) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          SizedBox(
+            width: width(context) * 0.6,
+            child: ListTile(
+              leading: const Icon(Icons.person, color: Colors.white),
+              title: MyText.text1(name, textColor: Colors.white),
             ),
-          )
-        : ListView.builder(
-            itemCount: retrieveWorkspace.members.length,
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.grey[900],
-                elevation: 3,
-                child: ListTile(
-                  leading: const Icon(Icons.person, color: Colors.white),
-                  title: Text(retrieveWorkspace.members[index].member.username,
-                      style: const TextStyle(color: Colors.white)),
-                ),
-              );
-            },
-          );
+          ),
+          showOwner
+              ? MyText.text1('Owner', textColor: Colors.white70)
+              : Container(),
+        ],
+      ),
+    );
   }
 }

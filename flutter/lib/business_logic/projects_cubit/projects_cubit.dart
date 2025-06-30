@@ -13,11 +13,12 @@ part 'projects_state.dart';
 class ProjectsCubit extends Cubit<ProjectsState> {
   ProjectsCubit() : super(ProjectsInitial());
 
-  Future<void> fetchProjects(int projectId) async {
+  Future<void> fetchProjects(int workspaceId) async {
     emit(ProjectsFetchingState());
 
     List<FetchProjectsModel> projects =
-        await ProjectsApi.fetchProjects(projectId, token);
+        await ProjectsApi.fetchProjects(workspaceId, token);
+    print(projects);
     if (projects[0].errorMessage.isEmpty) {
       emit(ProjectsFetchingSucceededState(projects));
     } else {

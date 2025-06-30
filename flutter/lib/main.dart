@@ -17,6 +17,7 @@ import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 import 'package:pr1/themes/themes.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   // runApp(DevicePreview(builder: (context) => MyApp()));
   runApp(const MyApp());
 }

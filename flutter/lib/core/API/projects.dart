@@ -10,10 +10,10 @@ import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 
 class ProjectsApi {
   static Future<List<FetchProjectsModel>> fetchProjects(
-      int projectId, String token) async {
+      int workspaceId, String token) async {
     var headers = {'Authorization': 'Bearer $token'};
 
-    var queryParameters = {'workspace': projectId};
+    var queryParameters = {'workspace': workspaceId};
 
     late List<FetchProjectsModel> projects;
 
