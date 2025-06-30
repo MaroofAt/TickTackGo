@@ -9,9 +9,11 @@ from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from .models import Task, Comment
-from .serializers import TaskSerializer, CommentSerializer
+
+from .models import Task, Comment , Inbox_Tasks
+from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner
+
 
 from projects.permissions import IsProjectMember
 
@@ -69,7 +71,23 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
                 # 'required': ['title']
-            }
+            },
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Task 1'},
+                    'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
+                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
+                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
+                    'workspace': {'type':'integer' , 'example':1},
+                    'project': {'type':'integer' , 'example':1},
+                    'perent_task': {'type':'integer' , 'example':1 or None},
+                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
+                    'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'locked': {'type':'boolean' , 'example':False},
+                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
+                }
+            }            
         }
     )
     # @action(detail=True , methods=['post'] , serializer_class=TaskSerializer)
@@ -341,3 +359,173 @@ class TaskViewSet(viewsets.ModelViewSet):
     
 
 
+
+class InboxTaskViewSet(viewsets.ModelViewSet):
+    queryset = Inbox_Tasks.objects.all()
+    serializer_class = InboxTaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.action == 'list':
+            qs = qs.filter(user=self.request.user)
+            if not self.request.GET.get('pending', True):
+                qs = qs.exclude(status='pending')
+            if not self.request.GET.get('in_progress', True):
+                qs = qs.exclude(status='in_progress')
+            if not self.request.GET.get('completed', True):
+                qs = qs.exclude(status='completed')
+        return qs
+    
+    @extend_schema(
+        summary="Retrieve Inbox Tasks",
+        operation_id="retrieve_inbox_tasks",
+        description="Retrieving Specified Inbox Task",
+        tags=["Inbox_Tasks"]
+    )
+    def retrieve(self, request,pk, *args, **kwargs ):
+        try:
+            inbox_task = Inbox_Tasks.objects.filter(user=request.user, pk=pk).first()
+            
+            if not inbox_task:
+                return Response(
+                    {"detail": "Not found."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            serializer = self.get_serializer(inbox_task)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return exception_response(e)
+
+    @extend_schema(
+        summary="List Inbox Tasks",
+        operation_id="list_Inbox_tasks",
+        description="Listing All Inbox Tasks",
+        tags=["Inbox_Tasks"],
+        # parameters=[
+        #     OpenApiParameter(
+        #         name='pending',
+        #         type=bool,
+        #         required=False,
+        #         description='Do you want to show the pending tasks?',
+        #         default=True
+        #     ),
+        #     OpenApiParameter(
+        #         name='in_progress',
+        #         type=bool,
+        #         required=False,
+        #         description='Do you want to show the in_progress tasks?',
+        #         default=True
+        #     ),
+        #     OpenApiParameter(
+        #         name='completed',
+        #         type=bool,
+        #         required=False,
+        #         description='Do you want to show the completed tasks?',
+        #         default=True
+        #     ),
+        # ]
+    )
+    def list(self, request, *args, **kwargs):
+        try:
+            return super().list(request, *args, **kwargs)
+        except Exception as e:
+            return exception_response(e)
+    
+    @extend_schema(
+        summary="Create Inbox Tasks",
+        operation_id="create_inbox_tasks",
+        description="Create Inbox Task",
+        tags=["Inbox_Tasks"],
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Task 1'},
+                    'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
+                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
+                    'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'}
+                },
+                # 'required': ['title']
+            }
+        }
+    )
+    def create(self, request):
+
+        data = request.data.copy()
+        data.update({
+            'user': request.user.id,
+        })
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data , status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        summary="Destroy Inbox Tasks",
+        operation_id="destroy_inbox_tasks",
+        description="Destroying Specified Inbox Task",
+        tags=["Inbox_Tasks"]
+    )
+    def destroy(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            inbox_task = Inbox_Tasks.objects.filter(user=request.user, pk=pk).first()
+            
+            if not inbox_task:
+                return Response(
+                    {"detail": "Not found."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            # serializer = self.get_serializer(inbox_task)
+            inbox_task.delete()
+            return Response({"detail": "Done :) "}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return exception_response(e)
+        
+    
+    @extend_schema(
+        summary="Update Inbox Tasks",
+        operation_id="update_inbox_tasks",
+        description="Updating Specified Inbox Task",
+        tags=["Inbox_Tasks"]
+    )
+    def update(self, request, *args, **kwargs):
+        # print('Aliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+        # try:
+            pk = kwargs.get('pk')
+            self.serializer_class = UpdateInboxTaskSerializer
+            inbox_task = Inbox_Tasks.objects.filter(user=request.user, pk=pk).first()
+            
+            if not inbox_task:
+                return Response(
+                    {"detail": "Not found."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            return super().update(request, *args, **kwargs)
+        # except Exception as e:
+        #     return exception_response(e)
+
+    @extend_schema(
+        summary="Partial Update Inbox Tasks",
+        operation_id="partial_update_inbox_tasks",
+        description="Partial Updating Specified Inbox Task",
+        tags=["Inbox_Tasks"]
+    )
+
+    def partial_update(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        self.serializer_class = UpdateInboxTaskSerializer
+        inbox_task = Inbox_Tasks.objects.filter(user=request.user, pk=pk).first()
+        
+        if not inbox_task:
+            return Response(
+                {"detail": "Not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        return super().partial_update(request, *args, **kwargs)
+    

@@ -38,7 +38,6 @@ class TaskCard extends StatelessWidget {
               ),
               MyText.text1('task title', textColor: white, fontSize: 18),
               Row(
-                spacing: 10,
                 children: [
                   MyIcons.icon(Icons.access_time, color: Colors.grey[400]),
                   MyText.text1('20/12/2025', textColor: Colors.grey[400])

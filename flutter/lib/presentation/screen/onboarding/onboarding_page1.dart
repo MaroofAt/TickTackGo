@@ -18,7 +18,7 @@ class OnboardingPage1 extends StatelessWidget {
           child: _buildText(
             upperText,
             28,
-            FontWeight.bold,
+            FontWeight.bold
           ),
         ),
         SizedBox(
@@ -42,6 +42,8 @@ class OnboardingPage1 extends StatelessWidget {
       textColor: white,
       fontSize: fontSize,
       fontWeight: fontWeight,
+
+
     );
   }
 }

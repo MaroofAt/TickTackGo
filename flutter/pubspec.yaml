@@ -71,8 +71,10 @@ flutter:
   assets:
     - assets/images/logo_images/
     - assets/images/verify_page_images/
+    - assets/images/verify_page_images/project.png
     - assets/images/welcome_screens_images/
     - assets/images/workspace_images/
+    - assets/images/auth_page_images/
     - assets/fonts/
     
   #   - images/a_dot_ham.jpeg

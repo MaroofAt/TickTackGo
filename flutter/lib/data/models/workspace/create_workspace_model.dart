@@ -48,8 +48,23 @@ class CreateWorkspaceModel {
         code: json["code"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        errorMessage: '',
+        errorMessage: json["detail"],
       );
+
+  factory CreateWorkspaceModel.error(String message) =>
+      CreateWorkspaceModel(
+        id: 0,
+        title: '',
+        description: '',
+        image: '',
+        owner: null,
+        members: [],
+        code: '',
+        createdAt: null,
+        updatedAt: null,
+        errorMessage: message,
+      );
+
 }
 
 class Owner {

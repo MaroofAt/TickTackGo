@@ -27,6 +27,7 @@ from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
 from workspaces.models import Invite , Workspace_Membership
 from tasks.models import Task
 from tools.responses import exception_response
+from tools.roles_check import is_workspace_owner
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
 from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , CanEditProject
@@ -80,8 +81,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         page = self.paginate_queryset(qr)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            serializer = self.get_serializer(page, many=True)  
+            filter = self.filter_queryset(qr)
+            if filter is not None:
+                serializer = self.get_serializer(filter, many=True)
+            # return self.get_paginated_response(serializer.data)        
             return self.get_paginated_response(serializer.data)
+
 
         serializer = self.get_serializer(qr, many=True)
         return Response(serializer.data)
@@ -119,6 +125,20 @@ class UserViewSet(viewsets.ModelViewSet):
         operation_id="register",
         description="registering the user (just for testing [without verification] )",
         tags=["Users/Auth"],
+        # request={
+        #     'multipart/form-data': {
+        #         'type': 'object',
+        #         'properties': {
+        #             'username': {'type': 'string', 'example': 'Aloosh'},
+        #             'email': {'type': 'eamil', 'example': 'aloosh@gmail.com'},
+        #             'password': {'type': 'string', 'example': 'ABU_alish09'},
+        #             'how_to_use_website': {'type': 'choice', 'example': 'small_team'},
+        #             'what_do_you_do': {'type':'choice' , 'example':'software_or_it'},
+        #             'how_did_you_get_here': {'type':'choice' , 'example':'friends'}
+        #         },
+        #         # 'required': ['title']
+        #     }
+        # }
     )
     @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer , url_path='register')
     def register(self , request):
@@ -134,7 +154,7 @@ class UserViewSet(viewsets.ModelViewSet):
         description="sending otp for the specified email in the request (to check that the user is the email owner) ",
         tags=["Users/Auth"],
     )
-    @action(detail=False , methods=['post'] ,url_path='send_otp')
+    @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer ,url_path='send_otp')
     def send_otp(self , request):
         email = request.data.get('email')
         if not email:
@@ -142,12 +162,16 @@ class UserViewSet(viewsets.ModelViewSet):
                 {'error': 'Email is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        send_otp_email_to_user(email)
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            send_otp_email_to_user(email)
+            return Response(
+                {'message': 'OTP has been sent to your email'},
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
 
-        return Response(
-            {'message': 'OTP has been sent to your email'},
-            status=status.HTTP_200_OK
-        )
+
     
     @extend_schema(
         summary="Verify And Register",
@@ -186,7 +210,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data , status = status.HTTP_201_CREATED)
-        return Response(serializer.data , status = status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
     
 
     # Invite section
@@ -284,7 +308,24 @@ class UserViewSet(viewsets.ModelViewSet):
         invite.delete()
         return Response(None , status.HTTP_202_ACCEPTED)
     
-
+    @extend_schema(
+        summary="Show Sent Invites ",
+        operation_id="show_sent_invites",
+        description="show all invites that aare sent by the user ",
+        tags=["Users/Invite"],
+    )
+    @action(detail=False , methods=['get'] , serializer_class=ShowInvitesSerializer)
+    def show_sent_invites(self , request):
+        workspace_id = request.data.get('workspace')
+        if is_workspace_owner(request.user.id,workspace_id):
+            invites = Invite.objects.filter(sender=request.user).all()
+            serializer = self.get_serializer(invites , many = True)
+            # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
+            return Response(serializer.data , status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "User is not the owner"},
+            status=status.HTTP_400_BAD_REQUEST
+            )
     
     @extend_schema(
         summary="Entro To The App",

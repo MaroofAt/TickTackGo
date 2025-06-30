@@ -10,8 +10,4 @@ double width(BuildContext context) {
 }
 
 
-List<dynamic>pages=[
- "",
-  "",
-  ""
-];
+final List<String> taskStatuses = ['pending', 'in_progress', 'completed'];

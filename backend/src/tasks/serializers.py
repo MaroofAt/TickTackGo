@@ -1,7 +1,10 @@
 from django.db import transaction
 from rest_framework import serializers
-from .models import Task, Assignee, Comment
+
+
+from .models import Task, Assignee, Comment ,  Inbox_Tasks
 from users.models import User
+
 
 class TaskSerializer(serializers.ModelSerializer):
     assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
@@ -76,3 +79,35 @@ class CommentSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+        
+        
+class InboxTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inbox_Tasks
+        fields = [
+            'id',
+            'title',
+            'description',
+            'user',
+            'status',
+            'priority',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+        }        
+
+class UpdateInboxTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inbox_Tasks
+        fields = [
+            'id',
+            'title',
+            'description',
+            'user',
+            'status',
+            'priority',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+            'user': {'read_only':True},
+        } 

@@ -30,8 +30,7 @@ class Workspace(TimeStampedModel):
         through_fields=("workspace", "member"),
         related_name='joined_workspaces'
     )
-    code = models.UUIDField(default=uuid.uuid4 , unique=True , editable=False)
-
+    code = models.UUIDField(default=uuid.uuid4 , unique=True , editable=False) 
     def __str__(self):
         return self.title
     

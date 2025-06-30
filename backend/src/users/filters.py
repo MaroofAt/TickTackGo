@@ -7,8 +7,8 @@ class UserFilter(django_filters.FilterSet):
     class Meta:
         model= User
         fields = {
-            'username': ['exact' , 'iexact' , 'icontains'],
-            'email': ['exact' , 'iexact' , 'icontains'],
+            'username': ['exact' , 'iexact' , 'icontains', 'contains'],
+            'email': ['exact' , 'iexact' , 'icontains' , 'contains'],
             'created_at': ['exact' , 'lt' , 'gt' , 'range'],
             'updated_at': ['exact' , 'lt' , 'gt' , 'range'],
         }
