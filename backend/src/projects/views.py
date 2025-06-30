@@ -36,6 +36,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
     def get_queryset(self):
         qs = super().get_queryset()
+        if self.action == 'list':
+            if self.request.data.get('workspace'):
+                qs = qs.filter(workspace=self.request.data.get('workspace'))
+            elif self.request.GET['workspace']:
+                qs = qs.filter(workspace=self.request.GET['workspace'])
+            else:
+                raise Exception('must pass workspace id as query param !')
         return qs
     def get_serializer_context(self):
         """
