@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema , OpenApiExample
 
 
 from tools.responses import method_not_allowed
@@ -68,15 +68,88 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         description="Getting All Workspaces Which The Authenticated-User Is A Member Of",
         tags=["Workspaces"],
     )
-    def list(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+    def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     @extend_schema(
         summary="Retrieve Workspace",
         operation_id="retrieve_workspaces",
         description="Retrieving The Workspace Specified",
         tags=["Workspaces"],
+        examples=[
+            OpenApiExample(
+                'Response 200',
+                value ={
+                        "id": 1,
+                        "title": "Team Workspace 1",
+                        "description": "Our Team Workspace",
+                        "image": 'null',
+                        "owner": {
+                            "username": "Marouf",
+                            "email": "m@m.com",
+                            "image": "http://127.0.0.1:8000/media/defaults/user/default.png",
+                            "how_to_use_website": "own_tasks_management",
+                            "what_do_you_do": "software_or_it",
+                            "how_did_you_get_here": "google_search",
+                            "created_at": "2025-06-07T13:02:34.790977Z",
+                            "updated_at": "2025-06-07T13:02:34.791022Z"
+                        },
+                        "members": [
+                            {
+                            "member": {
+                                "username": "A",
+                                "email": "a@a.com",
+                                "image": "/media/defaults/user/default.png",
+                                "how_to_use_website": "own_tasks_management",
+                                "what_do_you_do": "software_or_it",
+                                "how_did_you_get_here": "google_search",
+                                "created_at": "2025-06-07T13:03:39.898582Z",
+                                "updated_at": "2025-06-07T13:03:39.898639Z"
+                            },
+                            "role": "member",
+                            "created_at": "2025-06-07T13:06:10.084406Z",
+                            "updated_at": "2025-06-07T13:06:10.084426Z"
+                            }
+                        ],
+                        "projects": [
+                            {
+                            "id": 1,
+                            "title": "Project 1",
+                            "color": "#ff0000",
+                            "ended": False,
+                            "sub_projects": [
+                                {
+                                "id": 3,
+                                "title": "Project 3",
+                                "color": "#ff0000",
+                                "ended": False,
+                                "sub_projects": [
+                                    {
+                                    "id": 5,
+                                    "title": "Project 4",
+                                    "color": "#ff0000",
+                                    "ended": False,
+                                    "sub_projects": []
+                                    }
+                                ]
+                                }
+                            ]
+                            },
+                            {
+                            "id": 2,
+                            "title": "Project 2",
+                            "color": "#ff0000",
+                            "ended": False,
+                            "sub_projects": []
+                            }
+                        ],
+                        "created_at": "2025-06-07T13:04:29.089513Z",
+                        "updated_at": "2025-06-07T13:04:29.089539Z" 
+                    },
+                response_only=True
+            )
+        ]
     )
-    def retrieve(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+    def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
     
     

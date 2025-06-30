@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import transaction
 
 from .models import Workspace , Workspace_Membership , Invite
+from projects.models import Project
 from users.models import User
 
 
@@ -47,8 +48,29 @@ class WorkspaceMembershipSerializer(serializers.ModelSerializer):
             self.fields['workspace'] = WorkspaceSerializer(read_only=True)
 
 class WorkspaceSerializer(serializers.ModelSerializer):
+    class LocalProjectSerializer(serializers.ModelSerializer):
+        sub_projects = serializers.SerializerMethodField()
+        class Meta:
+            model = Project
+            fields = [
+                'id',
+                'title',
+                'color',
+                'ended',
+                'sub_projects',
+            ]
+        def get_sub_projects(self,obj):
+            return self.__class__(
+                Project.objects.filter(
+                    workspace = obj.workspace,
+                    parent_project = obj.id,
+                ),
+                many=True
+            ).data
+    
     owner = LocalUserSerializer(read_only=True)
     members = serializers.SerializerMethodField()
+    projects = serializers.SerializerMethodField()
     class Meta:
         model = Workspace
         fields = [
@@ -58,6 +80,7 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             'image',
             'owner',
             'members',
+            'projects',
             'created_at',
             'updated_at',
         ]
@@ -84,6 +107,15 @@ class WorkspaceSerializer(serializers.ModelSerializer):
                 },
                 read_only=True
             ).data
+
+    def get_projects(self,obj):
+        return self.LocalProjectSerializer(
+            Project.objects.filter(
+                parent_project__isnull=True,
+                workspace_id=obj.id
+            ),
+            many=True
+        ).data
 
     def create(self, validated_data):
         try:
