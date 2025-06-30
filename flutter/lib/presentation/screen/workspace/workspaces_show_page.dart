@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/presentation/screen/workspace/build_workspaces_list.dart';
 import 'package:pr1/presentation/screen/workspace/build_workspaces_list_item.dart';
+import 'package:pr1/presentation/screen/workspace/show_workspaces_app_bar.dart';
 import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/app_bar.dart';
@@ -36,12 +39,7 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar.appBar(
-        context,
-        title: MyText.text1('Workspaces'),
-        foregroundColor: white,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      ),
+      appBar: ShowWorkspacesAppBar.workspacesAppBar(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           pushNamed(context, workspaceCreatePageRoute);
@@ -70,29 +68,16 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
           },
           builder: (context, state) {
             if (state is WorkspacesFetchingSucceededState) {
-              return ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return BuildListItem(
-                    state.fetchWorkspacesModel[index].title,
-                    onWorkspaceTap: () {
-                      pushScreen(
-                        context,
-                        BlocProvider(
-                          create: (context) => WorkspaceCubit(),
-                          child: WorkspaceInfoPage(
-                              state.fetchWorkspacesModel[index].id),
-                        ),
-                      );
-                    },
-                    onArrowTap: () {},
-                  );
-                },
+              return BlocProvider(
+                create: (context) => ProjectsCubit(),
+                child: BuildWorkspacesList(state.fetchWorkspacesModel),
               );
             } else {
               return Center(
                 child: LoadingIndicator.circularProgressIndicator(
-                  color: Theme.of(context).secondaryHeaderColor,
+                  color: Theme
+                      .of(context)
+                      .secondaryHeaderColor,
                 ),
               );
             }

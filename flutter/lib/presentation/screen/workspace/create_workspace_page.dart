@@ -114,11 +114,14 @@ class CreateWorkspacePage extends StatelessWidget {
                             );
                           },
                         ),
+                        const SizedBox(height: 20),
                         SizedBox(
                           width: width(context) * 0.9,
-                          height: height(context) * 0.2,
+                          height: height(context) * 0.23,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              MyText.text1('Title *',textColor: white,fontSize: 20),
                               MyTextField.textField(
                                 context,
                                 _titleController,
@@ -127,6 +130,7 @@ class CreateWorkspacePage extends StatelessWidget {
                                 borderColor: Theme.of(context).primaryColor,
                               ),
                               const SizedBox(height: 20),
+                              MyText.text1('Description *',textColor: white,fontSize: 20),
                               MyTextField.textField(
                                 context,
                                 _descriptionController,

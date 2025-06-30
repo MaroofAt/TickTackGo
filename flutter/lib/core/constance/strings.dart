@@ -45,8 +45,8 @@ const String finalPageButtonText = 'Go Now';
 
 ///create workspace page
 const String pageTitle = 'Create your Own workspace!';
-const String titleHint = 'Title';
-const String descriptionHint = 'description';
+const String titleHint = 'enter title';
+const String descriptionHint = 'enter description';
 const String createButtonText = 'Create';
 const String permissionPermanentlyDeniedContent = 'Storage permission is permanently denied. Please enable it in the app settings';
 

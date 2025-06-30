@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/local_data/local_data.dart';
@@ -8,9 +10,19 @@ import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
 
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
-      String title, String description,String token) async {
-    var headers = {'Authorization': 'Bearer $token'};
-    var data = FormData.fromMap({'title': title, 'description': description});
+      String title, String description, File? image, String token) async {
+    var headers = {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer $token'
+    };
+    var data = FormData.fromMap({
+      'title': title,
+      'description': description,
+      'image': await MultipartFile.fromFile(
+        image!.path,
+        filename: '$title.jpg',
+      ),
+    });
 
     late CreateWorkspaceModel createWorkspaceModel;
     try {
@@ -33,13 +45,14 @@ class WorkspaceApi {
     return createWorkspaceModel;
   }
 
-  static Future<List<FetchWorkspacesModel>> fetchWorkspaces(String token) async {
+  static Future<List<FetchWorkspacesModel>> fetchWorkspaces(
+      String token) async {
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
 
-      late List<FetchWorkspacesModel> getWorkspacesModel;
+    late List<FetchWorkspacesModel> getWorkspacesModel;
 
     try {
       var response = await dio.request(
@@ -52,20 +65,19 @@ class WorkspaceApi {
 
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
-        getWorkspacesModel = data
-            .map((json) => FetchWorkspacesModel.onSuccess(json))
-            .toList();
+        getWorkspacesModel =
+            data.map((json) => FetchWorkspacesModel.onSuccess(json)).toList();
       } else {
         getWorkspacesModel = [FetchWorkspacesModel.onError(response.data)];
       }
-    }on DioException catch (e) {
+    } on DioException catch (e) {
       getWorkspacesModel = [FetchWorkspacesModel.error(handleDioError(e))];
     }
     return getWorkspacesModel;
   }
 
-  static Future<RetrieveWorkspace> retrieveWorkspace (int workspaceId,String token) async {
-
+  static Future<RetrieveWorkspace> retrieveWorkspace(
+      int workspaceId, String token) async {
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
