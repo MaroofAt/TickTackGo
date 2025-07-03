@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
@@ -11,14 +13,10 @@ import 'package:pr1/presentation/widgets/text.dart';
 class BuildListItem extends StatelessWidget {
   Function() onWorkspaceTap;
   Function() onArrowTap;
-  int? openedWorkspace;
   FetchWorkspacesModel fetchWorkspacesModel;
 
   BuildListItem(this.fetchWorkspacesModel,
-      {required this.onWorkspaceTap,
-      required this.onArrowTap,
-      required this.openedWorkspace,
-      super.key});
+      {required this.onWorkspaceTap, required this.onArrowTap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +52,15 @@ class BuildListItem extends StatelessWidget {
             MyButtons.primaryButton(
               onArrowTap,
               Theme.of(context).scaffoldBackgroundColor,
-              child: MyIcons.icon(
-                openedWorkspace != null && fetchWorkspacesModel.id == openedWorkspace
-                    ? Icons.keyboard_arrow_right
-                    : Icons.keyboard_arrow_down_outlined,
-                color: lightGrey,
+              child: BlocBuilder<ProjectsCubit, ProjectsState>(
+                builder: (context, state) {
+                  return MyIcons.icon(
+                    !BlocProvider.of<ProjectsCubit>(context).checkForIconType(fetchWorkspacesModel.id)
+                        ? Icons.keyboard_arrow_right
+                        : Icons.keyboard_arrow_down_outlined,
+                    color: lightGrey,
+                  );
+                },
               ),
             ),
           ],

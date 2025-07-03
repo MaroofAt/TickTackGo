@@ -41,12 +41,17 @@ class ProjectsApi {
   }
 
   static Future<CreateProjectModel> createProject(
-      String title, int workspaceId, String color, String token) async {
+      String title, int workspaceId, String color, int? parentProject, String token) async {
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
     };
-    var data = {"title": title, "workspace": workspaceId, "color": color};
+    var data = {
+      "title": title,
+      "workspace": workspaceId,
+      "color": color,
+      "parent_project": parentProject,
+    };
 
     late CreateProjectModel createProjectModel;
 
@@ -66,6 +71,7 @@ class ProjectsApi {
         createProjectModel = CreateProjectModel.onError(response.data);
       }
     } on DioException catch (e) {
+      print(e.toString());
       createProjectModel = CreateProjectModel.error(handleDioError(e));
     }
     return createProjectModel;

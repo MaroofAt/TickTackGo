@@ -12,14 +12,15 @@ part 'projects_state.dart';
 
 class ProjectsCubit extends Cubit<ProjectsState> {
   ProjectsCubit() : super(ProjectsInitial());
+  bool projectsAreOpened = false;
+  int? selectedWorkspaceId;
 
   Future<void> fetchProjects(int workspaceId) async {
     emit(ProjectsFetchingState());
 
     List<FetchProjectsModel> projects =
         await ProjectsApi.fetchProjects(workspaceId, token);
-    print(projects);
-    if (projects[0].errorMessage.isEmpty) {
+    if (projects.isEmpty || projects[0].errorMessage.isEmpty) {
       emit(ProjectsFetchingSucceededState(projects));
     } else {
       emit(ProjectsFetchingFailedState(projects[0].errorMessage));
@@ -27,12 +28,17 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   }
 
   Future<void> createProject(
-      String title, int workspaceId, String color) async {
+      String title, int workspaceId, Color color, int? parentId) async {
+    //TODO make create sub project method
+    if(title.isEmpty) return;
     emit(ProjectCreatingState());
 
+    final String colorHex = '#${color.value.toRadixString(16).substring(2)}';
+
     CreateProjectModel createProjectModel =
-        await ProjectsApi.createProject(title, workspaceId, color, token);
+        await ProjectsApi.createProject(title, workspaceId, colorHex, parentId, token);
     if (createProjectModel.errorMessage.isEmpty) {
+      onArrowTap(0);
       emit(ProjectCreatingSucceededState(createProjectModel));
     } else {
       emit(ProjectCreatingFailedState(createProjectModel.errorMessage));
@@ -75,4 +81,34 @@ class ProjectsCubit extends Cubit<ProjectsState> {
       emit(ProjectDeletingFailedState(deleteProjectModel.errorMessage));
     }
   }
+
+  void onArrowTap(int id) {
+    if (projectsAreOpened) {
+      closeArrow();
+    } else {
+      openArrow(id);
+    }
+  }
+
+  void openArrow(int id) {
+    selectedWorkspaceId = id;
+    changeOpenedProjectValue();
+    fetchProjects(id);
+  }
+
+  void closeArrow() {
+    selectedWorkspaceId = null;
+    changeOpenedProjectValue();
+    emit(ProjectsInitial());
+  }
+
+  void changeOpenedProjectValue() {
+    projectsAreOpened = !projectsAreOpened;
+  }
+
+  bool checkForIconType(int workspaceId) {
+    return projectsAreOpened &&
+        selectedWorkspaceId == workspaceId;
+  }
+
 }
