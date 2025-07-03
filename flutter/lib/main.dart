@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
-      theme: theme(),
+      // theme: theme(),
+      theme: ThemeData.dark(),
       routes: routes,
       home:MultiBlocProvider(
         providers: [

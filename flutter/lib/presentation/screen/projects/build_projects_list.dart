@@ -1,24 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/projects/fetch_projects_model.dart';
+import 'package:pr1/presentation/screen/projects/create_project.dart';
+import 'package:pr1/presentation/widgets/buttons.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class BuildProjectsList extends StatelessWidget {
+  final int workspaceId;
   final List<FetchProjectsModel> projects;
 
-  const BuildProjectsList(this.projects, {super.key});
+  const BuildProjectsList(this.projects, this.workspaceId, {super.key});
+
+  void _showAddProjectDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => BlocProvider(
+        create: (context) => ProjectsCubit(),
+        child: CreateProjectDialog(workspaceId),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const ScrollPhysics(),
-      itemCount: projects.length,
+      itemCount: projects.length + 1,
       itemBuilder: (context, index) {
-        String hex = projects[index].color.replaceFirst('#', '');
-        if (hex.length == 6) hex = 'ff$hex'; // Adds opacity if not provided
-        Color color = Color(int.parse(hex, radix: 16));
+        Color color = transparent;
+        if (index == projects.length) {
+          return buildAddProjectButton(context);
+        } else {
+          String hex = projects[index].color.replaceFirst('#', '');
+          if (hex.length == 6) hex = 'ff$hex'; // Adds opacity if not provided
+          color = Color(int.parse(hex, radix: 16));
+        }
         return Container(
           width: width(context) * 0.6,
           height: height(context) * 0.08,
@@ -44,6 +66,22 @@ class BuildProjectsList extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget buildAddProjectButton(BuildContext context) {
+    return Container(
+      height: height(context) * 0.06,
+      margin: EdgeInsets.only(left: width(context) * 0.2, bottom: 20),
+      child: MyButtons.primaryButton(
+        () {
+          _showAddProjectDialog(context);
+        },
+        Theme.of(context).secondaryHeaderColor,
+        child: Center(
+          child: MyText.text1('Add new project?', fontSize: 18),
+        ),
+      ),
     );
   }
 }
