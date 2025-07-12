@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
-import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
+import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 

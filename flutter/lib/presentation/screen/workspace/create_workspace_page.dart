@@ -36,7 +36,7 @@ class CreateWorkspacePage extends StatelessWidget {
                     SizedBox(height: height(context) * 0.08),
                     MyText.text1(pageTitle,
                         fontSize: 25,
-                        textColor: Theme.of(context).secondaryHeaderColor),
+                        textColor: white),
                     SizedBox(height: height(context) * 0.02),
                     Column(
                       children: [
@@ -127,7 +127,7 @@ class CreateWorkspacePage extends StatelessWidget {
                                 _titleController,
                                 hint: titleHint,
                                 textColor: white,
-                                borderColor: Theme.of(context).primaryColor,
+                                borderColor: greatMagenda,
                               ),
                               const SizedBox(height: 20),
                               MyText.text1('Description *',textColor: white,fontSize: 20),
@@ -139,7 +139,7 @@ class CreateWorkspacePage extends StatelessWidget {
                                 textColor: white,
                                 minLines: 1,
                                 maxLines: 3,
-                                borderColor: Theme.of(context).primaryColor,
+                                borderColor: greatMagenda,
                               ),
                             ],
                           ),
@@ -163,7 +163,7 @@ class CreateWorkspacePage extends StatelessWidget {
                     child: MyText.text1(
                       createButtonText,
                       fontSize: 20,
-                      textColor: Theme.of(context).scaffoldBackgroundColor,
+                      textColor: white,
                     ),
                   ),
                 ),

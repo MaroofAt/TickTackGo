@@ -40,18 +40,22 @@ class ProjectsApi {
     return projects;
   }
 
-  static Future<CreateProjectModel> createProject(
-      String title, int workspaceId, String color, int? parentProject, String token) async {
+  static Future<CreateProjectModel> createProject(String title, int workspaceId,
+      String color, int? parentProject, String token) async {
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token'
+      'Authorization':
+          'Bearer $token'
     };
     var data = {
       "title": title,
       "workspace": workspaceId,
       "color": color,
-      "parent_project": parentProject,
     };
+
+    if (parentProject != null) {
+      data.addAll({"parent_project": parentProject});
+    }
 
     late CreateProjectModel createProjectModel;
 

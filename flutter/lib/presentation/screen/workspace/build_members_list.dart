@@ -5,7 +5,7 @@ import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class BuildMembersList extends StatelessWidget {
-  final RetrieveWorkspace retrieveWorkspace;
+  final RetrieveWorkspaceModel retrieveWorkspace;
 
   const BuildMembersList(this.retrieveWorkspace, {super.key});
 

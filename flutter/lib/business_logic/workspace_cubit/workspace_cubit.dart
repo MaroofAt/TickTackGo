@@ -9,7 +9,7 @@ import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
-import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
+import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 
 part 'workspace_state.dart';
 
@@ -68,7 +68,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
   Future<void> fetchWorkspace(int workspaceId) async {
     emit(WorkspaceRetrievingState());
 
-    RetrieveWorkspace retrieveWorkspace =
+    RetrieveWorkspaceModel retrieveWorkspace =
         await WorkspaceApi.retrieveWorkspace(workspaceId, token);
 
     if (retrieveWorkspace.errorMessage.isEmpty) {

@@ -51,7 +51,7 @@ class WorkspacesFetchingFailedState extends WorkspaceState {
 class WorkspaceRetrievingState extends WorkspaceState {}
 
 class WorkspaceRetrievingSucceededState extends WorkspaceState{
-  RetrieveWorkspace retrieveWorkspace;
+  RetrieveWorkspaceModel retrieveWorkspace;
 
   WorkspaceRetrievingSucceededState(this.retrieveWorkspace);
 }
