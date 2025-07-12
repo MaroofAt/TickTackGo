@@ -36,7 +36,6 @@ class InboxBottomNavigationBar extends StatelessWidget {
       },
       Theme.of(context).primaryColor,
       child: Row(
-        spacing: 10,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           icon ?? Container(),

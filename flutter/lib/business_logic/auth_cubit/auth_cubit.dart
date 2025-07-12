@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:pr1/core/API/auth.dart';
 import 'package:pr1/core/constance/strings.dart';
@@ -12,6 +13,7 @@ import '../../core/variables/api_variables.dart';
 import '../../core/variables/global_var.dart';
 import '../../data/local_data/local_data.dart';
 import '../../data/models/auth/sign-up-model-withoutotp.dart';
+import '../../data/models/local_models/intro_questions_model.dart';
 
 part 'auth_state.dart';
 
@@ -26,31 +28,53 @@ class AuthCubit extends Cubit<AuthState> {
     isloading = true;
 
     print("trying...");
+
     var data = FormData.fromMap({
-      'email': email
+    "username": 'shadi',
+    "email": email,
+    "password": '123456789gh',
+      "how_to_use_website": "own_tasks_management",
+      "what_do_you_do": "software_or_it",
+      "how_did_you_get_here": "google_search"
     });
+
     try {
       var response = await dio.request(
-        'http://192.168.230.106:8000/api/users/send_otp/',
+        '/users/send_otp/',
         options: Options(
           method: 'POST',
+          validateStatus: (status) => status! < 500,
         ),
         data: data,
       );
+
       if (response.statusCode == 200 && response.data.isNotEmpty) {
-        print("sucesss");
+        print("success");
         print(response.data);
         pushReplacementNamed(context, verfiyeRoute);
         emit(OTPSentSuccess());
-      } else {
-        isloading = false;
+      } else if (response.statusCode == 400 && response.data.isNotEmpty) {
+        final errorData = response.data;
         print('Error: ${response.data}');
+
+        String errorMessage = "";
+
+        if (errorData.containsKey('username')) {
+          errorMessage += "Username: ${List<String>.from(errorData['username']).join(', ')}\n";
+        }
+        if (errorData.containsKey('email')) {
+          errorMessage += "Email: ${List<String>.from(errorData['email']).join(', ')}";
+        }
+
+        showErrorDialog(context, "Registration Error", errorMessage);
+
+        isloading = false;
         emit(FailedSignupState(response.data));
       }
     } catch (e) {
       isloading = false;
-      print("Field");
-      emit(FailedSignupState("$e"));
+      print(e.toString());
+      emit(FailedSignupState("Registration failed"));
     }
   }
 
@@ -102,9 +126,10 @@ class AuthCubit extends Cubit<AuthState> {
 
       print("Response: ${response.data}");
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print("Verification success!");
         pushNamed(context, mainHomePageRoute);
+        login(globalSignUpModel!.email, globalSignUpModel!.password, context);
         emit(SignupVerifiedSuccessState());
       } else {
         print('Error: ${response.statusCode} - ${response.data}');
@@ -127,7 +152,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     try {
       final response = await dio.post(
-        'http://192.168.230.106:8000/api/users/token/',
+        '/users/token/',
         data: {
           'email': email,
           'password': password,
@@ -135,11 +160,12 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       if (response.statusCode == 200) {
-          final accessToken = response.data['access'];
-          final refreshToken = response.data['refresh'];
-          await saveTokens(accessToken, refreshToken);
-          print("Login success: ${response.data}");
-          pushReplacementNamed(context, mainHomePageRoute);
+        final accessToken = response.data['access'];
+        final refreshToken = response.data['refresh'];
+        await saveTokens(accessToken, refreshToken);
+        token=refreshToken;
+        print("Login success: ${response.data}");
+        pushReplacementNamed(context, mainHomePageRoute);
         emit(SuccessfulyLoginState());
       } else {
         print("Login failed: ${response.data}");
@@ -154,5 +180,22 @@ class AuthCubit extends Cubit<AuthState> {
     } finally {
       isloading = false;
     }
+  }
+
+  void showErrorDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) =>
+          AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+    );
   }
 }

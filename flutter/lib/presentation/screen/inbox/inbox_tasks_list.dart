@@ -45,7 +45,7 @@ class InboxTasksList extends StatelessWidget {
               ],
             ),
             child: Column(
-              spacing: 20,
+
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 MyText.text1(
