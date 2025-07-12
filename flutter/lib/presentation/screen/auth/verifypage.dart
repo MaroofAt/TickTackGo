@@ -6,6 +6,9 @@ import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 
+import '../../../core/constance/strings.dart';
+import '../../../core/functions/navigation_functions.dart';
+
 class Verifypage extends StatefulWidget {
   @override
   VerifypageState createState() => VerifypageState();
@@ -24,6 +27,13 @@ class VerifypageState extends State<Verifypage> {
     bool isloading=BlocProvider.of<AuthCubit>(context).isloading;
     return Stack(
             children: [
+              Positioned(
+                top:20,
+                left:40,
+                child:IconButton(onPressed: (){
+                  pushReplacementNamed(context,signupRoute);
+                }, icon:Icon(Icons.arrow_back_sharp),)
+              ),
               Positioned(
                 top: height(context)*0.49,left: width(context)*0.25,
                 child:  Center(

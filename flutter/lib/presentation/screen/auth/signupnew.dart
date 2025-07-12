@@ -42,7 +42,8 @@ class SignUpnewstate extends State<Signupnew>  {
         errorname = 'Please enter your name';
       } else if (nameController.text.length < 3) {
         errorname = 'Name must be at least 3 characters';
-      } else if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(nameController.text)) {
+      }
+      else if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(nameController.text)) {
         errorname = 'Name can only contain letters and spaces';
       } else {
         errorname = null;
@@ -159,13 +160,15 @@ class SignUpnewstate extends State<Signupnew>  {
 
                     print("Email: ${emailController.text}");
                     print("Password: ${passwordController.text}");
-
                   }
-                  context.read<AuthCubit>().initializeModel(nameController.text,passwordController.text, emailController.text);
-
-                  context.read<AuthCubit>().sendEmailForOTP( emailController.text,context
-                  );
-
+                  if(erroremail == null && errorname == null && errorpassword == null ) {
+                    context.read<AuthCubit>().initializeModel(
+                        nameController.text, passwordController.text,
+                        emailController.text);
+                    context.read<AuthCubit>().sendEmailForOTP(
+                        emailController.text, context
+                    );
+                  }
                   }, icon:isloading? CircularProgressIndicator(color: ampleOrange,strokeWidth:3)
                     : Text("Sign Up",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
             Container(child: Text("Or",style: TextStyle(color: lightGrey,fontSize: 14,fontFamily: 'PTSerif'),textAlign:TextAlign.end),margin:EdgeInsets.only(left:width(context)*0.48))

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => AuthCubit()),
         ],
-        child: const MainHomePage(),
+        child: const Signupnew(),
       ),
     );
   }

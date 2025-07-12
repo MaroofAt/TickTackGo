@@ -63,7 +63,7 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
           ),
           child: SingleChildScrollView(
             child: Column(
-              spacing: 25,
+
               children: [
                 buildTextFieldWithLabel(
                     context, 'Title *', 'Enter title', _titleController),
