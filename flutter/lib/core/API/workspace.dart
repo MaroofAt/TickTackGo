@@ -5,8 +5,8 @@ import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/local_data/local_data.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:dio/dio.dart';
+import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
-import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
 
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
@@ -76,14 +76,14 @@ class WorkspaceApi {
     return getWorkspacesModel;
   }
 
-  static Future<RetrieveWorkspace> retrieveWorkspace(
+  static Future<RetrieveWorkspaceModel> retrieveWorkspace(
       int workspaceId, String token) async {
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
 
-    late RetrieveWorkspace retrieveWorkspace;
+    late RetrieveWorkspaceModel retrieveWorkspace;
 
     try {
       var response = await dio.request(
@@ -95,12 +95,12 @@ class WorkspaceApi {
       );
 
       if (response.statusCode == 200) {
-        retrieveWorkspace = RetrieveWorkspace.onSuccess(response.data);
+        retrieveWorkspace = RetrieveWorkspaceModel.onSuccess(response.data);
       } else {
-        retrieveWorkspace = RetrieveWorkspace.onError(response.data);
+        retrieveWorkspace = RetrieveWorkspaceModel.onError(response.data);
       }
     } on DioException catch (e) {
-      retrieveWorkspace = RetrieveWorkspace.error(handleDioError(e));
+      retrieveWorkspace = RetrieveWorkspaceModel.error(handleDioError(e));
     }
     return retrieveWorkspace;
   }

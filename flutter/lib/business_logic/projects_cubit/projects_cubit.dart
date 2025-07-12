@@ -7,6 +7,7 @@ import 'package:pr1/data/models/projects/create_project_model.dart';
 import 'package:pr1/data/models/projects/delete_project_model.dart';
 import 'package:pr1/data/models/projects/fetch_projects_model.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
+import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 
 part 'projects_state.dart';
 
@@ -29,17 +30,17 @@ class ProjectsCubit extends Cubit<ProjectsState> {
 
   Future<void> createProject(
       String title, int workspaceId, Color color, int? parentId) async {
-    //TODO make create sub project method
-    if(title.isEmpty) return;
+    if (title.isEmpty) return;
+
     emit(ProjectCreatingState());
 
     final String colorHex = '#${color.value.toRadixString(16).substring(2)}';
 
-    CreateProjectModel createProjectModel =
-        await ProjectsApi.createProject(title, workspaceId, colorHex, parentId, token);
+    CreateProjectModel createProjectModel = await ProjectsApi.createProject(
+        title, workspaceId, colorHex, parentId, token);
     if (createProjectModel.errorMessage.isEmpty) {
       onArrowTap(0);
-      emit(ProjectCreatingSucceededState(createProjectModel));
+      fetchProjects(workspaceId);
     } else {
       emit(ProjectCreatingFailedState(createProjectModel.errorMessage));
     }
@@ -107,8 +108,6 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   }
 
   bool checkForIconType(int workspaceId) {
-    return projectsAreOpened &&
-        selectedWorkspaceId == workspaceId;
+    return projectsAreOpened && selectedWorkspaceId == workspaceId;
   }
-
 }

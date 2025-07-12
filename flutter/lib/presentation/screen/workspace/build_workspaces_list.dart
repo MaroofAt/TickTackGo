@@ -4,7 +4,7 @@ import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
-import 'package:pr1/data/models/workspace/get_workspaces_model.dart';
+import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/presentation/screen/projects/build_projects_list.dart';
 import 'package:pr1/presentation/screen/workspace/build_workspaces_list_item.dart';
 import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
@@ -52,16 +52,9 @@ class _BuildWorkspacesListState extends State<BuildWorkspacesList> {
                       BlocProvider.of<ProjectsCubit>(context)
                               .selectedWorkspaceId ==
                           widget.fetchWorkspacesModel[index].id
-                  ? BlocBuilder<ProjectsCubit, ProjectsState>(
-                      builder: (context, state) {
-                        if (state is ProjectsFetchingSucceededState) {
-                          return BuildProjectsList(state.projects, widget.fetchWorkspacesModel[index].id);
-                        }
-                        return Center(
-                            child:
-                                LoadingIndicator.circularProgressIndicator());
-                      },
-                    )
+                  ? BuildProjectsList(
+                      widget.fetchWorkspacesModel[index].projects,
+                      widget.fetchWorkspacesModel[index].id)
                   : Container(),
             ],
           ),

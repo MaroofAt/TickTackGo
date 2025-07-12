@@ -27,7 +27,7 @@ class WorkspaceInfoPage extends StatefulWidget {
 }
 
 class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
-  RetrieveWorkspace? retrieveWorkspace;
+  RetrieveWorkspaceModel? retrieveWorkspace;
 
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
       body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
         builder: (context, state) {
           if (state is WorkspaceRetrievingSucceededState) {
-            RetrieveWorkspace retrieveWorkspace = state.retrieveWorkspace;
+            RetrieveWorkspaceModel retrieveWorkspace = state.retrieveWorkspace;
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

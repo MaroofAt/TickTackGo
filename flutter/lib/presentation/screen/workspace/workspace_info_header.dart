@@ -6,7 +6,7 @@ import 'package:pr1/presentation/widgets/text.dart';
 class WorkspaceInfoHeader extends StatelessWidget {
 
   final String imageUrl = "assets/images/logo_images/logo100.png";
-  final RetrieveWorkspace retrieveWorkspace;
+  final RetrieveWorkspaceModel retrieveWorkspace;
 
   const WorkspaceInfoHeader(this.retrieveWorkspace,{super.key});
 

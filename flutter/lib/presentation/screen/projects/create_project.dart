@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
+import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
@@ -14,8 +15,9 @@ import 'package:pr1/presentation/widgets/text_field.dart';
 
 class CreateProjectDialog extends StatefulWidget {
   final int workspaceId;
+  final Map<String, int> parentProjects;
 
-  const CreateProjectDialog(this.workspaceId, {super.key});
+  const CreateProjectDialog(this.workspaceId, this.parentProjects, {super.key});
 
   @override
   State<CreateProjectDialog> createState() => _CreateProjectDialogState();
@@ -47,7 +49,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
               _buildDropdown(
                 label: 'Parent Project',
                 value: _selectedParent,
-                items: ['No Parent'],
+                items: widget.parentProjects.keys.toList(),
                 onChanged: (val) => setState(() => _selectedParent = val),
               ),
               const SizedBox(height: 12),
@@ -64,7 +66,11 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
         ElevatedButton(
           onPressed: () {
             BlocProvider.of<ProjectsCubit>(context).createProject(
-                nameController.text, widget.workspaceId, selectedColor, null);
+              nameController.text,
+              widget.workspaceId,
+              selectedColor,
+              widget.parentProjects[_selectedParent ?? ""],
+            );
           },
           child: BlocConsumer<ProjectsCubit, ProjectsState>(
             listener: (context, state) {
@@ -83,6 +89,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
               }
               if (state is ProjectCreatingSucceededState) {
                 popScreen(context);
+                BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
               }
             },
             builder: (context, state) {
