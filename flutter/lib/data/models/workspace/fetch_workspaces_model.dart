@@ -9,6 +9,7 @@ class FetchWorkspacesModel {
   DateTime? createdAt;
   DateTime? updatedAt;
   String errorMessage;
+  int statusCode;
 
   FetchWorkspacesModel({
     required this.id,
@@ -21,9 +22,10 @@ class FetchWorkspacesModel {
     required this.createdAt,
     required this.updatedAt,
     required this.errorMessage,
+    required this.statusCode,
   });
 
-  factory FetchWorkspacesModel.onSuccess(Map<String, dynamic> json) =>
+  factory FetchWorkspacesModel.onSuccess(Map<String, dynamic> json, int statusCode) =>
       FetchWorkspacesModel(
         id: json["id"],
         title: json["title"],
@@ -37,9 +39,10 @@ class FetchWorkspacesModel {
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         errorMessage: '',
+        statusCode: statusCode,
       );
 
-  factory FetchWorkspacesModel.onError(Map<String, dynamic> json) =>
+  factory FetchWorkspacesModel.onError(Map<String, dynamic> json,int statusCode) =>
       FetchWorkspacesModel(
         id: json["id"]??0,
         title: json["title"]??'',
@@ -51,9 +54,10 @@ class FetchWorkspacesModel {
         createdAt: null,
         updatedAt: null,
         errorMessage: json["detail"] ?? json["message"],
+        statusCode: statusCode,
       );
 
-  factory FetchWorkspacesModel.error(String errorMessage) =>
+  factory FetchWorkspacesModel.error(String errorMessage, int statusCode) =>
       FetchWorkspacesModel(
         id: 0,
         title: '',
@@ -65,6 +69,7 @@ class FetchWorkspacesModel {
         createdAt: null,
         updatedAt: null,
         errorMessage: errorMessage,
+        statusCode: statusCode,
       );
 
 }

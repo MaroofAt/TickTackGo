@@ -38,8 +38,11 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => AuthCubit()),
         ],
-        child: BlocProvider(
-          create: (context) => SplashCubit(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => SplashCubit()),
+            BlocProvider(create: (context) => SplashCubit()),
+          ],
           child: const SplashScreen(),
         ),
       ),

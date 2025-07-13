@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
+import 'package:pr1/core/functions/refresh_token.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
@@ -48,6 +49,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
         await WorkspaceApi.createWorkspace(title, description, image, token);
     if (createWorkspaceModel.errorMessage.isEmpty) {
       emit(CreatedWorkspaceState(createWorkspaceModel));
+      fetchWorkspaces();
     } else {
       emit(CreateWorkspaceFailedState(createWorkspaceModel.errorMessage));
     }
@@ -57,11 +59,16 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     emit(WorkspacesFetchingState());
     List<FetchWorkspacesModel> fetchWorkspacesModel =
         await WorkspaceApi.fetchWorkspaces(token);
-
-    if (fetchWorkspacesModel[0].errorMessage.isEmpty) {
+    if (fetchWorkspacesModel.isEmpty ||
+        fetchWorkspacesModel[0].errorMessage.isEmpty) {
       emit(WorkspacesFetchingSucceededState(fetchWorkspacesModel));
     } else {
-      emit(WorkspacesFetchingFailedState(fetchWorkspacesModel[0].errorMessage));
+      if (fetchWorkspacesModel[0].statusCode == 401) {
+        emit(RefreshTokenState());
+      } else {
+        emit(WorkspacesFetchingFailedState(
+            fetchWorkspacesModel[0].errorMessage));
+      }
     }
   }
 

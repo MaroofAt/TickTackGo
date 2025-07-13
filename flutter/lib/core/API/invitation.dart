@@ -10,12 +10,9 @@ import 'package:pr1/data/models/invitation/send_invite_model.dart';
 import 'package:pr1/data/models/invitation/user_invites_model.dart';
 
 class InvitationApi {
-  static Future<InvitationSearchModel> invitationSearch(String query) async {
-    String? token = await getRefreshToken();
-    var headers = {
-      'Authorization':
-          'Bearer $token'
-    };
+  static Future<InvitationSearchModel> invitationSearch(
+      String query, String token) async {
+    var headers = {'Authorization': 'Bearer $token'};
 
     late InvitationSearchModel invitationSearchModel;
 
@@ -41,10 +38,8 @@ class InvitationApi {
   }
 
   static Future<List<dynamic>> fetchUserInvites(String token) async {
-    String? token = await getRefreshToken();
     var headers = {
-      'Authorization':
-          'Bearer $token',
+      'Authorization': 'Bearer $token',
     };
 
     late List<dynamic> userInvitesList;
@@ -72,12 +67,9 @@ class InvitationApi {
 
   static Future<AcceptInviteModel> acceptInvite(
       int inviteId, String token) async {
-
-    String? token = await getRefreshToken();
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer $token'
+      'Authorization': 'Bearer $token'
     };
     var data = {"invite": inviteId};
 
@@ -106,12 +98,10 @@ class InvitationApi {
 
   static Future<RejectInviteModel> rejectInvite(
       int inviteId, String token) async {
-    String? token = await getRefreshToken();
 
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer $token'
+      'Authorization': 'Bearer $token'
     };
 
     var data = {"invite": inviteId};
@@ -129,7 +119,6 @@ class InvitationApi {
       if (response.statusCode == 202) {
         rejectInviteModel = RejectInviteModel.onSuccess();
       } else {
-
         rejectInviteModel = RejectInviteModel.onError(response.data);
       }
     } on DioException catch (e) {
@@ -138,9 +127,9 @@ class InvitationApi {
     return rejectInviteModel;
   }
 
-  static Future<SendInviteModel> sendInvite(int senderId, int receiverId, int workspaceId) async {
+  static Future<SendInviteModel> sendInvite(
+      int senderId, int receiverId, int workspaceId, String token) async {
 
-String? token = await getRefreshToken();
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'

@@ -62,4 +62,4 @@ class WorkspaceRetrievingFailedState extends WorkspaceState {
   WorkspaceRetrievingFailedState(this.errorMessage);
 }
 
-
+class RefreshTokenState extends WorkspaceState {}

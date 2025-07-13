@@ -28,10 +28,10 @@ class _SplashScreenState extends State<SplashScreen> {
     setState(() {
       _visible = true;
     });
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     if (await BlocProvider.of<SplashCubit>(context).checkExistingToken()) {
       String? refresh =
-      await BlocProvider.of<SplashCubit>(context).getRefreshToken();
+          await BlocProvider.of<SplashCubit>(context).retrieveRefreshToken();
       if (refresh == null) {
         pushReplacementNamed(context, onboardingMainRoute);
       } else {

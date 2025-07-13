@@ -32,6 +32,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: const Text('Add Project'),
       content: SingleChildScrollView(
         child: Form(
@@ -110,8 +111,9 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
     return MyGestureDetector.gestureDetector(
       onTap: openColorPicker,
       child: Row(
+        spacing: 20,
         children: [
-          MyText.text1('pick color', fontSize: 18),
+          MyText.text1('pick color', fontSize: 18,textColor: white),
           Container(
             height: width(context) * 0.03,
             width: width(context) * 0.03,

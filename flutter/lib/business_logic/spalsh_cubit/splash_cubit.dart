@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/core/API/splash_api.dart';
+import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/local_data/local_data.dart';
 import 'package:pr1/data/models/auth/refresh_token.dart';
 
@@ -14,7 +15,7 @@ class SplashCubit extends Cubit<SplashState> {
     return token != null;
   }
 
-  Future<String?> getRefreshToken() async {
+  Future<String?> retrieveRefreshToken() async {
     return await getRefreshToken();
   }
 
@@ -22,11 +23,11 @@ class SplashCubit extends Cubit<SplashState> {
     emit(RefreshTokenLoadingState());
 
     RefreshTokenModel refreshTokenModel = await SplashApi.refreshToken(refresh);
-    if(refreshTokenModel.errorMessage.isEmpty){
+    if (refreshTokenModel.errorMessage.isEmpty) {
+      token = refreshTokenModel.access;
       emit(RefreshTokenSucceededState(refreshTokenModel.access));
-    }else{
+    } else {
       emit(RefreshTokenFailedState(refreshTokenModel.errorMessage));
     }
   }
-
 }

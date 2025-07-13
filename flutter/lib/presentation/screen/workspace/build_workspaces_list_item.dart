@@ -40,9 +40,14 @@ class BuildListItem extends StatelessWidget {
                   width: height(context) * 0.1,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    image: MyImages.decorationImage(
-                        isAssetImage: true,
-                        image: 'assets/images/workspace_images/img.png'),
+                    image: fetchWorkspacesModel.image == null
+                        ? MyImages.decorationImage(
+                            isAssetImage: true,
+                            image: 'assets/images/workspace_images/img.png')
+                        : MyImages.decorationImage(
+                            isAssetImage: false,
+                            image: fetchWorkspacesModel.image,
+                            ),
                   ),
                 ),
                 MyText.text1(fetchWorkspacesModel.title,
@@ -55,7 +60,8 @@ class BuildListItem extends StatelessWidget {
               child: BlocBuilder<ProjectsCubit, ProjectsState>(
                 builder: (context, state) {
                   return MyIcons.icon(
-                    !BlocProvider.of<ProjectsCubit>(context).checkForIconType(fetchWorkspacesModel.id)
+                    !BlocProvider.of<ProjectsCubit>(context)
+                            .checkForIconType(fetchWorkspacesModel.id)
                         ? Icons.keyboard_arrow_right
                         : Icons.keyboard_arrow_down_outlined,
                     color: lightGrey,
