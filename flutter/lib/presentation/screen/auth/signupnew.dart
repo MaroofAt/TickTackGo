@@ -156,17 +156,16 @@ class SignUpnewstate extends State<Signupnew>  {
                 decoration:BoxDecoration(color:parrotGreen, borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
                 child: IconButton(onPressed: (){
                   if (_validateFields()) {
-                    print("All fields are valid");
-
-                    print("Email: ${emailController.text}");
-                    print("Password: ${passwordController.text}");
+                    // print("All fields are valid");
+                    // print("Email: ${emailController.text}");
+                    // print("Password: ${passwordController.text}");
                   }
                   if(erroremail == null && errorname == null && errorpassword == null ) {
                     context.read<AuthCubit>().initializeModel(
                         nameController.text, passwordController.text,
                         emailController.text);
                     context.read<AuthCubit>().sendEmailForOTP(
-                        emailController.text, context
+                        emailController.text,nameController.text,passwordController.text, context
                     );
                   }
                   }, icon:isloading? CircularProgressIndicator(color: ampleOrange,strokeWidth:3)
