@@ -176,7 +176,7 @@ class SignUpnewstate extends State<Signupnew>  {
                 margin: EdgeInsets.only(left: 15,top:20,bottom: 20),
                 decoration:BoxDecoration(color:ampleOrange, borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
                 child: IconButton(onPressed: (){
-                  pushReplacementScreen(context, BlocProvider(
+                  pushScreen(context, BlocProvider(
                     create: (context) => AuthCubit(),
                     child:Signinnew(),
                   ));                 }, icon: Text("Sign In",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),

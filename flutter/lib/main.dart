@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
+import 'package:pr1/business_logic/spalsh_cubit/splash_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/auth/signinnew.dart';
@@ -30,14 +31,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
-      // theme: theme(),
-      theme: ThemeData.dark(),
+      theme: theme(),
+      // theme: ThemeData.dark(),
       routes: routes,
-      home:MultiBlocProvider(
+      home: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => AuthCubit()),
         ],
-        child: const Signupnew(),
+        child: BlocProvider(
+          create: (context) => SplashCubit(),
+          child: const SplashScreen(),
+        ),
       ),
     );
   }
