@@ -51,7 +51,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (response.statusCode == 200 && response.data.isNotEmpty) {
         print("success");
         print(response.data);
-        pushReplacementNamed(context, verfiyeRoute);
+        pushNamed(context, verfiyeRoute);
         emit(OTPSentSuccess());
       } else if (response.statusCode == 400 && response.data.isNotEmpty) {
         final errorData = response.data;
@@ -128,7 +128,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (response.statusCode == 201) {
         print("Verification success!");
-        pushNamed(context, mainHomePageRoute);
+        pushNamedAndRemoveUntil(context, mainHomePageRoute);
         login(globalSignUpModel!.email, globalSignUpModel!.password, context);
         emit(SignupVerifiedSuccessState());
       } else {
@@ -165,7 +165,7 @@ class AuthCubit extends Cubit<AuthState> {
         await saveTokens(accessToken, refreshToken);
         token=refreshToken;
         print("Login success: ${response.data}");
-        pushReplacementNamed(context, mainHomePageRoute);
+        pushNamedAndRemoveUntil(context, mainHomePageRoute);
         emit(SuccessfulyLoginState());
       } else {
         print("Login failed: ${response.data}");
