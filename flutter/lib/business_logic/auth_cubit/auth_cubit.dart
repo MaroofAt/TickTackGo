@@ -160,10 +160,11 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       if (response.statusCode == 200) {
-        final accessToken = response.data['access'];
-        final refreshToken = response.data['refresh'];
+        final String accessToken = response.data['access'];
+        final String refreshToken = response.data['refresh'];
         await saveTokens(accessToken, refreshToken);
-        token=refreshToken;
+        token=accessToken;
+        refresh = refreshToken;
         print("Login success: ${response.data}");
         pushNamedAndRemoveUntil(context, mainHomePageRoute);
         emit(SuccessfulyLoginState());

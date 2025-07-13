@@ -6,15 +6,12 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/refresh_token.dart';
+import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/presentation/screen/workspace/build_workspaces_list.dart';
-import 'package:pr1/presentation/screen/workspace/build_workspaces_list_item.dart';
 import 'package:pr1/presentation/screen/workspace/show_workspaces_app_bar.dart';
-import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
-import 'package:pr1/presentation/widgets/app_bar.dart';
-import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
-import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
@@ -64,10 +61,32 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
                 secondButtonText: '',
                 secondButtonAction: () {},
               );
+            } if (state is RefreshTokenState) {
+              refreshToken(context, refresh);
+              BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
             }
           },
           builder: (context, state) {
             if (state is WorkspacesFetchingSucceededState) {
+              if (state.fetchWorkspacesModel.isEmpty) {
+                return Column(
+                  spacing: 20,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MyText.text1(
+                      'You are not member in any workspace',
+                      fontSize: 20,
+                      textColor: white,
+                    ),
+                    MyText.text1(
+                      'You can create your own by the button down below',
+                      fontSize: 20,
+                      textColor: white,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                );
+              }
               return BlocProvider(
                 create: (context) => ProjectsCubit(),
                 child: BuildWorkspacesList(state.fetchWorkspacesModel),
@@ -75,9 +94,7 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
             } else {
               return Center(
                 child: LoadingIndicator.circularProgressIndicator(
-                  color: Theme
-                      .of(context)
-                      .secondaryHeaderColor,
+                  color: Theme.of(context).secondaryHeaderColor,
                 ),
               );
             }

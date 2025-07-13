@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/core/API/invitation.dart';
+import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/invitation/accept_invite_model.dart';
 import 'package:pr1/data/models/invitation/invitation_search_model.dart';
 import 'package:pr1/data/models/invitation/reject_invite_model.dart';
@@ -27,7 +28,7 @@ class InvitationCubit extends Cubit<InvitationState> {
       emit(SearchLoadingState());
 
       InvitationSearchModel invitationSearchModel =
-          await InvitationApi.invitationSearch(query);
+          await InvitationApi.invitationSearch(query, token);
 
       if (invitationSearchModel.errorMessage.isEmpty) {
         //TODO
@@ -79,7 +80,7 @@ class InvitationCubit extends Cubit<InvitationState> {
 
     emit(SendingInviteState());
     SendInviteModel sendInviteModel =
-        await InvitationApi.sendInvite(senderId, receiverId, workspaceId);
+        await InvitationApi.sendInvite(senderId, receiverId, workspaceId, token);
     if (sendInviteModel.errorMessage.isEmpty) {
       emit(SendingInviteSuccessfullyState(sendInviteModel));
     } else {

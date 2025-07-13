@@ -11,18 +11,31 @@ import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
       String title, String description, File? image, String token) async {
-    var headers = {
-      'Content-Type': 'multipart/form-data',
-      'Authorization': 'Bearer $token'
-    };
-    var data = FormData.fromMap({
-      'title': title,
-      'description': description,
-      'image': await MultipartFile.fromFile(
-        image!.path,
-        filename: '$title.jpg',
-      ),
-    });
+    Map<String, String> headers;
+    var data;
+
+    if (image == null) {
+      headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+
+      data = {
+        'title': title,
+        'description': description,
+      };
+    } else {
+      headers = {'Authorization': 'Bearer $token'};
+
+      data = FormData.fromMap({
+        'title': title,
+        'description': description,
+        'image': await MultipartFile.fromFile(
+          image.path,
+          filename: '$title.jpg',
+        ),
+      });
+    }
 
     late CreateWorkspaceModel createWorkspaceModel;
     try {
@@ -65,13 +78,19 @@ class WorkspaceApi {
 
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
-        getWorkspacesModel =
-            data.map((json) => FetchWorkspacesModel.onSuccess(json)).toList();
+        getWorkspacesModel = data
+            .map((json) =>
+                FetchWorkspacesModel.onSuccess(json, response.statusCode!))
+            .toList();
       } else {
-        getWorkspacesModel = [FetchWorkspacesModel.onError(response.data)];
+        getWorkspacesModel = [
+          FetchWorkspacesModel.onError(response.data, response.statusCode!)
+        ];
       }
     } on DioException catch (e) {
-      getWorkspacesModel = [FetchWorkspacesModel.error(handleDioError(e))];
+      getWorkspacesModel = [
+        FetchWorkspacesModel.error(handleDioError(e), e.response!.statusCode!)
+      ];
     }
     return getWorkspacesModel;
   }
