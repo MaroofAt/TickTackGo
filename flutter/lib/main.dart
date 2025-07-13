@@ -8,6 +8,7 @@ import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/auth/signinnew.dart';
 import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import 'package:pr1/presentation/screen/home/main_home_page.dart';
+import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/presentation/screen/projects/create_project.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => AuthCubit()),
         ],
-        child: const Signupnew(),
+        child: const All_Issues(),
       ),
     );
   }
