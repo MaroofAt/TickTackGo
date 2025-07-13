@@ -11,6 +11,7 @@ import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import '../../core/functions/navigation_functions.dart';
 import '../../core/variables/api_variables.dart';
 import '../../core/variables/global_var.dart';
+import '../../core/variables/intro_questions_variables.dart';
 import '../../data/local_data/local_data.dart';
 import '../../data/models/auth/sign-up-model-withoutotp.dart';
 import '../../data/models/local_models/intro_questions_model.dart';
@@ -23,19 +24,19 @@ class AuthCubit extends Cubit<AuthState> {
 
 
   ///////////SignUp
-  Future<void> sendEmailForOTP(String email, BuildContext context) async {
+  Future<void> sendEmailForOTP(String email,String name ,String password, BuildContext context) async {
     emit(SignupLoadingState());
     isloading = true;
 
     print("trying...");
 
     var data = FormData.fromMap({
-    "username": 'shadi',
+    "username": name,
     "email": email,
-    "password": '123456789gh',
-      "how_to_use_website": "own_tasks_management",
-      "what_do_you_do": "software_or_it",
-      "how_did_you_get_here": "google_search"
+    "password": password,
+      "how_to_use_website": selectedOptions[0],
+      "what_do_you_do": selectedOptions[1],
+      "how_did_you_get_here": selectedOptions[2]
     });
 
     try {
@@ -144,7 +145,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-
   ///////login
   Future<void> login(String email, String password, BuildContext context) async {
     isloading = true;
@@ -153,13 +153,17 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final response = await dio.post(
         '/users/token/',
+        options: Options(
+        method: 'POST',
+        validateStatus: (status) => status! < 500,
+      ),
         data: {
           'email': email,
           'password': password,
         },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && response.data.isNotEmpty) {
         final accessToken = response.data['access'];
         final refreshToken = response.data['refresh'];
         await saveTokens(accessToken, refreshToken);
@@ -167,7 +171,16 @@ class AuthCubit extends Cubit<AuthState> {
         print("Login success: ${response.data}");
         pushReplacementNamed(context, mainHomePageRoute);
         emit(SuccessfulyLoginState());
-      } else {
+      }else if (response.statusCode == 401 && response.data.isNotEmpty ) {
+        final errorDetail = response.data['detail'] ?? 'Invalid credentials';
+        emit(FailedLoginState(errorDetail.toString()));
+        showErrorDialog(
+            context,
+            "Login Failed",
+            errorDetail is String ? errorDetail : "Invalid email or password"
+        );
+      }
+      else {
         print("Login failed: ${response.data}");
         emit(FailedLoginState(response.data.toString()));
       }
