@@ -39,8 +39,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     CreateProjectModel createProjectModel = await ProjectsApi.createProject(
         title, workspaceId, colorHex, parentId, token);
     if (createProjectModel.errorMessage.isEmpty) {
-      onArrowTap(0);
-      fetchProjects(workspaceId);
+      emit(ProjectCreatingSucceededState(createProjectModel));
     } else {
       emit(ProjectCreatingFailedState(createProjectModel.errorMessage));
     }
