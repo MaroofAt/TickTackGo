@@ -42,8 +42,7 @@ class InvitationCubit extends Cubit<InvitationState> {
 
   Future<void> fetchUserInvites() async {
     emit(GettingInvitesState());
-    //TODO pass user token
-    List<dynamic> userInvitesList = await InvitationApi.fetchUserInvites('');
+    List<dynamic> userInvitesList = await InvitationApi.fetchUserInvites(token);
     if (userInvitesList.isEmpty || userInvitesList[0].errorMessage.isEmpty) {
       emit(GetInvitesSucceededState(userInvitesList));
     } else {
@@ -54,7 +53,7 @@ class InvitationCubit extends Cubit<InvitationState> {
   Future<void> acceptInvite(int inviteId) async {
     emit(AcceptingInviteState());
     AcceptInviteModel acceptInviteModel =
-        await InvitationApi.acceptInvite(inviteId, '');
+        await InvitationApi.acceptInvite(inviteId, token);
     if (acceptInviteModel.errorMessage.isEmpty) {
       fetchUserInvites();
     } else {
@@ -65,7 +64,7 @@ class InvitationCubit extends Cubit<InvitationState> {
   Future<void> rejectInvite(int inviteId) async {
     emit(RejectingInviteState());
     RejectInviteModel rejectInviteModel =
-        await InvitationApi.rejectInvite(inviteId, '');
+        await InvitationApi.rejectInvite(inviteId, token);
     if (rejectInviteModel.errorMessage.isEmpty) {
       fetchUserInvites();
     } else {

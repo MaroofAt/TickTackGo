@@ -31,12 +31,22 @@ class BuildProjectsList extends StatelessWidget {
 
     showDialog(
       context: context,
-      builder: (context) => MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => ProjectsCubit()),
-          BlocProvider(create: (context) => WorkspaceCubit()),
-        ],
-        child: CreateProjectDialog(workspaceId, parentProjects),
+      builder: (_) => BlocProvider(
+        create: (context) => ProjectsCubit(),
+        child: PopScope(
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop && result != null) {
+              final projectsCubit =
+                  BlocProvider.of<ProjectsCubit>(context, listen: false);
+              final workspaceCubit =
+                  BlocProvider.of<WorkspaceCubit>(context, listen: false);
+
+              projectsCubit.onArrowTap(0);
+              workspaceCubit.fetchWorkspaces();
+            }
+          },
+          child: CreateProjectDialog(workspaceId, parentProjects),
+        ),
       ),
     );
   }

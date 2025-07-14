@@ -41,7 +41,7 @@ class CreateWorkspacePage extends StatelessWidget {
                         BlocConsumer<WorkspaceCubit, WorkspaceState>(
                           listener: (context, state) {
                             if (state is CreatedWorkspaceState) {
-                              popScreen(context);
+                              popScreen(context, true);
                             }
                             if (state is CreateWorkspaceFailedState) {
                               MyAlertDialog.showAlertDialog(

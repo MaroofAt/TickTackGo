@@ -9,6 +9,7 @@ import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/core/functions/refresh_token.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/presentation/screen/workspace/build_workspaces_list.dart';
+import 'package:pr1/presentation/screen/workspace/create_workspace_page.dart';
 import 'package:pr1/presentation/screen/workspace/show_workspaces_app_bar.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
@@ -39,7 +40,20 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
       appBar: ShowWorkspacesAppBar.workspacesAppBar(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          pushNamed(context, workspaceCreatePageRoute);
+          pushScreen(
+            context,
+            BlocProvider(
+              create: (context) => WorkspaceCubit(),
+              child: PopScope(
+                onPopInvokedWithResult: (didPop, result) {
+                  if (didPop && result != null) {
+                    BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
+                  }
+                },
+                child: CreateWorkspacePage(),
+              ),
+            ),
+          );
         },
         child: MyIcons.icon(Icons.add),
       ),
@@ -61,8 +75,9 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
                 secondButtonText: '',
                 secondButtonAction: () {},
               );
-            } if (state is RefreshTokenState) {
-              refreshToken(context, refresh);
+            }
+            if (state is RefreshTokenState) {
+              refreshToken();
               BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
             }
           },
@@ -87,10 +102,7 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
                   ],
                 );
               }
-              return BlocProvider(
-                create: (context) => ProjectsCubit(),
-                child: BuildWorkspacesList(state.fetchWorkspacesModel),
-              );
+              return BuildWorkspacesList(state.fetchWorkspacesModel);
             } else {
               return Center(
                 child: LoadingIndicator.circularProgressIndicator(

@@ -8,7 +8,6 @@ const String verfiyeRoute = 'verfiye';
 const String onboardingMainRoute = 'onboardingMainRoute';
 const String introQuestionsRoute = 'introQuestionsRoute';
 const String finalOnboardingPageRoute = 'finalOnboardingPageRoute';
-const String workspaceCreatePageRoute = 'workspaceCreatePageRoute';
 const String workspaceInfoRoute = 'workspaceInfoRoute';
 const String workspacesShowPageRoute = 'workspacesShowPageRoute';
 const String receivedInvitationPageRoute = 'receivedInvitationPageRoute';

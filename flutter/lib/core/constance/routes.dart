@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
 import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
+import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/presentation/screen/auth/signinnew.dart';
@@ -34,12 +35,11 @@ Map<String, Widget Function(BuildContext)> routes = {
         child: const IntroQuestionsMain(),
       ),
   finalOnboardingPageRoute: (context) => const FinalOnboardingPage(),
-  workspaceCreatePageRoute: (context) => BlocProvider(
-        create: (context) => WorkspaceCubit(),
-        child: CreateWorkspacePage(),
-      ),
-  workspacesShowPageRoute: (context) => BlocProvider(
-        create: (context) => WorkspaceCubit(),
+  workspacesShowPageRoute: (context) => MultiBlocProvider(
+        providers: [
+          BlocProvider<WorkspaceCubit>(create: (context) => WorkspaceCubit()),
+          BlocProvider<ProjectsCubit>(create: (context) => ProjectsCubit()),
+        ],
         child: const WorkspacesShowPage(),
       ),
   receivedInvitationPageRoute: (context) => BlocProvider(

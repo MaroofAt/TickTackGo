@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:pr1/core/API/auth.dart';
+import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/data/models/auth/sign_up_model.dart';
 import 'package:pr1/presentation/screen/auth/signupnew.dart';
@@ -34,8 +35,8 @@ class AuthCubit extends Cubit<AuthState> {
     "username": name,
     "email": email,
     "password": password,
-      "how_to_use_website": selectedOptions[0],
-      "what_do_you_do": selectedOptions[1],
+      "what_do_you_do": selectedOptions[0],
+      "how_to_use_website": selectedOptions[1],
       "how_did_you_get_here": selectedOptions[2]
     });
 
@@ -201,8 +202,9 @@ class AuthCubit extends Cubit<AuthState> {
       context: context,
       builder: (context) =>
           AlertDialog(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Text(title),
-            content: Text(message),
+            content: Text(message,style: const TextStyle(color: white),),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
