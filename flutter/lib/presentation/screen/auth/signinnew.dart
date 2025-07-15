@@ -64,19 +64,19 @@ class _SigninnewState extends State<Signinnew>  {
     return Column(
           crossAxisAlignment:CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 100,),
+            const SizedBox(height: 100,),
       const Center(child: Text("Hello!",style: TextStyle(color: white,fontSize: 34,fontFamily: 'PTSerif'),),),
         const Center(child: Text("enter your details below",style: TextStyle(color: white,fontSize: 18,fontFamily: 'PTSerif'),),),
      const SizedBox(
        height: 20,
      ),
-           Container(child: Text("E-mail",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start),margin: EdgeInsets.only(left: 10),)
-          , Container(child:  CreateTextField(
+           Container(margin: const EdgeInsets.only(left: 10),child: Text("E-mail",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start),)
+          , Container(margin: const EdgeInsets.only(left: 15,),child:  CreateTextField(
              text: "Your Email",
              icon: Icon(Icons.email),
              controller: _emailController,
-           ),margin: EdgeInsets.only(left: 15,),),
-            SizedBox(height: 3,),
+           ),),
+            const SizedBox(height: 3,),
             if (erroremail != null)
               Padding(
                 padding: const EdgeInsets.only(left:20,bottom: 5),
@@ -84,12 +84,12 @@ class _SigninnewState extends State<Signinnew>  {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     erroremail!,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
                   ),
                 ),
               ),
-            Container(child: Text("Password",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start) ,margin: EdgeInsets.only(left: 10),),
-           Container(child:  CreateTextField(
+            Container(margin: const EdgeInsets.only(left: 10),child: Text("Password",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start) ,),
+           Container(margin: const EdgeInsets.only(left: 15,),child:  CreateTextField(
              text: "Your Password",
              icon: Icon(Icons.lock_outline_rounded),
              obscureText: _obscurePassword,
@@ -105,8 +105,8 @@ class _SigninnewState extends State<Signinnew>  {
                  });
                },
              ),
-           ),margin: EdgeInsets.only(left: 15,),) ,
-    SizedBox(height:3,),
+           ),) ,
+    const SizedBox(height:3,),
     if (errorpassword != null)
     Padding(
     padding: const EdgeInsets.only(left: 20),
@@ -114,15 +114,15 @@ class _SigninnewState extends State<Signinnew>  {
     alignment: Alignment.centerLeft,
     child: Text(
     errorpassword!,
-    style: TextStyle(color: Colors.red, fontSize: 12),
+    style: const TextStyle(color: Colors.red, fontSize: 12),
     ),
     ),
     ),
             Container(margin:EdgeInsets.only(left: width(context)*0.67
-            ),child: Text("forget password?",style: TextStyle(color: lightGrey,fontSize: 14,fontFamily: 'PTSerif'),textAlign:TextAlign.end),)
+            ),child: const Text("forget password?",style: TextStyle(color: lightGrey,fontSize: 14,fontFamily: 'PTSerif'),textAlign:TextAlign.end),)
         , Container(
-              margin: EdgeInsets.only(left: 15,top:20,bottom: 40),
-              decoration:BoxDecoration(color:parrotGreen,borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
+              margin: const EdgeInsets.only(left: 15,top:20,bottom: 40),
+              decoration:const BoxDecoration(color:parrotGreen,borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
                 child: IconButton(onPressed: (){
                   if (_validateFields()) {
                     print(_emailController.text);
@@ -130,26 +130,26 @@ class _SigninnewState extends State<Signinnew>  {
                   }
                   if(errorpassword== null && erroremail == null){
                     context.read<AuthCubit>().login(_emailController.text,_passwordController.text,context);}
-                }, icon:isloading?CircularProgressIndicator(color:white,): Text("Sign in",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
+                }, icon:isloading?const CircularProgressIndicator(color:white,): const Text("Sign in",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
          Row(
            children: [
-Container(child: Icon(Icons.key_sharp,color: lightGrey),margin:EdgeInsets.only(left: width(context)*0.354
-)),
-             SizedBox(width: 5,),
-             Container(child: Text("continues with",style: TextStyle(color: lightGrey,fontSize: 14,fontFamily: 'PTSerif'),textAlign:TextAlign.end),)
+Container(margin:EdgeInsets.only(left: width(context)*0.354
+), child: Icon(Icons.key_sharp,color: lightGrey)),
+             const SizedBox(width: 5,),
+             Container(child: const Text("continues with",style: TextStyle(color: lightGrey,fontSize: 14,fontFamily: 'PTSerif'),textAlign:TextAlign.end),)
              ,
            ],
          ),
             Container(
 
-              padding: EdgeInsets.only(left: 80),
-                margin: EdgeInsets.only(left: 15,top:40,bottom: 40),
-                decoration:BoxDecoration(color:ampleOrange.withOpacity(0.5),borderRadius: BorderRadius.all(Radius.circular(10) )),width: width(context)*0.9,
+              padding: const EdgeInsets.only(left: 80),
+                margin: const EdgeInsets.only(left: 15,top:40,bottom: 40),
+                decoration:BoxDecoration(color:ampleOrange.withOpacity(0.5),borderRadius: const BorderRadius.all(Radius.circular(10) )),width: width(context)*0.9,
                 child: IconButton(onPressed: (){}, icon:Row(
                   children: [
-  Container(child: Image.asset("assets/images/auth_page_images/google.png"),width: 25,height: 25,),
-                    SizedBox(width: 10,),
-                    Text("Sign in with Google",style: TextStyle(color:white,fontSize: 20,fontFamily: 'PTSerif'))
+  SizedBox(width: 25,height: 25,child: Image.asset("assets/images/auth_page_images/google.png"),),
+                    const SizedBox(width: 10,),
+                    const Text("Sign in with Google",style: TextStyle(color:white,fontSize: 20,fontFamily: 'PTSerif'))
                   ],
                 ))),
 

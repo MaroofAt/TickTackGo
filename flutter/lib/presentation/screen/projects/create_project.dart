@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
-import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
@@ -64,44 +63,43 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
           onPressed: () => popScreen(context),
           child: MyText.text1('Cancel'),
         ),
-        ElevatedButton(
-          onPressed: () {
-            BlocProvider.of<ProjectsCubit>(context).createProject(
-              nameController.text,
-              widget.workspaceId,
-              selectedColor,
-              widget.parentProjects[_selectedParent ?? ""],
+        BlocConsumer<ProjectsCubit, ProjectsState>(
+          listener: (context, state) {
+            if (state is ProjectCreatingFailedState) {
+              popScreen(context);
+              MyAlertDialog.showAlertDialog(
+                context,
+                content: state.errorMessage,
+                firstButtonText: okText,
+                firstButtonAction: () {
+                  popScreen(context);
+                },
+                secondButtonText: '',
+                secondButtonAction: () {},
+              );
+            }
+            if (state is ProjectCreatingSucceededState) {
+              popScreen(context, true);
+            }
+          },
+          builder: (context, state) {
+            if (state is ProjectCreatingState) {
+              return Center(
+                child: LoadingIndicator.circularProgressIndicator(),
+              );
+            }
+            return ElevatedButton(
+              onPressed: () {
+                BlocProvider.of<ProjectsCubit>(context).createProject(
+                  nameController.text,
+                  widget.workspaceId,
+                  selectedColor,
+                  widget.parentProjects[_selectedParent ?? ""],
+                );
+              },
+              child: MyText.text1('Add'),
             );
           },
-          child: BlocConsumer<ProjectsCubit, ProjectsState>(
-            listener: (context, state) {
-              if (state is ProjectCreatingFailedState) {
-                popScreen(context);
-                MyAlertDialog.showAlertDialog(
-                  context,
-                  content: state.errorMessage,
-                  firstButtonText: okText,
-                  firstButtonAction: () {
-                    popScreen(context);
-                  },
-                  secondButtonText: '',
-                  secondButtonAction: () {},
-                );
-              }
-              if (state is ProjectCreatingSucceededState) {
-                popScreen(context);
-                BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
-              }
-            },
-            builder: (context, state) {
-              if (state is ProjectCreatingState) {
-                return Center(
-                  child: LoadingIndicator.circularProgressIndicator(),
-                );
-              }
-              return MyText.text1('Add');
-            },
-          ),
         ),
       ],
     );
@@ -111,8 +109,9 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
     return MyGestureDetector.gestureDetector(
       onTap: openColorPicker,
       child: Row(
-         children: [
-          MyText.text1('pick color', fontSize: 18,textColor: white),
+        spacing: 20,
+        children: [
+          MyText.text1('pick color', fontSize: 18, textColor: white),
           Container(
             height: width(context) * 0.03,
             width: width(context) * 0.03,
@@ -135,8 +134,14 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(labelText: label),
+        decoration: InputDecoration(
+          labelText: label,
+          fillColor: Theme.of(context).scaffoldBackgroundColor,
+          focusColor: Theme.of(context).scaffoldBackgroundColor,
+        ),
         value: value,
+        style: const TextStyle(color: Colors.white),
+        dropdownColor: Theme.of(context).scaffoldBackgroundColor,
         items: items
             .map((item) => DropdownMenuItem(value: item, child: Text(item)))
             .toList(),
@@ -150,6 +155,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: MyText.text1('Pick a color'),
           content: SingleChildScrollView(
             child: ColorPicker(

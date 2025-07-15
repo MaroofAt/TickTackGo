@@ -5,7 +5,6 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
-import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
 import 'package:pr1/presentation/screen/inbox/inbox_app_bar.dart';
 import 'package:pr1/presentation/screen/inbox/inbox_body.dart';
 import 'package:pr1/presentation/screen/inbox/inbox_bottom_navigation_bar.dart';
@@ -24,11 +23,10 @@ class _MainInboxPageState extends State<MainInboxPage> {
   @override
   void initState() {
     super.initState();
-    getInboxTasks();
+    _getInboxTasks();
   }
 
-
-  getInboxTasks() async {
+  _getInboxTasks() async {
     await BlocProvider.of<InboxCubit>(context).fetchInboxTask();
   }
 
@@ -40,8 +38,13 @@ class _MainInboxPageState extends State<MainInboxPage> {
         appBar: InboxAppBar.inboxAppBar(context),
         bottomNavigationBar: SizedBox(
           height: height(context) * 0.08,
-          child: InboxBottomNavigationBar('Add new task', false,
-                icon: MyIcons.icon(Icons.add_circle_sharp, color: white)),
+          child: PopScope(
+            child: InboxBottomNavigationBar(
+              'Add new task',
+              false,
+              icon: MyIcons.icon(Icons.add_circle_sharp, color: white),
+            ),
+          ),
         ),
         body: BlocConsumer<InboxCubit, InboxState>(
           listener: (context, state) {
@@ -65,9 +68,7 @@ class _MainInboxPageState extends State<MainInboxPage> {
             }
             return Center(
               child: LoadingIndicator.circularProgressIndicator(
-                  color: Theme
-                      .of(context)
-                      .secondaryHeaderColor),
+                  color: Theme.of(context).secondaryHeaderColor),
             );
           },
         ),

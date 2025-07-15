@@ -79,18 +79,18 @@ class SignUpnewstate extends State<Signupnew>  {
         child: Column(
           crossAxisAlignment:CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 100,),
+            const SizedBox(height: 100,),
             const Center(child: Text("Hello!",style: TextStyle(color: white,fontSize: 34,fontFamily: 'PTSerif'),),),
             const Center(child: Text("enter your details below",style: TextStyle(color: white,fontSize: 18,fontFamily: 'PTSerif'),),),
             const SizedBox(
               height: 20,
             ),
-            Container(child: Text("Name",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start),margin: EdgeInsets.only(left: 10),),
-           Container(child:  CreateTextField(
+            Container(margin: const EdgeInsets.only(left: 10),child: Text("Name",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start),),
+           Container(margin: const EdgeInsets.only(left: 15),child:  CreateTextField(
              text: "Your name",
              icon: Icon(Icons.person_2_outlined),
              controller: nameController,
-           ),margin: EdgeInsets.only(left: 15),),
+           ),),
             if (errorname != null)
               Center(
                 child:  Padding(
@@ -99,31 +99,31 @@ class SignUpnewstate extends State<Signupnew>  {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       errorname!,
-                      style: TextStyle(color: Colors.red, fontSize: 12),
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
                     ),
                   ),
                 ),
               ),
-            SizedBox(height: 20,),
-            Container(child: Text("E-mail",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start),margin: EdgeInsets.only(left: 10),)
-            , Container(child:  CreateTextField(
+            const SizedBox(height: 20,),
+            Container(margin: const EdgeInsets.only(left: 10),child: Text("E-mail",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start),)
+            , Container(margin: const EdgeInsets.only(left: 15,),child:  CreateTextField(
               text: "Your Email",
               icon: Icon(Icons.email),
               controller: emailController,
-            ),margin: EdgeInsets.only(left: 15,),), if (erroremail != null)
+            ),), if (erroremail != null)
               Padding(
                 padding: const EdgeInsets.only(left:20,bottom: 5,top:3),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     erroremail!,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
                   ),
                 ),
               ),
-            SizedBox(height: 20,),
-            Container(child: Text("Password",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start) ,margin: EdgeInsets.only(left: 10),),
-            Container(child:  CreateTextField(
+            const SizedBox(height: 20,),
+            Container(margin: const EdgeInsets.only(left: 10),child: Text("Password",style: TextStyle(color: white,fontSize: 20,fontFamily: 'PTSerif'),textAlign:TextAlign.start) ,),
+            Container(margin: const EdgeInsets.only(left: 15),child:  CreateTextField(
               text: "Your Password",
               icon: Icon(Icons.lock_outline_rounded),
               obscureText: _obscurePassword,
@@ -139,7 +139,7 @@ class SignUpnewstate extends State<Signupnew>  {
                   });
                 },
               ),
-            ),margin: EdgeInsets.only(left: 15),) ,
+            ),) ,
             if (errorpassword != null)
               Padding(
                 padding: const EdgeInsets.only(left: 20,top:3),
@@ -147,13 +147,13 @@ class SignUpnewstate extends State<Signupnew>  {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     errorpassword!,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
                   ),
                 ),
-              ), SizedBox(height: 20,),
+              ), const SizedBox(height: 20,),
             Container(
-                margin: EdgeInsets.only(left: 15,top:20,bottom: 20),
-                decoration:BoxDecoration(color:parrotGreen, borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
+                margin: const EdgeInsets.only(left: 15,top:20,bottom: 20),
+                decoration:const BoxDecoration(color:parrotGreen, borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
                 child: IconButton(onPressed: (){
                   if (_validateFields()) {
                     // print("All fields are valid");
@@ -168,17 +168,17 @@ class SignUpnewstate extends State<Signupnew>  {
                         emailController.text,nameController.text,passwordController.text, context
                     );
                   }
-                  }, icon:isloading? CircularProgressIndicator(color: ampleOrange,strokeWidth:3)
-                    : Text("Sign Up",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
-            Container(child: Text("Or",style: TextStyle(color: lightGrey,fontSize: 14,fontFamily: 'PTSerif'),textAlign:TextAlign.end),margin:EdgeInsets.only(left:width(context)*0.48))
+                  }, icon:isloading? const CircularProgressIndicator(color: ampleOrange,strokeWidth:3)
+                    : const Text("Sign Up",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
+            Container(margin:EdgeInsets.only(left:width(context)*0.48), child: Text("Or",style: TextStyle(color: lightGrey,fontSize: 14,fontFamily: 'PTSerif'),textAlign:TextAlign.end))
             , Container(
-                margin: EdgeInsets.only(left: 15,top:20,bottom: 20),
-                decoration:BoxDecoration(color:ampleOrange, borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
+                margin: const EdgeInsets.only(left: 15,top:20,bottom: 20),
+                decoration:const BoxDecoration(color:ampleOrange, borderRadius: BorderRadius.all(Radius.circular(10))),width: width(context)*0.9,
                 child: IconButton(onPressed: (){
                   pushScreen(context, BlocProvider(
                     create: (context) => AuthCubit(),
-                    child:Signinnew(),
-                  ));                 }, icon: Text("Sign In",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
+                    child:const Signinnew(),
+                  ));                 }, icon: const Text("Sign In",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: 'PTSerif')))),
 
 
           ],

@@ -8,7 +8,6 @@ import 'package:pr1/data/models/invitation/accept_invite_model.dart';
 import 'package:pr1/data/models/invitation/invitation_search_model.dart';
 import 'package:pr1/data/models/invitation/reject_invite_model.dart';
 import 'package:pr1/data/models/invitation/send_invite_model.dart';
-import 'package:pr1/data/models/invitation/user_invites_model.dart';
 
 part 'invitation_state.dart';
 
@@ -42,8 +41,7 @@ class InvitationCubit extends Cubit<InvitationState> {
 
   Future<void> fetchUserInvites() async {
     emit(GettingInvitesState());
-    //TODO pass user token
-    List<dynamic> userInvitesList = await InvitationApi.fetchUserInvites('');
+    List<dynamic> userInvitesList = await InvitationApi.fetchUserInvites(token);
     if (userInvitesList.isEmpty || userInvitesList[0].errorMessage.isEmpty) {
       emit(GetInvitesSucceededState(userInvitesList));
     } else {
@@ -54,7 +52,7 @@ class InvitationCubit extends Cubit<InvitationState> {
   Future<void> acceptInvite(int inviteId) async {
     emit(AcceptingInviteState());
     AcceptInviteModel acceptInviteModel =
-        await InvitationApi.acceptInvite(inviteId, '');
+        await InvitationApi.acceptInvite(inviteId, token);
     if (acceptInviteModel.errorMessage.isEmpty) {
       fetchUserInvites();
     } else {
@@ -65,7 +63,7 @@ class InvitationCubit extends Cubit<InvitationState> {
   Future<void> rejectInvite(int inviteId) async {
     emit(RejectingInviteState());
     RejectInviteModel rejectInviteModel =
-        await InvitationApi.rejectInvite(inviteId, '');
+        await InvitationApi.rejectInvite(inviteId, token);
     if (rejectInviteModel.errorMessage.isEmpty) {
       fetchUserInvites();
     } else {

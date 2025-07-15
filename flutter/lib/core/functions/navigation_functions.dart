@@ -30,10 +30,10 @@ pushNamedAndRemoveUntil(BuildContext context, String route) {
   );
 }
 
-popScreen(BuildContext context) {
-  Navigator.pop(context);
+popScreen(BuildContext context, [Object? result]) {
+  Navigator.pop(context, result);
 }
 
-popUntil(BuildContext context,String routes) {
+popUntil(BuildContext context, String routes) {
   Navigator.popUntil(context, ModalRoute.withName(routes));
 }

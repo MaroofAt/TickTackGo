@@ -12,7 +12,7 @@ class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
       String title, String description, File? image, String token) async {
     Map<String, String> headers;
-    var data;
+    Object data;
 
     if (image == null) {
       headers = {
@@ -47,12 +47,14 @@ class WorkspaceApi {
         ),
         data: data,
       );
+
       if (response.statusCode == 201) {
         createWorkspaceModel = CreateWorkspaceModel.onSuccess(response.data);
       } else {
         createWorkspaceModel = CreateWorkspaceModel.onError(response.data);
       }
     } on DioException catch (e) {
+      print(e.toString());
       createWorkspaceModel = CreateWorkspaceModel.error(handleDioError(e));
     }
     return createWorkspaceModel;
