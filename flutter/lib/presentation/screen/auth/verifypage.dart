@@ -10,6 +10,8 @@ import '../../../core/constance/strings.dart';
 import '../../../core/functions/navigation_functions.dart';
 
 class Verifypage extends StatefulWidget {
+  const Verifypage({super.key});
+
   @override
   VerifypageState createState() => VerifypageState();
 }
@@ -21,7 +23,7 @@ class VerifypageState extends State<Verifypage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: BlocBuilder<AuthCubit, AuthState>(
   builder: (context, state) {
     bool isloading=BlocProvider.of<AuthCubit>(context).isloading;
@@ -32,7 +34,7 @@ class VerifypageState extends State<Verifypage> {
                 left:40,
                 child:IconButton(onPressed: (){
                   pushReplacementNamed(context,signupRoute);
-                }, icon:Icon(Icons.arrow_back_sharp),)
+                }, icon:const Icon(Icons.arrow_back_sharp),)
               ),
               Positioned(
                 top: height(context)*0.49,left: width(context)*0.25,
@@ -44,7 +46,7 @@ class VerifypageState extends State<Verifypage> {
                 ),),),
               Positioned(
                 top: height(context)*0.099,left: width(context)*0.18,
-                child: Text(
+                child: const Text(
                   "Verify account",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -64,10 +66,15 @@ class VerifypageState extends State<Verifypage> {
                     ),
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
+                    width: width(context) * 0.8,
+                    height: height(context) * 0.2,
+                    decoration: const BoxDecoration(
+                        color: ampleOrange,
+                        borderRadius: BorderRadius.all(Radius.circular(40))),
                     child: Column(
                       children: [
                         SizedBox(
@@ -112,19 +119,14 @@ class VerifypageState extends State<Verifypage> {
                             ))
                       ],
                     ),
-                    width: width(context) * 0.8,
-                    height: height(context) * 0.2,
-                    decoration: BoxDecoration(
-                        color: ampleOrange,
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
                   ),
                   Column(
                     children: [
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       GestureDetector(
                         onTap: () {},
                         child: RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             style: TextStyle(
                                 fontSize: 14,
                                 color: white,
@@ -135,10 +137,10 @@ class VerifypageState extends State<Verifypage> {
                           ),
                         ),
                       ),
-SizedBox(height: 10,),
+const SizedBox(height: 10,),
                       GestureDetector(
                           onTap: () {},
-                          child: Text(
+                          child: const Text(
                             'Re_send',
                             style: TextStyle(color: white,fontSize: 14),
 

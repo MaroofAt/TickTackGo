@@ -34,12 +34,18 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
 
   final List<String> _statuses = ['pending', 'in progress', 'completed'];
 
+  String getKeyByValue(Map<String, String> map, String value) {
+      return map.keys.firstWhere((key) => map[key] == value);
+  }
+
   void initFunction() {
     if (widget.inboxTasksModel != null) {
       BlocProvider.of<InboxCubit>(context).selectedPriority =
           widget.inboxTasksModel!.priority;
-      BlocProvider.of<InboxCubit>(context).selectedStatus =
-          widget.inboxTasksModel!.status;
+
+      BlocProvider.of<InboxCubit>(context).selectedStatus = getKeyByValue(
+          BlocProvider.of<InboxCubit>(context).statuses,
+          widget.inboxTasksModel!.status);
     }
   }
 
@@ -63,12 +69,13 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
           ),
           child: SingleChildScrollView(
             child: Column(
-
               children: [
                 buildTextFieldWithLabel(
                     context, 'Title *', 'Enter title', _titleController),
+                const SizedBox(height: 20),
                 buildTextFieldWithLabel(context, 'description *',
                     'Enter description', _descriptionController, 3),
+                const SizedBox(height: 20),
                 buildHorizontalDivider(context),
                 BlocBuilder<InboxCubit, InboxState>(
                   builder: (context, state) {
@@ -82,7 +89,9 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                     );
                   },
                 ),
+                const SizedBox(height: 20),
                 buildHorizontalDivider(context),
+                const SizedBox(height: 20),
                 BlocBuilder<InboxCubit, InboxState>(
                   builder: (context, state) {
                     return buildPriorityWrap(
@@ -95,7 +104,7 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                     );
                   },
                 ),
-                SizedBox(height: height(context) * 0.1),
+                SizedBox(height: height(context) * 0.15),
                 SizedBox(
                   width: width(context),
                   child: Row(
@@ -106,8 +115,22 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                         BlocConsumer<InboxCubit, InboxState>(
                           listener: (context, state) {
                             if (state is InboxCreatingSucceededState) {
-                              popScreen(context);
+                              popScreen(context, true);
+                            } else if (state
+                                is InboxTaskUpdatingSucceededState) {
+                              popScreen(context, 'updating successfully');
                             } else if (state is InboxCreatingFailedState) {
+                              MyAlertDialog.showAlertDialog(
+                                context,
+                                content: state.errorMessage,
+                                firstButtonText: okText,
+                                firstButtonAction: () {
+                                  popScreen(context);
+                                },
+                                secondButtonText: '',
+                                secondButtonAction: () {},
+                              );
+                            } else if (state is InboxTaskUpdatingFailedState) {
                               MyAlertDialog.showAlertDialog(
                                 context,
                                 content: state.errorMessage,
@@ -120,8 +143,7 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                               );
                             } else if (state
                                 is InboxTaskDestroyingSucceededState) {
-                              popScreen(context);
-                              popScreen(context);
+                              popScreen(context, 'destroying successfully');
                             } else if (state
                                 is InboxTaskDestroyingFailedState) {
                               MyAlertDialog.showAlertDialog(
@@ -158,10 +180,11 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                               description: _descriptionController.text,
                               priority: BlocProvider.of<InboxCubit>(context)
                                   .selectedPriority,
-                              status: BlocProvider.of<InboxCubit>(context)
-                                  .selectedStatus,
+                              status:
+                                  BlocProvider.of<InboxCubit>(context).statuses[
+                                      BlocProvider.of<InboxCubit>(context)
+                                          .selectedStatus]!,
                             );
-                            popScreen(context);
                             popScreen(context);
                           } else {
                             BlocProvider.of<InboxCubit>(context)
@@ -169,7 +192,6 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                               _titleController.text,
                               _descriptionController.text,
                             );
-                            popScreen(context);
                           }
                         },
                       ),
@@ -182,8 +204,8 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                           if (widget.withDeleteButton) {
                             BlocProvider.of<InboxCubit>(context)
                                 .destroyInboxTask(widget.inboxTasksModel!.id);
+                            popScreen(context);
                           }
-                          popScreen(context);
                         },
                       ),
                     ],

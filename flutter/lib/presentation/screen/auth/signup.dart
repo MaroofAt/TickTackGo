@@ -7,6 +7,8 @@ import '../../../core/constance/colors.dart';
 import '../../widgets/creatTextFiled.dart';
 
 class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
   @override
   State<SignUp> createState() => _SignUpState();
 }
@@ -79,13 +81,13 @@ class _SignUpState extends State<SignUp> {
             Container(
               width: width(context),
               height: height(context),
-              decoration: BoxDecoration(color: primaryColor),
+              decoration: const BoxDecoration(color: primaryColor),
               child: Column(
                 children: [
-                  SizedBox(height: 335),
+                  const SizedBox(height: 335),
                   CreateTextField(
                     text: "Your name",
-                    icon: Icon(Icons.person_2_outlined),
+                    icon: const Icon(Icons.person_2_outlined),
                     controller: _nameController,
                   ),
                   if (errorname != null)
@@ -96,15 +98,15 @@ class _SignUpState extends State<SignUp> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           errorname!,
-                          style: TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     ),
                    ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   CreateTextField(
                     text: "Your Email",
-                    icon: Icon(Icons.email),
+                    icon: const Icon(Icons.email),
                     controller: _emailController,
                   ),
                   if (erroremail != null)
@@ -114,14 +116,14 @@ class _SignUpState extends State<SignUp> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           erroremail!,
-                          style: TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   CreateTextField(
                     text: "Your Password",
-                    icon: Icon(Icons.lock_outline_rounded),
+                    icon: const Icon(Icons.lock_outline_rounded),
                     obscureText: _obscurePassword,
                     controller: _passwordController,
                     iconsuf: IconButton(
@@ -143,7 +145,7 @@ class _SignUpState extends State<SignUp> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           errorpassword!,
-                          style: TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     ),
@@ -153,6 +155,8 @@ class _SignUpState extends State<SignUp> {
 
             // Header box (purple)
             Positioned(
+              left: 0,
+              top: 0,
               child: Container(
                 child: Column(
                   children: [
@@ -188,12 +192,12 @@ class _SignUpState extends State<SignUp> {
                   borderRadius: BorderRadius.only(bottomRight: Radius.circular(400)),
                 ),
               ),
-              left: 0,
-              top: 0,
             ),
 
             // Bottom white box
             Positioned(
+              right: 0,
+              bottom: 0,
               child: Container(
                 width: width(context) - 100,
                 height: height(context) - 610,
@@ -259,11 +263,9 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
               ),
-              right: 0,
-              bottom: 0,
             ),
          
-             Positioned(child:  Container(
+             Positioned(bottom: height(context)*0.21,right: width(context)*0.19,child:  Container(
                     margin: EdgeInsets.only(top: 60),
                     padding: EdgeInsets.only(right: 180),
                     child: Text(
@@ -274,8 +276,7 @@ class _SignUpState extends State<SignUp> {
                         fontFamily: "DMSerifText",
                       ),
                     ),
-                  ),
-                  bottom: height(context)*0.21,right: width(context)*0.19,)
+                  ),)
          
          
          

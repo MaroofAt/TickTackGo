@@ -28,14 +28,14 @@ class _ShowProjectsState extends State<ShowProjects>  {
       appBar: AppBar(
 leading:GestureDetector(
   onTap: (){},child:
-Icon(Icons.arrow_back_sharp,color: white,size: 24,),
+const Icon(Icons.arrow_back_sharp,color: white,size: 24,),
 ),
         title: Row(
           children: [
             SizedBox(width: width(context)*0.1,),
-            Center(child: Text("workspace name",style: TextStyle(color: white,fontFamily: 'PTSerif'),),),
+            const Center(child: Text("workspace name",style: TextStyle(color: white,fontFamily: 'PTSerif'),),),
             SizedBox(width: width(context)*0.13,),
-            IconButton(onPressed: (){}, icon: Icon(Icons.menu,color: white,))
+            IconButton(onPressed: (){}, icon: const Icon(Icons.menu,color: white,))
           ],
         ),
         backgroundColor: primaryColor,
@@ -44,7 +44,7 @@ Icon(Icons.arrow_back_sharp,color: white,size: 24,),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
           ListView.builder(
               itemCount: 10,
               shrinkWrap: true,
@@ -63,14 +63,14 @@ Icon(Icons.arrow_back_sharp,color: white,size: 24,),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
+                          boxShadow: const [
                           BoxShadow(
                           color: Colors.orangeAccent,
                           blurRadius: 2,
-                          offset: const Offset(0, 1),)
+                          offset: Offset(0, 1),)
                           ],
                         ),
-                        child: Text(
+                        child: const Text(
                           "the project collected with the workespace one",
                           style: TextStyle(color: black, fontFamily: 'PTSerif'),
                         ),
@@ -85,7 +85,7 @@ Icon(Icons.arrow_back_sharp,color: white,size: 24,),
                               borderRadius: BorderRadius.circular(10)),
                           width:width(context) * 0.5,
                           height: 50,
-                          child: Text(
+                          child: const Text(
                             "name project",
                             style: TextStyle(
                                 color: white,
@@ -95,10 +95,11 @@ Icon(Icons.arrow_back_sharp,color: white,size: 24,),
                         ),
                       ),
                       Positioned(
+                          right: width(context)*0.04,
+                      top: height(context)*0.03,
                           child: GestureDetector(
                         child: Icon(Icons.delete_outlined,color: Colors.red.withOpacity(0.5),size: 30,),
-                      ), right: width(context)*0.04,
-                      top: height(context)*0.03,)
+                      ),)
                     ],
                   ),
                 );

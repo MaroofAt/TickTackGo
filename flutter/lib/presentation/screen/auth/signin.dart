@@ -9,6 +9,8 @@ import 'package:pr1/presentation/screen/auth/signup.dart';
 import 'package:pr1/presentation/widgets/creatTextFiled.dart';
 
 class SignIn extends StatefulWidget {
+  const SignIn({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return SignInstate();
@@ -38,7 +40,7 @@ bool loading = false;
   Widget build(BuildContext context) {
   
 
-bool _validateFields() {
+bool validateFields() {
     setState(() {
       // Email validation
       if (_emailController.text.isEmpty) {
@@ -67,14 +69,14 @@ bool _validateFields() {
               Container(
                 width: width(context),
                 height: height(context),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: primaryColor,
                 ),
                 child: Column(children: [
-                  SizedBox(height: 480),
+                  const SizedBox(height: 480),
                   CreateTextField(
                     text: "Your Email",
-                    icon: Icon(Icons.email),
+                    icon: const Icon(Icons.email),
                     controller: _emailController,
                   ),
                   if (erroremail != null)
@@ -84,14 +86,14 @@ bool _validateFields() {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           erroremail!,
-                          style: TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   CreateTextField(
                     text: "Your Password",
-                    icon: Icon(Icons.lock_outline_rounded),
+                    icon: const Icon(Icons.lock_outline_rounded),
                     obscureText: _obscurePassword,
                     controller: _passwordController,
                     iconsuf: IconButton(
@@ -113,14 +115,14 @@ bool _validateFields() {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           errorpassword!,
-                          style: TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     ),
                   Row(children: [
                     Container(
-                      margin: EdgeInsets.only(left: 80, top: 20),
-                      child: Text(
+                      margin: const EdgeInsets.only(left: 80, top: 20),
+                      child: const Text(
                         "Sign In",
                         style: TextStyle(
                             fontSize: 28,
@@ -129,17 +131,17 @@ bool _validateFields() {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 80, top: 30),
+                      margin: const EdgeInsets.only(left: 80, top: 30),
                       width: 80,
                       height: 80,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: ampleOrange,
                         borderRadius: BorderRadius.all(Radius.circular(400)),
                       ),
                       child: IconButton(
                         onPressed: () {
                           loading=!loading;
-                             if (_validateFields()) {
+                             if (validateFields()) {
                             print("All fields are valid");
                           
                             print("Email: ${_emailController.text}");
@@ -148,9 +150,9 @@ bool _validateFields() {
                           
                         }},
                         icon: (loading)?
-                        CircularProgressIndicator(strokeWidth: 2.0,
+                        const CircularProgressIndicator(strokeWidth: 2.0,
                             valueColor:AlwaysStoppedAnimation(white,
-                        )):Icon(Icons.arrow_right_alt_sharp,size:40,color: white,)
+                        )):const Icon(Icons.arrow_right_alt_sharp,size:40,color: white,)
                      
                       ),
                     )
@@ -158,6 +160,7 @@ bool _validateFields() {
                   Row(
                     children: [
                       Container(
+                        margin: const EdgeInsets.only(left: 50,top:20),
                         child: IconButton(onPressed: () {
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) => SignUp()));
@@ -170,9 +173,9 @@ bool _validateFields() {
                             ),
                           ),
                         ),
-                        margin: EdgeInsets.only(left: 50,top:20),
                       ),
                       Container(
+                        margin: const EdgeInsets.only(left: 80,top:20),
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(fontSize: 16,
@@ -186,13 +189,14 @@ bool _validateFields() {
 
                           ),
                         ),
-                        margin: EdgeInsets.only(left: 80,top:20),
                       ),
                     ],
                   )
                 ]),
               ),
               Positioned(
+                right: 0,
+                top: 0,
                 child: Container(
                   width: width(context) - 200,
                   height:height(context) - 350,
@@ -202,10 +206,10 @@ bool _validateFields() {
                         bottomLeft: Radius.circular(600)),
                   ),
                 ),
-                right: 0,
-                top: 0,
               ),
               Positioned(
+                left: 0,
+                top: 0,
                 child: Container(
                     width: width(context),
                     height: height(context) - 450,
@@ -238,10 +242,10 @@ bool _validateFields() {
                             )),
                       ],
                     )),
-                left: 0,
-                top: 0,
               ),
               Positioned(
+                left: 0,
+                top: 0,
                 child: Container(
                   width: width(context) - 180,
                   height: height(context) - 680,
@@ -251,8 +255,6 @@ bool _validateFields() {
                     BorderRadius.only(bottomRight: Radius.elliptical(600, 500)),
                   ),
                 ),
-                left: 0,
-                top: 0,
               ),
             ])));
   }

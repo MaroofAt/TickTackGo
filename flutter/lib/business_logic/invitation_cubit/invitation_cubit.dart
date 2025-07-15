@@ -8,7 +8,6 @@ import 'package:pr1/data/models/invitation/accept_invite_model.dart';
 import 'package:pr1/data/models/invitation/invitation_search_model.dart';
 import 'package:pr1/data/models/invitation/reject_invite_model.dart';
 import 'package:pr1/data/models/invitation/send_invite_model.dart';
-import 'package:pr1/data/models/invitation/user_invites_model.dart';
 
 part 'invitation_state.dart';
 

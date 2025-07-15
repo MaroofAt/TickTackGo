@@ -7,7 +7,6 @@ import 'package:pr1/data/models/projects/create_project_model.dart';
 import 'package:pr1/data/models/projects/delete_project_model.dart';
 import 'package:pr1/data/models/projects/fetch_projects_model.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
-import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 
 part 'projects_state.dart';
 

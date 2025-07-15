@@ -25,7 +25,7 @@ class InvitationSearch extends StatefulWidget {
 }
 
 class _InvitationSearchState extends State<InvitationSearch> {
-  List<String> _searchResults = [];
+  final List<String> _searchResults = [];
 
   final _controller = TextEditingController();
 

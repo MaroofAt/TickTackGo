@@ -18,11 +18,6 @@ class InboxBody extends StatelessWidget {
         children: List.generate(
           allInboxTasks.length,
               (index) {
-            if (allInboxTasks.isEmpty) {
-              return Center(
-                child: MyText.text1('No Tasks here', textColor: white, fontSize: 22),
-              );
-            }
             return InboxTasksList(allInboxTasks[index]);
           },
         ),

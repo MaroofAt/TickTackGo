@@ -34,7 +34,7 @@ class _IntroQuestionsMainState extends State<IntroQuestionsMain> {
                     pushReplacementNamed(context, finalOnboardingPageRoute);
                   }
                 },
-                child: QuestionsPageView(),
+                child: const QuestionsPageView(),
               ),
               buildNextButton(context),
             ],

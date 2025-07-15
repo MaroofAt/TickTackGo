@@ -16,53 +16,67 @@ class InboxTasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: inboxTasksList.length,
-      itemBuilder: (context, index) {
-        return MyGestureDetector.gestureDetector(
-          onTap: () {
-            pushScreen(
-              context,
-              InboxInfoPage(inboxTasksList[index]),
-            );
-          },
-          child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            margin:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            height: height(context) * 0.13,
-            decoration: BoxDecoration(
-              color:
-                  Theme.of(context).scaffoldBackgroundColor.withAlpha(225),
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: lightGrey.withAlpha(50),
-                  spreadRadius: 5,
-                  blurRadius: 5,
+    return inboxTasksList.isEmpty
+        ? Center(
+            child:
+                MyText.text1('No Tasks here', textColor: white, fontSize: 22),
+          )
+        : ListView.builder(
+            itemCount: inboxTasksList.length,
+            itemBuilder: (context, index) {
+              return MyGestureDetector.gestureDetector(
+                onTap: () {
+                  pushScreen(
+                    context,
+                    PopScope(
+                      onPopInvokedWithResult: (didPop, result) {
+                        if (didPop && result != null) {
+                          BlocProvider.of<InboxCubit>(context).fetchInboxTask();
+                        }
+                      },
+                      child: InboxInfoPage(inboxTasksList[index]),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  height: height(context) * 0.13,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .scaffoldBackgroundColor
+                        .withAlpha(225),
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: lightGrey.withAlpha(50),
+                        spreadRadius: 2,
+                        blurRadius: 2,
+                        offset: const Offset(3, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MyText.text1(
+                        inboxTasksList[index].title,
+                        textColor: white,
+                        fontSize: 22,
+                      ),
+                      const SizedBox(height: 10),
+                      MyText.text1(
+                        'priority: ${inboxTasksList[index].priority}',
+                        textColor: white,
+                        fontSize: 18,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-            child: Column(
-
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MyText.text1(
-                  inboxTasksList[index].title,
-                  textColor: white,
-                  fontSize: 22,
-                ),
-                MyText.text1(
-                  'priority: ${inboxTasksList[index].priority}',
-                  textColor: white,
-                  fontSize: 18,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+              );
+            },
+          );
   }
 }

@@ -4,13 +4,10 @@ import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
-import 'package:pr1/data/models/projects/fetch_projects_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/presentation/screen/projects/build_project_list_item.dart';
 import 'package:pr1/presentation/screen/projects/create_project.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
-import 'package:pr1/presentation/widgets/gesture_detector.dart';
-import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class BuildProjectsList extends StatelessWidget {

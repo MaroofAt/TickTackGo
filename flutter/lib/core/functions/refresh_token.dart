@@ -1,7 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/data/local_data/local_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

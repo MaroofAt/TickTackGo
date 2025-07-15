@@ -1,21 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
-import 'package:pr1/core/API/auth.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/data/models/auth/sign_up_model.dart';
-import 'package:pr1/presentation/screen/auth/signupnew.dart';
 
 import '../../core/functions/navigation_functions.dart';
 import '../../core/variables/api_variables.dart';
 import '../../core/variables/global_var.dart';
 import '../../core/variables/intro_questions_variables.dart';
 import '../../data/local_data/local_data.dart';
-import '../../data/models/auth/sign-up-model-withoutotp.dart';
-import '../../data/models/local_models/intro_questions_model.dart';
 
 part 'auth_state.dart';
 
