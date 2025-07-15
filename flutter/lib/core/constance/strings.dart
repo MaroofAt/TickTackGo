@@ -4,6 +4,7 @@
 const String signinRoute = 'login';
 const String signupRoute = 'signup';
 const String verfiyeRoute = 'verfiye';
+const String issuesdetalies = 'detalies';
 const String onboardingMainRoute = 'onboardingMainRoute';
 const String introQuestionsRoute = 'introQuestionsRoute';
 const String finalOnboardingPageRoute = 'finalOnboardingPageRoute';

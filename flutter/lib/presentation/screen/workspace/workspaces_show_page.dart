@@ -83,8 +83,7 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
             if (state is WorkspacesFetchingSucceededState) {
               if (state.fetchWorkspacesModel.isEmpty) {
                 return Column(
-                  spacing: 20,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     MyText.text1(
                       'You are not member in any workspace',

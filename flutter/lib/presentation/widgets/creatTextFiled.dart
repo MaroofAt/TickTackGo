@@ -8,6 +8,8 @@ class CreateTextField extends StatelessWidget {
   final IconButton? iconsuf;
   final bool obscureText;
   final TextEditingController controller;
+  final Color? fillcolor;
+
   
   const CreateTextField({super.key, 
     required this.text,
@@ -15,6 +17,7 @@ class CreateTextField extends StatelessWidget {
     this.iconsuf,
     this.obscureText = false,
     required this.controller,
+    this.fillcolor
   });
   
   @override
@@ -30,7 +33,7 @@ class CreateTextField extends StatelessWidget {
           prefixIcon: icon,
           suffixIcon: iconsuf ?? const SizedBox(),
           filled: true,
-          fillColor: ampleOrange.withOpacity(0.5),
+          fillColor:fillcolor?? ampleOrange.withOpacity(0.5),
           hintText: text,
           hintStyle: TextStyle(
             fontSize: 16,

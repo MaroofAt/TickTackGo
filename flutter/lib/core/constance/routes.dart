@@ -13,11 +13,13 @@ import 'package:pr1/presentation/screen/home/main_home_page.dart';
 import 'package:pr1/presentation/screen/inbox/main_inbox_page.dart';
 import 'package:pr1/presentation/screen/intro_questions/intro_questions_main.dart';
 import 'package:pr1/presentation/screen/invitation/received_invitations.dart';
+import 'package:pr1/presentation/screen/issues/detalies_issue.dart';
 import 'package:pr1/presentation/screen/onboarding/final_onboarding_page.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
 import 'package:pr1/presentation/screen/workspace/workspaces_show_page.dart';
 
 import '../../business_logic/auth_cubit/auth_cubit.dart';
+import '../../data/models/issues/issue_model.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   signupRoute: (context) => const Signupnew(),
@@ -26,6 +28,10 @@ Map<String, Widget Function(BuildContext)> routes = {
         create: (context) => AuthCubit(),
         child: Verifypage(),
       ),
+  issuesdetalies: (context) {
+    final issue = ModalRoute.of(context)!.settings.arguments as Issue;
+    return Detalies_Issue(issue: issue);
+  },
   onboardingMainRoute: (context) => const OnboardingMain(),
   introQuestionsRoute: (context) => BlocProvider(
         create: (context) => IntroQuestionsCubit(),
