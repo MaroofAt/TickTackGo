@@ -84,13 +84,13 @@ class MainHomePage extends StatelessWidget {
                       pushNamed(context, mainInboxPage);
                     },
                   ),
-                  CardBuilder(
-                    color: ampleOrange,
-                    label: 'logout',
-                    icon: Icons.logout_rounded,
-                    onTap: () {},
-                    content: '',
-                  ),
+                  // CardBuilder(
+                  //   color: ampleOrange,
+                  //   label: 'logout',
+                  //   icon: Icons.logout_rounded,
+                  //   onTap: () {},
+                  //   content: '',
+                  // ),
                 ],
               ),
               const SizedBox(height: 16),
