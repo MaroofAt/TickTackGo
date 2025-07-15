@@ -12,7 +12,7 @@ class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
       String title, String description, File? image, String token) async {
     Map<String, String> headers;
-    var data;
+    Object data;
 
     if (image == null) {
       headers = {

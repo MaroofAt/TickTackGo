@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/API/inbox.dart';
-import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/inbox/create_inbox_task_model.dart';
 import 'package:pr1/data/models/inbox/destroy_inbox_task_model.dart';
@@ -16,6 +15,12 @@ class InboxCubit extends Cubit<InboxState> {
   String selectedPriority = 'medium';
   String selectedStatus = 'pending';
   String titleErrorMessage = '';
+  final Map<String, String> statuses = {
+    'pending': 'pending',
+    'in progress': 'in_progress',
+    'completed': 'completed',
+  };
+
 
   Future<void> createInboxTask(String title, String description) async {
     if (title.isEmpty || description.isEmpty) return;
@@ -23,10 +28,9 @@ class InboxCubit extends Cubit<InboxState> {
     emit(InboxCreatingState());
 
     CreateInboxTaskModel createInboxTaskModel = await InboxApi.createInboxTask(
-        title, description, selectedPriority, selectedStatus, token);
+        title, description, selectedPriority, statuses[selectedStatus]!, token);
     if (createInboxTaskModel.errorMessage.isEmpty) {
       emit(InboxCreatingSucceededState(createInboxTaskModel));
-      fetchInboxTask();
     } else {
       emit(InboxCreatingFailedState(createInboxTaskModel.errorMessage));
     }
@@ -39,7 +43,7 @@ class InboxCubit extends Cubit<InboxState> {
         await InboxApi.fetchInboxTasks(token);
     List<List<InboxTasksModel>> allInboxTasks =
         filterInboxTasks(inboxTasksList);
-    if (inboxTasksList[0].errorMessage.isEmpty) {
+    if (inboxTasksList.isEmpty || inboxTasksList[0].errorMessage.isEmpty) {
       emit(InboxFetchingTasksSucceededState(allInboxTasks));
     } else {
       emit(InboxFetchingTasksFailedState(inboxTasksList[0].errorMessage));
@@ -87,12 +91,11 @@ class InboxCubit extends Cubit<InboxState> {
       user: retrieveInboxTaskModel.user,
       status: retrieveInboxTaskModel.status,
       priority: retrieveInboxTaskModel.priority,
-      errorMessage: '',
+      errorMessage: retrieveInboxTaskModel.errorMessage,
     );
 
     if (retrieveInboxTaskModel.errorMessage.isEmpty) {
       emit(InboxTaskUpdatingSucceededState(inboxTasksModelNew));
-      fetchInboxTask();
     } else {
       emit(InboxTaskUpdatingFailedState(retrieveInboxTaskModel.errorMessage));
     }
@@ -102,7 +105,7 @@ class InboxCubit extends Cubit<InboxState> {
     emit(InboxTaskDestroyingState());
 
     DestroyInboxTaskModel destroyInboxTaskModel =
-        await InboxApi.destroyTaskModel(taskId);
+        await InboxApi.destroyTaskModel(taskId, token);
     if (destroyInboxTaskModel.errorMessage.isEmpty) {
       emit(InboxTaskDestroyingSucceededState(destroyInboxTaskModel));
     } else {

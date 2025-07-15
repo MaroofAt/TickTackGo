@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/core/functions/refresh_token.dart';
-import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/presentation/screen/workspace/build_workspaces_list.dart';
 import 'package:pr1/presentation/screen/workspace/create_workspace_page.dart';
 import 'package:pr1/presentation/screen/workspace/show_workspaces_app_bar.dart';

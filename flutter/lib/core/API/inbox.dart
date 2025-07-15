@@ -41,6 +41,7 @@ class InboxApi {
         createInboxTaskModel = CreateInboxTaskModel.onError(response.data);
       }
     } on DioException catch (e) {
+      print(e.toString());
       createInboxTaskModel = CreateInboxTaskModel.error(handleDioError(e));
     }
     return createInboxTaskModel;
@@ -149,10 +150,10 @@ class InboxApi {
     return retrieveInboxTaskModel;
   }
 
-  static Future<DestroyInboxTaskModel> destroyTaskModel(int taskId) async {
+  static Future<DestroyInboxTaskModel> destroyTaskModel(int taskId, String token) async {
     var headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNDE5NTkwLCJpYXQiOjE3NTA0MTU5OTAsImp0aSI6ImRkYjk0Y2ZhZmJhMTQwNGU5NGEyMWIzY2JkMGMxZTczIiwidXNlcl9pZCI6MX0.uGjdDQHjStXxrDz2PYeqLAGV1YjqyAD764jhxdNorz0'
+          'Bearer $token'
     };
 
     late DestroyInboxTaskModel destroyInboxTaskModel;

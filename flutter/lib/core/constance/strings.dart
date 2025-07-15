@@ -1,4 +1,3 @@
-import 'package:pr1/data/models/auth/sign_up_model.dart';
 
 ///routes
 

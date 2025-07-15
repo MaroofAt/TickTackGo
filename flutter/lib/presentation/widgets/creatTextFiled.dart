@@ -9,7 +9,7 @@ class CreateTextField extends StatelessWidget {
   final bool obscureText;
   final TextEditingController controller;
   
-  CreateTextField({
+  const CreateTextField({super.key, 
     required this.text,
     this.icon,
     this.iconsuf,
@@ -20,6 +20,9 @@ class CreateTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width(context) *0.9,
+      height: 50,
+      margin: const EdgeInsets.only(top: 10),
       child: TextField(
         controller: controller,
         obscureText: obscureText,
@@ -40,9 +43,6 @@ class CreateTextField extends StatelessWidget {
           ),
         ),
       ),
-      width: width(context) *0.9,
-      height: 50,
-      margin: EdgeInsets.only(top: 10),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/widgets/text.dart';

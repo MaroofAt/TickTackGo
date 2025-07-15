@@ -12,12 +12,9 @@ import 'package:pr1/presentation/screen/auth/verifypage.dart';
 import 'package:pr1/presentation/screen/home/main_home_page.dart';
 import 'package:pr1/presentation/screen/inbox/main_inbox_page.dart';
 import 'package:pr1/presentation/screen/intro_questions/intro_questions_main.dart';
-import 'package:pr1/presentation/screen/invitation/invitation_search.dart';
 import 'package:pr1/presentation/screen/invitation/received_invitations.dart';
 import 'package:pr1/presentation/screen/onboarding/final_onboarding_page.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
-import 'package:pr1/presentation/screen/workspace/create_workspace_page.dart';
-import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspaces_show_page.dart';
 
 import '../../business_logic/auth_cubit/auth_cubit.dart';
