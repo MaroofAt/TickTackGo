@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/variables/global_var.dart';
+import 'package:pr1/data/local_data/local_data.dart';
+import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import 'package:pr1/presentation/screen/home/card_builder.dart';
 import 'package:pr1/presentation/screen/home/task_card.dart';
+import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-class MainHomePage extends StatelessWidget {
+import '../../../business_logic/auth_cubit/auth_cubit.dart';
+import '../../../core/API/user.dart';
+import '../auth/signinnew.dart';
+
+class MainHomePage extends StatefulWidget {
   const MainHomePage({super.key});
+
+  @override
+  State<MainHomePage> createState() => _MainHomePageState();
+}
+
+class _MainHomePageState extends State<MainHomePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: primaryColor
+        ,
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -25,10 +47,10 @@ class MainHomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CircleAvatar(
-                    // backgroundImage: AssetImage(''),
+                    // backgroundImage: AssetImage("${theuser?.image}"),
                     radius: width(context) * 0.1,
                     child:
-                        MyIcons.icon(Icons.person, size: width(context) * 0.1),
+                    MyIcons.icon(Icons.person, size: width(context) * 0.1),
                   ),
                   // BlocBuilder<WorkspaceCubit, WorkspaceState>(
                   //   builder: (context, state) {
@@ -46,7 +68,7 @@ class MainHomePage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               MyText.text1(
-                '$hiText,\nUser Name',
+                '$hiText\n' + "${theuser?.username}",
                 textColor: Colors.white,
                 fontSize: 24,
               ),
@@ -82,15 +104,19 @@ class MainHomePage extends StatelessWidget {
                     icon: Icons.folder_copy,
                     onTap: () {
                       pushNamed(context, mainInboxPage);
+                      print(theuser?.email);
                     },
                   ),
-                  // CardBuilder(
-                  //   color: ampleOrange,
-                  //   label: 'logout',
-                  //   icon: Icons.logout_rounded,
-                  //   onTap: () {},
-                  //   content: '',
-                  // ),
+                   CardBuilder(
+                      color: ampleOrange,
+                      label: 'logout',
+                      icon: Icons.logout_rounded,
+                      onTap: () {
+                        context.read<AuthCubit>().logout(context);
+                      },
+                      content: '',
+                    ),
+
                 ],
               ),
               const SizedBox(height: 16),

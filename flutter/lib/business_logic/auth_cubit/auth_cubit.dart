@@ -3,13 +3,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/functions/refresh_token.dart';
 import 'package:pr1/data/models/auth/sign_up_model.dart';
 
+import '../../core/API/user.dart';
 import '../../core/functions/navigation_functions.dart';
 import '../../core/variables/api_variables.dart';
 import '../../core/variables/global_var.dart';
 import '../../core/variables/intro_questions_variables.dart';
 import '../../data/local_data/local_data.dart';
+import '../../data/models/user/user.dart';
 
 part 'auth_state.dart';
 
@@ -124,6 +127,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (response.statusCode == 201) {
         print("Verification success!");
+        getUser() ;
         pushNamedAndRemoveUntil(context, mainHomePageRoute);
         login(globalSignUpModel!.email, globalSignUpModel!.password, context);
         emit(SignupVerifiedSuccessState());
@@ -165,6 +169,7 @@ class AuthCubit extends Cubit<AuthState> {
         token=accessToken;
         refresh = refreshToken;
         print("Login success: ${response.data}");
+          getUser() ;
         pushNamedAndRemoveUntil(context, mainHomePageRoute);
         emit(SuccessfulyLoginState());
       }else if (response.statusCode == 401 && response.data.isNotEmpty ) {
@@ -191,6 +196,28 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> logout(BuildContext context) async {
+    try {
+      emit(LogoutLoadingState());
+      await clearTokens();
+      await clearUserData();
+
+      token = "";
+      refresh ='';
+      theuser = null;
+      globalSignUpModel = null;
+
+      emit(LogoutSuccessState());
+    pushNamedAndRemoveUntil(
+        context,
+       signinRoute
+      );
+    } catch (e) {
+      print('Error during logout: $e');
+      emit(LogoutFailedState('Failed to logout: $e'));
+      showErrorDialog(context, "Logout Error", "Failed to logout. Please try again.");
+    }
+  }
   void showErrorDialog(BuildContext context, String title, String message) {
     showDialog(
       context: context,

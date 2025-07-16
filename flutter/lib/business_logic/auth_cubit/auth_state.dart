@@ -22,3 +22,10 @@ final class FailedSignupState extends AuthState {
   FailedSignupState(this.message);
 }
 
+///// log out
+final class LogoutLoadingState extends AuthState{}
+final class LogoutSuccessState  extends AuthState{}
+final class LogoutFailedState  extends AuthState {
+  final String message;
+  LogoutFailedState(this.message);
+}

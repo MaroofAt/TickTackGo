@@ -4,7 +4,9 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/variables/issues_variables.dart';
 
+import '../../../data/models/issues/issue_model.dart';
 import 'all_list.dart';
+import 'creat_issue.dart';
 import 'notsolveissue.dart';
 
 class All_Issues extends StatefulWidget {
@@ -21,7 +23,8 @@ class _All_IssuesState extends State<All_Issues> {
   Widget build(BuildContext context) {
     return DefaultTabController(length: 2, child: Scaffold(
       backgroundColor: primaryColor,
-      appBar: AppBar(backgroundColor: primaryColor, title: Container(
+      appBar: AppBar(
+        automaticallyImplyLeading:false,backgroundColor: primaryColor, title: Container(
         margin: EdgeInsets.only(top: 20),
         child: Row(
           children: [
@@ -32,6 +35,7 @@ class _All_IssuesState extends State<All_Issues> {
             Container(margin: EdgeInsets.only(left: 5, top: 10),
                 child: Text("("+number_of_issues_notsolved+ " issues to fix)", style: TextStyle(
                     color: white, fontSize: 18, fontFamily: 'PTSerif'),)),
+
           ],
         ),
       ),
@@ -98,11 +102,19 @@ class _All_IssuesState extends State<All_Issues> {
         AllList(),
         Notsolveissue(),
       ]) ,floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        allIssues.add("new issue");
-        setState(() {
-        });
-      },
+      onPressed: () async {
+    final newIssue = await showDialog<Issue>(
+    context: context,
+    builder: (context) => CreateIssue(),
+    );
+
+    if (newIssue != null) {
+    setState(() {
+    sampleIssues.add(newIssue);
+    });
+    }
+    },
+
       backgroundColor: ampleOrange,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50),
