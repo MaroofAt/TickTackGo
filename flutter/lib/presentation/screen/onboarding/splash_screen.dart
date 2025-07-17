@@ -59,7 +59,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 content: 'something went wrong please login again',
                 firstButtonText: okText,
                 firstButtonAction: () {
-                  pushReplacementNamed(context, signinRoute);
+                  popScreen(context);
+                  pushReplacementNamed(context, signupRoute);
                 },
                 secondButtonText: '',
                 secondButtonAction: () {},
