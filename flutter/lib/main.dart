@@ -18,18 +18,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      builder: DevicePreview.appBuilder,
-      debugShowCheckedModeBanner: false,
-      theme: theme(),
-      // theme: ThemeData.dark(),
-      routes: routes,
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => AuthCubit()),
-          BlocProvider(create: (context) => SplashCubit()),
-        ],
-        child: const SplashScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider(create: (context) => SplashCubit()),
+      ],
+      child: MaterialApp(
+        builder: DevicePreview.appBuilder,
+        debugShowCheckedModeBanner: false,
+        theme: theme(),
+        // theme: ThemeData.dark(),
+        routes: routes,
+        home: const SplashScreen(),
       ),
     );
   }
