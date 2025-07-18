@@ -4,6 +4,7 @@
 const String signinRoute = 'login';
 const String signupRoute = 'signup';
 const String verfiyeRoute = 'verfiye';
+const String issueRout = "issues";
 const String issuesdetalies = 'detalies';
 const String onboardingMainRoute = 'onboardingMainRoute';
 const String introQuestionsRoute = 'introQuestionsRoute';
@@ -65,7 +66,7 @@ const String receivedInviteText = 'received Invites';
 const String inboxText = 'Inbox';
 const String allTasksText = 'All Tasks';
 const String tasksText = 'tasks';
-
+const String issuesText ='Issues';
 const String hiText = 'Hi';
 const String warning = 'warning';
 const String okText = 'Ok';

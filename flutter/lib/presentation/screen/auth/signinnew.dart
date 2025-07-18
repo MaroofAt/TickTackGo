@@ -145,7 +145,14 @@ Container(margin:EdgeInsets.only(left: width(context)*0.354
               padding: const EdgeInsets.only(left: 80),
                 margin: const EdgeInsets.only(left: 15,top:40,bottom: 40),
                 decoration:BoxDecoration(color:ampleOrange.withOpacity(0.5),borderRadius: const BorderRadius.all(Radius.circular(10) )),width: width(context)*0.9,
-                child: IconButton(onPressed: (){}, icon:Row(
+                child: IconButton(onPressed: () async {
+                  final userCredential = await context.read<AuthCubit>().signInWithGoogle();
+                  if (userCredential != null) {
+                    print('Signed in as ${userCredential.user?.displayName}');
+                  } else {
+                    print('Google sign-in cancelled or failed');
+                  }
+                }, icon:Row(
                   children: [
   SizedBox(width: 25,height: 25,child: Image.asset("assets/images/auth_page_images/google.png"),),
                     const SizedBox(width: 10,),

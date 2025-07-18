@@ -4,13 +4,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/constance/routes.dart';
+import 'package:pr1/presentation/screen/auth/signinnew.dart';
+import 'package:pr1/presentation/screen/home/main_home_page.dart';
+import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // runApp(DevicePreview(builder: (context) => MyApp()));
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -13,6 +13,7 @@ import 'package:pr1/presentation/screen/home/main_home_page.dart';
 import 'package:pr1/presentation/screen/inbox/main_inbox_page.dart';
 import 'package:pr1/presentation/screen/intro_questions/intro_questions_main.dart';
 import 'package:pr1/presentation/screen/invitation/received_invitations.dart';
+import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/issues/detalies_issue.dart';
 import 'package:pr1/presentation/screen/onboarding/final_onboarding_page.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
@@ -28,6 +29,7 @@ Map<String, Widget Function(BuildContext)> routes = {
         create: (context) => AuthCubit(),
         child: Verifypage(),
       ),
+  issueRout:(context) => const All_Issues(),
   issuesdetalies: (context) {
     final issue = ModalRoute.of(context)!.settings.arguments as Issue;
     return Detalies_Issue(issue: issue);

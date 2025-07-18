@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:pr1/data/local_data/local_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,5 +28,19 @@ Future<void> refreshToken() async {
     await prefs.setString("access_token", newAccessToken);
   } on DioException catch (e) {
     print(e.response?.data);
+  }
+}
+
+int getUserIdFromToken(String token) {
+  try {
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+
+    if (decodedToken.containsKey('user_id')) {
+      return decodedToken['user_id'] as int;
+    } else {
+      throw Exception('User ID not found in token');
+    }
+  } catch (e) {
+    throw Exception('Failed to decode token: $e');
   }
 }
