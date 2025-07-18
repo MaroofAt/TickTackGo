@@ -46,7 +46,9 @@ class FetchTasksModel {
         description: json["description"],
         startDate: DateTime.parse(json["start_date"]),
         dueDate: DateTime.parse(json["due_date"]),
-        completeDate: DateTime.parse(json["complete_date"]),
+        completeDate: json["complete_date"] == null
+            ? null
+            : DateTime(json["complete_date"]),
         creator: json["creator"],
         workspace: json["workspace"],
         project: json["project"],
@@ -82,8 +84,7 @@ class FetchTasksModel {
         errorMessage: json["detail"] ?? json["message"],
       );
 
-  factory FetchTasksModel.error(String errorMessage) =>
-      FetchTasksModel(
+  factory FetchTasksModel.error(String errorMessage) => FetchTasksModel(
         id: 0,
         title: '',
         description: '',

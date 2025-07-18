@@ -46,7 +46,9 @@ class RetrieveTaskModel {
         description: json["description"],
         startDate: DateTime.parse(json["start_date"]),
         dueDate: DateTime.parse(json["due_date"]),
-        completeDate: DateTime.parse(json["complete_date"]),
+        completeDate: json["complete_date"] == null
+            ? null
+            : DateTime(json["complete_date"]),
         creator: json["creator"],
         workspace: json["workspace"],
         project: json["project"],
@@ -83,8 +85,7 @@ class RetrieveTaskModel {
         errorMessage: json["detail"] ?? json["message"],
       );
 
-      factory RetrieveTaskModel.error(String errorMessage) =>
-      RetrieveTaskModel(
+  factory RetrieveTaskModel.error(String errorMessage) => RetrieveTaskModel(
         id: 0,
         title: '',
         description: '',
