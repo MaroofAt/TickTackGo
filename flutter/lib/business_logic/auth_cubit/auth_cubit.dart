@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/refresh_token.dart';
@@ -19,7 +21,8 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
   bool isloading = false;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   ///////////SignUp
   Future<void> sendEmailForOTP(String email,String name ,String password, BuildContext context) async {
@@ -195,7 +198,7 @@ class AuthCubit extends Cubit<AuthState> {
       isloading = false;
     }
   }
-
+//// logout
   Future<void> logout(BuildContext context) async {
     try {
       emit(LogoutLoadingState());
@@ -234,5 +237,24 @@ class AuthCubit extends Cubit<AuthState> {
             ],
           ),
     );
+  }
+
+  //// Sign in with google
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return null; // user canceled the sign-in
+      }
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      return await _auth.signInWithCredential(credential);
+    } catch (e) {
+      print('Error signing in with Google: $e');
+      return null;
+    }
   }
 }
