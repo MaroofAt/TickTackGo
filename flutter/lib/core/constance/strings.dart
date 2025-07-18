@@ -13,6 +13,7 @@ const String workspacesShowPageRoute = 'workspacesShowPageRoute';
 const String receivedInvitationPageRoute = 'receivedInvitationPageRoute';
 const String mainHomePageRoute = 'mainHomePageRoute';
 const String mainInboxPage = 'mainInboxPage';
+const String mainShowTasksPage = 'mainShowTasksPage';
 
 ///Splash screen strings
 const String splashScreenLogoPath = 'assets/images/logo_images/logoorgenal.png';

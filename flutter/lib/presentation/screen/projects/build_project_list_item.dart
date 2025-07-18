@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/presentation/screen/projects/build_projects_list.dart';
+import 'package:pr1/presentation/screen/tasks/main_show_tasks_page.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class BuildProjectListItem extends StatelessWidget {
@@ -18,51 +23,62 @@ class BuildProjectListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            width: containerWidth,
-            height: height(context) * 0.08,
-            margin: EdgeInsets.only(left: marginFromLeft, bottom: 20),
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius:
-                  const BorderRadius.horizontal(right: Radius.circular(16)),
-              boxShadow: [
-                BoxShadow(
-                  color: color.withAlpha(50),
-                  offset: const Offset(2, 2),
-                  blurRadius: 2,
-                  spreadRadius: 2,
-                )
-              ],
-            ),
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  height: height(context),
-                  width: width(context) * 0.05,
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: const BorderRadius.horizontal(
-                        right: Radius.circular(16)),
-                  ),
-                ),
-                MyText.text1(projectsModel.title, textColor: white),
-              ],
-            ),
+    return MyGestureDetector.gestureDetector(
+      onTap: () {
+        pushScreen(
+          context,
+          BlocProvider(
+            create: (context) => TaskCubit(),
+            child: MainShowTasksPage(projectsModel.id, color),
           ),
-          projectsModel.subProjects.isNotEmpty
-              ? BuildProjectsList(
-                  projectsModel.subProjects,
-                  workspaceId,
-                  newWidth: containerWidth * 0.9,
-                  newMargin: marginFromLeft * 1.2,
-                )
-              : Container(),
-        ],
+        );
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: containerWidth,
+              height: height(context) * 0.08,
+              margin: EdgeInsets.only(left: marginFromLeft, bottom: 20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius:
+                    const BorderRadius.horizontal(right: Radius.circular(16)),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withAlpha(50),
+                    offset: const Offset(2, 2),
+                    blurRadius: 2,
+                    spreadRadius: 2,
+                  )
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    height: height(context),
+                    width: width(context) * 0.05,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: const BorderRadius.horizontal(
+                          right: Radius.circular(16)),
+                    ),
+                  ),
+                  MyText.text1(projectsModel.title, textColor: white),
+                ],
+              ),
+            ),
+            projectsModel.subProjects.isNotEmpty
+                ? BuildProjectsList(
+                    projectsModel.subProjects,
+                    workspaceId,
+                    newWidth: containerWidth * 0.9,
+                    newMargin: marginFromLeft * 1.2,
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }
