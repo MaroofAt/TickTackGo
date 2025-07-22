@@ -4,9 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/constance/routes.dart';
-import 'package:pr1/presentation/screen/auth/signinnew.dart';
-import 'package:pr1/presentation/screen/home/main_home_page.dart';
-import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
 import 'firebase_options.dart';
@@ -18,7 +15,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
