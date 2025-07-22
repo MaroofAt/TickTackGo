@@ -4,6 +4,7 @@ import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/constance/task_constance.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
@@ -30,9 +31,6 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
 
   final TextEditingController _descriptionController = TextEditingController();
 
-  final List<String> _priorities = ['high', 'medium', 'low'];
-
-  final List<String> _statuses = ['pending', 'in progress', 'completed'];
 
   String getKeyByValue(Map<String, String> map, String value) {
       return map.keys.firstWhere((key) => map[key] == value);
@@ -82,7 +80,7 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                     return buildPriorityWrap(
                       context,
                       'Priority',
-                      _priorities,
+                      priorities,
                       BlocProvider.of<InboxCubit>(context).selectedPriority,
                       BlocProvider.of<InboxCubit>(context)
                           .changePriorityInCreateTask,
@@ -97,7 +95,7 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                     return buildPriorityWrap(
                       context,
                       'Status',
-                      _statuses,
+                      statuses,
                       BlocProvider.of<InboxCubit>(context).selectedStatus,
                       BlocProvider.of<InboxCubit>(context)
                           .changeStatusInCreateTask,

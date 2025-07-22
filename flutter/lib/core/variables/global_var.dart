@@ -6,4 +6,4 @@ import '../../data/models/user/user.dart';
 SignUpModel? globalSignUpModel;
 String token = '';
 String refresh = '';
-User? theuser ;
+User? user ;
