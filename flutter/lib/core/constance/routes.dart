@@ -4,7 +4,6 @@ import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
 import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
-import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/presentation/screen/auth/signinnew.dart';
@@ -18,7 +17,6 @@ import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/issues/detalies_issue.dart';
 import 'package:pr1/presentation/screen/onboarding/final_onboarding_page.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
-import 'package:pr1/presentation/screen/tasks/main_show_tasks_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspaces_show_page.dart';
 
 import '../../business_logic/auth_cubit/auth_cubit.dart';

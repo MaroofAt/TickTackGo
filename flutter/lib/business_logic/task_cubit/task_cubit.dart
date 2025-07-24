@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pr1/core/API/tasks.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/tasks/cancel_task_model.dart';
@@ -12,17 +15,89 @@ part 'task_state.dart';
 class TaskCubit extends Cubit<TaskState> {
   TaskCubit() : super(TaskInitial());
 
+  DateTime selectedStartDate = DateTime.now();
+  DateTime selectedEndDate = DateTime.now();
+  TimeOfDay startTime = const TimeOfDay(hour: 16, minute: 0);
+  TimeOfDay endTime = const TimeOfDay(hour: 14, minute: 0);
+  bool locked = false;
+  String? selectedParent;
+  String selectedPriority = 'medium';
+  String selectedStatus = 'pending';
+
+  File? image;
+
+  Future<void> selectStartDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedStartDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025, 12, 31),
+    );
+    if (picked != null && picked != selectedStartDate) {
+      selectedStartDate = picked;
+      emit(TaskInitial());
+    }
+  }
+
+  Future<void> selectEndDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedEndDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025, 12, 31), // Changed to end of 2025
+    );
+    if (picked != null && picked != selectedEndDate) {
+      selectedEndDate = picked;
+      emit(TaskInitial());
+    }
+  }
+
+  Future<void> selectStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: startTime,
+    );
+    if (picked != null && picked != startTime) {
+      startTime = picked;
+      emit(TaskInitial());
+    }
+  }
+
+  Future<void> selectEndTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: endTime,
+    );
+    if (picked != null && picked != endTime) {
+      endTime = picked;
+      emit(TaskInitial());
+    }
+  }
+
+  void changeSelectedStatus(String newStatus) {
+    selectedStatus = newStatus;
+    emit(TaskInitial());
+  }
+
+  void changeSelectedPriority(String newPriority) {
+    selectedPriority = newPriority;
+    emit(TaskInitial());
+  }
+
+  void changeTaskLocked() {
+    locked = !locked;
+    emit(TaskInitial());
+  }
+
   Future<void> createTask(
-      String title,
-      String description,
-      String startDate,
-      String dueDate,
-      int workspaceId,
-      int projectId,
-      String status,
-      String priority,
-      bool locked) async {
+      String title, String description, int workspaceId, int projectId) async {
+    if (title.isEmpty || description.isEmpty) return;
     emit(TaskCreatingState());
+
+    String startDate =
+        DateFormat('yyyy-M-d').format(selectedStartDate).toString();
+    String dueDate =
+        DateFormat('yyyy-M-d').format(selectedEndDate).toString();
 
     CreateTaskModel createTaskModel = await TaskApi.createTask(
         title: title,
@@ -31,8 +106,8 @@ class TaskCubit extends Cubit<TaskState> {
         dueDate: dueDate,
         workspaceId: workspaceId,
         projectId: projectId,
-        status: status,
-        priority: priority,
+        status: selectedStatus,
+        priority: selectedPriority,
         locked: locked,
         token: token);
 

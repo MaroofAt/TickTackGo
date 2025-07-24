@@ -130,7 +130,6 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (response.statusCode == 201) {
         print("Verification success!");
-        getUser() ;
         pushNamedAndRemoveUntil(context, mainHomePageRoute);
         login(globalSignUpModel!.email, globalSignUpModel!.password, context);
         emit(SignupVerifiedSuccessState());
@@ -171,8 +170,6 @@ class AuthCubit extends Cubit<AuthState> {
         await saveTokens(accessToken, refreshToken);
         token=accessToken;
         refresh = refreshToken;
-        print("Login success: ${response.data}");
-          getUser() ;
         pushNamedAndRemoveUntil(context, mainHomePageRoute);
         emit(SuccessfulyLoginState());
       }else if (response.statusCode == 401 && response.data.isNotEmpty ) {
@@ -203,17 +200,17 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(LogoutLoadingState());
       await clearTokens();
-      await clearUserData();
 
       token = "";
       refresh ='';
-      theuser = null;
+      user = null;
       globalSignUpModel = null;
+      await clearTokens();
 
       emit(LogoutSuccessState());
     pushNamedAndRemoveUntil(
         context,
-       signinRoute
+       signupRoute
       );
     } catch (e) {
       print('Error during logout: $e');

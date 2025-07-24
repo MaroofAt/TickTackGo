@@ -29,7 +29,7 @@ class BuildProjectListItem extends StatelessWidget {
           context,
           BlocProvider(
             create: (context) => TaskCubit(),
-            child: MainShowTasksPage(projectsModel.id, color),
+            child: MainShowTasksPage(projectsModel.id, color, workspaceId),
           ),
         );
       },
