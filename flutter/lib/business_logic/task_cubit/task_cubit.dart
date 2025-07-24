@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pr1/core/API/tasks.dart';
+import 'package:pr1/core/functions/image_picker.dart';
+import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/tasks/cancel_task_model.dart';
 import 'package:pr1/data/models/tasks/create_task_model.dart';
@@ -15,12 +18,37 @@ part 'task_state.dart';
 class TaskCubit extends Cubit<TaskState> {
   TaskCubit() : super(TaskInitial());
 
+  Future<void> getWorkspaceImage() async {
+    PermissionStatus checkStoragePermissionStatus =
+        await checkPermissionStatus(Permission.storage);
+
+    if (checkStoragePermissionStatus.isGranted) {
+      image = await pickImage();
+    } else if (checkStoragePermissionStatus.isDenied) {
+      PermissionStatus storageStatus =
+          await requestPermission(Permission.storage);
+      getWorkspaceImage();
+      return;
+    } else if (checkStoragePermissionStatus.isPermanentlyDenied) {
+      emit(PermissionPermanentlyDeniedState());
+    } else {
+      emit(SomethingWentWrongState());
+    }
+
+    if (image != null) {
+      emit(TaskImagePickedState(image!));
+    } else {
+      emit(TaskInitial());
+    }
+  }
+
   DateTime selectedStartDate = DateTime.now();
   DateTime selectedEndDate = DateTime.now();
   TimeOfDay startTime = const TimeOfDay(hour: 16, minute: 0);
   TimeOfDay endTime = const TimeOfDay(hour: 14, minute: 0);
   bool locked = false;
   String? selectedParent;
+  int? parentTask;
   String selectedPriority = 'medium';
   String selectedStatus = 'pending';
 
@@ -96,8 +124,7 @@ class TaskCubit extends Cubit<TaskState> {
 
     String startDate =
         DateFormat('yyyy-M-d').format(selectedStartDate).toString();
-    String dueDate =
-        DateFormat('yyyy-M-d').format(selectedEndDate).toString();
+    String dueDate = DateFormat('yyyy-M-d').format(selectedEndDate).toString();
 
     CreateTaskModel createTaskModel = await TaskApi.createTask(
         title: title,
@@ -109,6 +136,7 @@ class TaskCubit extends Cubit<TaskState> {
         status: selectedStatus,
         priority: selectedPriority,
         locked: locked,
+        parentTask: parentTask,
         token: token);
 
     if (createTaskModel.errorMessage.isEmpty) {
