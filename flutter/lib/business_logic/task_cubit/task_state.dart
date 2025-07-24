@@ -6,6 +6,19 @@ sealed class TaskState {}
 
 final class TaskInitial extends TaskState {}
 
+class TaskImageIsPickingState extends TaskState {}
+
+class TaskImagePickedState extends TaskState {
+  File image;
+
+  TaskImagePickedState(this.image);
+}
+
+class PermissionPermanentlyDeniedState extends TaskState {}
+
+class SomethingWentWrongState extends TaskState {}
+
+
 class TaskCreatingState extends TaskState {}
 
 class TaskCreatingSucceededState extends TaskState {

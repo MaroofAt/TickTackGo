@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class MyText {
@@ -20,7 +21,7 @@ class MyText {
     );
   }
 
-  static Widget text1(String text,
+  static AutoSizeText text1(String text,
       {Color? textColor,
       double? fontSize,
       FontWeight? fontWeight,
@@ -31,7 +32,7 @@ class MyText {
       double? wordSpacing,
       bool? softWrap,
       TextOverflow overflow = TextOverflow.clip}) {
-    return Text(
+    return AutoSizeText(
       text,
       softWrap: softWrap,
       maxLines: maxLines,

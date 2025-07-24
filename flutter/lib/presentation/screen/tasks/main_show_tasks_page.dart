@@ -29,6 +29,8 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
     BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
   }
 
+  Map<String, int> tasksTitles = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +47,8 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
                         .fetchTasks(widget.projectId);
                   }
                 },
-                child: CreateTaskPage(widget.projectId, widget.workspaceId),
+                child: CreateTaskPage(
+                    widget.projectId, widget.workspaceId, tasksTitles),
               ),
             ),
           );
@@ -62,6 +65,10 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
                     textColor: white, fontSize: 22),
               );
             }
+            for (var element in state.fetchedTasks) {
+              tasksTitles.addAll({element.title: element.id});
+            }
+            tasksTitles.addAll({'canceled': 0});
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
