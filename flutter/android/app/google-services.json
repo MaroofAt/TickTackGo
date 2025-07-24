@@ -12,7 +12,16 @@
           "package_name": "com.example.pr1"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "189709970345-3k52bf0gr59q4ad89dfne0k1esiip49u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pr1",
+            "certificate_hash": "d997b6921eb79e71d472a38dc0409dad73cdd53f"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDY1LX-PUnaDnpTFNTwXTXIDf579DbNZg8"

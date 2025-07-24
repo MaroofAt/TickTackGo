@@ -240,21 +240,34 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   //// Sign in with google
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
+    final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email'],
+    serverClientId: "189709970345-kd9qm46btja8ciid052a15r7paditavm.apps.googleusercontent.com");
+
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return null; // user canceled the sign-in
+      final GoogleSignInAccount? account = await _googleSignIn.signIn();
+
+      if (account == null) {
+        print('Login canceled');
+        return;
       }
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      return await _auth.signInWithCredential(credential);
+
+      final auth = await account.authentication;
+      final idToken = auth.idToken;
+
+      if (idToken == null) {
+        print('ID Token is null');
+        return;
+      }
+      print('Email: ${account.email}');
+      print('Display Name: ${account.displayName}');
+      print('Auth object: $auth');
+
+      print('Google ID Token: $idToken');
+
     } catch (e) {
-      print('Error signing in with Google: $e');
-      return null;
+      print('Sign-in error: $e');
     }
   }
+
 }

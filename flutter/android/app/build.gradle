@@ -21,10 +21,15 @@ android {
 
     defaultConfig {
         applicationId = "com.example.pr1"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders = [
+                onesignal_app_id: '972c2f0d-d622-4793-ba9d-2648e39485c3',
+                onesignal_google_project_number: '',
+                applicationName: "android.app.Application"
+        ]
     }
 
     buildTypes {

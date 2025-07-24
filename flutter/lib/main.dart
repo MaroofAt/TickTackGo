@@ -1,14 +1,18 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/auth/signinnew.dart';
+import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import 'package:pr1/presentation/screen/home/main_home_page.dart';
 import 'package:pr1/presentation/screen/issues/all_issues.dart';
+import 'package:pr1/presentation/screen/notification/history_notification.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
+import 'core/API/notification.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -18,6 +22,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await  initOneSignal();
   runApp(MyApp());
 }
 
@@ -37,7 +42,7 @@ class MyApp extends StatelessWidget {
         theme: theme(),
         // theme: ThemeData.dark(),
         routes: routes,
-        home: const SplashScreen(),
+        home:  Signupnew(),
       ),
     );
   }
