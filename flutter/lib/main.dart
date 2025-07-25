@@ -18,7 +18,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await  initOneSignal();
-  runApp(MyApp());
+  runApp(const MyApp());
 
 }
 
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         theme: theme(),
         // theme: ThemeData.dark(),
         routes: routes,
-        home:  Signupnew(),
+        home:  const SplashScreen(),
       ),
     );
   }
