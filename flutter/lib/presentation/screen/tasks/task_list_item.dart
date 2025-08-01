@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
@@ -64,7 +65,7 @@ class TaskListItem extends StatelessWidget {
                   ),
                   MyText.text1(fetchTask.title,
                       textColor: white, textAlign: TextAlign.center),
-                  MyText.text1(fetchTask.dueDate.toString(),
+                  MyText.text1(DateFormat('yyyy-MM-d').format(fetchTask.dueDate!),
                       textColor: Colors.grey),
                 ],
               ),

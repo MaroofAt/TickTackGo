@@ -18,7 +18,7 @@ part 'task_state.dart';
 class TaskCubit extends Cubit<TaskState> {
   TaskCubit() : super(TaskInitial());
 
-  Future<void> getWorkspaceImage() async {
+  Future<void> getTaskImage() async {
     PermissionStatus checkStoragePermissionStatus =
         await checkPermissionStatus(Permission.storage);
 
@@ -27,7 +27,7 @@ class TaskCubit extends Cubit<TaskState> {
     } else if (checkStoragePermissionStatus.isDenied) {
       PermissionStatus storageStatus =
           await requestPermission(Permission.storage);
-      getWorkspaceImage();
+      getTaskImage();
       return;
     } else if (checkStoragePermissionStatus.isPermanentlyDenied) {
       emit(PermissionPermanentlyDeniedState());
@@ -117,8 +117,7 @@ class TaskCubit extends Cubit<TaskState> {
     emit(TaskInitial());
   }
 
-  Future<void> createTask(
-      String title, String description, int workspaceId, int projectId) async {
+  Future<void> createTask(String title, String description, int workspaceId, int projectId) async {
     if (title.isEmpty || description.isEmpty) return;
     emit(TaskCreatingState());
 
@@ -183,4 +182,6 @@ class TaskCubit extends Cubit<TaskState> {
       emit(TaskCancelingFailedState(cancelTaskModel.errorMessage));
     }
   }
+
+
 }
