@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
 import 'package:pr1/presentation/screen/tasks/task_info_app_bar.dart';
+import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/circle.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
+import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class TaskInfoPage extends StatelessWidget {
@@ -24,6 +29,14 @@ class TaskInfoPage extends StatelessWidget {
           child: Column(
             spacing: 20,
             children: [
+              // Container(
+              //   width: width(context) * 0.35,
+              //   height: width(context) * 0.35,
+              //   decoration: BoxDecoration(
+              //     shape: BoxShape.circle,
+              //     image: MyImages.decorationImage(isAssetImage: false, image: fetchTasksModel.image),
+              //   ),
+              // ),
               MyCircle.circle(width(context) * 0.35, color: Colors.white),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,13 +67,38 @@ class TaskInfoPage extends StatelessWidget {
               Column(
                 spacing: 20,
                 children: [
-                  buildTwoTextRow(
-                    context,
-                    ' Status',
-                    ' ${fetchTasksModel.status}',
-                    Icons.access_time,
-                    white,
-                    Icons.circle_outlined,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buildTwoTextRow(
+                        context,
+                        ' Status',
+                        ' ${fetchTasksModel.status}',
+                        Icons.access_time,
+                        white,
+                        Icons.circle_outlined,
+                      ),
+                      MyGestureDetector.gestureDetector(
+                        onTap: () {
+                          if(fetchTasksModel.status == 'in_progress'){
+                            // BlocProvider.of<TaskCubit>(context).completeTask();
+                          }
+                        },
+                        child: Container(
+                          height: height(context) * 0.05,
+                          width: width(context) * 0.28,
+                          decoration: BoxDecoration(
+                              color: fetchTasksModel.status == 'pending'
+                                  ? lightGrey
+                                  : Theme.of(context).secondaryHeaderColor,
+                              borderRadius: BorderRadius.circular(16)),
+                          child: Center(
+                            child: MyText.text1('Completed?',
+                                textColor: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   buildTwoTextRow(
                     context,
@@ -77,12 +115,35 @@ class TaskInfoPage extends StatelessWidget {
                     Icons.people,
                     white,
                   ),
-                  buildTwoTextRow(
-                    context,
-                    ' Priority',
-                    ' ${fetchTasksModel.priority}',
-                    Icons.people,
-                    white,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buildTwoTextRow(
+                        context,
+                        ' Priority',
+                        ' ${fetchTasksModel.priority}',
+                        Icons.people,
+                        white,
+                      ),
+                      MyGestureDetector.gestureDetector(
+                        onTap: () {
+                          BlocProvider.of<TaskCubit>(context).cancelTask(fetchTasksModel.id);
+                        },
+                        child: Container(
+                          height: height(context) * 0.05,
+                          width: width(context) * 0.28,
+                          decoration: BoxDecoration(
+                              color: fetchTasksModel.status == 'completed'
+                                  ? lightGrey
+                                  : Theme.of(context).secondaryHeaderColor,
+                              borderRadius: BorderRadius.circular(16)),
+                          child: Center(
+                            child: MyText.text1('Cancel?',
+                                textColor: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -174,7 +235,7 @@ class TaskInfoPage extends StatelessWidget {
 
   Widget _buildCommentsTab() {
     return Center(
-      child: MyText.text1('Comments content goes here', textColor: white),
+      child: MyText.text1('No comments here', textColor: white),
     );
   }
 }

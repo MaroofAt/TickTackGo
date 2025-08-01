@@ -22,6 +22,7 @@ class TaskApi {
       required String token,
       required int? parentTask,
       File? image}) async {
+
     Map<String, String> headers;
 
     Map<String, Object> data = {
@@ -34,11 +35,11 @@ class TaskApi {
       'status': status,
       'priority': priority,
       'locked': locked.toString(),
+      'assignees': []
     };
 
     if(parentTask != null && parentTask != 0) {
       data.addAll({'perent_task': parentTask});
-
     }
 
     if (image == null) {
