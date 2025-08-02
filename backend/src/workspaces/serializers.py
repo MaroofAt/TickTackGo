@@ -126,11 +126,10 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             with transaction.atomic():
                 if not ('description' in validated_data):
                     validated_data['description'] = ""
-                if 'image' in validated_data:
-                    image = validated_data.pop('image')
+                image = validated_data.pop('image', None)
                 validated_data['owner'] = owner
                 instance = super().create(validated_data)
-                if 'image' in validated_data:
+                if image is not None:
                     instance.image = image
                     instance.save()
                 Workspace_Membership.objects.create(
