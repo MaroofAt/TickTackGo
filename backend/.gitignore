@@ -37,4 +37,4 @@ src/users/migrations/*
 src/workspaces/migrations/*
 src/tasks/migrations/*
 
-backend/src/media/
+src/media/
