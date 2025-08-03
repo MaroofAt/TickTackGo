@@ -22,7 +22,6 @@ class TaskInfoPage extends StatelessWidget {
         width: width(context),
         child: SingleChildScrollView(
           child: Column(
-            spacing: 20,
             children: [
               MyCircle.circle(width(context) * 0.35, color: Colors.white),
               Column(
@@ -52,7 +51,6 @@ class TaskInfoPage extends StatelessWidget {
                 ],
               ),
               Column(
-                spacing: 20,
                 children: [
                   buildTwoTextRow(
                     context,
@@ -125,7 +123,6 @@ class TaskInfoPage extends StatelessWidget {
       String secondLabel, IconData firstIcon, Color secondTextColor,
       [IconData? secondIcon]) {
     return Row(
-      spacing: width(context) * 0.1,
       children: [
         buildIconTextRow(firstLabel, firstIcon),
         buildIconTextRow(secondLabel, secondIcon, secondTextColor)

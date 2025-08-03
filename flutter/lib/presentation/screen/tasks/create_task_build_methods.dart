@@ -218,7 +218,6 @@ Column buildTextFieldsColumn(
     TextEditingController titleController,
     TextEditingController descriptionController) {
   return Column(
-    spacing: 20,
     children: [
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,

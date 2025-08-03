@@ -51,7 +51,6 @@ class TaskListItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 10,
                 children: [
                   Container(
                     width: width(context) * 0.2,

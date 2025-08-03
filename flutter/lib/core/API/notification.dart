@@ -1,83 +1,101 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../variables/api_variables.dart';
 import '../variables/global_var.dart';
-//
-Future<void> getPlayerId() async {
-  FCMuserId=OneSignal.User.pushSubscription.id;
-print(OneSignal.User.pushSubscription.id);
-}
-
-void _handleGetOnesignalId() async {
-  var onesignalId = await OneSignal.User.getOnesignalId();
-  print('OneSignal ID: $onesignalId');
-}
 
 Future<void> initOneSignal() async {
-
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   // Initialize with your OneSignal App ID
   OneSignal.initialize("972c2f0d-d622-4793-ba9d-2648e39485c3");
+  await Permission.notification.request();
   // Use this method to prompt for push notifications.
   // We recommend removing this method after testing and instead use In-App Messages to prompt for notification permission.
-  OneSignal.Notifications.requestPermission(false);
-  // await getPlayerId();
+  OneSignal.Notifications.requestPermission(true);
+
+  //
+  // OneSignal.User.pushSubscription.addObserver((state) {
+  //   final id = OneSignal.User.pushSubscription.id;
+  //   FCMuserToken = OneSignal.User.pushSubscription.token;
+  //   print("=====================================================================");
+  //   print("  the id: $id =====================================================================");
+  //   print(" the token: $FCMuserToken =====================================================================");
+  //   // sendTokenToServer(FCMuserToken!, id!);
+  // });
   OneSignal.User.pushSubscription.addObserver((state) {
-    print(OneSignal.User.pushSubscription.optedIn);
-    print(OneSignal.User.pushSubscription.id);
+    final token = OneSignal.User.pushSubscription.token;
     final id = OneSignal.User.pushSubscription.id;
 
-    if (id != null && id.isNotEmpty) {
-      FCMuserId = id;
-      print("✅ Got userId: $FCMuserId");
+    print("================ OneSignal Subscription Observer ================");
+    print("🔥 Push Token: ${token ?? 'null'}");
+    print("📦 OneSignal ID: ${id ?? 'null'}");
+    print("===============================================================");
 
-      // await SendFCMId(); // 📤 أرسل الـ ID فقط بعد التعيين
+    if (token != null && token.isNotEmpty && id != null) {
+      // sendTokenToServer(token, id);
     } else {
-      print("❌ No OneSignal User ID available yet.");
+      print("⚠️ No token or ID yet. Waiting...");
     }
-    print(OneSignal.User.pushSubscription.token);
-    print(state.current.jsonRepresentation());
   });
 
-  print("m,jvbgtr=fnhgfnh=======================================mg$FCMuserId");
-//   await SendFCMId();
-//
-//  /// opened notification out bage
-//   OneSignal.shared.setNotificationOpenedHandler((openedResult) {
-//     var notification = openedResult.notification;
-//     print("Notification opened: ${notification.jsonRepresentation()}");
-//   });
-// //// in the bage
-//   OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
-//     var notification = event.notification;
-//     print("Notification received in foreground: ${notification.jsonRepresentation()}");
-//     event.complete(notification);
-//   });
-// }
-//
-// Future<void> SendFCMId() async {
-//
-//   Map<String, dynamic> data = {
-//     "one_signal_user_id": FCMuserId,
-//   };
-//
-//   try {
-//     var response = await dio.request(
-//       '/users/id/',
-//       options: Options(
-//         method: 'POST',
-//         validateStatus: (status) => status! < 500,
-//       ),
-//       data: data,
-//     );
-//
-//     if (response.statusCode == 200 && response.data.isNotEmpty) {
-//       print("success");
-//       print(response.data);
-//     }
-//   } catch (e) {
-//     print(e.toString());
-//   }
+
+
+  // await getPlayerId();
+  // OneSignal.User.pushSubscription.addObserver((state) {
+  //   print(OneSignal.User.pushSubscription.optedIn);
+  //   print(OneSignal.User.pushSubscription.id);
+  //   final id = OneSignal.User.pushSubscription.id;
+  //   FCMuserToken = OneSignal.User.pushSubscription.token;
+  //   String? onesignalId = OneSignal.User.pushSubscription.id;
+  //   print(FCMuserToken);
+  //   print(onesignalId);
+  //   print(state.current.jsonRepresentation());
+  // });
+  //
+  // print(
+  //     "=====================================================================");
+  OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+
+    showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (_) => AlertDialog(
+        title: Text(event.notification.title ?? "New Notification"),
+        content: Text(event.notification.body ?? ""),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(navigatorKey.currentContext!),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+    // event.notification.display();
+
+  });
+
 }
+  Future<void> sendTokenToServer( String pushToken,String id) async {
+    const url = "https://your-django-api.com/api/register-device/";
+    try {
+      var response = await dio.request(
+        '/users/send_otp/',
+        options: Options(
+          method: 'POST',
+        ),
+      data: {
+      "push_token": pushToken,
+        'user_id': id
+      },
+      );
+
+      print(" Token sent to server: ${response.data}");
+    } catch (e) {
+      print(" Error sending token: $e");
+    }
+  }
+
+
 

@@ -39,7 +39,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                   BlocBuilder<TaskCubit, TaskState>(
                     builder: (context, state) {
                       return Column(
-                        spacing: 20,
                         children: [
                           buildTextFieldsColumn(context, _titleController,
                               _descriptionController),
