@@ -7,8 +7,10 @@ from rest_framework.decorators import action
 
 from drf_spectacular.utils import extend_schema , OpenApiExample
 
+from django.db import IntegrityError
+from rest_framework.exceptions import ValidationError
 
-from tools.responses import method_not_allowed
+from tools.responses import method_not_allowed, exception_response
 from tools.roles_check import is_workspace_owner
 
 
@@ -60,7 +62,14 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         }
     )
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as ve:
+            return Response(str(ve), status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError as ie:
+            return Response(str(ie), status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return exception_response(e)
 
     
     @extend_schema(
