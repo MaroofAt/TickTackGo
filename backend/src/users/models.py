@@ -43,8 +43,8 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
     email = models.EmailField(unique=True)
     image = models.ImageField( 
         upload_to=user_image_upload_path,
-        default="defaults/user/default.png"
-    ) #TODO put default photo
+        default="defaults/users/default.png"
+    )
     class HOW_TO_USE_WEBSITE(models.TextChoices):
         OWN_TASKS_MANAGEMENT = 'own_tasks_management'
         SMALL_TEAM = 'small_team'

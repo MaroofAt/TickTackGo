@@ -21,8 +21,9 @@ class Workspace(TimeStampedModel):
     image = models.ImageField(
         null=True,
         blank=True,
-        upload_to=workspace_image_upload_path
-    ) #TODO put default photo
+        upload_to=workspace_image_upload_path,
+        default="defaults/workspaces/default.png"
+    )
     owner = models.ForeignKey(User , related_name='owned_workspaces' , on_delete=models.CASCADE, null=False, blank=False)
     members = models.ManyToManyField(
         User,
