@@ -5,9 +5,11 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/constance/routes.dart';
+import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
 import 'core/API/notification.dart';
+import 'core/variables/global_var.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -33,12 +35,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => SplashCubit()),
       ],
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         builder: DevicePreview.appBuilder,
         debugShowCheckedModeBanner: false,
         theme: theme(),
         // theme: ThemeData.dark(),
         routes: routes,
-        home:  const SplashScreen(),
+        home:  const Signupnew(),
       ),
     );
   }

@@ -50,9 +50,9 @@ dependencies:
   firebase_core: ^3.15.1
   firebase_auth: ^5.6.2
   onesignal_flutter: ^5.1.2
-  shimmer_animation: ^2.2.2
   intl: ^0.19.0
   auto_size_text: ^3.0.0
+  shimmer_animation: ^2.1.0
  
 
 
