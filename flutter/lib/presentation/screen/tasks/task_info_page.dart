@@ -28,15 +28,15 @@ class TaskInfoPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Container(
-              //   width: width(context) * 0.35,
-              //   height: width(context) * 0.35,
-              //   decoration: BoxDecoration(
-              //     shape: BoxShape.circle,
-              //     image: MyImages.decorationImage(isAssetImage: false, image: fetchTasksModel.image),
-              //   ),
-              // ),
-              MyCircle.circle(width(context) * 0.35, color: Colors.white),
+              Container(
+                width: width(context) * 0.35,
+                height: width(context) * 0.35,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: MyImages.decorationImage(isAssetImage: false, image: fetchTasksModel.image),
+                ),
+              ),
+              // MyCircle.circle(width(context) * 0.35, color: Colors.white),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
