@@ -3,8 +3,8 @@ POST http://127.0.0.1:8000/api/users/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "Shadi",
-    "email": "shadi@gmail.com",
+    "username": "Ali",
+    "email": "alialmusfi@gmail.com",
     "password": "aloosh1234",
     "how_to_use_website": "small_team",
     "what_do_you_do": "software_or_it",
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
     "username": "Ali",
-    "email": "ABUALISH@gmail.com",
+    "email": "alialmusfi@gmail.com",
     "password": "aloosh1234",
     "how_to_use_website": "small_team",
     "what_do_you_do": "software_or_it",
@@ -62,10 +62,22 @@ Content-Type: application/json
 ###
 POST http://127.0.0.1:8000/api/workspaces/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4OTYwNjAyLCJpYXQiOjE3NDg5NTcwMDIsImp0aSI6IjhlODk5MmI0YWQyYzQ2ZjNhNjE4MzFmY2ViNDU1M2Y1IiwidXNlcl9pZCI6MX0.Y5Mqk8OszKoPC3cQi55BOY0_ykPDD00C5njk-gVMON0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjE4Njg2LCJpYXQiOjE3NTEyMTUwODYsImp0aSI6ImE4YjY0NWIyNTdhYjQwOTNiMmQ1MGIxM2E1YmE5N2YwIiwidXNlcl9pZCI6MX0.aHlsd17w1BW3x9e81Cd9wrlcSoTrt8JeCMFzyi53wl4
 
 {
     "title": "Workspace 1"
+}
+###
+
+POST http://127.0.0.1:8000/api/projects/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjE4Njg2LCJpYXQiOjE3NTEyMTUwODYsImp0aSI6ImE4YjY0NWIyNTdhYjQwOTNiMmQ1MGIxM2E1YmE5N2YwIiwidXNlcl9pZCI6MX0.aHlsd17w1BW3x9e81Cd9wrlcSoTrt8JeCMFzyi53wl4
+
+{
+  "title": "SupProject 7",
+  "color": "#ff0000",
+  "workspace": 1,
+  "parent_project": 1
 }
 
 ###
