@@ -1,6 +1,6 @@
 POST http://127.0.0.1:8000/api/tasks/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5Mjk3NTk4LCJpYXQiOjE3NDkyOTM5OTgsImp0aSI6IjJiODNhNjdiZGE2MTRmYWE4MTY4MGY1NDljOTNlYWFiIiwidXNlcl9pZCI6MX0.kI3JFAS9UullfV46PMYxEC-X-7I2sNlbqYCexpMvjGA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0MzAyNjIzLCJpYXQiOjE3NTQyOTkwMjMsImp0aSI6IjIyZjVmZmExMjg2MzQ1MjA5NDZhMmY3NzM4YTcwMWM4IiwidXNlcl9pZCI6MX0.n274wjrKufU4Uk9Iuh656hDqBQjtk20LzUtch9Al-k8
 
 {
     "title": "Task 1",
@@ -85,3 +85,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 {   
     "status": "pending"
 }
+
+
+###comment
+
+POST http://127.0.0.1:8000/api/tasks/1/create_comment/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0MzAyNjIzLCJpYXQiOjE3NTQyOTkwMjMsImp0aSI6IjIyZjVmZmExMjg2MzQ1MjA5NDZhMmY3NzM4YTcwMWM4IiwidXNlcl9pZCI6MX0.n274wjrKufU4Uk9Iuh656hDqBQjtk20LzUtch9Al-k8
+
+{
+    "body": "running"
+}
+
+###
+
+GET  http://127.0.0.1:8000/api/tasks/1/list_comments/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0MzAyNjIzLCJpYXQiOjE3NTQyOTkwMjMsImp0aSI6IjIyZjVmZmExMjg2MzQ1MjA5NDZhMmY3NzM4YTcwMWM4IiwidXNlcl9pZCI6MX0.n274wjrKufU4Uk9Iuh656hDqBQjtk20LzUtch9Al-k8

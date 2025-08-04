@@ -70,6 +70,14 @@ class TaskSerializer(serializers.ModelSerializer):
         
 
 class CommentSerializer(serializers.ModelSerializer):
+    class UserInnerSerialiser(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = [
+                'id',
+                'username',
+            ]
+    user = UserInnerSerialiser()
     class Meta:
         model= Comment
         fields= [
