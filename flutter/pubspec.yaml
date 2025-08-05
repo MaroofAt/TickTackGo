@@ -87,7 +87,8 @@ flutter:
     - assets/images/workspace_images/
     - assets/images/auth_page_images/
     - assets/fonts/
-    
+    - assets/gifs/
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
