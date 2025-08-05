@@ -11,7 +11,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 
 from .models import Task, Comment , Inbox_Tasks
-from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer
+from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer , CreateCommentSerializer
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner
 
 
@@ -310,7 +310,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             }
         }
     )
-    @action(detail=True, methods=['post'], serializer_class=CommentSerializer)
+    @action(detail=True, methods=['post'], serializer_class=CreateCommentSerializer)
     def create_comment(self, request, pk):
         try:
             if not request.data.get('body'):

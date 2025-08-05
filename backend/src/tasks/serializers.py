@@ -69,6 +69,19 @@ class TaskSerializer(serializers.ModelSerializer):
             return super().update(instance=instance,validated_data=validated_data)
         
 
+
+class CreateCommentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model= Comment
+            fields= [
+                'task',
+                'user',
+                'body',
+                'created_at',
+                'updated_at',
+            ]
+
+
 class CommentSerializer(serializers.ModelSerializer):
     class UserInnerSerialiser(serializers.ModelSerializer):
         class Meta:
@@ -81,12 +94,14 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model= Comment
         fields= [
+            'id',
             'task',
             'user',
             'body',
             'created_at',
             'updated_at',
         ]
+
         
         
 class InboxTaskSerializer(serializers.ModelSerializer):
