@@ -27,6 +27,7 @@ class TaskInfoPage extends StatelessWidget {
         width: width(context),
         child: SingleChildScrollView(
           child: Column(
+            spacing: 20,
             children: [
               Container(
                 width: width(context) * 0.35,
@@ -64,6 +65,7 @@ class TaskInfoPage extends StatelessWidget {
                 ],
               ),
               Column(
+                spacing: 15,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,6 +188,7 @@ class TaskInfoPage extends StatelessWidget {
     return Row(
       children: [
         buildIconTextRow(firstLabel, firstIcon),
+        const SizedBox(width: 10),
         buildIconTextRow(secondLabel, secondIcon, secondTextColor)
       ],
     );
