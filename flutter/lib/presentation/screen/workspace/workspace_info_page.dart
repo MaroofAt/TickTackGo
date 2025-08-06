@@ -49,8 +49,8 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
         body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
           builder: (context, state) {
             if (state is WorkspaceRetrievingSucceededState) {
-              RetrieveWorkspaceModel retrieveWorkspace = state
-                  .retrieveWorkspace;
+              RetrieveWorkspaceModel retrieveWorkspace =
+                  state.retrieveWorkspace;
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -71,7 +71,10 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                         ),
                         MyGestureDetector.gestureDetector(
                           onTap: () {
-                            pushScreen(
+                            if(isAdmin(retrieveWorkspace.owner!.id)) {
+                              
+                            }else {
+                              pushScreen(
                               context,
                               BlocProvider(
                                 create: (context) => InvitationCubit(),
@@ -80,23 +83,20 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                                     workspaceId: retrieveWorkspace.id),
                               ),
                             );
+                            }
                           },
                           child: Container(
                             height: width(context) * 0.1,
                             width: width(context) * 0.3,
                             decoration: BoxDecoration(
-                              color: Theme
-                                  .of(context)
-                                  .secondaryHeaderColor,
+                              color: Theme.of(context).secondaryHeaderColor,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Center(
                               child: MyText.text1(
                                 'Invite',
                                 textColor:
-                                Theme
-                                    .of(context)
-                                    .scaffoldBackgroundColor,
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 fontSize: 20,
                                 letterSpacing: 2,
                                 fontWeight: FontWeight.w500,
@@ -112,19 +112,16 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                       ),
                     ),
                     // Delete Button
-                    // todo compare between user id and owner id
-                    // isAdmin(retrieveWorkspace.owner!.) ?
-                        buildDeleteButton(context)
-                        // : Container(),
+                    isAdmin(retrieveWorkspace.owner!.id)
+                        ? buildDeleteButton(context)
+                        : Container(),
                   ],
                 ),
               );
             } else {
               return Center(
                 child: LoadingIndicator.circularProgressIndicator(
-                  color: Theme
-                      .of(context)
-                      .secondaryHeaderColor,
+                  color: Theme.of(context).secondaryHeaderColor,
                 ),
               );
             }
