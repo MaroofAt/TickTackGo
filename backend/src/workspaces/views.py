@@ -212,7 +212,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         if not sender.exists():
             return Response({'message': 'Sender is not in workspace'} , status=status.HTTP_400_BAD_REQUEST)
         
-        sender = Workspace_Membership.objects.filter(member = request.user.id).first()
+        sender = Workspace_Membership.objects.filter(member = request.user.id , workspace=pk).first()
         if sender.role != 'owner':
             return Response({'message': 'Sender is not the Owner of the workspace'} , status=status.HTTP_400_BAD_REQUEST)
 
