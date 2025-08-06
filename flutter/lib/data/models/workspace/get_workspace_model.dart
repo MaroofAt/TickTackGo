@@ -97,6 +97,7 @@ class Member {
 }
 
 class Owner {
+  int id;
   String username;
   String email;
   String image;
@@ -107,6 +108,7 @@ class Owner {
   DateTime updatedAt;
 
   Owner({
+    required this.id,
     required this.username,
     required this.email,
     required this.image,
@@ -118,6 +120,7 @@ class Owner {
   });
 
   factory Owner.fromJson(Map<String, dynamic> json) => Owner(
+        id: json["id"],
         username: json["username"],
         email: json["email"],
         image: json["image"],

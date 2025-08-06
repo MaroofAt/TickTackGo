@@ -37,5 +37,9 @@ ThemeData theme() {
       ),
       menuPadding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
     ),
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.grey[800],
+    ),
   );
 }
