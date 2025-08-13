@@ -31,11 +31,7 @@ class TaskInfoPage extends StatelessWidget {
             children: [
               Container(
                 width: width(context) * 0.35,
-                height: width(context) * 0.35,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: MyImages.decorationImage(isAssetImage: false, image: fetchTasksModel.image),
-                ),
+                child: MyImages.networkImage(fetchTasksModel.image),
               ),
               // MyCircle.circle(width(context) * 0.35, color: Colors.white),
               Column(
@@ -107,14 +103,14 @@ class TaskInfoPage extends StatelessWidget {
                     Icons.date_range,
                     white,
                   ),
-                  buildTwoTextRow(
-                    context,
-                    ' Assignees',
-                    //TODO assignees people
-                    ' ${DateFormat('yyyy-MM-d').format(fetchTasksModel.dueDate!)}',
-                    Icons.people,
-                    white,
-                  ),
+                  // buildTwoTextRow(
+                  //   context,
+                  //   ' Assignees',
+                  //   //TODO assignees people
+                  //   ' ${DateFormat('yyyy-MM-d').format(fetchTasksModel.dueDate!)}',
+                  //   Icons.people,
+                  //   white,
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
