@@ -133,17 +133,14 @@ class InvitationApi {
       'Authorization': 'Bearer $token'
     };
     var data = {
-      "sender": senderId,
       "receiver": receiverId,
-      "workspace": workspaceId,
-      "status": "pending"
     };
 
     late SendInviteModel sendInviteModel;
 
     try {
       var response = await dio.request(
-        '/workspaces/$senderId/invite_user/',
+        '/workspaces/$workspaceId/invite_user/',
         options: Options(
           method: 'POST',
           headers: headers,

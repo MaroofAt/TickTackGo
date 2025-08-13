@@ -1,16 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/data/models/projects/retrieve_project_model.dart';
+import 'package:pr1/presentation/screen/projects/build_members_list.dart';
+import 'package:pr1/presentation/widgets/text.dart';
 
 class BuildProjectInfoPage extends StatelessWidget {
-  const BuildProjectInfoPage({super.key});
+  final RetrieveProjectModel retrieveProjectModel;
+
+  const BuildProjectInfoPage(this.retrieveProjectModel, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      padding: const EdgeInsets.all(16),
       width: width(context),
       height: height(context),
-      // child: ,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 20,
+          children: [
+            MyText.text1(
+              retrieveProjectModel.title,
+              textColor: white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+            buildCreateAtRow(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 20,
+              children: [
+                MyText.text1('project members: ', textColor: white, fontSize: 20),
+                SizedBox(
+                    height: height(context) * 0.5,
+                    child: BuildMembersList(retrieveProjectModel)),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Row buildCreateAtRow() {
+    return Row(
+      children: [
+        MyText.text1('Created at: ', textColor: white, fontSize: 18),
+        MyText.text1(
+            DateFormat('yyyy - M - dd').format(retrieveProjectModel.createdAt!),
+            textColor: white,
+            fontSize: 18),
+      ],
     );
   }
 }
-

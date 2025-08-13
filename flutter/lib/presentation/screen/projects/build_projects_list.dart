@@ -29,7 +29,7 @@ class BuildProjectsList extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => BlocProvider(
-        create: (context) => ProjectsCubit(),
+        create: (BuildContext context) => ProjectsCubit(),
         child: PopScope(
           onPopInvokedWithResult: (didPop, result) {
             if (didPop && result != null) {

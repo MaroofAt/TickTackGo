@@ -71,10 +71,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                         ),
                         MyGestureDetector.gestureDetector(
                           onTap: () {
-                            if(isAdmin(retrieveWorkspace.owner!.id)) {
-                              
-                            }else {
-                              pushScreen(
+                            pushScreen(
                               context,
                               BlocProvider(
                                 create: (context) => InvitationCubit(),
@@ -83,7 +80,6 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                                     workspaceId: retrieveWorkspace.id),
                               ),
                             );
-                            }
                           },
                           child: Container(
                             height: width(context) * 0.1,

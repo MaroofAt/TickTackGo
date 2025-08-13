@@ -84,6 +84,7 @@ class InvitesList extends StatelessWidget {
                           },
                         ),
                       ),
+                      SizedBox(width: width(context) * 0.15),
                       MyGestureDetector.gestureDetector(
                         onTap: () {
                           clickedItemId = userInvitesList[index].id;
