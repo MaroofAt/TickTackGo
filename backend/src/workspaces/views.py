@@ -14,8 +14,9 @@ from tools.responses import method_not_allowed, exception_response
 from tools.roles_check import is_workspace_owner
 
 
-from .models import Workspace , Workspace_Membership
+from .models import Workspace , Workspace_Membership , Invite
 from .serializers import WorkspaceSerializer , InviteSerializer
+from django.utils import timezone
 from .permissions import IsWorkspaceMember
 
 # Create your views here.
@@ -229,3 +230,35 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             return Response(serializer.data , status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+    
+    @extend_schema(
+        summary = "Cancel Invite",
+        operation_id = "cancel_invite",
+        description = "Owner how send invite can cancel the invite",
+        tags = ["Workspaces/Invite"]
+    )
+    @action(detail=True , methods=['post'] , serializer_class=InviteSerializer)
+    def cancel_invite (self , request , pk):
+        Invite.objects.filter(expire_date__lt = timezone.now()).delete()
+        if not request.data.get('invite'):
+            return Response({"message": "the invite is required!"}, status.HTTP_400_BAD_REQUEST)
+        invite = Invite.objects.filter(id = request.data.get('invite')).first()
+        
+        sender = Workspace_Membership.objects.filter(member = request.user.id , workspace = pk)
+        if not sender.exists():
+            return Response({'message': 'you are not member in this workspace'} , status=status.HTTP_400_BAD_REQUEST)
+        sender = Workspace_Membership.objects.filter(member = request.user.id , workspace = pk).first()
+        print(sender.role)
+        if sender.role != 'owner':
+            return Response({'message': 'You are not the Owner of the workspace'} , status=status.HTTP_400_BAD_REQUEST)
+
+        if not invite:
+            return Response({"message":"the invite specified doesn't exist!  maybe it expired :( "} , status.HTTP_404_NOT_FOUND)
+        if invite.sender != request.user:
+            return Response({"message":"the invite specified doesn't belong to this owner"} , status.HTTP_400_BAD_REQUEST)
+        if not invite.valid_invite():
+            return Response({"message": "the invite specified status isn't pending! it can't be updated"}, status.HTTP_400_BAD_REQUEST)
+        
+        invite.status = 'cancelled'
+        invite.save()
+        return Response(None , status.HTTP_202_ACCEPTED)
