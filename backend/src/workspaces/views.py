@@ -182,7 +182,12 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             status=status.HTTP_400_BAD_REQUEST
             )
         return super().partial_update(request, *args, **kwargs)
-    @extend_schema(exclude=True)
+    @extend_schema(
+        summary="Delete Workspace",
+        operation_id="delete_workspace",
+        description="Deleting The Workspace Specified",
+        tags=["Workspaces"],
+    )
     def destroy(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
         pk = kwargs.get('pk')
         if is_workspace_owner(request.user.id,pk):
