@@ -1,0 +1,32 @@
+POST http://127.0.0.1:8000/api/issues/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1MjcwMTgxLCJpYXQiOjE3NTUyNjY1ODEsImp0aSI6IjdiODkzMjZhNzIwYzQ0YTRhNGRkZTlhMDA4ZGQ3OTcwIiwidXNlcl9pZCI6MX0.gS34oM_w_jct0DYtJc3atDdIrJd-B62G5F8b_h6aYYo
+
+{
+    "title": "Issue 1",
+    "description": "new issue to solve",
+    "project": 1
+}
+
+
+###
+
+GET http://127.0.0.1:8000/api/issues/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjc0MzIwLCJpYXQiOjE3NTUyNzA3MjAsImp0aSI6IjIwYjBkNWNkZTk3MjQzODc5MzQxMjIyYTYzNmQwMWJlIiwidXNlcl9pZCI6MX0.m1SeGI9hUZuHNa5WGyD8slW1lrsOaShMoYoKqY76Wxg
+
+{
+    "project": 1
+}
+
+
+###
+
+
+GET http://127.0.0.1:8000/api/issues/1/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjc0MzIwLCJpYXQiOjE3NTUyNzA3MjAsImp0aSI6IjIwYjBkNWNkZTk3MjQzODc5MzQxMjIyYTYzNmQwMWJlIiwidXNlcl9pZCI6MX0.m1SeGI9hUZuHNa5WGyD8slW1lrsOaShMoYoKqY76Wxg
+
+{
+    "project": 1
+}

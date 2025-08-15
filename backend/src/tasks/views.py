@@ -17,7 +17,7 @@ from .permissions import IsTaskProjectMember, IsTaskProjectOwner
 
 from projects.permissions import IsProjectMember
 
-from tools.roles_check import can_edit_project , is_creator ,is_project_owner
+from tools.roles_check import can_edit_project , is_creator ,is_project_owner , is_task_project_owner
 from tools.responses import method_not_allowed, exception_response, required_response
 
 
@@ -279,6 +279,19 @@ class TaskViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
 
+    @extend_schema(
+        summary="Cancel Tasks",
+        operation_id="cancel_task",
+        description="Cancel Specified Task",
+        tags=["Tasks"]
+    )
+    @action(detail=True , methods=['get'] , serializer_class = TaskSerializer)
+    def cancel_task(self , request , pk):
+        task = Task.objects.filter(pk=pk).first()
+        if is_task_project_owner(request.user.id , pk ) or is_creator(request.user.id , pk):
+            self.perform_destroy(instance=task)
+            return Response(None , status.HTTP_200_OK)
+        return Response({"message":"You are not the owner or the creator of the task"} , status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
