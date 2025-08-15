@@ -1,5 +1,6 @@
 import '../../data/models/comments/comment.dart';
 import '../../data/models/issues/issue_model.dart';
+import '../../data/models/user/user.dart';
 
 String all="All";
 String number_of_issues_notsolved="$notSolvedIssuesCount";
@@ -26,7 +27,7 @@ final List<String> allcomment = [
 final List<Issue> sampleIssues = [
   Issue(
     id: '1',
-    authorId:'1',
+    authorId: '1',
     title: 'Login Issue',
     description: 'Users cannot login after latest app update',
     projectId: 'project_123',
@@ -35,16 +36,18 @@ final List<Issue> sampleIssues = [
     updatedAt: DateTime(2023, 5, 15),
     comments: [
       Comment(
-        id: 'c1',
-        content: 'Have you tried resetting password?',
-        authorName: 'Ahmed',
+        id: 11,
+        task: 1,
+        user: CommentUser(id: 101, username: 'ali'),
+        body: 'Have you tried resetting password?',
         createdAt: DateTime(2023, 5, 11),
+        updatedAt: DateTime(2023, 5, 11),
       ),
     ],
   ),
   Issue(
     id: '2',
-    authorId:'1',
+    authorId: '1',
     title: 'UI Design Improvement',
     description: 'Homepage needs better visual hierarchy',
     projectId: 'project_456',
@@ -53,49 +56,56 @@ final List<Issue> sampleIssues = [
     updatedAt: DateTime(2023, 5, 1),
     comments: [
       Comment(
-        id: 'c2',
-        content: 'New design mockups completed',
-        authorName: 'Sarah',
+        id: 22,
+        task: 2,
+        user: CommentUser(id: 102, username: 'layla'),
+        body: 'New design mockups completed',
         createdAt: DateTime(2023, 4, 25),
+        updatedAt: DateTime(2023, 4, 25),
       ),
     ],
   ),
   Issue(
     id: '3',
+    authorId: '1',
     title: 'Calculation Error',
-    authorId:'1',
-
     description: 'Numbers not adding correctly in reports',
+    projectId: 'project_123',
     isResolved: false,
     createdAt: DateTime(2023, 5, 5),
-    updatedAt: DateTime(2023, 5, 5), projectId: 'project_123',
+    updatedAt: DateTime(2023, 5, 5),
+    comments: [],
   ),
   Issue(
     id: '4',
-    authorId:'1',
-
+    authorId: '1',
     title: 'Performance Issue',
     description: 'Dashboard takes too long to load',
     projectId: 'project_789',
     isResolved: false,
-
     createdAt: DateTime(2023, 5, 12),
     updatedAt: DateTime(2023, 5, 14),
     comments: [
       Comment(
-        id: 'c3',
-        content: 'This appears to be a server-side issue',
-        authorName: 'Ali',
+        id: 41,
+        task: 4,
+        user: CommentUser(id: 103, username: 'omar'),
+        body: 'This appears to be a server-side issue',
         createdAt: DateTime(2023, 5, 13),
+        updatedAt: DateTime(2023, 5, 13),
       ),
       Comment(
-        id: 'c4',
-        content: 'We are working on a fix',
-        authorName: 'Support Team',
+        id: 42,
+        task: 4,
+        user: CommentUser(id: 104, username: 'sara'),
+        body: 'We are working on a fix',
         createdAt: DateTime(2023, 5, 14),
+        updatedAt: DateTime(2023, 5, 14),
       ),
     ],
   ),
 ];
+
+
 final int notSolvedIssuesCount = sampleIssues.where((issue) => !issue.isResolved).length;
 final List<Issue> unsolvedIssues = sampleIssues.where((issue) => !issue.isResolved).toList();

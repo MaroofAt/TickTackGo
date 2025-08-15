@@ -28,17 +28,17 @@ Future<void> initOneSignal() async {
   OneSignal.User.pushSubscription.addObserver((state) {
     final token = OneSignal.User.pushSubscription.token;
     final id = OneSignal.User.pushSubscription.id;
-
-    print("================ OneSignal Subscription Observer ================");
-    print("🔥 Push Token: ${token ?? 'null'}");
-    print("📦 OneSignal ID: ${id ?? 'null'}");
-    print("===============================================================");
-
-    if (token != null && token.isNotEmpty && id != null) {
-      // sendTokenToServer(token, id);
-    } else {
-      print("⚠️ No token or ID yet. Waiting...");
-    }
+    //
+    // print("================ OneSignal Subscription Observer ================");
+    // print("🔥 Push Token: ${token ?? 'null'}");
+    // print("📦 OneSignal ID: ${id ?? 'null'}");
+    // print("===============================================================");
+    //
+    // if (token != null && token.isNotEmpty && id != null) {
+    //   // sendTokenToServer(token, id);
+    // } else {
+    //   print("⚠️ No token or ID yet. Waiting...");
+    // }
   });
 
 

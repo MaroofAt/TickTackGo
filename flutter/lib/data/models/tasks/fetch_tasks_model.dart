@@ -41,25 +41,25 @@ class FetchTasksModel {
 
   factory FetchTasksModel.onSuccess(Map<String, dynamic> json) =>
       FetchTasksModel(
-        id: json["id"],
-        title: json["title"],
-        description: json["description"],
-        startDate: DateTime.parse(json["start_date"]),
-        dueDate: DateTime.parse(json["due_date"]),
-        completeDate: json["complete_date"] == null
-            ? null
-            : DateTime(json["complete_date"]),
-        creator: json["creator"],
-        workspace: json["workspace"],
-        project: json["project"],
-        image: json["image"],
-        outDated: json["out_dated"],
+        id: json["id"] ?? 0,
+        title: json["title"] ?? '',
+        description: json["description"] ?? '',
+        startDate: json["start_date"] != null ? DateTime.parse(json["start_date"]) : null,
+        dueDate: json["due_date"] != null ? DateTime.parse(json["due_date"]) : null,
+        completeDate: json["complete_date"] != null ? DateTime.parse(json["complete_date"]) : null,
+        creator: json["creator"] ?? 0,
+        workspace: json["workspace"] ?? 0,
+        project: json["project"] ?? 0,
+        image: json["image"] ?? '',
+        outDated: json["out_dated"] ?? false,
         parentTask: json["parent_task"],
-        assignees: List<dynamic>.from(json["assignees"].map((x) => x)),
-        status: json["status"],
-        priority: json["priority"],
-        locked: json["locked"],
-        reminder: json["reminder"],
+        assignees: json["assignees"] != null
+            ? List<dynamic>.from(json["assignees"].map((x) => x))
+            : [],
+        status: json["status"] ?? '',
+        priority: json["priority"] ?? '',
+        locked: json["locked"] ?? false,
+        reminder: json["reminder"] != null ? DateTime.parse(json["reminder"]) : null,
         errorMessage: '',
       );
 
