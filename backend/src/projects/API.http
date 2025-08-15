@@ -30,3 +30,43 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 {
     "project": 1
 }
+
+
+###
+
+
+POST http://127.0.0.1:8000/api/issues/create_replie/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjk3MjU0LCJpYXQiOjE3NTUyOTM2NTQsImp0aSI6IjJhNWZlZmY5ODJlYzQyNWZiNDQ0NTZhZWM0MjBjNTY3IiwidXNlcl9pZCI6MX0.p3ViS94bBmy3fG-mPKcnKlkhR2DHYtWcVQeVFuiFOjU
+
+{
+    "body": "Issue replie 2",
+    "issue": 1
+}
+
+
+###
+
+
+GET http://127.0.0.1:8000/api/issues/list_replie/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjk3MjU0LCJpYXQiOjE3NTUyOTM2NTQsImp0aSI6IjJhNWZlZmY5ODJlYzQyNWZiNDQ0NTZhZWM0MjBjNTY3IiwidXNlcl9pZCI6MX0.p3ViS94bBmy3fG-mPKcnKlkhR2DHYtWcVQeVFuiFOjU
+
+{
+    "project": 1,
+    "issue": 1
+}
+
+
+###
+
+
+
+GET http://127.0.0.1:8000/api/issues/2/retrieve_replie/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjk3MjU0LCJpYXQiOjE3NTUyOTM2NTQsImp0aSI6IjJhNWZlZmY5ODJlYzQyNWZiNDQ0NTZhZWM0MjBjNTY3IiwidXNlcl9pZCI6MX0.p3ViS94bBmy3fG-mPKcnKlkhR2DHYtWcVQeVFuiFOjU
+
+{
+    "project": 1,
+    "issue": 1
+}

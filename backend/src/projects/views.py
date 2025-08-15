@@ -15,7 +15,7 @@ from tools.responses import exception_response , required_response , method_not_
 from tools.roles_check import is_project_workspace_member , is_project_member
 
 from .models import Project, Project_Membership , Issue ,Issue_Replies
-from .serializers import ProjectSerializer , ProjectMembershipSerializer , IssueSerializer , ShowIssueSerializer,  IssueRepliesSerializer
+from .serializers import ProjectSerializer , ProjectMembershipSerializer , IssueSerializer , ShowIssueSerializer,  IssueRepliesSerializer , ShowIssueRepliesSerializer
 
 # Create your views here.
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -380,6 +380,105 @@ class IssueViewSet(viewsets.ModelViewSet):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @extend_schema(
+        summary="Create Replie",
+        operation_id="create_replie",
+        description="Create replies issue for the issue",
+        tags=['Projects/Issue'],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'body': {'type':'string' , 'example':"description for the new issue" },
+                    'issue': {'type':'integar' , 'example':1 },
+
+                },
+                'required':['issue' , 'body']
+            }
+        },
+    )
+    @action(detail=False , methods=['post'] , serializer_class=IssueRepliesSerializer)
+    def create_replie(self , request):
+        print("Aliiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+        if not request.data.get('body'):
+            return Response({"error":"Body is required to create the replie"}, status.HTTP_400_BAD_REQUEST)
+        
+        if not request.data.get('issue'):
+            return Response({"error":"Issue ID is required to create the replie"}, status.HTTP_400_BAD_REQUEST)
+        
+        issue = Issue.objects.filter(pk = request.data.get('issue'))
+        if not issue.exists():
+            return Response({"error":"Issue doesn't exist :( "}, status.HTTP_404_NOT_FOUND)
+        issue = Issue.objects.filter(pk = request.data.get('issue')).first()
+        if not is_project_workspace_member(request.user.id , issue.project.id):
+            return Response({"error":"You are not member in the project"}, status.HTTP_400_BAD_REQUEST)
+
+        data = request.data.copy()
+        data['user'] = request.user.id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @extend_schema(
+        summary="List replie",
+        operation_id="list_replie",
+        description="List the replie to the issue",
+        tags=['Projects/Issue']
+    )
+    @action(detail=False , methods=['get'] , serializer_class=ShowIssueRepliesSerializer)
+    def list_replie(self , request , *args, **kwargs):
+        if not request.data.get('project'):
+            return Response(
+                {"error": "Project ID is required in request data"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if not request.data.get('issue'):
+            return Response(
+                {"error": "Issue ID is required in request data"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if not is_project_workspace_member(request.user.id, request.data.get('project')):
+            return Response(
+                {"error": "You are not a member of this project"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        replies = Issue_Replies.objects.filter(issue = request.data.get('issue'))
+        serializer = self.get_serializer(replies, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+    @extend_schema(
+        summary="Retrieve replie",
+        operation_id="retrieve_replie",
+        description="Retrieve the replie to the issue",
+        tags=['Projects/Issue']
+    )
+    @action(detail=True , methods=['get'] , serializer_class=ShowIssueRepliesSerializer)
+    def retrieve_replie(self , request , *args, **kwargs):
+        if not request.data.get('project'):
+            return Response(
+                {"error": "Project ID is required in request data"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if not request.data.get('issue'):
+            return Response(
+                {"error": "Issue ID is required in request data"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if not is_project_workspace_member(request.user.id, request.data.get('project')):
+            return Response(
+                {"error": "You are not a member of this project"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        replies = Issue_Replies.objects.filter(issue = request.data.get('issue') , pk = kwargs.get('pk'))
+
+        serializer = self.get_serializer(replies, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):

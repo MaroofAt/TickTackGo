@@ -155,6 +155,29 @@ class IssueRepliesSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'body',
+            'issue',
+            'user',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+        }
+
+
+class ShowIssueRepliesSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = [
+                'id',
+                'username',
+            ]
+    user = UserSerializer()
+    class Meta:
+        model = Issue_Replies
+        fields = [
+            'id',
+            'body',
+            'issue',
             'user',
         ]
         extra_kwargs = {
