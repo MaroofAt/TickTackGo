@@ -86,11 +86,20 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
         extra_kwargs = {
+            'title': {
+                'required': False
+            },
             'image': {
                 'required': False
             },
             'description': {
                 'required': False
+            },
+            'created_at': {
+                'read_only': True
+            },
+            'updated_at': {
+                'read_only': True
             }
         }
 
@@ -115,8 +124,14 @@ class WorkspaceSerializer(serializers.ModelSerializer):
                 parent_project__isnull=True,
                 workspace_id=obj.id
             ),
-            many=True
+            many=True,
+            read_only=True
         ).data
+
+    def validate(self, attrs):
+        if self.instance is None and 'title' not in attrs:  # For Create
+            raise serializers.ValidationError({"title": "This field is required."})
+        return attrs
 
     def create(self, validated_data):
         try:

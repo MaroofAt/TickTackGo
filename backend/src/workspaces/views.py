@@ -168,19 +168,42 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     # def update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
     #     return method_not_allowed()
     #     return super().update(request, *args, **kwargs)
-    @extend_schema(exclude=True)
-    def partial_update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+    @extend_schema(
+        summary="Partial Update Workspace",
+        operation_id="partial_update_workspace",
+        description="Updating The Workspace Specified",
+        tags=["Workspaces"],
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Team Workspace 1'},
+                    'description': {'type': 'string', 'example': 'Our Team Workspace'},
+                    'image': {'type': 'string' , 'format': 'binary'}
+                }
+            },
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Team Workspace 1'},
+                    'description': {'type': 'string', 'example': 'Our Team Workspace'},
+                }
+            },
+        }
+    )
+    def partial_update(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not is_workspace_owner(request.user.id,pk):
             return Response(
             {"detail": "User is not the owner"},
             status=status.HTTP_400_BAD_REQUEST
             )
-        if ( request.data.get('members') and request.data.get('owner')):
+        if ( request.data.get('members') or request.data.get('owner')):
             return Response(
             {"detail": "you can't change members or owners"},
             status=status.HTTP_400_BAD_REQUEST
             )
+        print(f'\n\nABBAS\n\n')
         return super().partial_update(request, *args, **kwargs)
     @extend_schema(
         summary="Delete Workspace",
@@ -188,7 +211,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         description="Deleting The Workspace Specified",
         tags=["Workspaces"],
     )
-    def destroy(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+    def destroy(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if is_workspace_owner(request.user.id,pk):
             return super().destroy(request, *args, **kwargs)
