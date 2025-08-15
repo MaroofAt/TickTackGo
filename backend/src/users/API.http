@@ -45,7 +45,7 @@ POST http://127.0.0.1:8000/api/users/token/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "alialmusfi3@gmail.com",
+    "email": "alialmusfi@gmail.com",
     "password": "aloosh1234"
 }
 
@@ -97,10 +97,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 #invite user#
 POST http://127.0.0.1:8000/api/workspaces/2/invite_user/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDg0NjgwLCJpYXQiOjE3NTQ0ODEwODAsImp0aSI6IjdkYTQzYmM3YmQxMTQzNjViMzAyNDIwOWY0ZThhMDMxIiwidXNlcl9pZCI6Mn0.qOyrn7NqEhNnzqFB97HVXbvje20b-o10VuwB-uDxooM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1MjU0OTM4LCJpYXQiOjE3NTUyNTEzMzgsImp0aSI6IjA3MTYxOTllMDlkMDQ3YmRhYjdmYmEyNDZjZmQ3OGQ1IiwidXNlcl9pZCI6Mn0.WyrGIcQTPY_3WdEt4mmHmRDaWgs5quSyL8tf0-fkMCA
 
 {
-    "receiver": 3
+    "receiver": 1
 
 }
 
@@ -115,10 +115,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 POST http://127.0.0.1:8000/api/users/accept_invite/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDg0OTk5LCJpYXQiOjE3NTQ0ODEzOTksImp0aSI6IjQ5MzhiN2JmZjc2YzQ2YjZhNWMyMDI5MDlkY2FlNTQxIiwidXNlcl9pZCI6M30.xFHdvAvZewL9w8ToG4mTekVoNTY6mgAkEqil241LHfs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1MjU2MjY0LCJpYXQiOjE3NTUyNTI2NjQsImp0aSI6IjBkMWIzZTQ5MzUwYTQyMzU4YmI0YzJkYmE1NzQ3NDJiIiwidXNlcl9pZCI6MX0.l23U-kcwnFnEz613U4nSRa2Hdrx3y6ggjaFEUtuMrUg
 
 {
-    "invite": 3
+    "invite": 4
 
 }
 
@@ -135,6 +135,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ###
 
+
+POST http://127.0.0.1:8000/api/workspaces/2/cancel_invite/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1MjU0OTM4LCJpYXQiOjE3NTUyNTEzMzgsImp0aSI6IjA3MTYxOTllMDlkMDQ3YmRhYjdmYmEyNDZjZmQ3OGQ1IiwidXNlcl9pZCI6Mn0.WyrGIcQTPY_3WdEt4mmHmRDaWgs5quSyL8tf0-fkMCA
+
+{
+    "invite":4
+}
+
+###
+
 GET http://127.0.0.1:8000/api/users/start_app/ HTTP/1.1
 Content-Type: application/json
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5Mjk3MTk5LCJpYXQiOjE3NDkyOTM1OTksImp0aSI6IjRmYTgwMzgyNTFiOTRhNDRiYzMwYWU3NTU1ZTQ4MjhhIiwidXNlcl9pZCI6Mn0.2FrXWHiOZRlfuWS9dBBiw__3MsQTA-TTvXrQCvxN5-E
+
+
