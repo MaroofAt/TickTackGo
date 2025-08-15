@@ -70,3 +70,17 @@ class ProjectDeletingFailedState extends ProjectsState {
 
   ProjectDeletingFailedState(this.errorMessage);
 }
+
+class ChangingUserRoleState extends ProjectsState {}
+
+class ChangingUserRoleSucceededState extends ProjectsState {
+  ChangeUserRoleModel changeUserRoleModel;
+
+  ChangingUserRoleSucceededState(this.changeUserRoleModel);
+}
+
+class ChangingUserRoleFailedState extends ProjectsState {
+  String errorMessage;
+
+  ChangingUserRoleFailedState(this.errorMessage);
+}

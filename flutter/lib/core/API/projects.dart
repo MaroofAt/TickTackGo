@@ -9,8 +9,7 @@ import 'package:pr1/data/models/projects/fetch_projects_model.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 
 class ProjectsApi {
-  static Future<List<FetchProjectsModel>> fetchProjects(
-      int workspaceId, String token) async {
+  static Future<List<FetchProjectsModel>> fetchProjects(int workspaceId, String token) async {
     var headers = {'Authorization': 'Bearer $token'};
 
     var queryParameters = {'workspace': workspaceId};
@@ -40,8 +39,7 @@ class ProjectsApi {
     return projects;
   }
 
-  static Future<CreateProjectModel> createProject(String title, int workspaceId,
-      String color, int? parentProject, String token) async {
+  static Future<CreateProjectModel> createProject(String title, int workspaceId, String color, int? parentProject, String token) async {
     var headers = {
       'Content-Type': 'application/json',
       'Authorization':
@@ -81,8 +79,7 @@ class ProjectsApi {
     return createProjectModel;
   }
 
-  static Future<RetrieveProjectModel> retrieveProject(
-      int projectId, String token) async {
+  static Future<RetrieveProjectModel> retrieveProject(int projectId, String token) async {
     var headers = {'Authorization': 'Bearer $token'};
 
     late RetrieveProjectModel retrieveProjectModel;
@@ -107,8 +104,7 @@ class ProjectsApi {
     return retrieveProjectModel;
   }
 
-  static Future<AddMemberToProjectModel> addMemberToProject(
-      int projectId, int userId, String token) async {
+  static Future<AddMemberToProjectModel> addMemberToProject(int projectId, int userId, String token) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -141,8 +137,7 @@ class ProjectsApi {
     return addMemberToProjectModel;
   }
 
-  static Future<ChangeUserRoleModel> changeUserRole(
-      String projectId, String newRole, String userId, String token) async {
+  static Future<ChangeUserRoleModel> changeUserRole(int projectId, String newRole, int userId, String token) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -172,8 +167,7 @@ class ProjectsApi {
     return changeUserRoleModel;
   }
 
-  static Future<DeleteProjectModel> deleteProject(
-      int projectId, String token) async {
+  static Future<DeleteProjectModel> deleteProject(int projectId, String token) async {
     var headers = {'Authorization': 'Bearer $token'};
     late DeleteProjectModel deleteProjectModel;
 
@@ -196,4 +190,5 @@ class ProjectsApi {
     }
     return deleteProjectModel;
   }
+
 }

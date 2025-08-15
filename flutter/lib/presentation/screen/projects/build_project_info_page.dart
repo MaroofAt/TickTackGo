@@ -4,6 +4,8 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/presentation/screen/projects/build_members_list.dart';
+import 'package:pr1/presentation/widgets/buttons.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class BuildProjectInfoPage extends StatelessWidget {
@@ -29,11 +31,32 @@ class BuildProjectInfoPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
             buildCreateAtRow(),
+            buildCompletedRow(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 20,
               children: [
-                MyText.text1('project members: ', textColor: white, fontSize: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MyText.text1('project members: ',
+                        textColor: white, fontSize: 20),
+                    MyGestureDetector.gestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        height: height(context) * 0.05,
+                        width: width(context) * 0.3,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(12)
+                        ),
+                        child: Center(
+                          child: MyText.text1('add members'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(
                     height: height(context) * 0.5,
                     child: BuildMembersList(retrieveProjectModel)),
@@ -42,6 +65,16 @@ class BuildProjectInfoPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Row buildCompletedRow() {
+    return Row(
+      children: [
+        MyText.text1('completed: ', textColor: white, fontSize: 18),
+        MyText.text1(retrieveProjectModel.ended.toString(),
+            textColor: white, fontSize: 18),
+      ],
     );
   }
 
