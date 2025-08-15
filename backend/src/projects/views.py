@@ -7,15 +7,15 @@ from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema , OpenApiParameter , OpenApiExample
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
-from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner
+from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , IsProjectMember
 
 from users.models import User
 
 from tools.responses import exception_response , required_response , method_not_allowed
 from tools.roles_check import is_project_workspace_member , is_project_member
 
-from .models import Project, Project_Membership
-from .serializers import ProjectSerializer , ProjectMembershipSerializer
+from .models import Project, Project_Membership , Issue ,Issue_Replies
+from .serializers import ProjectSerializer , ProjectMembershipSerializer , IssueSerializer , ShowIssueSerializer,  IssueRepliesSerializer
 
 # Create your views here.
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -270,6 +270,126 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return method_not_allowed()
         return super().update(request, *args, **kwargs)
     
+    @extend_schema(exclude=True)
+    def partial_update(self, request, *args, **kwargs):
+        return method_not_allowed()
+        return super().partial_update(request, *args, **kwargs)
+
+
+
+class IssueViewSet(viewsets.ModelViewSet):
+    queryset = Issue.objects.all()
+    serializer_class = IssueSerializer
+
+    
+    def get_permissions(self):
+        self.permission_classes = [IsAuthenticated]
+        if self.action == 'list':
+            self.permission_classes.append(IsProjectMember)
+        if self.action == 'retrieve':
+            self.permission_classes.append(IsProjectWorkspaceMember)
+        if self.action == 'create':
+            self.permission_classes.append(IsProjectMember)
+        return super().get_permissions()
+    
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return ShowIssueSerializer
+        return super().get_serializer_class()
+
+    @extend_schema(
+        summary = "Create Issue",
+        operation_id = "create_issue",
+        description="Create issue for task or project",
+        tags=["Projects/Issue"],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'title': {'type':'string' , 'example':"New Issue" },
+                    'desctiption': {'type':'string' , 'example':"description for the new issue" },
+                    'project': {'type':'integar' , 'example':1 },
+
+                },
+                'required':['project' , 'title' , 'description']
+            }
+        },
+    )
+    def create(self , request , *args, **kwargs):
+        if not request.data.get('title'):
+            return required_response('title')
+        if not request.data.get('description'):
+            return required_response('description')
+        if not request.data.get('project'):
+            return required_response('project')
+        # print (request.user)
+        data = request.data.copy()
+        data['user'] = request.user.id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @extend_schema(
+        summary="List Issue",
+        operation_id="list_issue",
+        description="List the issue in the project",
+        tags=['Projects/Issue']
+    )
+    def list(self, request, *args, **kwargs):
+
+        if not request.data.get('project'):
+            return Response(
+                {"error": "Project ID is required in request data"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if not is_project_workspace_member(request.user.id, request.data.get('project')):
+            return Response(
+                {"error": "You are not a member of this project"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        issues = Issue.objects.filter(project=request.data.get('project'))
+        serializer = self.get_serializer(issues, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @extend_schema(
+        summary="Retrieve Issue",
+        operation_id="retrieve_issue",
+        description="Retrieve the issue in the project",
+        tags=['Projects/Issue']
+    )
+    def retrieve(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if not request.data.get('project'):
+            return Response(
+                {"error": "Project ID is required in request data"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if not is_project_workspace_member(request.user.id, request.data.get('project')):
+            return Response(
+                {"error": "You are not a member of this project"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        issues = Issue.objects.filter(project=request.data.get('project') , pk=pk)
+        serializer = self.get_serializer(issues, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+    @extend_schema(exclude=True)
+    def update(self, request, *args, **kwargs):
+        return method_not_allowed()
+        return super().update(request, *args, **kwargs)
+    
+    @extend_schema(exclude=True)
+    def destroy(self, request, *args, **kwargs):
+        return method_not_allowed()
+        return super().destroy(request, *args, **kwargs)
     @extend_schema(exclude=True)
     def partial_update(self, request, *args, **kwargs):
         return method_not_allowed()
