@@ -173,6 +173,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         if task.status == 'in_progress':
             if is_project_owner(request.user.id , task.project) or is_creator(request.user.id , pk) :
                task.status = 'completed' 
+               task.done_assignee = request.user
                task.save()
                return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
         

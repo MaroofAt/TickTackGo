@@ -10,14 +10,14 @@ from drf_spectacular.utils import extend_schema , OpenApiExample
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
 
-from tools.responses import method_not_allowed, exception_response
-from tools.roles_check import is_workspace_owner
+from tools.responses import method_not_allowed, exception_response, required_response
+from tools.roles_check import is_workspace_owner , is_workspace_member
 
 
 from .models import Workspace , Workspace_Membership , Invite
 from .serializers import WorkspaceSerializer , InviteSerializer
 from django.utils import timezone
-from .permissions import IsWorkspaceMember
+from .permissions import IsWorkspaceMember, IsWorkspaceOwner
 
 # Create your views here.
 class WorkspaceViewSet(viewsets.ModelViewSet):
@@ -29,6 +29,8 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         self.permission_classes = [IsAuthenticated]
         if self.action == 'retrieve':
             self.permission_classes.append(IsWorkspaceMember)
+        if self.action == 'kick_member':
+            self.permission_classes.append(IsWorkspaceOwner)
 
         return super().get_permissions()
     def get_queryset(self):
@@ -168,22 +170,49 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     # def update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
     #     return method_not_allowed()
     #     return super().update(request, *args, **kwargs)
-    @extend_schema(exclude=True)
-    def partial_update(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+    @extend_schema(
+        summary="Partial Update Workspace",
+        operation_id="partial_update_workspace",
+        description="Updating The Workspace Specified",
+        tags=["Workspaces"],
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Team Workspace 1'},
+                    'description': {'type': 'string', 'example': 'Our Team Workspace'},
+                    'image': {'type': 'string' , 'format': 'binary'}
+                }
+            },
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Team Workspace 1'},
+                    'description': {'type': 'string', 'example': 'Our Team Workspace'},
+                }
+            },
+        }
+    )
+    def partial_update(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not is_workspace_owner(request.user.id,pk):
             return Response(
             {"detail": "User is not the owner"},
             status=status.HTTP_400_BAD_REQUEST
             )
-        if ( request.data.get('members') and request.data.get('owner')):
+        if ( request.data.get('members') or request.data.get('owner')):
             return Response(
             {"detail": "you can't change members or owners"},
             status=status.HTTP_400_BAD_REQUEST
             )
         return super().partial_update(request, *args, **kwargs)
-    @extend_schema(exclude=True)
-    def destroy(self, request, *args, **kwargs): # NOT ALLOWED! #TODO STILL_NOT_ALLOWED
+    @extend_schema(
+        summary="Delete Workspace",
+        operation_id="delete_workspace",
+        description="Deleting The Workspace Specified",
+        tags=["Workspaces"],
+    )
+    def destroy(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if is_workspace_owner(request.user.id,pk):
             return super().destroy(request, *args, **kwargs)
@@ -262,3 +291,48 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         invite.status = 'cancelled'
         invite.save()
         return Response(None , status.HTTP_202_ACCEPTED)
+    
+    @extend_schema(
+        summary = "Kick Member",
+        operation_id = "kick_member",
+        description = "Kick Member From Workspace",
+        tags = ["Workspaces"],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'member':{'type':'integer' , 'example':1}
+                }
+            }
+        }
+    )
+    @action(detail=True , methods=['post'])
+    def kick_member(self, request, pk):
+        try:
+            if 'member' not in request.data:
+                return required_response('member')
+            member = request.data.get('member')
+            if not is_workspace_member(member, pk):
+                return Response(
+                    {'detail': 'can\'t kick a person who is not a member of the workspace'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            membership_object = Workspace_Membership.objects.filter(member_id=member,workspace=pk).first()
+            if not membership_object:
+                return Response(
+                    {"detail": 'membership doesn\'t exist'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            try:
+                membership_object.delete()
+            except Exception as ex:
+                return Response(
+                    {'error': 'can\'t delete the membership object'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+            return Response(
+                {},
+                status=status.HTTP_204_NO_CONTENT
+            )
+        except Exception as e:
+            return exception_response(e)
