@@ -38,6 +38,13 @@ class Task(TimeStampedModel):
         null=True,
         blank=True
     )
+    done_assignee = models.ForeignKey(
+        User,
+        related_name='done_assignees',
+        on_delete = models.CASCADE,
+        null=True,
+        blank=True
+    )
     assignees = models.ManyToManyField(
         User,
         through="Assignee",
