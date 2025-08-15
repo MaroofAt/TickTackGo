@@ -55,7 +55,7 @@ class RetrieveProjectModel {
   factory RetrieveProjectModel.error(String errorMessage) =>
       RetrieveProjectModel(
         id: 0,
-        title:'',
+        title: '',
         color: '',
         ended: false,
         workspace: 0,
@@ -65,7 +65,6 @@ class RetrieveProjectModel {
         updatedAt: null,
         errorMessage: errorMessage,
       );
-
 }
 
 class MemberElement {
@@ -97,6 +96,7 @@ class MemberElement {
 }
 
 class MemberMember {
+  int id;
   String username;
   String email;
   String image;
@@ -107,6 +107,7 @@ class MemberMember {
   DateTime updatedAt;
 
   MemberMember({
+    required this.id,
     required this.username,
     required this.email,
     required this.image,
@@ -118,6 +119,7 @@ class MemberMember {
   });
 
   factory MemberMember.fromJson(Map<String, dynamic> json) => MemberMember(
+        id: json["id"],
         username: json["username"],
         email: json["email"],
         image: json["image"],

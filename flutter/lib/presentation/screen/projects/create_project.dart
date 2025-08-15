@@ -168,8 +168,13 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
       builder: (BuildContext context) {
         return AlertDialog(
           // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: MyText.text1('Pick a color'),
-          content: SingleChildScrollView(
+          title: SizedBox(
+              width: width(context),
+              height: height(context) * 0.05,
+              child: MyText.text1('Pick a color', textColor: black, textAlign: TextAlign.center)),
+          content: SizedBox(
+            width: width(context) * 0.9,
+            height: height(context) * 0.48,
             child: ColorPicker(
               pickerColor: selectedColor,
               onColorChanged: (Color color) {
@@ -182,11 +187,15 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: MyText.text1('Select'),
-              onPressed: () {
-                popScreen(context);
-              },
+            SizedBox(
+              width: width(context) * 0.2,
+              height: height(context) * 0.05,
+              child: TextButton(
+                child: MyText.text1('Select'),
+                onPressed: () {
+                  popScreen(context);
+                },
+              ),
             ),
           ],
         );

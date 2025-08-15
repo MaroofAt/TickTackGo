@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/core/API/projects.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/projects/add_member_to_project.dart';
+import 'package:pr1/data/models/projects/change_user_role_model.dart';
 import 'package:pr1/data/models/projects/create_project_model.dart';
 import 'package:pr1/data/models/projects/delete_project_model.dart';
 import 'package:pr1/data/models/projects/fetch_projects_model.dart';
@@ -78,6 +79,19 @@ class ProjectsCubit extends Cubit<ProjectsState> {
       emit(ProjectDeletingSucceededState());
     } else {
       emit(ProjectDeletingFailedState(deleteProjectModel.errorMessage));
+    }
+  }
+
+  Future<void> changeUserRole(
+      int userId, int projectId, String newRole) async {
+    emit(ChangingUserRoleState());
+
+    ChangeUserRoleModel changeUserRoleModel =
+        await ProjectsApi.changeUserRole(projectId, newRole, userId, token);
+    if (changeUserRoleModel.errorMessage.isEmpty) {
+      emit(ChangingUserRoleSucceededState(changeUserRoleModel));
+    } else {
+      emit(ChangingUserRoleFailedState(changeUserRoleModel.errorMessage));
     }
   }
 
