@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/comment_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
@@ -44,7 +46,9 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
        popScreen(context);
       }
           , icon:SizedBox(width: 10,child: Icon(Icons.arrow_back_sharp,color: ampleOrange,size: 24,))),),
-      body:Column(
+      body:BlocBuilder<CommentCubit, CommentState>(
+  builder: (context, comments) {
+    return Column(
         crossAxisAlignment:CrossAxisAlignment.start,
         children: [
           Row(
@@ -82,13 +86,15 @@ SizedBox(width:10)
             iconsuf:IconButton(onPressed: (){
     if (commentcontroller.text.isNotEmpty) {
     setState(() {
-    widget.issue.comments.add(Comment(
-    id: DateTime.now().millisecondsSinceEpoch.toString(),
-    content: commentcontroller.text,
-    authorName: "Current User", // Replace with actual user
-    createdAt: DateTime.now(),
-    ));
-    commentcontroller.clear();
+      context.read<CommentCubit>().addComment(2, commentcontroller.text);
+    // widget.issue.comments.add(Comment(
+    // id: DateTime.now().millisecondsSinceEpoch.toString(),
+    // content: commentcontroller.text,
+    // authorName: "Current User", // Replace with actual user
+    // createdAt: DateTime.now(),
+    // ));
+    // commentcontroller.clear();
+      
     });
     }
     },icon:Icon(Icons.send,color:parrotGreen,)),
@@ -110,11 +116,11 @@ SizedBox(width:10)
                       color: Colors.grey[800],
                       child: ListTile(
                         title: Text(
-                          comment.content,
+                          comment.body,
                           style: TextStyle(color: white),
                         ),
                         subtitle: Text(
-                          "By ${comment.authorName} • ${comment.createdAt.toString().split(' ')[0]}",
+                          "By ${comment.user.username} • ${comment.createdAt.toString().split(' ')[0]}",
                           style: TextStyle(color: Colors.grey),
                         ),
                       ),
@@ -141,7 +147,9 @@ SizedBox(width:10)
           ),
 
         ],
-      )
+      );
+  },
+)
     );
   }
 }
