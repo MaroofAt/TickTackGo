@@ -23,10 +23,10 @@ from django.utils import timezone
 from .utils import send_otp_email_to_user
 from .filters import UserFilter
 
-from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
-from workspaces.models import Invite , Workspace_Membership
+from workspaces.serializers import InviteSerializer , ShowInvitesSerializer , PointsSerializer
+from workspaces.models import Invite , Workspace_Membership, Points
 from tasks.models import Task
-from tools.responses import exception_response
+from tools.responses import exception_response, required_response
 from tools.roles_check import is_workspace_owner
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
@@ -271,6 +271,7 @@ class UserViewSet(viewsets.ModelViewSet):
             workspace = invite.workspace,
             role = 'member'
         )
+        Points.objects.create(user = request.user, workspace = invite.workspace)
 
         serializer = self.get_serializer(invite)
         return Response(serializer.data , status=status.HTTP_201_CREATED)

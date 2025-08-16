@@ -31,6 +31,12 @@ class Workspace(TimeStampedModel):
         through_fields=("workspace", "member"),
         related_name='joined_workspaces'
     )
+    user_points = models.ManyToManyField(
+        User,
+        through= "Points",
+        through_fields=("workspace", "user"),
+        related_name='points'
+    )
     code = models.UUIDField(default=uuid.uuid4 , unique=True , editable=False) 
     def __str__(self):
         return self.title
@@ -55,6 +61,30 @@ class Workspace_Membership(TimeStampedModel):
     def __str__(self):
         return f' user {str(self.member)} is a member in workspace {str(self.workspace)} as {str(self.role)} '
     
+class Points(TimeStampedModel):
+    class Meta:
+        db_table = 'points'
+        unique_together = ['user', 'workspace']
+    
+    total = models.IntegerField(default=0)
+    important_mission_solver = models.IntegerField(default=0)
+    hard_worker = models.IntegerField(default=0)
+    discipline_member = models.IntegerField(default=0)
+
+    user = models.ForeignKey(
+        User,
+        related_name= 'points_in_workspace',
+        on_delete= models.CASCADE,
+        null=False,
+        blank=False
+    )
+    workspace = models.ForeignKey(
+        Workspace,
+        related_name= 'the_user_points',
+        on_delete= models.CASCADE,
+        null=False,
+        blank=False
+    )
 
 
 def default_invite_expire_date():
@@ -107,4 +137,3 @@ class Invite(TimeStampedModel):
         if self.status == 'pending':
             return True
         return False
-    
