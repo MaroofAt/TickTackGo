@@ -184,7 +184,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     task_points = calculate_task_points(task)
                     task_assignees = task.assignees
                     task_workspace = task.project.workspace
-                    for assignee in task_assignees:
+                    for assignee in task_assignees.all():
                         points_object = Points.objects.filter(user=assignee,workspace=task_workspace).first()
                         points_object.total += task_points.get('total')
                         points_object.hard_worker += task_points.get('hard_work_points')
