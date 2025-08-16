@@ -16,9 +16,12 @@ from .permissions import IsTaskProjectMember, IsTaskProjectOwner
 
 
 from projects.permissions import IsProjectMember
+from workspaces.models import Points
 
 from tools.roles_check import can_edit_project , is_creator ,is_project_owner , is_task_project_owner
 from tools.responses import method_not_allowed, exception_response, required_response
+from tools.points import calculate_task_points
+
 
 
 
@@ -159,25 +162,41 @@ class TaskViewSet(viewsets.ModelViewSet):
     )
     @action(detail=True , methods=['get'] , serializer_class = TaskSerializer)
     def mark_as_completed(self , request , pk):
-        # ### check for the start time (we have to change it and do it in celery)
-        # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
-        # for task in tasks:
-        #     if task.status == 'pending':
-        #         task.status = 'in_progress'
-        #         task.save()
-        # ###        
-        task = Task.objects.filter(pk=pk)
-        if not task.exists():
-            return Response({"detail": "Task existe"} , status=status.HTTP_404_NOT_FOUND)
-        task = task.first()
-        if task.status == 'in_progress':
-            if is_project_owner(request.user.id , task.project) or is_creator(request.user.id , pk) :
-               task.status = 'completed' 
-               task.done_assignee = request.user
-               task.save()
-               return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
-        
-        return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_400_BAD_REQUEST)
+        try:
+            # ### check for the start time (we have to change it and do it in celery)
+            # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
+            # for task in tasks:
+            #     if task.status == 'pending':
+            #         task.status = 'in_progress'
+            #         task.save()
+            # ###        
+            task = Task.objects.filter(pk=pk)
+            if not task.exists():
+                return Response({"detail": "Task exist"} , status=status.HTTP_404_NOT_FOUND)
+            task = task.first()
+            if task.status == 'in_progress':
+                if is_project_owner(request.user.id , task.project) or is_creator(request.user.id , pk) :
+                    task.status = 'completed' 
+                    task.complete_date = timezone.now().date()
+                    task.done_assignee = request.user
+                    task.save()
+                    # Points ###############################################################################################
+                    task_points = calculate_task_points(task)
+                    task_assignees = task.assignees
+                    task_workspace = task.project.workspace
+                    for assignee in task_assignees.all():
+                        points_object = Points.objects.filter(user=assignee,workspace=task_workspace).first()
+                        points_object.total += task_points.get('total')
+                        points_object.hard_worker += task_points.get('hard_work_points')
+                        points_object.important_mission_solver += task_points.get('important_mission_points')
+                        points_object.discipline_member += task_points.get('discipline_points')
+                        points_object.save()
+                    ########################################################################################################
+                    return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
+            
+            return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return exception_response(e)
 
             
     @extend_schema(

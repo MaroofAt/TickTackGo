@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.conf import settings
 from django.db import transaction
 
-from .models import Workspace , Workspace_Membership , Invite
+from .models import Workspace , Workspace_Membership , Invite, Points
 from projects.models import Project
 from users.models import User
 
@@ -153,10 +153,31 @@ class WorkspaceSerializer(serializers.ModelSerializer):
                     workspace = instance,
                     role = 'owner'
                 )
+                Points.objects.create(user=owner, workspace=instance)
             return instance
         except Exception as e:
             raise e
 
+class PointsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Points
+        fields = [
+            'id',
+            'user',
+            'workspace',
+            'total',
+            'important_mission_solver',
+            'hard_worker',
+            'discipline_member',
+            'created_at',
+            'updated_at',
+        ]
+        extra_kwargs = {
+            'created_at': {'read_only':True, 'required':False},
+            'updated_at': {'read_only':True, 'required':False},
+            'user': {'read_only':True},
+            'workspace': {'read_only':True}
+        }
 
 class InviteSerializer(serializers.ModelSerializer):
     class Meta:
