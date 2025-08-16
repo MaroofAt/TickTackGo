@@ -215,6 +215,18 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10  # 10MB
 MAX_WORKSPACES_COUNT_FOR_SINGLE_USER = 10
 MAX_MEMBERS_COUNT_FOR_SINGLE_WORKSPACE = 20
 
+    # -Points
+        # priority
+HIGH_PRIORITY_MISSION = 10
+MEDIUM_PRIORITY_MISSION = 8
+LOW_PRIORITY_MISSION = 6
+        # time
+FINISHED_BEFORE_TIME = 10
+FINISHED_ON_TIME = 8
+FINISHED_AFTER_TIME = 5
+        # task_long
+DAY_POINTS = 1
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
