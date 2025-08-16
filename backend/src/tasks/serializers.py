@@ -2,7 +2,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 
-from .models import Task, Assignee, Comment ,  Inbox_Tasks
+from .models import Task, Assignee, Comment ,  Inbox_Tasks 
 from users.models import User
 
 
@@ -134,3 +134,5 @@ class UpdateInboxTaskSerializer(serializers.ModelSerializer):
             'id': {'read_only':True},
             'user': {'read_only':True},
         } 
+
+

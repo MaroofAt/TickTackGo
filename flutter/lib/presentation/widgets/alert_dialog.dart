@@ -16,7 +16,7 @@ class MyAlertDialog {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) {
+      builder: (_) {
         return AlertDialog(
           backgroundColor: Theme.of(context).dialogBackgroundColor,
           title: const Row(

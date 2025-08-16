@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 String handleDioError(DioException e) {
   if (e.response != null) {
     print(e.response!.data);
-    return e.runtimeType is String
+    return e.response.runtimeType is! Map<String,dynamic>
       ? 'something went wrong please Try again later'
       : e.response!.data["detail"] ??
         e.response!.data["message"] ??

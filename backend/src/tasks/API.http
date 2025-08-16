@@ -1,6 +1,6 @@
 POST http://127.0.0.1:8000/api/tasks/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0MzAyNjIzLCJpYXQiOjE3NTQyOTkwMjMsImp0aSI6IjIyZjVmZmExMjg2MzQ1MjA5NDZhMmY3NzM4YTcwMWM4IiwidXNlcl9pZCI6MX0.n274wjrKufU4Uk9Iuh656hDqBQjtk20LzUtch9Al-k8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1MjYwODI2LCJpYXQiOjE3NTUyNTcyMjYsImp0aSI6ImVjOGE5MWVlNjViNTRkYWY5ZGIxYWMxZjYzYTAzZmI5IiwidXNlcl9pZCI6MX0.mt0Wr1a5KAagGViPWHQwlYEaAbIdtkKgkXh_XZe-dTE
 
 {
     "title": "Task 1",
@@ -102,3 +102,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 GET  http://127.0.0.1:8000/api/tasks/1/list_comments/ HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDAwOTIxLCJpYXQiOjE3NTQzOTczMjEsImp0aSI6ImY1YTFmYWYyYzcyZDQ2ZGY5ZThlZGU5NmE1ZGEwZTUxIiwidXNlcl9pZCI6MX0.8EsOtbNNATwxsnKQ5r0eiyROlxma2ybH_qPWCpScuZo
+
+
+###
+
+GET  http://127.0.0.1:8000/api/tasks/11/cancel_task/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1MjYwNDk1LCJpYXQiOjE3NTUyNTY4OTUsImp0aSI6IjFlNThmZjg5MzZjMjQ0ZDQ5NDE5MTY0NjJmYzc4ZGI0IiwidXNlcl9pZCI6MX0.A0TPZeJh89p-pBhd2cpKRtmS0Dr8qsa50JQ86BwPEQk
