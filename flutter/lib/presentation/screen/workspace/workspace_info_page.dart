@@ -49,15 +49,14 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
         body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
           builder: (context, state) {
             if (state is WorkspaceRetrievingSucceededState) {
-              RetrieveWorkspaceModel retrieveWorkspace =
-                  state.retrieveWorkspace;
+              retrieveWorkspace = state.retrieveWorkspace;
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   spacing: 20,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    WorkspaceInfoHeader(retrieveWorkspace),
+                    WorkspaceInfoHeader(retrieveWorkspace!),
                     MyDivider.horizontalDivider(
                         thickness: 2, color: Colors.grey),
                     Row(
@@ -77,7 +76,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                                 create: (context) => InvitationCubit(),
                                 child: InvitationSearch(
                                     senderId: 1,
-                                    workspaceId: retrieveWorkspace.id),
+                                    workspaceId: retrieveWorkspace!.id),
                               ),
                             );
                           },
@@ -104,12 +103,15 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                     ),
                     Expanded(
                       child: BuildMembersList(
-                        retrieveWorkspace,
+                        retrieveWorkspace!,
                       ),
                     ),
                     // Delete Button
-                    isAdmin(retrieveWorkspace.owner!.id)
-                        ? buildDeleteButton(context)
+                    isAdmin(retrieveWorkspace!.owner!.id)
+                        ? BlocProvider(
+                            create: (context) => WorkspaceCubit(),
+                            child: buildDeleteButton(context),
+                          )
                         : Container(),
                   ],
                 ),
@@ -127,29 +129,58 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
     );
   }
 
-  Center buildDeleteButton(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
-        ),
-        onPressed: () {
+  Widget buildDeleteButton(BuildContext context) {
+    return BlocConsumer<WorkspaceCubit, WorkspaceState>(
+      listener: (_, state) {
+        if (state is DeletingWorkspaceSucceededState) {
+          popScreen(context);
+          popScreen(context, true);
+        }
+        if (state is DeletingWorkspaceFailedState) {
+          popScreen(context);
           MyAlertDialog.showAlertDialog(
             context,
-            content: alertDialogQuestion,
-            firstButtonText: deleteText,
+            content: state.errorMessage,
+            firstButtonText: okText,
             firstButtonAction: () {
-              //TODO delete workspace request
-            },
-            secondButtonText: cancelText,
-            secondButtonAction: () {
               popScreen(context);
             },
+            secondButtonText: '',
+            secondButtonAction: () {},
           );
-        },
-        child: MyText.text1(deleteButtonText, fontSize: 18),
-      ),
+        }
+      },
+      builder: (context, state) {
+        if (state is DeletingWorkspaceState) {
+          return Center(
+            child: LoadingIndicator.circularProgressIndicator(),
+          );
+        }
+        return Center(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              MyAlertDialog.showAlertDialog(
+                context,
+                content: alertDialogQuestion,
+                firstButtonText: deleteText,
+                firstButtonAction: () {
+                  BlocProvider.of<WorkspaceCubit>(context)
+                      .deleteWorkspace(retrieveWorkspace!.id);
+                },
+                secondButtonText: cancelText,
+                secondButtonAction: () {
+                  popScreen(context);
+                },
+              );
+            },
+            child: MyText.text1(deleteButtonText, fontSize: 18),
+          ),
+        );
+      },
     );
   }
 }

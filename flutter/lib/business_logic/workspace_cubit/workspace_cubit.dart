@@ -8,6 +8,7 @@ import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
+import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 
@@ -81,6 +82,17 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
       emit(WorkspaceRetrievingSucceededState(retrieveWorkspace));
     } else {
       emit(WorkspaceRetrievingFailedState(retrieveWorkspace.errorMessage));
+    }
+  }
+
+  Future<void> deleteWorkspace(int workspaceId) async {
+    emit(DeletingWorkspaceState());
+    DeleteWorkspaceModel deleteWorkspaceModel =
+        await WorkspaceApi.deleteWorkspace(workspaceId, token);
+    if (deleteWorkspaceModel.errorMessage.isEmpty) {
+      emit(DeletingWorkspaceSucceededState(deleteWorkspaceModel));
+    } else {
+      emit(DeletingWorkspaceFailedState(deleteWorkspaceModel.errorMessage));
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/local_data/local_data.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:dio/dio.dart';
+import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 
@@ -124,5 +125,32 @@ class WorkspaceApi {
       retrieveWorkspace = RetrieveWorkspaceModel.error(handleDioError(e));
     }
     return retrieveWorkspace;
+  }
+
+  static Future<DeleteWorkspaceModel> deleteWorkspace(int workspaceId, String token) async {
+    var headers = {
+      'Authorization': 'Bearer $token'
+    };
+
+    late DeleteWorkspaceModel deleteWorkspaceModel;
+
+    try {
+      var response = await dio.request(
+        '/workspaces/$workspaceId/',
+        options: Options(
+          method: 'DELETE',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 204) {
+        deleteWorkspaceModel = DeleteWorkspaceModel.onSuccess();
+      } else {
+        deleteWorkspaceModel = DeleteWorkspaceModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      deleteWorkspaceModel = DeleteWorkspaceModel.error(handleDioError(e));
+    }
+    return deleteWorkspaceModel;
   }
 }
