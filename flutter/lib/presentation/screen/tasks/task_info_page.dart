@@ -16,7 +16,6 @@ import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-import '../../../core/API/comments.dart';
 class TaskInfoPage extends StatefulWidget {
   final FetchTasksModel fetchTasksModel;
 
@@ -32,19 +31,23 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
     super.initState();
     context.read<CommentCubit>().fetchComments(widget.fetchTasksModel.id);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TaskInfoAppBar.taskInfoAppBar(context, widget.fetchTasksModel.title),
+      appBar:
+          TaskInfoAppBar.taskInfoAppBar(context, widget.fetchTasksModel.title),
       body: SizedBox(
         height: height(context),
         width: width(context),
         child: SingleChildScrollView(
           child: Column(
+            spacing: 20,
             children: [
               Container(
                 width: width(context) * 0.35,
-                child: MyImages.networkImage(fetchTasksModel.image),
+                height: height(context) * 0.2,
+                child: MyImages.networkImage(widget.fetchTasksModel.image),
               ),
               // MyCircle.circle(width(context) * 0.35, color: Colors.white),
               Column(
@@ -57,9 +60,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                     margin: const EdgeInsets.only(top: 10.0),
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Theme
-                          .of(context)
-                          .primaryColor),
+                      border: Border.all(color: Theme.of(context).primaryColor),
                     ),
                     child: Scrollbar(
                       child: ListView(
@@ -76,6 +77,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                 ],
               ),
               Column(
+                spacing: 20,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,9 +102,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           decoration: BoxDecoration(
                               color: widget.fetchTasksModel.status == 'pending'
                                   ? lightGrey
-                                  : Theme
-                                  .of(context)
-                                  .secondaryHeaderColor,
+                                  : Theme.of(context).secondaryHeaderColor,
                               borderRadius: BorderRadius.circular(16)),
                           child: Center(
                             child: MyText.text1('Completed?',
@@ -115,8 +115,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                   buildTwoTextRow(
                     context,
                     ' Due Date',
-                    ' ${DateFormat('yyyy-MM-d').format(
-                       widget. fetchTasksModel.dueDate!)}',
+                    ' ${DateFormat('yyyy-MM-d').format(widget.fetchTasksModel.dueDate!)}',
                     Icons.date_range,
                     white,
                   ),
@@ -140,18 +139,17 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       ),
                       MyGestureDetector.gestureDetector(
                         onTap: () {
-                          BlocProvider.of<TaskCubit>(context).cancelTask(
-                              widget. fetchTasksModel.id);
+                          BlocProvider.of<TaskCubit>(context)
+                              .cancelTask(widget.fetchTasksModel.id);
                         },
                         child: Container(
                           height: height(context) * 0.05,
                           width: width(context) * 0.28,
                           decoration: BoxDecoration(
-                              color: widget.fetchTasksModel.status == 'completed'
-                                  ? lightGrey
-                                  : Theme
-                                  .of(context)
-                                  .secondaryHeaderColor,
+                              color:
+                                  widget.fetchTasksModel.status == 'completed'
+                                      ? lightGrey
+                                      : Theme.of(context).secondaryHeaderColor,
                               borderRadius: BorderRadius.circular(16)),
                           child: Center(
                             child: MyText.text1('Cancel?',
@@ -186,7 +184,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           // Comments Tab
                           BlocBuilder<CommentCubit, CommentState>(
                             builder: (context, comments) {
-                              return _buildCommentsTab(comments,context);
+                              return _buildCommentsTab(comments, context);
                             },
                           ),
                         ],
@@ -252,6 +250,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
       ),
     );
   }
+
   Widget _buildCommentsTab(CommentState state, BuildContext context) {
     final TextEditingController _commentController = TextEditingController();
 
@@ -278,9 +277,12 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                     final comment = state.comments[index];
                     return Stack(
                       children: [
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Card(
-                          margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 5),
                           color: Colors.grey[800],
                           child: ListTile(
                             title: Text(
@@ -324,17 +326,17 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
             },
           ),
         ),
-
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
-    ,child: Row(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
             children: [
               Expanded(
                 child: TextField(
                   controller: _commentController,
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                   decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                     hintText: "Write a comment...",
                     hintStyle: TextStyle(color: Colors.white54, fontSize: 14),
                     border: OutlineInputBorder(
@@ -362,7 +364,5 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
         ),
       ],
     );
-
   }
-
 }

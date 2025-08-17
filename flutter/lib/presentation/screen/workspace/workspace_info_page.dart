@@ -39,7 +39,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
         widget.workspaceId == retrieveWorkspace!.id) {
       return;
     }
-    BlocProvider.of<WorkspaceCubit>(context).fetchWorkspace(widget.workspaceId);
+    BlocProvider.of<WorkspaceCubit>(context).retrieveWorkspace(widget.workspaceId);
   }
 
   @override
@@ -53,6 +53,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  spacing: 20,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     WorkspaceInfoHeader(retrieveWorkspace!),

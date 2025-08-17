@@ -11,6 +11,7 @@ import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
+import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
 
 part 'workspace_state.dart';
 
@@ -72,7 +73,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     }
   }
 
-  Future<void> fetchWorkspace(int workspaceId) async {
+  Future<void> retrieveWorkspace(int workspaceId) async {
     emit(WorkspaceRetrievingState());
 
     RetrieveWorkspaceModel retrieveWorkspace =
@@ -93,6 +94,22 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
       emit(DeletingWorkspaceSucceededState(deleteWorkspaceModel));
     } else {
       emit(DeletingWorkspaceFailedState(deleteWorkspaceModel.errorMessage));
+    }
+  }
+
+  Future<void> kickMember(int workspaceId, int memberId) async {
+    emit(KickingMemberFromWorkspaceState());
+
+    KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel =
+        await WorkspaceApi.kickMember(workspaceId, memberId, token);
+
+    if (kickMemberFromWorkspaceModel.errorMessage.isEmpty) {
+      emit(KickingMemberFromWorkspaceSucceededState(
+          kickMemberFromWorkspaceModel));
+      retrieveWorkspace(workspaceId);
+    } else {
+      emit(KickingMemberFromWorkspaceFailedState(
+          kickMemberFromWorkspaceModel.errorMessage));
     }
   }
 }

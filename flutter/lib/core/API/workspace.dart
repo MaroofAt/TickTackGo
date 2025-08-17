@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
+import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
 
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
@@ -152,5 +153,38 @@ class WorkspaceApi {
       deleteWorkspaceModel = DeleteWorkspaceModel.error(handleDioError(e));
     }
     return deleteWorkspaceModel;
+  }
+
+  static Future<KickMemberFromWorkspaceModel> kickMember(int workspaceId, int memberId, String token) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var data = {
+      "member": memberId
+    };
+
+    late KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel;
+
+    try {
+      var response = await dio.request(
+        '/workspaces/$workspaceId/kick_member/',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 204) {
+        kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.onSuccess();
+      } else {
+        kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.error(handleDioError(e));
+    }
+    return kickMemberFromWorkspaceModel;
   }
 }
