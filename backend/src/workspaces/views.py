@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.db.models import Max
 
 from rest_framework import viewsets , status
 from rest_framework.response import Response
@@ -250,6 +250,44 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             return Response(serializer.data , status=status.HTTP_200_OK)
         except Exception as e:
             return exception_response(e)
+
+    @extend_schema(
+        summary='Get Points Statistics',
+        operation_id='get_points_statistics',
+        description='getting points statistics such as the best hard-worker and the best important-mission-solver and  the best discipline-member',
+        tags=['Workspaces/Points']
+    )
+    @action(detail=True , methods=['get'])
+    def get_points_statistics(self, request, pk):
+        instance = self.get_object()
+        
+        best_hard_work_record = Points.objects.filter(workspace=instance).order_by('-hard_worker').first()
+        best_important_mission_solver_record = Points.objects.filter(workspace=instance).order_by('-important_mission_solver').first()
+        best_discipline_member_record = Points.objects.filter(workspace=instance).order_by('-discipline_member').first()
+        best_member_record = Points.objects.filter(workspace=instance).order_by('-total').first()
+        
+        return Response(
+            {
+                "best_hard_worker":{
+                    "user_id" : best_hard_work_record.user_id,
+                    "hard_worker_points": best_hard_work_record.hard_worker
+                },
+                "best_important_mission_solver_record":{
+                    "user_id" : best_important_mission_solver_record.user_id,
+                    "important_mission_solver_points": best_important_mission_solver_record.important_mission_solver
+                },
+                "best_discipline_member_record":{
+                    "user_id" : best_discipline_member_record.user_id,
+                    "discipline_member_points": best_discipline_member_record.discipline_member
+                },
+                "best_member_record":{
+                    "user_id" : best_member_record.user_id,
+                    "total_points": best_member_record.total
+                }
+            },
+            status=status.HTTP_200_OK
+        )
+
 
     # Invite section
     
