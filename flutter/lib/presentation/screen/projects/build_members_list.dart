@@ -4,7 +4,10 @@ import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
+import 'package:pr1/data/models/projects/show_member_info_dialog.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
+import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 import 'package:pr1/presentation/widgets/word_switch.dart';
@@ -26,7 +29,6 @@ class BuildMembersList extends StatelessWidget {
   }
 
   Container buildOneMemberCard(BuildContext context, int index) {
-    String selectedRole = retrieveProjectModel.members[index].role;
     return Container(
       padding: const EdgeInsets.only(right: 12.0),
       margin: const EdgeInsets.symmetric(vertical: 5.0),
@@ -49,31 +51,51 @@ class BuildMembersList extends StatelessWidget {
           index == 0
               ? MyText.text1(retrieveProjectModel.members[index].role,
                   textColor: Colors.white70)
-              : BlocBuilder(
-                  builder: (context, state) {
-                    if (state is ChangingUserRoleState &&
-                        retrieveProjectModel.id == selectedUserId) {
-                      return Center(
-                        child: LoadingIndicator.circularProgressIndicator(),
-                      );
-                    }
-                    return WordSwitch(
-                      firstOption: selectedRole,
-                      secondOption:
-                          selectedRole == 'editor' ? 'viewer' : 'editor',
-                      onChanged: (String value) {
-                        selectedUserId = retrieveProjectModel.id;
-                        BlocProvider.of<ProjectsCubit>(context).changeUserRole(
-                          retrieveProjectModel.members[index].member.id,
-                          selectedUserId,
-                          value,
+              : MyGestureDetector.gestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return BlocProvider(
+                          create: (context) => ProjectsCubit(),
+                          child: ShowMemberInfoDialog(
+                            retrieveProjectModel.members[index],
+                            retrieveProjectModel.id,
+                            retrieveProjectModel.members[0].member.id,
+                          ),
                         );
                       },
-                      selectedColor: Theme.of(context).secondaryHeaderColor,
-                      selectedTextColor: black,
                     );
                   },
+                  child: MyIcons.icon(Icons.info_outline, color: lightGrey),
                 ),
+          // : BlocBuilder<ProjectsCubit, ProjectsState>(
+          //     builder: (context, state) {
+          //       String selectedRole = retrieveProjectModel.members[index].role;
+          //       if (state is ChangingUserRoleState &&
+          //           retrieveProjectModel.id == selectedUserId) {
+          //         return Center(
+          //           child: LoadingIndicator.circularProgressIndicator(),
+          //         );
+          //       }
+          //       return WordSwitch(
+          //         firstOption: 'editor',
+          //         secondOption: 'viewer',
+          //         selectedValue: selectedRole,
+          //         onChanged: (String value) {
+          //           selectedUserId = retrieveProjectModel.id;
+          //           BlocProvider.of<ProjectsCubit>(context).changeUserRole(
+          //             retrieveProjectModel.members[index].member.id,
+          //             selectedUserId,
+          //             value,
+          //             retrieveProjectModel,
+          //           );
+          //         },
+          //         selectedColor: Theme.of(context).primaryColor,
+          //         selectedTextColor: black,
+          //       );
+          //     },
+          //   ),
         ],
       ),
     );

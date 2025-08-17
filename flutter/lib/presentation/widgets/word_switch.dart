@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class WordSwitch extends StatefulWidget {
   final String firstOption;
   final String secondOption;
+  String selectedValue;
   final ValueChanged<String> onChanged;
   final Color selectedColor;
   final Color unselectedColor;
   final Color selectedTextColor;
   final Color unselectedTextColor;
+  final double? height;
 
-  const WordSwitch({
+  WordSwitch({
     super.key,
     required this.firstOption,
     required this.secondOption,
     required this.onChanged,
+    required this.selectedValue,
     this.selectedColor = Colors.blue,
     this.unselectedColor = Colors.grey,
     this.selectedTextColor = Colors.white,
     this.unselectedTextColor = Colors.black,
+    this.height,
   });
 
   @override
@@ -26,14 +31,14 @@ class WordSwitch extends StatefulWidget {
 }
 
 class _WordSwitchState extends State<WordSwitch> {
-  bool _isFirstSelected = true;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: widget.height ?? height(context) * 0.05,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
+        // border: Border.all(color: Colors.grey.shade300),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -42,14 +47,14 @@ class _WordSwitchState extends State<WordSwitch> {
           GestureDetector(
             onTap: () {
               setState(() {
-                _isFirstSelected = true;
+
               });
               widget.onChanged(widget.firstOption);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: _isFirstSelected
+                color: widget.selectedValue == widget.firstOption
                     ? widget.selectedColor
                     : widget.unselectedColor,
                 borderRadius: const BorderRadius.only(
@@ -59,7 +64,7 @@ class _WordSwitchState extends State<WordSwitch> {
               ),
               child: MyText.text1(
                 widget.firstOption,
-                textColor: _isFirstSelected
+                textColor: widget.selectedValue == widget.firstOption
                     ? widget.selectedTextColor
                     : widget.unselectedTextColor,
                 fontSize: 16,
@@ -69,8 +74,8 @@ class _WordSwitchState extends State<WordSwitch> {
 
           // Divider
           Container(
-            width: 1,
-            height: 24,
+            width: 2,
+            height: widget.height ?? height(context) * 0.045,
             color: Colors.grey.shade300,
           ),
 
@@ -78,14 +83,14 @@ class _WordSwitchState extends State<WordSwitch> {
           GestureDetector(
             onTap: () {
               setState(() {
-                _isFirstSelected = false;
+
               });
               widget.onChanged(widget.secondOption);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: !_isFirstSelected
+                color: !(widget.selectedValue == widget.firstOption)
                     ? widget.selectedColor
                     : widget.unselectedColor,
                 borderRadius: const BorderRadius.only(
@@ -95,7 +100,7 @@ class _WordSwitchState extends State<WordSwitch> {
               ),
               child: MyText.text1(
                 widget.secondOption,
-                textColor: !_isFirstSelected
+                textColor: !(widget.selectedValue == widget.firstOption)
                     ? widget.selectedTextColor
                     : widget.unselectedTextColor,
                 fontSize: 16,

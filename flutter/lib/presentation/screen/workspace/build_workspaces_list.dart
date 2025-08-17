@@ -33,8 +33,15 @@ class _BuildWorkspacesListState extends State<BuildWorkspacesList> {
                     context,
                     BlocProvider(
                       create: (context) => WorkspaceCubit(),
-                      child: WorkspaceInfoPage(
-                          widget.fetchWorkspacesModel[index].id),
+                      child: PopScope(
+                        onPopInvokedWithResult: (didPop, result) {
+                          if(didPop && result != null) {
+                            BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
+                          }
+                        },
+                        child: WorkspaceInfoPage(
+                            widget.fetchWorkspacesModel[index].id),
+                      ),
                     ),
                   );
                 },

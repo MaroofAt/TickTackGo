@@ -63,3 +63,17 @@ class WorkspaceRetrievingFailedState extends WorkspaceState {
 }
 
 class RefreshTokenState extends WorkspaceState {}
+
+class DeletingWorkspaceState extends WorkspaceState {}
+
+class DeletingWorkspaceSucceededState extends WorkspaceState {
+  DeleteWorkspaceModel deleteWorkspaceModel;
+
+  DeletingWorkspaceSucceededState(this.deleteWorkspaceModel);
+}
+
+class DeletingWorkspaceFailedState extends WorkspaceState {
+  String errorMessage;
+
+  DeletingWorkspaceFailedState(this.errorMessage);
+}

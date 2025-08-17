@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
@@ -42,14 +44,15 @@ class BuildProjectInfoPage extends StatelessWidget {
                     MyText.text1('project members: ',
                         textColor: white, fontSize: 20),
                     MyGestureDetector.gestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        // todo take me to workspace members
+                      },
                       child: Container(
                         height: height(context) * 0.05,
                         width: width(context) * 0.3,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(12)
-                        ),
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(12)),
                         child: Center(
                           child: MyText.text1('add members'),
                         ),
@@ -58,8 +61,12 @@ class BuildProjectInfoPage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                    height: height(context) * 0.5,
-                    child: BuildMembersList(retrieveProjectModel)),
+                  height: height(context) * 0.5,
+                  child: BlocProvider(
+                    create: (context) => ProjectsCubit(),
+                    child: BuildMembersList(retrieveProjectModel),
+                  ),
+                ),
               ],
             ),
           ],
