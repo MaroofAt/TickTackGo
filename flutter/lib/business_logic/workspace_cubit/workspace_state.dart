@@ -77,3 +77,17 @@ class DeletingWorkspaceFailedState extends WorkspaceState {
 
   DeletingWorkspaceFailedState(this.errorMessage);
 }
+
+class KickingMemberFromWorkspaceState extends WorkspaceState {}
+
+class KickingMemberFromWorkspaceSucceededState extends WorkspaceState {
+  KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel;
+
+  KickingMemberFromWorkspaceSucceededState(this.kickMemberFromWorkspaceModel);
+}
+
+class KickingMemberFromWorkspaceFailedState extends WorkspaceState {
+  String errorMessage;
+
+  KickingMemberFromWorkspaceFailedState(this.errorMessage);
+}
