@@ -213,6 +213,7 @@ class WorkspaceNameSerializer(serializers.ModelSerializer):
 class ShowInvitesSerializer(serializers.ModelSerializer):
     sender = UserNameSerializer(read_only=True)  
     workspace = WorkspaceNameSerializer(read_only=True) 
+    receiver = UserNameSerializer(read_only = True)
     class Meta:
         model = Invite
         fields = [
