@@ -315,7 +315,7 @@ class UserViewSet(viewsets.ModelViewSet):
         description="show all invites that aare sent by the user ",
         tags=["Users/Invite"],
     )
-    @action(detail=False , methods=['get'] , serializer_class=ShowInvitesSerializer)
+    @action(detail=False , methods=['post'] , serializer_class=ShowInvitesSerializer)
     def show_sent_invites(self , request):
         workspace_id = request.data.get('workspace')
         if not workspace_id:
