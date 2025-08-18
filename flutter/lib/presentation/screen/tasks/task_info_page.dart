@@ -6,6 +6,7 @@ import 'package:pr1/business_logic/comment_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/comments/comment.dart';
 import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
 import 'package:pr1/presentation/screen/tasks/task_info_app_bar.dart';
@@ -14,6 +15,7 @@ import 'package:pr1/presentation/widgets/circle.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/images.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class TaskInfoPage extends StatefulWidget {
@@ -137,25 +139,52 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         Icons.people,
                         white,
                       ),
-                      MyGestureDetector.gestureDetector(
-                        onTap: () {
-                          BlocProvider.of<TaskCubit>(context)
-                              .cancelTask(widget.fetchTasksModel.id);
+                      BlocConsumer<TaskCubit, TaskState>(
+                        listener: (context, state) {
+                          if(state is TaskCancelingSucceededState) {
+                            popScreen(context, true);
+                          }
                         },
-                        child: Container(
-                          height: height(context) * 0.05,
-                          width: width(context) * 0.28,
-                          decoration: BoxDecoration(
-                              color:
-                                  widget.fetchTasksModel.status == 'completed'
+                        builder: (context, state) {
+                          if (state is TaskCancelingState) {
+                            return Container(
+                              height: height(context) * 0.05,
+                              width: width(context) * 0.28,
+                              decoration: BoxDecoration(
+                                  color: widget.fetchTasksModel.status ==
+                                          'completed'
                                       ? lightGrey
                                       : Theme.of(context).secondaryHeaderColor,
-                              borderRadius: BorderRadius.circular(16)),
-                          child: Center(
-                            child: MyText.text1('Cancel?',
-                                textColor: Colors.black),
-                          ),
-                        ),
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: LoadingIndicator
+                                    .circularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          return MyGestureDetector.gestureDetector(
+                            onTap: () {
+                              if (widget.fetchTasksModel.status != 'completed') {
+                                BlocProvider.of<TaskCubit>(context)
+                                    .cancelTask(widget.fetchTasksModel.id);
+                              }
+                            },
+                            child: Container(
+                              height: height(context) * 0.05,
+                              width: width(context) * 0.28,
+                              decoration: BoxDecoration(
+                                  color: widget.fetchTasksModel.status ==
+                                          'completed'
+                                      ? lightGrey
+                                      : Theme.of(context).secondaryHeaderColor,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: MyText.text1('Cancel?',
+                                    textColor: Colors.black),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -171,22 +200,23 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       unselectedLabelColor: Colors.grey,
                       indicatorColor: Colors.blue,
                       tabs: [
-                        Tab(text: 'Subtasks'),
                         Tab(text: 'Comments'),
+                        Tab(text: 'Subtasks'),
                       ],
                     ),
                     SizedBox(
-                      height: 200, // Adjust height as needed
+                      height: height(context) * 0.22,
                       child: TabBarView(
                         children: [
-                          // Subtasks Tab
-                          _buildSubtasksTab(),
                           // Comments Tab
                           BlocBuilder<CommentCubit, CommentState>(
                             builder: (context, comments) {
                               return _buildCommentsTab(comments, context);
                             },
                           ),
+
+                          // Subtasks Tab
+                          _buildSubtasksTab(),
                         ],
                       ),
                     ),
@@ -277,9 +307,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                     final comment = state.comments[index];
                     return Stack(
                       children: [
-                        SizedBox(
-                          height: 5,
-                        ),
+                        SizedBox(height: 5),
                         Card(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 18, vertical: 5),

@@ -20,21 +20,29 @@ class TaskListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyGestureDetector.gestureDetector(
       onTap: () {
-        pushScreen(context, BlocProvider(
-          create: (context) => TaskCubit(),
-          child: TaskInfoPage(fetchTask),
-        ));
+        pushScreen(
+          context,
+          BlocProvider(
+            create: (context) => TaskCubit(),
+            child: PopScope(
+              onPopInvokedWithResult: (didPop, result) {
+                if(didPop && result != null) {
+                  BlocProvider.of<TaskCubit>(context).fetchTasks(fetchTask.project);
+                }
+              },
+              child: TaskInfoPage(fetchTask),
+            ),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
         height: height(context) * 0.12,
         decoration: BoxDecoration(
-          color: Theme
-              .of(context)
-              .scaffoldBackgroundColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius:
-          const BorderRadius.horizontal(left: Radius.circular(16)),
+              const BorderRadius.horizontal(left: Radius.circular(16)),
           border: Border(left: BorderSide(color: color, width: 5)),
           boxShadow: [
             BoxShadow(
@@ -64,7 +72,8 @@ class TaskListItem extends StatelessWidget {
                   ),
                   MyText.text1(fetchTask.title,
                       textColor: white, textAlign: TextAlign.center),
-                  MyText.text1(DateFormat('yyyy-MM-d').format(fetchTask.dueDate!),
+                  MyText.text1(
+                      DateFormat('yyyy-MM-d').format(fetchTask.dueDate!),
                       textColor: Colors.grey),
                 ],
               ),
