@@ -317,13 +317,17 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False , methods=['get'] , serializer_class=ShowInvitesSerializer)
     def show_sent_invites(self , request):
         workspace_id = request.data.get('workspace')
+        if not workspace_id:
+            return Response(
+                {"error":"worksapce ID is required!"}
+            )
         if is_workspace_owner(request.user.id,workspace_id):
             invites = Invite.objects.filter(sender=request.user).all()
             serializer = self.get_serializer(invites , many = True)
             # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
             return Response(serializer.data , status=status.HTTP_200_OK)
         return Response(
-            {"detail": "User is not the owner"},
+            {"error": "User is not the owner"},
             status=status.HTTP_400_BAD_REQUEST
             )
     
