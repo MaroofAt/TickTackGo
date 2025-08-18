@@ -248,3 +248,17 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY' , '')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET' , '')
 
+
+#firebase notification
+# Firebase settings
+FIREBASE_CONFIG = {
+    "apiKey": "your-api-key",
+    "authDomain": "your-project.firebaseapp.com",
+    "projectId": "your-project-id",
+    "storageBucket": "your-bucket.appspot.com",
+    "messagingSenderId": "your-sender-id",
+    "appId": "your-app-id",
+}
+
+# FCM server key (from Firebase Console > Project Settings > Cloud Messaging)
+FCM_SERVER_KEY = "your-server-key"
