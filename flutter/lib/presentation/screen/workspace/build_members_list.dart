@@ -71,11 +71,11 @@ class BuildMembersList extends StatelessWidget {
                                 firstButtonText: okText,
                                 firstButtonAction: () {
                                   selectedId = id;
+                                  popScreen(context);
                                   BlocProvider.of<WorkspaceCubit>(context)
                                       .kickMember(
                                           retrieveWorkspace.id, selectedId);
                                   selectedId = 0;
-                                  popScreen(context);
                                 },
                                 secondButtonText: cancelText,
                                 secondButtonAction: () {
