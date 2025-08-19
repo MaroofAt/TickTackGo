@@ -344,6 +344,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(
                 {"error":"worksapce ID is required!"}
             )
+        
         if is_workspace_owner(request.user.id,workspace_id):
             invites = Invite.objects.filter(sender=request.user).all()
             serializer = self.get_serializer(invites , many = True)
