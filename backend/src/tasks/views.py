@@ -16,12 +16,13 @@ from .permissions import IsTaskProjectMember, IsTaskProjectOwner
 
 
 from projects.permissions import IsProjectMember
-from workspaces.models import Points
+from workspaces.models import Points , Workspace
+from users.models import User
 
 from tools.roles_check import can_edit_project , is_creator ,is_project_owner , is_task_project_owner
 from tools.responses import method_not_allowed, exception_response, required_response
 from tools.points import calculate_task_points
-
+from tools.notify import send
 
 
 
@@ -120,9 +121,11 @@ class TaskViewSet(viewsets.ModelViewSet):
          
             return Response(serializer.data , status=status.HTTP_201_CREATED)
         
+        user = User.objects.filter(id=request.user.id).first()
+        worksapce = Workspace.objects.filter(id=worksapce).first()
+        result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigne new task to you in {worksapce.title}')
 
-
-        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+        return Response({serializer.errors , result} , status=status.HTTP_400_BAD_REQUEST)
 
 
     @extend_schema(

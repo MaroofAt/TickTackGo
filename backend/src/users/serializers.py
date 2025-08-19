@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.db import transaction
 from social_django.models import UserSocialAuth
 
-from .models import User
+from .models import User , Device
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -91,3 +91,17 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f'{str(e)}: this field is required !')
  
 
+
+class DeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Device
+        fields = ['registration_id', 'device_type']
+        extra_kwargs = {
+            'registration_id': {'required': True},
+            'device_type': {'required': False}
+        }
+
+class NotificationSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=255)
+    body = serializers.CharField(max_length=1024)
+    data = serializers.DictField(required=False)
