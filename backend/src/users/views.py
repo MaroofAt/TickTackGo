@@ -346,7 +346,7 @@ class UserViewSet(viewsets.ModelViewSet):
             )
         
         if is_workspace_owner(request.user.id,workspace_id):
-            invites = Invite.objects.filter(sender=request.user).all()
+            invites = Invite.objects.filter(sender=request.user , workspace=workspace_id).all()
             serializer = self.get_serializer(invites , many = True)
             # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
             return Response(serializer.data , status=status.HTTP_200_OK)
