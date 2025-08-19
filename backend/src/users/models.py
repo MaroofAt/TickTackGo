@@ -120,10 +120,10 @@ class User_OTP (TimeStampedModel):
 
 
 
-    class Dvice (TimeStampedModel):
-        class Meta:
-            db_table = 'dvice'
-        user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
-        registration_id = models.TextField(verbose_name="FCM Registration Token")
-        active = models.BooleanField(default=True , help_text="is this device currently active?")
-        device_type = models.CharField(max_length=20, blank=True, null=True, help_text="e.g., Android, iOS, Web")
+class Device (TimeStampedModel):
+    class Meta:
+        db_table = 'device'
+    user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
+    registration_id = models.TextField(verbose_name="FCM Registration Token")
+    active = models.BooleanField(default=True , help_text="is this device currently active?")
+    device_type = models.CharField(max_length=20, blank=True, null=True, help_text="e.g., Android, iOS, Web")

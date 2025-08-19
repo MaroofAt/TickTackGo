@@ -4,7 +4,7 @@ from django.db import transaction
 
 from .models import Workspace , Workspace_Membership , Invite, Points
 from projects.models import Project
-from users.models import User
+from users.models import User 
 
 
 class LocalUserSerializer(serializers.ModelSerializer):
@@ -226,3 +226,5 @@ class ShowInvitesSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at'
         ]
+
+
