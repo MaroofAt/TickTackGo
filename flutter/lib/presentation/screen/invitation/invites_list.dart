@@ -37,7 +37,8 @@ class InvitesList extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: MyImages.decorationImage(
-                    isAssetImage: true,
+                    isAssetImage: false,
+                    //TODO display workspace image
                     image: 'assets/images/workspace_images/img.png',
                   ),
                 ),
