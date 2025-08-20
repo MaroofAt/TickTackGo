@@ -29,12 +29,19 @@ class Task(TimeStampedModel):
     creator = models.ForeignKey(User , on_delete=models.CASCADE )
     workspace = models.ForeignKey(Workspace , on_delete=models.CASCADE )
     project = models.ForeignKey(Project , on_delete=models.CASCADE )
-    image = models.ImageField(null=True,blank=True , upload_to= task_image_upload_path , default="defaults/task/task.png")
+    image = models.ImageField(null=True,blank=True , upload_to= task_image_upload_path , default="defaults/tasks/default.png")
     out_dated = models.BooleanField(default = False)
     parent_task = models.ForeignKey( # if this is null so the task doesn't have parent_task it is directly inside the project
         'self', 
         related_name='sub_tasks',
         on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    done_assignee = models.ForeignKey(
+        User,
+        related_name='done_assignees',
+        on_delete = models.CASCADE,
         null=True,
         blank=True
     )
@@ -150,3 +157,5 @@ class Inbox_Tasks(TimeStampedModel):
     def save(self, *args , **kwargs):
 
         return super().save(*args , **kwargs)
+
+

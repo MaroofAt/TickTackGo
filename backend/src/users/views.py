@@ -17,16 +17,16 @@ from drf_spectacular.utils import extend_schema
 
 from datetime import timedelta
 
-from .models import User , User_OTP
-from .serializers import UserSerializer , RegisterSerializer
+from .models import User , User_OTP , Device
+from .serializers import UserSerializer , RegisterSerializer , NotificationSerializer , DeviceSerializer
 from django.utils import timezone
 from .utils import send_otp_email_to_user
 from .filters import UserFilter
 
-from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
-from workspaces.models import Invite , Workspace_Membership
+from workspaces.serializers import InviteSerializer , ShowInvitesSerializer , PointsSerializer
+from workspaces.models import Invite , Workspace_Membership, Points
 from tasks.models import Task
-from tools.responses import exception_response
+from tools.responses import exception_response, required_response
 from tools.roles_check import is_workspace_owner
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
@@ -125,6 +125,20 @@ class UserViewSet(viewsets.ModelViewSet):
         operation_id="register",
         description="registering the user (just for testing [without verification] )",
         tags=["Users/Auth"],
+        # request={
+        #     'multipart/form-data': {
+        #         'type': 'object',
+        #         'properties': {
+        #             'username': {'type': 'string', 'example': 'Aloosh'},
+        #             'email': {'type': 'eamil', 'example': 'aloosh@gmail.com'},
+        #             'password': {'type': 'string', 'example': 'ABU_alish09'},
+        #             'how_to_use_website': {'type': 'choice', 'example': 'small_team'},
+        #             'what_do_you_do': {'type':'choice' , 'example':'software_or_it'},
+        #             'how_did_you_get_here': {'type':'choice' , 'example':'friends'}
+        #         },
+        #         # 'required': ['title']
+        #     }
+        # }
     )
     @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer , url_path='register')
     def register(self , request):
@@ -140,7 +154,7 @@ class UserViewSet(viewsets.ModelViewSet):
         description="sending otp for the specified email in the request (to check that the user is the email owner) ",
         tags=["Users/Auth"],
     )
-    @action(detail=False , methods=['post'] ,url_path='send_otp')
+    @action(detail=False , methods=['post'] , serializer_class=RegisterSerializer ,url_path='send_otp')
     def send_otp(self , request):
         email = request.data.get('email')
         if not email:
@@ -148,12 +162,16 @@ class UserViewSet(viewsets.ModelViewSet):
                 {'error': 'Email is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        send_otp_email_to_user(email)
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            send_otp_email_to_user(email)
+            return Response(
+                {'message': 'OTP has been sent to your email'},
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
 
-        return Response(
-            {'message': 'OTP has been sent to your email'},
-            status=status.HTTP_200_OK
-        )
+
     
     @extend_schema(
         summary="Verify And Register",
@@ -192,8 +210,30 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data , status = status.HTTP_201_CREATED)
-        return Response(serializer.data , status = status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
     
+
+    @extend_schema(
+        summary="Register Device",
+        operation_id="register_device",
+        description="Register the device to send notification to the device",
+        tags=["User/Device"]
+    )
+    @action(detail=False , methods=['post'] , serializer_class=DeviceSerializer)
+    def register_device(self, request):
+        serializer = DeviceSerializer(data=request.data)
+        if serializer.is_valid():
+            device, created = Device.objects.update_or_create(
+                user=request.user,
+                registration_id=serializer.validated_data['registration_id'],
+                defaults={
+                    'device_type': serializer.validated_data.get('device_type'),
+                    'active': True
+                }
+            )
+            return Response(DeviceSerializer(device).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
+
 
     # Invite section
 
@@ -253,6 +293,7 @@ class UserViewSet(viewsets.ModelViewSet):
             workspace = invite.workspace,
             role = 'member'
         )
+        Points.objects.create(user = request.user, workspace = invite.workspace)
 
         serializer = self.get_serializer(invite)
         return Response(serializer.data , status=status.HTTP_201_CREATED)
@@ -296,16 +337,21 @@ class UserViewSet(viewsets.ModelViewSet):
         description="show all invites that aare sent by the user ",
         tags=["Users/Invite"],
     )
-    @action(detail=False , methods=['get'] , serializer_class=ShowInvitesSerializer)
+    @action(detail=False , methods=['post'] , serializer_class=ShowInvitesSerializer)
     def show_sent_invites(self , request):
         workspace_id = request.data.get('workspace')
+        if not workspace_id:
+            return Response(
+                {"error":"worksapce ID is required!"}
+            )
+        
         if is_workspace_owner(request.user.id,workspace_id):
-            invites = Invite.objects.filter(sender=request.user).all()
+            invites = Invite.objects.filter(sender=request.user , workspace=workspace_id).all()
             serializer = self.get_serializer(invites , many = True)
             # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
             return Response(serializer.data , status=status.HTTP_200_OK)
         return Response(
-            {"detail": "User is not the owner"},
+            {"error": "User is not the owner"},
             status=status.HTTP_400_BAD_REQUEST
             )
     

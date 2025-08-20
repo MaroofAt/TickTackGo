@@ -6,7 +6,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
+import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
+import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
+import 'package:pr1/data/models/workspace/get_workspace_model.dart';
+import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
+import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
 
 part 'workspace_state.dart';
 
@@ -39,14 +44,72 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
   }
 
   Future<void> createWorkSpace(String title, String description) async {
+    if (title.isEmpty || description.isEmpty) return;
     emit(CreatingWorkspaceState());
-    //TODO send user token
     CreateWorkspaceModel createWorkspaceModel =
-        await WorkspaceApi.createWorkspace(title, description, '');
+        await WorkspaceApi.createWorkspace(title, description, image, token);
     if (createWorkspaceModel.errorMessage.isEmpty) {
       emit(CreatedWorkspaceState(createWorkspaceModel));
+      fetchWorkspaces();
     } else {
       emit(CreateWorkspaceFailedState(createWorkspaceModel.errorMessage));
+    }
+  }
+
+  Future<void> fetchWorkspaces() async {
+    emit(WorkspacesFetchingState());
+    List<FetchWorkspacesModel> fetchWorkspacesModel =
+        await WorkspaceApi.fetchWorkspaces(token);
+    if (fetchWorkspacesModel.isEmpty ||
+        fetchWorkspacesModel[0].errorMessage.isEmpty) {
+      emit(WorkspacesFetchingSucceededState(fetchWorkspacesModel));
+    } else {
+      if (fetchWorkspacesModel[0].statusCode == 401) {
+        emit(RefreshTokenState());
+      } else {
+        emit(WorkspacesFetchingFailedState(
+            fetchWorkspacesModel[0].errorMessage));
+      }
+    }
+  }
+
+  Future<void> retrieveWorkspace(int workspaceId) async {
+    emit(WorkspaceRetrievingState());
+
+    RetrieveWorkspaceModel retrieveWorkspace =
+        await WorkspaceApi.retrieveWorkspace(workspaceId, token);
+
+    if (retrieveWorkspace.errorMessage.isEmpty) {
+      emit(WorkspaceRetrievingSucceededState(retrieveWorkspace));
+    } else {
+      emit(WorkspaceRetrievingFailedState(retrieveWorkspace.errorMessage));
+    }
+  }
+
+  Future<void> deleteWorkspace(int workspaceId) async {
+    emit(DeletingWorkspaceState());
+    DeleteWorkspaceModel deleteWorkspaceModel =
+        await WorkspaceApi.deleteWorkspace(workspaceId, token);
+    if (deleteWorkspaceModel.errorMessage.isEmpty) {
+      emit(DeletingWorkspaceSucceededState(deleteWorkspaceModel));
+    } else {
+      emit(DeletingWorkspaceFailedState(deleteWorkspaceModel.errorMessage));
+    }
+  }
+
+  Future<void> kickMember(int workspaceId, int memberId) async {
+    emit(KickingMemberFromWorkspaceState());
+
+    KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel =
+        await WorkspaceApi.kickMember(workspaceId, memberId, token);
+
+    if (kickMemberFromWorkspaceModel.errorMessage.isEmpty) {
+      emit(KickingMemberFromWorkspaceSucceededState(
+          kickMemberFromWorkspaceModel));
+      retrieveWorkspace(workspaceId);
+    } else {
+      emit(KickingMemberFromWorkspaceFailedState(
+          kickMemberFromWorkspaceModel.errorMessage));
     }
   }
 }

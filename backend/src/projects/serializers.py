@@ -5,7 +5,7 @@ from workspaces.serializers import WorkspaceSerializer , LocalUserSerializer
 
 from workspaces.models import Workspace
 from users.models import User
-from .models import Project , Project_Membership
+from .models import Project , Project_Membership , Issue , Issue_Replies
 
 
 class ProjectMembershipSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class ProjectMembershipSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     
     workspace = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all())
-    parent_project = serializers.PrimaryKeyRelatedField(read_only=True)
+    parent_project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.filter(workspace=workspace.get_queryset().first()) , required=False)
     members = serializers.SerializerMethodField()
     class Meta:
         model=Project
@@ -101,3 +101,85 @@ class ProjectSerializer(serializers.ModelSerializer):
                 role = 'owner'
             )
         return instance
+    
+
+
+class IssueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Issue
+        fields = [
+            'id',
+            'title',
+            'description',
+            'user',
+            'solved',
+            'project',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+        }
+
+class ShowIssueSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = [
+                'id',
+                'username',
+            ]
+    
+    class ProjectSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Project
+            fields = [
+                'id',
+                'title'
+            ]
+
+    user = UserSerializer()
+    project = ProjectSerializer()
+    class Meta:
+        model = Issue
+        fields = [
+            'id',
+            'title',
+            'description',
+            'user',
+            'solved',
+            'project',
+        ]
+
+class IssueRepliesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Issue_Replies
+        fields = [
+            'id',
+            'body',
+            'issue',
+            'user',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+        }
+
+
+class ShowIssueRepliesSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = [
+                'id',
+                'username',
+            ]
+    user = UserSerializer()
+    class Meta:
+        model = Issue_Replies
+        fields = [
+            'id',
+            'body',
+            'issue',
+            'user',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+        }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/presentation/screen/auth/signinnew.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/text.dart';
+
+import '../auth/signupnew.dart';
 
 class FinalOnboardingPage extends StatelessWidget {
   const FinalOnboardingPage({super.key});
@@ -39,7 +44,10 @@ class FinalOnboardingPage extends StatelessWidget {
                 width: width(context) * 0.35,
                 child: MyButtons.primaryButton(
                   () {
-                    pushNamed(context, signinRoute);
+                    pushReplacementScreen(context, BlocProvider(
+                      create: (context) => AuthCubit(),
+                      child:const Signupnew(),
+                    ));
                   },
                   Theme.of(context).secondaryHeaderColor,
                   child: MyText.text1(

@@ -8,21 +8,21 @@ Widget buildPage({
   }) {
     return Container(
       color: color,
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(image, height: 200),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Text(
             title,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text(
             description,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ));}

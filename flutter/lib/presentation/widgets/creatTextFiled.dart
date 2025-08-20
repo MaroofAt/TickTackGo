@@ -4,22 +4,28 @@ import '../../core/constance/colors.dart';
 
 class CreateTextField extends StatelessWidget {
   final String text;
-  final Icon icon;
+  final Icon? icon;
   final IconButton? iconsuf;
   final bool obscureText;
   final TextEditingController controller;
+  final Color? fillcolor;
+
   
-  CreateTextField({
+  const CreateTextField({super.key, 
     required this.text,
-    required this.icon,
+    this.icon,
     this.iconsuf,
     this.obscureText = false,
     required this.controller,
+    this.fillcolor
   });
   
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width(context) *0.9,
+      height: 50,
+      margin: const EdgeInsets.only(top: 10),
       child: TextField(
         controller: controller,
         obscureText: obscureText,
@@ -27,7 +33,7 @@ class CreateTextField extends StatelessWidget {
           prefixIcon: icon,
           suffixIcon: iconsuf ?? const SizedBox(),
           filled: true,
-          fillColor: ampleOrange.withOpacity(0.5),
+          fillColor:fillcolor?? ampleOrange.withOpacity(0.5),
           hintText: text,
           hintStyle: TextStyle(
             fontSize: 16,
@@ -40,9 +46,6 @@ class CreateTextField extends StatelessWidget {
           ),
         ),
       ),
-      width: width(context) - 100,
-      height: 50,
-      margin: EdgeInsets.only(top: 10),
     );
   }
 }

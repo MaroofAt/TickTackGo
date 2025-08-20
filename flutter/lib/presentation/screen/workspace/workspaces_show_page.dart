@@ -1,29 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
-import 'package:pr1/presentation/widgets/app_bar.dart';
-import 'package:pr1/presentation/widgets/gesture_detector.dart';
+import 'package:pr1/core/functions/refresh_token.dart';
+import 'package:pr1/presentation/screen/workspace/build_workspaces_list.dart';
+import 'package:pr1/presentation/screen/workspace/create_workspace_page.dart';
+import 'package:pr1/presentation/screen/workspace/show_workspaces_app_bar.dart';
+import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
-import 'package:pr1/presentation/widgets/images.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-class WorkspacesShowPage extends StatelessWidget {
+class WorkspacesShowPage extends StatefulWidget {
   const WorkspacesShowPage({super.key});
+
+  @override
+  State<WorkspacesShowPage> createState() => _WorkspacesShowPageState();
+}
+
+class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
+  @override
+  void initState() {
+    super.initState();
+    getWorkspaces();
+  }
+
+  getWorkspaces() {
+    BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar.appBar(
-        context,
-        title: MyText.text1('Workspaces'),
-        foregroundColor: white,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      ),
+      appBar: ShowWorkspacesAppBar.workspacesAppBar(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          pushNamed(context, workspaceCreatePageRoute);
+          pushScreen(
+            context,
+            BlocProvider(
+              create: (context) => WorkspaceCubit(),
+              child: PopScope(
+                onPopInvokedWithResult: (didPop, result) {
+                  if (didPop && result != null) {
+                    BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
+                  }
+                },
+                child: CreateWorkspacePage(),
+              ),
+            ),
+          );
         },
         child: MyIcons.icon(Icons.add),
       ),
@@ -31,56 +59,54 @@ class WorkspacesShowPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         height: height(context),
         width: width(context),
-        child: ListView.builder(
-          itemCount: 3,
-          itemBuilder: (context, index) {
-            return MyGestureDetector.gestureDetector(
-              onTap: () {
-                if (index == 1) {
-                  pushNamed(context, workspaceInfoRoute);
-                }
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                height: height(context) * 0.1,
-                decoration: BoxDecoration(
-                  color: transparent,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: BlocConsumer<WorkspaceCubit, WorkspaceState>(
+          listener: (context, state) {
+            if (state is WorkspacesFetchingFailedState) {
+              MyAlertDialog.showAlertDialog(
+                context,
+                content: state.errorMessage,
+                firstButtonText: okText,
+                firstButtonAction: () {
+                  popScreen(context);
+                  popScreen(context);
+                },
+                secondButtonText: '',
+                secondButtonAction: () {},
+              );
+            }
+            if (state is RefreshTokenState) {
+              refreshToken();
+              BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
+            }
+          },
+          builder: (context, state) {
+            if (state is WorkspacesFetchingSucceededState) {
+              if (state.fetchWorkspacesModel.isEmpty) {
+                return Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      spacing: 10,
-                      children: [
-                        Container(
-                          height: height(context) * 0.1,
-                          width: height(context) * 0.1,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: MyImages.decorationImage(
-                                isAssetImage: true,
-                                image:
-                                    'assets/images/workspace_images/img.png'),
-                          ),
-                        ),
-                        MyText.text1('workspace name',
-                            fontSize: 18, textColor: white),
-                      ],
+                    MyText.text1(
+                      'You are not member in any workspace',
+                      fontSize: 20,
+                      textColor: white,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        MyText.text1(index == 1 ? 'current workspace' : '',
-                            textColor: Colors.grey[400]),
-                      ],
+                    MyText.text1(
+                      'You can create your own by the button down below',
+                      fontSize: 20,
+                      textColor: white,
+                      textAlign: TextAlign.center,
                     ),
                   ],
+                );
+              }
+              return BuildWorkspacesList(state.fetchWorkspacesModel);
+            } else {
+              return Center(
+                child: LoadingIndicator.circularProgressIndicator(
+                  color: Theme.of(context).secondaryHeaderColor,
                 ),
-              ),
-            );
+              );
+            }
           },
         ),
       ),

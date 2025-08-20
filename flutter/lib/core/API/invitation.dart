@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/models/invitation/accept_invite_model.dart';
@@ -9,11 +8,9 @@ import 'package:pr1/data/models/invitation/send_invite_model.dart';
 import 'package:pr1/data/models/invitation/user_invites_model.dart';
 
 class InvitationApi {
-  static Future<InvitationSearchModel> invitationSearch(String query) async {
-    var headers = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzMxMjE4LCJpYXQiOjE3NDk3Mjc2MTgsImp0aSI6IjhjNTcxNThmNTlmNTQwMDk5ZmUxZjY2MmUxMGY2YTE3IiwidXNlcl9pZCI6MX0._PCsIn52kKNgvqm9UreFNvyb1YZpgn7gUdvlRb1k-A8'
-    };
+  static Future<InvitationSearchModel> invitationSearch(
+      String query, String token) async {
+    var headers = {'Authorization': 'Bearer $token'};
 
     late InvitationSearchModel invitationSearchModel;
 
@@ -40,8 +37,7 @@ class InvitationApi {
 
   static Future<List<dynamic>> fetchUserInvites(String token) async {
     var headers = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE3ODc5LCJpYXQiOjE3NDk3MTQyNzksImp0aSI6ImEyYTBhN2Q2MGYyMDQzYjVhYjg0M2M4Y2YwYzAzNzI5IiwidXNlcl9pZCI6M30.8dZ1wnWAMnFfOFxuPC-wdmd12N6S4E3_zkiijr3aOI0',
+      'Authorization': 'Bearer $token',
     };
 
     late List<dynamic> userInvitesList;
@@ -71,8 +67,7 @@ class InvitationApi {
       int inviteId, String token) async {
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzEzODg5LCJpYXQiOjE3NDk3MTAyODksImp0aSI6IjM0NzVkZTVhNjhkMjRhZjNiN2M4OTc4MTBlN2FhNGQ5IiwidXNlcl9pZCI6M30.P9eshfzlNrS2bQibqkR5u0laZcL5tx5sF3_9DtqOxXY'
+      'Authorization': 'Bearer $token'
     };
     var data = {"invite": inviteId};
 
@@ -87,7 +82,7 @@ class InvitationApi {
         data: data,
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         acceptInviteModel = AcceptInviteModel.onSuccess(response.data);
       } else {
         acceptInviteModel = AcceptInviteModel.onError(response.data);
@@ -101,10 +96,10 @@ class InvitationApi {
 
   static Future<RejectInviteModel> rejectInvite(
       int inviteId, String token) async {
+
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE3ODc5LCJpYXQiOjE3NDk3MTQyNzksImp0aSI6ImEyYTBhN2Q2MGYyMDQzYjVhYjg0M2M4Y2YwYzAzNzI5IiwidXNlcl9pZCI6M30.8dZ1wnWAMnFfOFxuPC-wdmd12N6S4E3_zkiijr3aOI0'
+      'Authorization': 'Bearer $token'
     };
 
     var data = {"invite": inviteId};
@@ -122,7 +117,6 @@ class InvitationApi {
       if (response.statusCode == 202) {
         rejectInviteModel = RejectInviteModel.onSuccess();
       } else {
-
         rejectInviteModel = RejectInviteModel.onError(response.data);
       }
     } on DioException catch (e) {
@@ -131,23 +125,22 @@ class InvitationApi {
     return rejectInviteModel;
   }
 
-  static Future<SendInviteModel> sendInvite(int senderId, int receiverId, int workspaceId) async {
+  static Future<SendInviteModel> sendInvite(
+      int senderId, int receiverId, int workspaceId, String token) async {
+
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzE4MTY1LCJpYXQiOjE3NDk3MTQ1NjUsImp0aSI6IjRkMGRlM2Q0YjgwMzQyMzU5YjY5NjkzNWUwYzA1NTIxIiwidXNlcl9pZCI6MX0.7paAg7tL7_ot9O0EskjHFZHmqa2jjFtNAETNUCFiz1w'
+      'Authorization': 'Bearer $token'
     };
     var data = {
-      "sender": senderId,
       "receiver": receiverId,
-      "workspace": workspaceId,
-      "status": "pending"
     };
 
     late SendInviteModel sendInviteModel;
 
     try {
       var response = await dio.request(
-        '/workspaces/$senderId/invite_user/',
+        '/workspaces/$workspaceId/invite_user/',
         options: Options(
           method: 'POST',
           headers: headers,

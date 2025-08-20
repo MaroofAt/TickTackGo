@@ -1,0 +1,72 @@
+POST http://127.0.0.1:8000/api/issues/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1NjUzMjAyLCJpYXQiOjE3NTU2NDk2MDIsImp0aSI6IjYyMzkyM2UwMDkwYzQyMmI5NWRiMGFjYjA1MDJhZTQwIiwidXNlcl9pZCI6M30.K4I_-8P-rMZyVZ4h-LS7-HVuYCOhvMGDSxGRDw9yQrQ
+
+{
+    "title": "Issue 8",
+    "description": "new issue to solve",
+    "project": 1
+}
+
+
+###
+
+GET http://127.0.0.1:8000/api/issues/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjc0MzIwLCJpYXQiOjE3NTUyNzA3MjAsImp0aSI6IjIwYjBkNWNkZTk3MjQzODc5MzQxMjIyYTYzNmQwMWJlIiwidXNlcl9pZCI6MX0.m1SeGI9hUZuHNa5WGyD8slW1lrsOaShMoYoKqY76Wxg
+
+{
+    "project": 1
+}
+
+
+###
+
+
+GET http://127.0.0.1:8000/api/issues/5/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1NjUwNjk3LCJpYXQiOjE3NTU2NDcwOTcsImp0aSI6IjRjZDY0MTExNzZmMzRmYWNiNjI5ZmYxNThmMzllZThhIiwidXNlcl9pZCI6MX0.PBdzDH0-yeDOrlzcXJRjkqn7aLx9-p6XP5YKns7ttrU
+
+{
+    "project": 1
+}
+
+
+###
+
+
+POST http://127.0.0.1:8000/api/issues/create_replie/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjk3MjU0LCJpYXQiOjE3NTUyOTM2NTQsImp0aSI6IjJhNWZlZmY5ODJlYzQyNWZiNDQ0NTZhZWM0MjBjNTY3IiwidXNlcl9pZCI6MX0.p3ViS94bBmy3fG-mPKcnKlkhR2DHYtWcVQeVFuiFOjU
+
+{
+    "body": "Issue replie 2",
+    "issue": 1
+}
+
+
+###
+
+
+GET http://127.0.0.1:8000/api/issues/list_replie/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjk3MjU0LCJpYXQiOjE3NTUyOTM2NTQsImp0aSI6IjJhNWZlZmY5ODJlYzQyNWZiNDQ0NTZhZWM0MjBjNTY3IiwidXNlcl9pZCI6MX0.p3ViS94bBmy3fG-mPKcnKlkhR2DHYtWcVQeVFuiFOjU
+
+{
+    "project": 1,
+    "issue": 1
+}
+
+
+###
+
+
+
+GET http://127.0.0.1:8000/api/issues/2/retrieve_replie/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjk3MjU0LCJpYXQiOjE3NTUyOTM2NTQsImp0aSI6IjJhNWZlZmY5ODJlYzQyNWZiNDQ0NTZhZWM0MjBjNTY3IiwidXNlcl9pZCI6MX0.p3ViS94bBmy3fG-mPKcnKlkhR2DHYtWcVQeVFuiFOjU
+
+{
+    "project": 1,
+    "issue": 1
+}

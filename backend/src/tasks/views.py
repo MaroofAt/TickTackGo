@@ -10,16 +10,24 @@ from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 
 
+
 from .models import Task, Comment , Inbox_Tasks, Task_Dependencies
-from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers
+from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers , CreateCommentSerializer
+
+
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner
 
 
 from projects.permissions import IsProjectMember
+from workspaces.models import Points , Workspace
+from users.models import User
 
-from tools.roles_check import can_edit_project , is_creator ,is_project_owner
+from tools.roles_check import can_edit_project , is_creator ,is_project_owner , is_task_project_owner
 from tools.responses import method_not_allowed, exception_response, required_response
 from tools.dependencie_functions import can_end, can_start
+from tools.points import calculate_task_points
+from tools.notify import send
+
 
 
 
@@ -73,7 +81,23 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
                 # 'required': ['title']
-            }
+            },
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Task 1'},
+                    'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
+                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
+                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
+                    'workspace': {'type':'integer' , 'example':1},
+                    'project': {'type':'integer' , 'example':1},
+                    'perent_task': {'type':'integer' , 'example':1 or None},
+                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
+                    'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'locked': {'type':'boolean' , 'example':False},
+                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
+                }
+            }            
         }
     )
     # @action(detail=True , methods=['post'] , serializer_class=TaskSerializer)
@@ -103,9 +127,11 @@ class TaskViewSet(viewsets.ModelViewSet):
          
             return Response(serializer.data , status=status.HTTP_201_CREATED)
         
+        user = User.objects.filter(id=request.user.id).first()
+        worksapce = Workspace.objects.filter(id=worksapce).first()
+        result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigne new task to you in {worksapce.title}')
 
-
-        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+        return Response({serializer.errors , result} , status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         summary="Cancel Task",
@@ -141,27 +167,44 @@ class TaskViewSet(viewsets.ModelViewSet):
     )
     @action(detail=True , methods=['get'] , serializer_class = TaskSerializer)
     def mark_as_completed(self , request , pk):
-        # ### check for the start time (we have to change it and do it in celery)
-        # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
-        # for task in tasks:
-        #     if task.status == 'pending':
-        #         task.status = 'in_progress'
-        #         task.save()
-        # ###        
-        task = Task.objects.filter(pk=pk)
-        if not task.exists():
-            return Response({"detail": "Task existe"} , status=status.HTTP_404_NOT_FOUND)
-        task = task.first()
-        if task.status == 'in_progress':
-            if not can_end(task.id):
-                return Response({'detail': 'Task can\'t be Completed... it depends on another task. '} , status=status.HTTP_400_BAD_REQUEST)
-                    
-            if is_project_owner(request.user.id , task.project) or is_creator(request.user.id , pk) :
-               task.status = 'completed' 
-               task.save()
-               return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
-        
-        return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_400_BAD_REQUEST)
+        try:
+            # ### check for the start time (we have to change it and do it in celery)
+            # tasks = Task.objects.filter(start_date__lte = timezone.now().date())
+            # for task in tasks:
+            #     if task.status == 'pending':
+            #         task.status = 'in_progress'
+            #         task.save()
+            # ###        
+            task = Task.objects.filter(pk=pk)
+            if not task.exists():
+                return Response({"detail": "Task exist"} , status=status.HTTP_404_NOT_FOUND)
+            task = task.first()
+            if task.status == 'in_progress':
+                if not can_end(task.id):
+                    return Response({'detail': 'Task can\'t be Completed... it depends on another task. '} , status=status.HTTP_400_BAD_REQUEST)
+                if is_project_owner(request.user.id , task.project) or is_creator(request.user.id , pk) :
+                    task.status = 'completed' 
+                    task.complete_date = timezone.now().date()
+                    task.done_assignee = request.user
+                    task.save()
+                    # Points ###############################################################################################
+                    task_points = calculate_task_points(task)
+                    task_assignees = task.assignees
+                    task_workspace = task.project.workspace
+                    for assignee in task_assignees.all():
+                        points_object = Points.objects.filter(user=assignee,workspace=task_workspace).first()
+                        points_object.total += task_points.get('total')
+                        points_object.hard_worker += task_points.get('hard_work_points')
+                        points_object.important_mission_solver += task_points.get('important_mission_points')
+                        points_object.discipline_member += task_points.get('discipline_points')
+                        points_object.save()
+                    ########################################################################################################
+                    return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
+            
+            return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return exception_response(e)
+
             
     @extend_schema(
         summary="List Tasks",
@@ -271,6 +314,22 @@ class TaskViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
 
+
+    @extend_schema(
+        summary="Cancel Tasks",
+        operation_id="cancel_task",
+        description="Cancel Specified Task",
+        tags=["Tasks"]
+    )
+    @action(detail=True , methods=['get'] , serializer_class = TaskSerializer)
+    def cancel_task(self , request , pk):
+        task = Task.objects.filter(pk=pk).first()
+        if is_task_project_owner(request.user.id , pk ) or is_creator(request.user.id , pk):
+            self.perform_destroy(instance=task)
+            return Response(None , status.HTTP_200_OK)
+        return Response({"message":"You are not the owner or the creator of the task"} , status.HTTP_400_BAD_REQUEST)
+
+
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
         return method_not_allowed()
@@ -303,7 +362,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             }
         }
     )
-    @action(detail=True, methods=['post'], serializer_class=CommentSerializer)
+    @action(detail=True, methods=['post'], serializer_class=CreateCommentSerializer)
     def create_comment(self, request, pk):
         try:
             if not request.data.get('body'):

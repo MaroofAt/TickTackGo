@@ -2,14 +2,16 @@ from rest_framework import serializers
 from django.conf import settings
 from django.db import transaction
 
-from .models import Workspace , Workspace_Membership , Invite
-from users.models import User
+from .models import Workspace , Workspace_Membership , Invite, Points
+from projects.models import Project
+from users.models import User 
 
 
 class LocalUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            'id',
             'username',
             'email',
             'image',
@@ -47,8 +49,29 @@ class WorkspaceMembershipSerializer(serializers.ModelSerializer):
             self.fields['workspace'] = WorkspaceSerializer(read_only=True)
 
 class WorkspaceSerializer(serializers.ModelSerializer):
+    class LocalProjectSerializer(serializers.ModelSerializer):
+        sub_projects = serializers.SerializerMethodField()
+        class Meta:
+            model = Project
+            fields = [
+                'id',
+                'title',
+                'color',
+                'ended',
+                'sub_projects',
+            ]
+        def get_sub_projects(self,obj):
+            return self.__class__(
+                Project.objects.filter(
+                    workspace = obj.workspace,
+                    parent_project = obj.id,
+                ),
+                many=True
+            ).data
+    
     owner = LocalUserSerializer(read_only=True)
     members = serializers.SerializerMethodField()
+    projects = serializers.SerializerMethodField()
     class Meta:
         model = Workspace
         fields = [
@@ -58,15 +81,25 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             'image',
             'owner',
             'members',
+            'projects',
             'created_at',
             'updated_at',
         ]
         extra_kwargs = {
+            'title': {
+                'required': False
+            },
             'image': {
                 'required': False
             },
             'description': {
                 'required': False
+            },
+            'created_at': {
+                'read_only': True
+            },
+            'updated_at': {
+                'read_only': True
             }
         }
 
@@ -85,6 +118,21 @@ class WorkspaceSerializer(serializers.ModelSerializer):
                 read_only=True
             ).data
 
+    def get_projects(self,obj):
+        return self.LocalProjectSerializer(
+            Project.objects.filter(
+                parent_project__isnull=True,
+                workspace_id=obj.id
+            ),
+            many=True,
+            read_only=True
+        ).data
+
+    def validate(self, attrs):
+        if self.instance is None and 'title' not in attrs:  # For Create
+            raise serializers.ValidationError({"title": "This field is required."})
+        return attrs
+
     def create(self, validated_data):
         try:
             owner = self.context['request'].user
@@ -94,11 +142,10 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             with transaction.atomic():
                 if not ('description' in validated_data):
                     validated_data['description'] = ""
-                if 'image' in validated_data:
-                    image = validated_data.pop('image')
+                image = validated_data.pop('image', None)
                 validated_data['owner'] = owner
                 instance = super().create(validated_data)
-                if 'image' in validated_data:
+                if image is not None:
                     instance.image = image
                     instance.save()
                 Workspace_Membership.objects.create(
@@ -106,10 +153,31 @@ class WorkspaceSerializer(serializers.ModelSerializer):
                     workspace = instance,
                     role = 'owner'
                 )
+                Points.objects.create(user=owner, workspace=instance)
             return instance
         except Exception as e:
             raise e
 
+class PointsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Points
+        fields = [
+            'id',
+            'user',
+            'workspace',
+            'total',
+            'important_mission_solver',
+            'hard_worker',
+            'discipline_member',
+            'created_at',
+            'updated_at',
+        ]
+        extra_kwargs = {
+            'created_at': {'read_only':True, 'required':False},
+            'updated_at': {'read_only':True, 'required':False},
+            'user': {'read_only':True},
+            'workspace': {'read_only':True}
+        }
 
 class InviteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -145,6 +213,7 @@ class WorkspaceNameSerializer(serializers.ModelSerializer):
 class ShowInvitesSerializer(serializers.ModelSerializer):
     sender = UserNameSerializer(read_only=True)  
     workspace = WorkspaceNameSerializer(read_only=True) 
+    receiver = UserNameSerializer(read_only = True)
     class Meta:
         model = Invite
         fields = [
@@ -157,3 +226,5 @@ class ShowInvitesSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at'
         ]
+
+

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 
+import '../../../core/constance/strings.dart';
+import '../../../core/functions/navigation_functions.dart';
+
 class Verifypage extends StatefulWidget {
+  const Verifypage({super.key});
+
   @override
   VerifypageState createState() => VerifypageState();
 }
@@ -15,20 +23,30 @@ class VerifypageState extends State<Verifypage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Stack(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: BlocBuilder<AuthCubit, AuthState>(
+  builder: (context, state) {
+    bool isloading=BlocProvider.of<AuthCubit>(context).isloading;
+    return Stack(
             children: [
+              Positioned(
+                top:20,
+                left:40,
+                child:IconButton(onPressed: (){
+                  pushReplacementNamed(context,signupRoute);
+                }, icon:const Icon(Icons.arrow_back_sharp),)
+              ),
               Positioned(
                 top: height(context)*0.49,left: width(context)*0.25,
                 child:  Center(
                 child: Text(
-                    "We have just send 4 degit\n code via your email",
+                    "We have just send 6 degit\n code via your email",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(color: white,fontSize: 17)
                 ),),),
               Positioned(
                 top: height(context)*0.099,left: width(context)*0.18,
-                child: Text(
+                child: const Text(
                   "Verify account",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -48,10 +66,15 @@ class VerifypageState extends State<Verifypage> {
                     ),
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
+                    width: width(context) * 0.8,
+                    height: height(context) * 0.2,
+                    decoration: const BoxDecoration(
+                        color: ampleOrange,
+                        borderRadius: BorderRadius.all(Radius.circular(40))),
                     child: Column(
                       children: [
                         SizedBox(
@@ -59,7 +82,7 @@ class VerifypageState extends State<Verifypage> {
                         ),
                         Pinput(
                           showCursor: true,
-                          length: 4,
+                          length: 6,
                           controller: pincontroller,
                           defaultPinTheme: PinTheme(
                             decoration: BoxDecoration(
@@ -80,13 +103,14 @@ class VerifypageState extends State<Verifypage> {
                         IconButton(
                             onPressed: () {
                               print(pincontroller.text);
+                              context.read<AuthCubit>().verify_SignUp(pincontroller.text,context);
                             },
                             icon: Container(
                               margin: EdgeInsets.all(10),
                               width: width(context) * 0.3,
                               height: height(context) * 0.04,
                               child: Center(
-                                child: Text("Verify"),
+                                child: isloading?CircularProgressIndicator(color: ampleOrange,strokeWidth:3):Text("Verify"),
                               ),
                               decoration: BoxDecoration(
                                   color: white,
@@ -95,19 +119,14 @@ class VerifypageState extends State<Verifypage> {
                             ))
                       ],
                     ),
-                    width: width(context) * 0.8,
-                    height: height(context) * 0.2,
-                    decoration: BoxDecoration(
-                        color: ampleOrange,
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
                   ),
                   Column(
                     children: [
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       GestureDetector(
                         onTap: () {},
                         child: RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             style: TextStyle(
                                 fontSize: 14,
                                 color: white,
@@ -118,10 +137,10 @@ class VerifypageState extends State<Verifypage> {
                           ),
                         ),
                       ),
-SizedBox(height: 10,),
+const SizedBox(height: 10,),
                       GestureDetector(
                           onTap: () {},
-                          child: Text(
+                          child: const Text(
                             'Re_send',
                             style: TextStyle(color: white,fontSize: 14),
 
@@ -132,7 +151,9 @@ SizedBox(height: 10,),
                 ],
               ),
             ],
-          ),
+          );
+  },
+),
         ),
       ),
       backgroundColor: primaryColor,

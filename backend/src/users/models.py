@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 
+from django.conf import settings
 
 from tools.models import TimeStampedModel #auto insert the created_at & updated_at fields
 
@@ -43,8 +44,8 @@ class User(AbstractBaseUser , PermissionsMixin , TimeStampedModel):
     email = models.EmailField(unique=True)
     image = models.ImageField( 
         upload_to=user_image_upload_path,
-        default="defaults/user/default.png"
-    ) #TODO put default photo
+        default="defaults/users/default.png"
+    )
     class HOW_TO_USE_WEBSITE(models.TextChoices):
         OWN_TASKS_MANAGEMENT = 'own_tasks_management'
         SMALL_TEAM = 'small_team'
@@ -116,3 +117,13 @@ class User_OTP (TimeStampedModel):
         db_table = 'user_otp'
     otp = models.CharField(max_length=6, null=True, blank=True)
     expires_at = models.DateTimeField(default=otp_expires_date_time , editable=False)
+
+
+
+class Device (TimeStampedModel):
+    class Meta:
+        db_table = 'device'
+    user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
+    registration_id = models.TextField(verbose_name="FCM Registration Token")
+    active = models.BooleanField(default=True , help_text="is this device currently active?")
+    device_type = models.CharField(max_length=20, blank=True, null=True, help_text="e.g., Android, iOS, Web")

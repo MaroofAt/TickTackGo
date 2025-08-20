@@ -17,8 +17,8 @@ import 'package:pr1/presentation/widgets/text_field.dart';
 class CreateWorkspacePage extends StatelessWidget {
   CreateWorkspacePage({super.key});
 
-  final controller = TextEditingController();
-  final controller1 = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +34,28 @@ class CreateWorkspacePage extends StatelessWidget {
                 Column(
                   children: [
                     SizedBox(height: height(context) * 0.08),
-                    MyText.text1(pageTitle,
-                        fontSize: 25,
-                        textColor: Theme.of(context).secondaryHeaderColor),
+                    MyText.text1(pageTitle, fontSize: 25, textColor: white),
                     SizedBox(height: height(context) * 0.02),
                     Column(
-                      spacing: height(context) * 0.05,
                       children: [
-                        BlocBuilder<WorkspaceCubit, WorkspaceState>(
+                        BlocConsumer<WorkspaceCubit, WorkspaceState>(
+                          listener: (context, state) {
+                            if (state is CreatedWorkspaceState) {
+                              popScreen(context, true);
+                            }
+                            if (state is CreateWorkspaceFailedState) {
+                              MyAlertDialog.showAlertDialog(
+                                context,
+                                content: state.errorMessage,
+                                firstButtonText: okText,
+                                firstButtonAction: () {
+                                  popScreen(context);
+                                },
+                                secondButtonText: '',
+                                secondButtonAction: () {},
+                              );
+                            }
+                          },
                           builder: (context, state) {
                             return Stack(
                               children: [
@@ -115,27 +129,34 @@ class CreateWorkspacePage extends StatelessWidget {
                             );
                           },
                         ),
+                        const SizedBox(height: 20),
                         SizedBox(
                           width: width(context) * 0.9,
-                          height: height(context) * 0.2,
+                          height: height(context) * 0.23,
                           child: Column(
-                            spacing: height(context) * 0.02,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              MyText.text1('Title *',
+                                  textColor: white, fontSize: 20),
                               MyTextField.textField(
                                 context,
-                                controller,
+                                _titleController,
                                 hint: titleHint,
-                                borderColor: Theme.of(context).primaryColor,
+                                textColor: white,
+                                borderColor: greatMagenda,
                               ),
+                              const SizedBox(height: 20),
+                              MyText.text1('Description *',
+                                  textColor: white, fontSize: 20),
                               MyTextField.textField(
                                 context,
-                                controller1,
+                                _descriptionController,
                                 hint: descriptionHint,
                                 type: TextInputType.multiline,
                                 textColor: white,
                                 minLines: 1,
                                 maxLines: 3,
-                                borderColor: Theme.of(context).primaryColor,
+                                borderColor: greatMagenda,
                               ),
                             ],
                           ),
@@ -150,13 +171,16 @@ class CreateWorkspacePage extends StatelessWidget {
                   height: height(context) * 0.06,
                   child: MyButtons.primaryButton(
                     () {
-                      //TODO create workspace
+                      BlocProvider.of<WorkspaceCubit>(context).createWorkSpace(
+                        _titleController.text,
+                        _descriptionController.text,
+                      );
                     },
                     Theme.of(context).secondaryHeaderColor,
                     child: MyText.text1(
                       createButtonText,
                       fontSize: 20,
-                      textColor: Theme.of(context).scaffoldBackgroundColor,
+                      textColor: white,
                     ),
                   ),
                 ),

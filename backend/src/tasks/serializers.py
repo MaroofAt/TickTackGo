@@ -2,8 +2,10 @@ from django.db import transaction
 from rest_framework import serializers
 
 
+
 from .models import Task, Assignee, Comment ,  Inbox_Tasks, Task_Dependencies
 from tools.dependencie_functions import creates_problems, can_start
+
 from users.models import User
 
 
@@ -76,16 +78,39 @@ class TaskSerializer(serializers.ModelSerializer):
             return super().update(instance=instance,validated_data=validated_data)
         
 
+
+class CreateCommentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model= Comment
+            fields= [
+                'task',
+                'user',
+                'body',
+                'created_at',
+                'updated_at',
+            ]
+
+
 class CommentSerializer(serializers.ModelSerializer):
+    class UserInnerSerialiser(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = [
+                'id',
+                'username',
+            ]
+    user = UserInnerSerialiser()
     class Meta:
         model= Comment
         fields= [
+            'id',
             'task',
             'user',
             'body',
             'created_at',
             'updated_at',
         ]
+
         
 class TaskDependenciesSerializers(serializers.ModelSerializer):
     class Meta:
@@ -143,3 +168,5 @@ class UpdateInboxTaskSerializer(serializers.ModelSerializer):
             'id': {'read_only':True},
             'user': {'read_only':True},
         } 
+
+

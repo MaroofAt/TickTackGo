@@ -1,16 +1,20 @@
+
 ///routes
 
 const String signinRoute = 'login';
 const String signupRoute = 'signup';
+const String verfiyeRoute = 'verfiye';
+const String issueRout = "issues";
+const String issuesdetalies = 'detalies';
 const String onboardingMainRoute = 'onboardingMainRoute';
 const String introQuestionsRoute = 'introQuestionsRoute';
 const String finalOnboardingPageRoute = 'finalOnboardingPageRoute';
-const String workspaceCreatePageRoute = 'workspaceCreatePageRoute';
 const String workspaceInfoRoute = 'workspaceInfoRoute';
 const String workspacesShowPageRoute = 'workspacesShowPageRoute';
-const String invitationSearchPageRoute = 'invitationSearchPageRoute';
 const String receivedInvitationPageRoute = 'receivedInvitationPageRoute';
-
+const String mainHomePageRoute = 'mainHomePageRoute';
+const String mainInboxPage = 'mainInboxPage';
+const String mainShowTasksPage = 'mainShowTasksPage';
 
 ///Splash screen strings
 const String splashScreenLogoPath = 'assets/images/logo_images/logoorgenal.png';
@@ -42,8 +46,8 @@ const String finalPageButtonText = 'Go Now';
 
 ///create workspace page
 const String pageTitle = 'Create your Own workspace!';
-const String titleHint = 'Title';
-const String descriptionHint = 'description';
+const String titleHint = 'enter title';
+const String descriptionHint = 'enter description';
 const String createButtonText = 'Create';
 const String permissionPermanentlyDeniedContent = 'Storage permission is permanently denied. Please enable it in the app settings';
 
@@ -58,11 +62,12 @@ const String deleteButtonText = 'Delete Workspace';
 
 ///main home page
 const String workspaceText = 'Workspaces';
-const String projectText = 'Projects';
+const String invitesText = 'Invites';
+const String receivedInviteText = 'received Invites';
 const String inboxText = 'Inbox';
 const String allTasksText = 'All Tasks';
 const String tasksText = 'tasks';
-
+const String issuesText ='Issues';
 const String hiText = 'Hi';
 const String warning = 'warning';
 const String okText = 'Ok';

@@ -4,6 +4,7 @@ from tools.models import TimeStampedModel
 
 from workspaces.models import Workspace
 from users.models import User
+# from tasks.models import Task
 
 # Create your models here.
 class Project(TimeStampedModel):
@@ -75,4 +76,37 @@ class Project_Membership(TimeStampedModel):
                 raise Exception('There Can\'t Be More Than One Owner For The Project !')
         except Exception as e:
             raise e
+        return super().save(*args , **kwargs)
+
+
+
+class Issue(TimeStampedModel):
+
+    class Meta:
+        db_table = 'issue'
+
+    user = models.ForeignKey(User , on_delete=models.CASCADE , null=False, blank=False)
+    project = models.ForeignKey(Project , on_delete=models.CASCADE, null=False, blank=False )
+    task = models.ForeignKey('tasks.Task',  on_delete=models.CASCADE, null=True, blank=True)
+    title = models.CharField(max_length=100, null=False, blank=False)
+    description = models.CharField(max_length=2000, null=False, blank=False)
+    solved = models.BooleanField(default=False)
+
+
+    def save(self, *args , **kwargs):
+
+        return super().save(*args , **kwargs)
+    
+
+class Issue_Replies(TimeStampedModel):
+
+    class Meta:
+        db_table = 'issue_replies'
+
+    user = models.ForeignKey(User , on_delete=models.CASCADE  , null=False, blank=False)
+    issue = models.ForeignKey(Issue , on_delete=models.CASCADE , null=False , blank=False)
+    body = models.CharField(max_length=2000 , null=False , blank=False)
+
+    def save(self, *args , **kwargs):
+
         return super().save(*args , **kwargs)

@@ -42,6 +42,17 @@ dependencies:
   image_picker: ^1.1.2
   dropdown_button2: ^2.3.9
   dio: ^5.8.0+1
+  flutter_colorpicker: ^1.1.0
+  http: ^1.4.0
+  shared_preferences: ^2.5.3
+  jwt_decoder: ^2.0.1
+  google_sign_in: ^6.2.2
+  firebase_core: ^3.15.1
+  firebase_auth: ^5.6.2
+  onesignal_flutter: ^5.1.2
+  intl: ^0.19.0
+  auto_size_text: ^3.0.0
+  shimmer_animation: ^2.1.0
  
 
 
@@ -71,10 +82,13 @@ flutter:
   assets:
     - assets/images/logo_images/
     - assets/images/verify_page_images/
+    - assets/images/verify_page_images/project.png
     - assets/images/welcome_screens_images/
     - assets/images/workspace_images/
+    - assets/images/auth_page_images/
     - assets/fonts/
-    
+    - assets/gifs/
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -20,20 +20,20 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.pr1"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 23
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders = [
+                onesignal_app_id: '972c2f0d-d622-4793-ba9d-2648e39485c3',
+                onesignal_google_project_number: '',
+                applicationName: "android.app.Application"
+        ]
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
         }
     }
@@ -42,3 +42,5 @@ android {
 flutter {
     source = "../.."
 }
+
+apply plugin: 'com.google.gms.google-services'

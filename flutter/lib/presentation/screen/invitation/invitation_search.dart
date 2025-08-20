@@ -5,6 +5,7 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/data/models/invitation/invitation_search_model.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
@@ -13,14 +14,18 @@ import 'package:pr1/presentation/widgets/text.dart';
 import 'package:pr1/presentation/widgets/text_field.dart';
 
 class InvitationSearch extends StatefulWidget {
-  const InvitationSearch({super.key});
+  final int senderId;
+  final int workspaceId;
+
+  const InvitationSearch(
+      {required this.senderId, required this.workspaceId, super.key});
 
   @override
   State<InvitationSearch> createState() => _InvitationSearchState();
 }
 
 class _InvitationSearchState extends State<InvitationSearch> {
-  List<String> _searchResults = [];
+  final List<String> _searchResults = [];
 
   final _controller = TextEditingController();
 
@@ -83,9 +88,10 @@ class _InvitationSearchState extends State<InvitationSearch> {
               },
               builder: (context, state) {
                 if (state is SearchSuccessState) {
+                  InvitationSearchModel invitationSearchModel = state.invitationSearchModel;
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: state.invitationSearchModel.results.length,
+                      itemCount: invitationSearchModel.results.length,
                       itemBuilder: (context, index) {
                         return Container(
                           width: width(context) * 0.9,
@@ -115,13 +121,13 @@ class _InvitationSearchState extends State<InvitationSearch> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   MyText.text1(
-                                    state.invitationSearchModel.results[index]
+                                    invitationSearchModel.results[index]
                                         .username,
                                     textColor: white,
                                     fontSize: 18,
                                   ),
                                   MyText.text1(
-                                      state.invitationSearchModel.results[index]
+                                      invitationSearchModel.results[index]
                                           .email,
                                       textColor: Colors.grey[400]),
                                 ],
@@ -129,7 +135,11 @@ class _InvitationSearchState extends State<InvitationSearch> {
                               MyGestureDetector.gestureDetector(
                                 onTap: () {
                                   BlocProvider.of<InvitationCubit>(context)
-                                      .inviteUser();
+                                      .inviteUser(
+                                    senderId: widget.senderId,
+                                    workspaceId: widget.workspaceId,
+                                    receiverId: invitationSearchModel.results[index].id,
+                                  );
                                 },
                                 child: BlocBuilder<InvitationCubit,
                                     InvitationState>(

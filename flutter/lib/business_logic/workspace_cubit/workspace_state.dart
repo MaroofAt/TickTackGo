@@ -17,6 +17,7 @@ class PermissionPermanentlyDeniedState extends WorkspaceState {}
 
 class SomethingWentWrongState extends WorkspaceState {}
 
+//create workspace states
 class CreatingWorkspaceState extends WorkspaceState {}
 
 class CreatedWorkspaceState extends WorkspaceState {
@@ -31,6 +32,62 @@ class CreateWorkspaceFailedState extends WorkspaceState {
   CreateWorkspaceFailedState(this.errorMessage);
 }
 
+//fetch workspaces states
+class WorkspacesFetchingState extends WorkspaceState {}
 
+class WorkspacesFetchingSucceededState extends WorkspaceState {
+  List<FetchWorkspacesModel> fetchWorkspacesModel;
 
+  WorkspacesFetchingSucceededState(this.fetchWorkspacesModel);
+}
 
+class WorkspacesFetchingFailedState extends WorkspaceState {
+  String errorMessage;
+
+  WorkspacesFetchingFailedState(this.errorMessage);
+}
+
+//retrieve workspace states
+class WorkspaceRetrievingState extends WorkspaceState {}
+
+class WorkspaceRetrievingSucceededState extends WorkspaceState{
+  RetrieveWorkspaceModel retrieveWorkspace;
+
+  WorkspaceRetrievingSucceededState(this.retrieveWorkspace);
+}
+
+class WorkspaceRetrievingFailedState extends WorkspaceState {
+  String errorMessage;
+
+  WorkspaceRetrievingFailedState(this.errorMessage);
+}
+
+class RefreshTokenState extends WorkspaceState {}
+
+class DeletingWorkspaceState extends WorkspaceState {}
+
+class DeletingWorkspaceSucceededState extends WorkspaceState {
+  DeleteWorkspaceModel deleteWorkspaceModel;
+
+  DeletingWorkspaceSucceededState(this.deleteWorkspaceModel);
+}
+
+class DeletingWorkspaceFailedState extends WorkspaceState {
+  String errorMessage;
+
+  DeletingWorkspaceFailedState(this.errorMessage);
+}
+
+class KickingMemberFromWorkspaceState extends WorkspaceState {}
+
+class KickingMemberFromWorkspaceSucceededState extends WorkspaceState {
+  KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel;
+
+  KickingMemberFromWorkspaceSucceededState(this.kickMemberFromWorkspaceModel);
+}
+
+class KickingMemberFromWorkspaceFailedState extends WorkspaceState {
+  String errorMessage;
+
+  KickingMemberFromWorkspaceFailedState(this.errorMessage);
+}

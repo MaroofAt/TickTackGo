@@ -1,16 +1,27 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
+import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
+import 'package:pr1/business_logic/comment_cubit.dart';
+import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
+import 'package:pr1/core/API/comments.dart';
 import 'package:pr1/core/constance/routes.dart';
-import 'package:pr1/presentation/screen/home/main_home_page.dart';
-import 'package:pr1/presentation/screen/workspace/create_workspace_page.dart';
-import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
+import 'package:pr1/presentation/screen/issues/all_issues.dart';
+import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
+import 'core/API/notification.dart';
+import 'core/variables/global_var.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  // runApp(DevicePreview(builder: (context) => MyApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // await  initOneSignal();
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -18,12 +29,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // builder: DevicePreview.appBuilder,
-      debugShowCheckedModeBanner: false,
-      theme: theme(),
-      routes: routes,
-      home: const MainHomePage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => CommentCubit(Commentapi())),
+
+        BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider(create: (context) => SplashCubit()),
+      ],
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        builder: DevicePreview.appBuilder,
+        debugShowCheckedModeBanner: false,
+        theme: theme(),
+        // theme: ThemeData.dark(),
+        routes: routes,
+        home:  const 
+        SplashScreen(),
+      ),
     );
   }
 }

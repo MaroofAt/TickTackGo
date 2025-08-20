@@ -36,3 +36,9 @@ src/projects/migrations/*
 src/users/migrations/*
 src/workspaces/migrations/*
 src/tasks/migrations/*
+
+src/media/Workspaces/
+src/media/Tasks/
+src/media/Users/
+
+src/services/taskmanagment-ab14e-firebase-adminsdk-fbsvc-956ece5f7c.json

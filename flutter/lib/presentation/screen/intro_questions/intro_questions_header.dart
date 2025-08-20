@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
-import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/variables/intro_questions_variables.dart';
@@ -21,7 +20,6 @@ class _IntroQuestionsHeaderState extends State<IntroQuestionsHeader> {
     return Padding(
       padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
       child: Row(
-        spacing: 25,
         children: [
           MyGestureDetector.gestureDetector(
             onTap: () {

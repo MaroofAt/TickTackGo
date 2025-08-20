@@ -5,7 +5,7 @@ class CreateWorkspaceModel {
   dynamic image;
   Owner? owner;
   List<dynamic> members;
-  String code;
+  List<dynamic> projects;
   DateTime? createdAt;
   DateTime? updatedAt;
   String errorMessage;
@@ -17,7 +17,7 @@ class CreateWorkspaceModel {
     required this.image,
     required this.owner,
     required this.members,
-    required this.code,
+    required this.projects,
     required this.createdAt,
     required this.updatedAt,
     required this.errorMessage,
@@ -25,13 +25,13 @@ class CreateWorkspaceModel {
 
   factory CreateWorkspaceModel.onSuccess(Map<String, dynamic> json) =>
       CreateWorkspaceModel(
-        id: json["id"]??0,
-        title: json["title"]??'',
-        description: json["description"]??'',
-        image: json["image"]??'',
+        id: json["id"],
+        title: json["title"],
+        description: json["description"],
+        image: json["image"],
         owner: Owner.fromJson(json["owner"]),
         members: List<dynamic>.from(json["members"].map((x) => x)),
-        code: json["code"],
+        projects: List<dynamic>.from(json["projects"].map((x) => x)),
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         errorMessage: '',
@@ -39,19 +39,19 @@ class CreateWorkspaceModel {
 
   factory CreateWorkspaceModel.onError(Map<String, dynamic> json) =>
       CreateWorkspaceModel(
-        id: json["id"]??'',
-        title: json["title"]??'',
-        description: json["description"]??'',
-        image: json["image"]??'',
-        owner: Owner.fromJson(json["owner"]),
-        members: List<dynamic>.from(json["members"].map((x) => x)),
-        code: json["code"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        errorMessage: json["detail"],
+        id: 0,
+        title: '',
+        description: '',
+        image: '',
+        owner: null,
+        members: [],
+        projects: [],
+        createdAt: null,
+        updatedAt: null,
+        errorMessage: json["detail"] ?? json["message"],
       );
 
-  factory CreateWorkspaceModel.error(String message) =>
+  factory CreateWorkspaceModel.error(String errorMessage) =>
       CreateWorkspaceModel(
         id: 0,
         title: '',
@@ -59,12 +59,11 @@ class CreateWorkspaceModel {
         image: '',
         owner: null,
         members: [],
-        code: '',
+        projects: [],
         createdAt: null,
         updatedAt: null,
-        errorMessage: message,
+        errorMessage: errorMessage,
       );
-
 }
 
 class Owner {
@@ -98,4 +97,15 @@ class Owner {
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
       );
+
+  Map<String, dynamic> toJson() => {
+        "username": username,
+        "email": email,
+        "image": image,
+        "how_to_use_website": howToUseWebsite,
+        "what_do_you_do": whatDoYouDo,
+        "how_did_you_get_here": howDidYouGetHere,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+      };
 }
