@@ -359,7 +359,17 @@ class IssueViewSet(viewsets.ModelViewSet):
         summary="Retrieve Issue",
         operation_id="retrieve_issue",
         description="Retrieve the issue in the project",
-        tags=['Projects/Issue']
+        tags=['Projects/Issue'],
+                request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'project': {'type':'integar' , 'example':1 },
+
+                },
+                'required':['issue' , 'body']
+            }
+        },
     )
     def retrieve(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
@@ -424,7 +434,18 @@ class IssueViewSet(viewsets.ModelViewSet):
         summary="List replie",
         operation_id="list_replie",
         description="List the replie to the issue",
-        tags=['Projects/Issue']
+        tags=['Projects/Issue'],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'project': {'type':'integar' , 'example':1},
+                    'issue': {'type':'integar' , 'example':1 },
+
+                },
+                'required':['issue' , 'project']
+            }
+        }
     )
     @action(detail=False , methods=['get'] , serializer_class=ShowIssueRepliesSerializer)
     def list_replie(self , request , *args, **kwargs):
@@ -454,7 +475,18 @@ class IssueViewSet(viewsets.ModelViewSet):
         summary="Retrieve replie",
         operation_id="retrieve_replie",
         description="Retrieve the replie to the issue",
-        tags=['Projects/Issue']
+        tags=['Projects/Issue'],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'project': {'type':'integar' , 'example':1 },
+                    'issue': {'type':'integar' , 'example':1 },
+
+                },
+                'required':['issue' , 'project']
+            }
+        }
     )
     @action(detail=True , methods=['get'] , serializer_class=ShowIssueRepliesSerializer)
     def retrieve_replie(self , request , *args, **kwargs):
