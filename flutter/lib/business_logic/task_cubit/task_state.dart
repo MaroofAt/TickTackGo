@@ -67,3 +67,17 @@ class TaskCancelingFailedState extends TaskState {
   TaskCancelingFailedState(this.errorMessage);
 }
 
+class TaskCompletingState extends TaskState {}
+
+class TaskCompletingSucceededState extends TaskState {
+  CompleteTaskModel completeTaskModel;
+
+  TaskCompletingSucceededState(this.completeTaskModel);
+}
+
+class TaskCompletingFailedState extends TaskState {
+  String errorMessage;
+
+  TaskCompletingFailedState(this.errorMessage);
+}
+

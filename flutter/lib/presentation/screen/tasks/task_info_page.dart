@@ -92,25 +92,46 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         white,
                         Icons.circle_outlined,
                       ),
-                      MyGestureDetector.gestureDetector(
-                        onTap: () {
-                          if (widget.fetchTasksModel.status == 'in_progress') {
-                            // BlocProvider.of<TaskCubit>(context).completeTask();
+                      BlocConsumer<TaskCubit, TaskState>(
+                        listener: (context, state) {
+                          if(state is TaskCompletingSucceededState) {
+                            popScreen(context, true);
                           }
                         },
-                        child: Container(
-                          height: height(context) * 0.05,
-                          width: width(context) * 0.28,
-                          decoration: BoxDecoration(
-                              color: widget.fetchTasksModel.status == 'pending'
-                                  ? lightGrey
-                                  : Theme.of(context).secondaryHeaderColor,
-                              borderRadius: BorderRadius.circular(16)),
-                          child: Center(
-                            child: MyText.text1('Completed?',
-                                textColor: Colors.black),
-                          ),
-                        ),
+                        builder: (context, state) {
+                          if(state is TaskCompletingState) {
+                            return Container(
+                              height: height(context) * 0.05,
+                              width: width(context) * 0.28,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: LoadingIndicator.circularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          return MyGestureDetector.gestureDetector(
+                            onTap: () {
+                              if (widget.fetchTasksModel.status == 'in_progress') {
+                                BlocProvider.of<TaskCubit>(context).completeTask(widget.fetchTasksModel.id);
+                              }
+                            },
+                            child: Container(
+                              height: height(context) * 0.05,
+                              width: width(context) * 0.28,
+                              decoration: BoxDecoration(
+                                  color: widget.fetchTasksModel.status != 'in_progress'
+                                      ? lightGrey
+                                      : Theme.of(context).secondaryHeaderColor,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: MyText.text1('Completed?',
+                                    textColor: Colors.black),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
