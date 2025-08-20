@@ -9,6 +9,7 @@ class ShowTasksAppBar {
       context,
       title: MyText.text1('Task list'),
       backgroundColor: transparent,
+      foregroundColor: white,
     );
   }
 }

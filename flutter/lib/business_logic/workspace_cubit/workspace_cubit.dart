@@ -12,6 +12,7 @@ import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
+import 'package:pr1/data/models/workspace/sent_invites_model.dart';
 
 part 'workspace_state.dart';
 
@@ -110,6 +111,19 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     } else {
       emit(KickingMemberFromWorkspaceFailedState(
           kickMemberFromWorkspaceModel.errorMessage));
+    }
+  }
+
+  Future<void> sentInvites(int workspaceId) async {
+    emit(SentInvitesRetrievingState());
+
+    SentInvitesModel sentInvitesModel =
+        await WorkspaceApi.sentInvites(workspaceId, token);
+
+    if (sentInvitesModel.errorMessage.isEmpty) {
+      emit(SentInvitesRetrievingSucceededState(sentInvitesModel));
+    } else {
+      emit(SentInvitesRetrievingFailedState(sentInvitesModel.errorMessage));
     }
   }
 }
