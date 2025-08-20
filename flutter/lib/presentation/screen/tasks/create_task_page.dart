@@ -28,100 +28,108 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CreateTaskAppBar.createTaskAppBar(context),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildSelectImage(context),
-                  BlocBuilder<TaskCubit, TaskState>(
-                    builder: (context, state) {
-                      return Column(
-                        children: [
-                          buildTextFieldsColumn(context, _titleController,
-                              _descriptionController),
-                          Column(
-                            children: [
-                              buildStartEndDate(
-                                context,
-                                label: 'Start Date',
-                                onTap: BlocProvider.of<TaskCubit>(context)
-                                    .selectStartDate,
-                                selectedDate:
-                                    BlocProvider.of<TaskCubit>(context)
-                                        .selectedStartDate,
-                              ),
-                              const SizedBox(height: 10),
-                              buildStartEndDate(
-                                context,
-                                label: 'End Date',
-                                onTap: BlocProvider.of<TaskCubit>(context)
-                                    .selectEndDate,
-                                selectedDate:
-                                    BlocProvider.of<TaskCubit>(context)
-                                        .selectedEndDate,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              buildLockedSwitch(context),
-                              buildParentTask(context),
-                            ],
-                          ),
-                          buildPriorityWrap(
-                            context,
-                            'Priority',
-                            priorities,
-                            BlocProvider.of<TaskCubit>(context)
-                                .selectedPriority,
-                            BlocProvider.of<TaskCubit>(context)
-                                .changeSelectedPriority,
-                          ),
-                          buildPriorityWrap(
-                            context,
-                            'status',
-                            statuses,
-                            BlocProvider.of<TaskCubit>(context).selectedStatus,
-                            BlocProvider.of<TaskCubit>(context)
-                                .changeSelectedStatus,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  // Row(
-                  //   children: [
-                  //     buildStartEndTimeSelector(
-                  //       context,
-                  //       label: 'Start time',
-                  //       onTap: _selectStartTime,
-                  //       timeFormat: _startTime,
-                  //     ),
-                  //     const SizedBox(width: 10),
-                  //     const Text('~'),
-                  //     const SizedBox(width: 10),
-                  //     buildStartEndTimeSelector(
-                  //       context,
-                  //       label: 'End time',
-                  //       onTap: _selectEndTime,
-                  //       timeFormat: _endTime,
-                  //     ),
-                  //   ],
-                  // ),
-                  SizedBox(
-                    height: height(context) * 0.12,
-                  )
-                ],
+      body: SizedBox(
+        height: height(context),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: 20,
+                  children: [
+                    buildSelectImage(context),
+                    BlocBuilder<TaskCubit, TaskState>(
+                      builder: (context, state) {
+                        return Column(
+                          spacing: 20,
+                          children: [
+                            buildTextFieldsColumn(context, _titleController,
+                                _descriptionController),
+                            Column(
+                              children: [
+                                buildStartEndDate(
+                                  context,
+                                  label: 'Start Date',
+                                  onTap: BlocProvider.of<TaskCubit>(context)
+                                      .selectStartDate,
+                                  selectedDate:
+                                      BlocProvider.of<TaskCubit>(context)
+                                          .selectedStartDate,
+                                ),
+                                const SizedBox(height: 10),
+                                buildStartEndDate(
+                                  context,
+                                  label: 'End Date',
+                                  onTap: BlocProvider.of<TaskCubit>(context)
+                                      .selectEndDate,
+                                  selectedDate:
+                                      BlocProvider.of<TaskCubit>(context)
+                                          .selectedEndDate,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                buildLockedSwitch(context),
+                                buildParentTask(context),
+                              ],
+                            ),
+                            buildPriorityWrap(
+                              context,
+                              'Priority',
+                              priorities,
+                              BlocProvider.of<TaskCubit>(context)
+                                  .selectedPriority,
+                              BlocProvider.of<TaskCubit>(context)
+                                  .changeSelectedPriority,
+                            ),
+                            // buildPriorityWrap(
+                            //   context,
+                            //   'status',
+                            //   statuses,
+                            //   BlocProvider.of<TaskCubit>(context).selectedStatus,
+                            //   BlocProvider.of<TaskCubit>(context)
+                            //       .changeSelectedStatus,
+                            // ),
+                          ],
+                        );
+                      },
+                    ),
+                    // Row(
+                    //   children: [
+                    //     buildStartEndTimeSelector(
+                    //       context,
+                    //       label: 'Start time',
+                    //       onTap: _selectStartTime,
+                    //       timeFormat: _startTime,
+                    //     ),
+                    //     const SizedBox(width: 10),
+                    //     const Text('~'),
+                    //     const SizedBox(width: 10),
+                    //     buildStartEndTimeSelector(
+                    //       context,
+                    //       label: 'End time',
+                    //       onTap: _selectEndTime,
+                    //       timeFormat: _endTime,
+                    //     ),
+                    //   ],
+                    // ),
+                    SizedBox(
+                      height: height(context) * 0.12,
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          buildBottomContainer(context, _titleController,
-              _descriptionController, widget.workspaceId, widget.projectId),
-        ],
+            Positioned(
+              bottom: 0,
+              child: buildBottomContainer(context, _titleController,
+                  _descriptionController, widget.workspaceId, widget.projectId),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -9,6 +9,7 @@ import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
+import 'package:pr1/data/models/workspace/sent_invites_model.dart';
 
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
@@ -186,5 +187,38 @@ class WorkspaceApi {
       kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.error(handleDioError(e));
     }
     return kickMemberFromWorkspaceModel;
+  }
+
+  static Future<SentInvitesModel> sentInvites(int workspaceId, String token) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var data = {
+      "workspace": workspaceId,
+    };
+
+    late SentInvitesModel sentInvitesModel;
+
+    try {
+      var response = await dio.request(
+        '/users/show_sent_invites/',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        sentInvitesModel = SentInvitesModel.onSuccess(response.data);
+      } else {
+        sentInvitesModel = SentInvitesModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+        sentInvitesModel = SentInvitesModel.error(handleDioError(e));
+    }
+    return sentInvitesModel;
   }
 }

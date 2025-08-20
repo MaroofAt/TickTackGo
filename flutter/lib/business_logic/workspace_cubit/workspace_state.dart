@@ -91,3 +91,17 @@ class KickingMemberFromWorkspaceFailedState extends WorkspaceState {
 
   KickingMemberFromWorkspaceFailedState(this.errorMessage);
 }
+
+class SentInvitesRetrievingState extends WorkspaceState {}
+
+class SentInvitesRetrievingSucceededState extends WorkspaceState {
+  SentInvitesModel sentInvitesModel;
+
+  SentInvitesRetrievingSucceededState(this.sentInvitesModel);
+}
+
+class SentInvitesRetrievingFailedState extends WorkspaceState {
+  String errorMessage;
+
+  SentInvitesRetrievingFailedState(this.errorMessage);
+}
