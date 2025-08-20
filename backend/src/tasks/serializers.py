@@ -2,12 +2,14 @@ from django.db import transaction
 from rest_framework import serializers
 
 
-from .models import Task, Assignee, Comment ,  Inbox_Tasks
+from .models import Task, Assignee, Comment ,  Inbox_Tasks, Task_Dependencies
+from tools.dependencie_functions import creates_problems, can_start
 from users.models import User
 
 
 class TaskSerializer(serializers.ModelSerializer):
     assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
+    status_message = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Task
         fields = [
@@ -27,7 +29,8 @@ class TaskSerializer(serializers.ModelSerializer):
             'status',
             'priority',
             'locked',
-            'reminder'
+            'reminder',
+            'status_message',
         ]
         extra_kwargs = {
             'id': {'read_only':True},
@@ -36,6 +39,10 @@ class TaskSerializer(serializers.ModelSerializer):
             'assignees': {'read_only': False}
         }
 
+    def get_status_message(self, obj):
+        if can_start(obj.pk):
+            return ""
+        return "Task can't start... it depends on another task."
     
     def create(self, validated_data):
         if validated_data.get('assignees'):
@@ -80,7 +87,32 @@ class CommentSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
         
+class TaskDependenciesSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Task_Dependencies
+        fields = (
+            'id',   'condition_task', 'target_task', 'type',
+        )
+        extra_kwargs = {
+            'id': {'read_only':True},
+        }
+    def create(self, validated_data):
+        if validated_data['target_task'] == validated_data['condition_task']:
+            raise serializers.ValidationError({
+                "you can't tie a task to it self!"
+            })
+        if validated_data['target_task'].project != validated_data['condition_task'].project:
+            raise serializers.ValidationError({
+                "you can't tie tasks from different projects!"
+            })
+        if creates_problems(validated_data):
+            raise serializers.ValidationError({
+                "this type of dependencie will create a scheduling impossibility."
+            })
         
+        print(validated_data['target_task'].project.workspace)
+        return super().create(validated_data)
+
 class InboxTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inbox_Tasks

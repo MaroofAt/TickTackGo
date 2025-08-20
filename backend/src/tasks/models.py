@@ -77,12 +77,28 @@ class Task(TimeStampedModel):
     def save(self, *args , **kwargs):
 
         return super().save(*args , **kwargs)
-    
+
     def change_status_when_start(self):
         if self.start_date <= timezone.now().date():
             self.status = 'in_progress'
             self.save()
 
+class Task_Dependencies(TimeStampedModel):
+    class Meta:
+        #app_label = "tasks_dependencies"
+        db_table = "tasks_dependencies"
+    class Dependencie_Type(models.TextChoices):
+        START_TO_START = 'start_to_start'
+        START_TO_FINISH = 'start_to_finish'
+        FINISH_TO_START = 'finish_to_start'
+        FINISH_TO_FINISH = 'finish_to_finish'
+    condition_task = models.ForeignKey(Task, related_name='c_task', on_delete=models.CASCADE)
+    target_task = models.ForeignKey(Task, related_name='t_task', on_delete=models.CASCADE)
+    type = models.CharField(
+        max_length=20,
+        choices=Dependencie_Type,
+        default=Dependencie_Type.START_TO_FINISH
+    )
 
 class Assignee(TimeStampedModel):
     class Meta:

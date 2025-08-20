@@ -7,11 +7,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 
-from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 
 
-from .models import Task, Comment , Inbox_Tasks
-from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer
+from .models import Task, Comment , Inbox_Tasks, Task_Dependencies
+from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner
 
 
@@ -19,6 +19,7 @@ from projects.permissions import IsProjectMember
 
 from tools.roles_check import can_edit_project , is_creator ,is_project_owner
 from tools.responses import method_not_allowed, exception_response, required_response
+from tools.dependencie_functions import can_end, can_start
 
 
 
@@ -38,6 +39,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             if not self.request.GET.get('completed', True):
                 qs = qs.exclude(status='completed')
         return qs
+    
     def get_permissions(self):
         self.permission_classes = [IsAuthenticated]
         if self.action == 'list':
@@ -105,7 +107,6 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
 
-
     @extend_schema(
         summary="Cancel Task",
         operation_id="cancel_task",
@@ -132,9 +133,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         return Response({"detail": "User is not the Owner of the workspace or not the Creator of the Task"} , status=status.HTTP_400_BAD_REQUEST)
 
-    
-
-
     @extend_schema(
         summary="Mark The task Completed ",
         operation_id="mark_as_completed",
@@ -155,13 +153,15 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Task existe"} , status=status.HTTP_404_NOT_FOUND)
         task = task.first()
         if task.status == 'in_progress':
+            if not can_end(task.id):
+                return Response({'detail': 'Task can\'t be Completed... it depends on another task. '} , status=status.HTTP_400_BAD_REQUEST)
+                    
             if is_project_owner(request.user.id , task.project) or is_creator(request.user.id , pk) :
                task.status = 'completed' 
                task.save()
                return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
         
         return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_400_BAD_REQUEST)
-
             
     @extend_schema(
         summary="List Tasks",
@@ -200,7 +200,15 @@ class TaskViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         try:
-            return super().list(request, *args, **kwargs)
+            queryset = self.filter_queryset(self.get_queryset())
+
+            for task in queryset:
+                if can_start(task.pk) and task.status == 'pending':
+                    task.change_status_when_start()
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
         except Exception as e:
             return exception_response(e)
     
@@ -263,15 +271,16 @@ class TaskViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
 
-
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
         return method_not_allowed()
         return super().update(request, *args, **kwargs)
+    
     @extend_schema(exclude=True)
     def partial_update(self, request, *args, **kwargs):
         return method_not_allowed()
         return super().partial_update(request, *args, **kwargs)
+    
     @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs):
         return method_not_allowed()
@@ -339,10 +348,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
     
-
-    
-
-
 
 class InboxTaskViewSet(viewsets.ModelViewSet):
     queryset = Inbox_Tasks.objects.all()
@@ -513,3 +518,83 @@ class InboxTaskViewSet(viewsets.ModelViewSet):
             )
         return super().partial_update(request, *args, **kwargs)
     
+
+class TaskDependenciesViewSet(viewsets.ModelViewSet):
+    queryset = Task_Dependencies.objects.all()
+    serializer_class = TaskDependenciesSerializers
+    permission_classes = [IsAuthenticated]
+
+
+    def get_permissions(self):
+        self.permission_classes = [IsAuthenticated]
+        if self.action in ['update', 'destroy']:
+            self.permission_classes.append(IsTaskProjectOwner)
+        return super().get_permissions()
+
+    @extend_schema(
+        summary="List all task dependencies",
+        description="Retrieve a list of all task dependencies.",
+        responses={200: TaskDependenciesSerializers(many=True)},
+        tags=["Task_Dependencies"],
+    )
+    def list(self, request, *args, **kwargs):
+        #self.permission_classes.append(IsTaskProjectOwner)
+        return super().list(request, *args, **kwargs)
+
+    @extend_schema(
+        summary="Retrieve a specific task dependency",
+        description="Get details of a single task dependency by its ID.",
+        responses={200: TaskDependenciesSerializers},
+        tags=["Task_Dependencies"],
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    @extend_schema(
+        summary="Create a new task dependency",
+        description=(
+            "Create a new dependency between two tasks. \n\n"
+            "- `target_task`: The task that depends on another. \n"
+            "- `condition_task`: The task it depends on. \n"
+            "- `type`: The dependency type "
+            "(`start_to_start`, `start_to_finish`, `finish_to_start`, `finish_to_finish`)."
+        ),
+        request=TaskDependenciesSerializers,
+        responses={201: TaskDependenciesSerializers},
+        examples=[
+            OpenApiExample(
+                "Example dependency",
+                value={
+                    "condition_task": 1,
+                    "target_task": 2,
+                    "type": "finish_to_start",
+                },
+            ),
+        ],
+        tags=["Task_Dependencies"],
+    )
+    def create(self, request, *args, **kwargs):
+        if not is_project_owner(request.user.id , request.data.get('condition_task').project):
+            return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
+        return super().create(request, *args, **kwargs)
+
+    @extend_schema(
+        summary="Update a task dependency",
+        description="Update the details of an existing dependency.",
+        request=TaskDependenciesSerializers,
+        responses={200: TaskDependenciesSerializers},
+        tags=["Task_Dependencies"],
+    )
+    def update(self, request, *args, **kwargs):
+        #self.permission_classes.append(IsTaskProjectOwner)
+        return super().update(request, *args, **kwargs)
+
+    @extend_schema(
+        summary="Delete a task dependency",
+        description="Remove a task dependency by its ID.",
+        responses={204: None},
+        tags=["Task_Dependencies"],
+    )
+    def destroy(self, request, *args, **kwargs):
+        #self.permission_classes.append(IsTaskProjectOwner)
+        return super().destroy(request, *args, **kwargs)
