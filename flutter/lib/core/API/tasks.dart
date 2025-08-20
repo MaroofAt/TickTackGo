@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/models/tasks/cancel_task_model.dart';
+import 'package:pr1/data/models/tasks/complete_task_model.dart';
 import 'package:pr1/data/models/tasks/create_task_model.dart';
 import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
 import 'package:pr1/data/models/tasks/retrieve_task_model.dart';
@@ -175,6 +176,33 @@ class TaskApi {
     return cancelTaskModel;
   }
 
-  
+  static Future<CompleteTaskModel> completeTask(int taskId, String token) async {
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+
+      late CompleteTaskModel completeTaskModel;
+
+    try {
+      var response = await dio.request(
+        '/tasks/$taskId/mark_as_completed/',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        completeTaskModel = CompleteTaskModel.onSuccess();
+      }
+      else {
+        completeTaskModel = CompleteTaskModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+        completeTaskModel = CompleteTaskModel.error(handleDioError(e));
+    }
+    return completeTaskModel;
+  }
 
 }

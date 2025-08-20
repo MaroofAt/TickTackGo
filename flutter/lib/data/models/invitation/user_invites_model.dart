@@ -1,7 +1,7 @@
 class UserInvitesModel {
   int id;
-  Sender? sender;
-  int receiver;
+  Receiver? sender;
+  Receiver? receiver;
   Workspace? workspace;
   String status;
   DateTime? expireDate;
@@ -24,10 +24,10 @@ class UserInvitesModel {
   factory UserInvitesModel.onSuccess(Map<String, dynamic> json) =>
       UserInvitesModel(
         id: json["id"],
-        sender: Sender.fromJson(json["sender"]),
-        receiver: json["receiver"] ?? 0,
+        sender: Receiver.fromJson(json["sender"]),
+        receiver: Receiver.fromJson(json["receiver"]),
         workspace: Workspace.fromJson(json["workspace"]),
-        status: json["status"] ?? '',
+        status: json["status"],
         expireDate: DateTime.parse(json["expire_date"]),
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
@@ -36,21 +36,22 @@ class UserInvitesModel {
 
   factory UserInvitesModel.onError(Map<String, dynamic> json) =>
       UserInvitesModel(
-        id: json["id"] ?? 0,
-        sender: Sender.fromJson(json["sender"]),
-        receiver: json["receiver"],
-        workspace: Workspace.fromJson(json["workspace"]),
-        status: json["status"],
-        expireDate: DateTime.parse(json["expire_date"] ?? ''),
-        createdAt: DateTime.parse(json["created_at"] ?? ''),
-        updatedAt: DateTime.parse(json["updated_at"] ?? ''),
-        errorMessage: json["detail"],
-      );
-
-  factory UserInvitesModel.error(String errorMessage) => UserInvitesModel(
         id: 0,
         sender: null,
-        receiver: 0,
+        receiver: null,
+        workspace: null,
+        status: '',
+        expireDate: null,
+        createdAt: null,
+        updatedAt: null,
+        errorMessage: json["detail"] ?? json["message"],
+      );
+
+  factory UserInvitesModel.error(String errorMessage) =>
+      UserInvitesModel(
+        id: 0,
+        sender: null,
+        receiver: null,
         workspace: null,
         status: '',
         expireDate: null,
@@ -60,16 +61,16 @@ class UserInvitesModel {
       );
 }
 
-class Sender {
-  int? id;
-  String? username;
+class Receiver {
+  int id;
+  String username;
 
-  Sender({
+  Receiver({
     required this.id,
     required this.username,
   });
 
-  factory Sender.fromJson(Map<String, dynamic> json) => Sender(
+  factory Receiver.fromJson(Map<String, dynamic> json) => Receiver(
         id: json["id"],
         username: json["username"],
       );
@@ -81,8 +82,8 @@ class Sender {
 }
 
 class Workspace {
-  int? id;
-  String? title;
+  int id;
+  String title;
 
   Workspace({
     required this.id,
