@@ -45,7 +45,7 @@ POST http://127.0.0.1:8000/api/users/token/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "alialmusfi@gmail.com",
+    "email": "shadii@gmail.com",
     "password": "aloosh1234"
 }
 
