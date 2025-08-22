@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class WorkspaceInfoHeader extends StatelessWidget {
-
   final String imageUrl = "assets/images/logo_images/logo100.png";
   final RetrieveWorkspaceModel retrieveWorkspace;
 
-  const WorkspaceInfoHeader(this.retrieveWorkspace,{super.key});
+  const WorkspaceInfoHeader(this.retrieveWorkspace, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,11 @@ class WorkspaceInfoHeader extends StatelessWidget {
             child: retrieveWorkspace.image == null
                 ? MyImages.assetImage(imageUrl,
                     height: 150, width: 150, fit: BoxFit.cover)
-                : MyImages.networkImage(retrieveWorkspace.image),
+                : MyImages.networkImage(
+                    retrieveWorkspace.image,
+                    width: width(context) * 0.6,
+                    height: width(context) * 0.6,
+                  ),
           ),
         ),
         const SizedBox(height: 16),

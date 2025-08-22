@@ -42,10 +42,14 @@ class MyImages {
   static Widget networkImage(
     String imageUrl, {
     String placeholder = 'assets/gifs/loading_indicator.gif',
+    double? height,
+    double? width,
   }) {
     return FadeInImage.assetNetwork(
       placeholder: placeholder,
       image: imageUrl,
+      height: height,
+      width: width,
       fit: BoxFit.cover,
     );
   }

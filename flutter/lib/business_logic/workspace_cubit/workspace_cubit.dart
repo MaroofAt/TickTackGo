@@ -117,13 +117,13 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
   Future<void> sentInvites(int workspaceId) async {
     emit(SentInvitesRetrievingState());
 
-    SentInvitesModel sentInvitesModel =
+    List<SentInvitesModel> sentInvitesModel =
         await WorkspaceApi.sentInvites(workspaceId, token);
 
-    if (sentInvitesModel.errorMessage.isEmpty) {
+    if (sentInvitesModel[0].errorMessage.isEmpty) {
       emit(SentInvitesRetrievingSucceededState(sentInvitesModel));
     } else {
-      emit(SentInvitesRetrievingFailedState(sentInvitesModel.errorMessage));
+      emit(SentInvitesRetrievingFailedState(sentInvitesModel[0].errorMessage));
     }
   }
 }
