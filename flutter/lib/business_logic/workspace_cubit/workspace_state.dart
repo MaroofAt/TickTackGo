@@ -95,7 +95,7 @@ class KickingMemberFromWorkspaceFailedState extends WorkspaceState {
 class SentInvitesRetrievingState extends WorkspaceState {}
 
 class SentInvitesRetrievingSucceededState extends WorkspaceState {
-  SentInvitesModel sentInvitesModel;
+  List<SentInvitesModel> sentInvitesModel;
 
   SentInvitesRetrievingSucceededState(this.sentInvitesModel);
 }

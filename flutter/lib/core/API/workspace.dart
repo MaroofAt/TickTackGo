@@ -189,7 +189,7 @@ class WorkspaceApi {
     return kickMemberFromWorkspaceModel;
   }
 
-  static Future<SentInvitesModel> sentInvites(int workspaceId, String token) async {
+  static Future<List<SentInvitesModel>> sentInvites(int workspaceId, String token) async {
     var headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -199,7 +199,7 @@ class WorkspaceApi {
       "workspace": workspaceId,
     };
 
-    late SentInvitesModel sentInvitesModel;
+    late List<SentInvitesModel> sentInvitesModel;
 
     try {
       var response = await dio.request(
@@ -212,12 +212,14 @@ class WorkspaceApi {
       );
 
       if (response.statusCode == 200) {
-        sentInvitesModel = SentInvitesModel.onSuccess(response.data);
+        List<dynamic> data = response.data;
+        sentInvitesModel =
+            data.map((json) => SentInvitesModel.onSuccess(json)).toList();
       } else {
-        sentInvitesModel = SentInvitesModel.onError(response.data);
+        sentInvitesModel = [SentInvitesModel.onError(response.data)];
       }
     } on DioException catch (e) {
-        sentInvitesModel = SentInvitesModel.error(handleDioError(e));
+        sentInvitesModel = [SentInvitesModel.error(handleDioError(e))];
     }
     return sentInvitesModel;
   }
