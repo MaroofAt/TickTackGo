@@ -7,6 +7,7 @@ import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/core/variables/global_var.dart';
+import 'package:pr1/data/models/workspace/cancel_invite_model.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
@@ -124,6 +125,19 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
       emit(SentInvitesRetrievingSucceededState(sentInvitesModel));
     } else {
       emit(SentInvitesRetrievingFailedState(sentInvitesModel[0].errorMessage));
+    }
+  }
+
+  Future<void> cancelInvites(int workspaceId, int inviteId) async {
+    emit(InviteCancelingState());
+
+    CancelInviteModel cancelInviteModel =
+        await WorkspaceApi.cancelInvite(workspaceId, inviteId, token);
+
+    if (cancelInviteModel.errorMessage.isEmpty) {
+      sentInvites(workspaceId);
+    } else {
+      emit(InviteCancelingFailedState(cancelInviteModel.errorMessage));
     }
   }
 }

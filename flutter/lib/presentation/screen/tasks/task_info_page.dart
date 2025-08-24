@@ -212,7 +212,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                 ],
               ),
               DefaultTabController(
-                length: 2,
+                length: 3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -223,6 +223,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       tabs: [
                         Tab(text: 'Comments'),
                         Tab(text: 'Subtasks'),
+                        Tab(text: 'Assignees'),
                       ],
                     ),
                     SizedBox(
@@ -238,6 +239,8 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
 
                           // Subtasks Tab
                           _buildSubtasksTab(),
+
+
                         ],
                       ),
                     ),
