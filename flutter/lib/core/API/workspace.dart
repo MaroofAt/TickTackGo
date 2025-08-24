@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/local_data/local_data.dart';
+import 'package:pr1/data/models/workspace/cancel_invite_model.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:dio/dio.dart';
 import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
@@ -222,5 +223,38 @@ class WorkspaceApi {
         sentInvitesModel = [SentInvitesModel.error(handleDioError(e))];
     }
     return sentInvitesModel;
+  }
+
+  static Future<CancelInviteModel> cancelInvite(int workspaceId, int inviteId, String token) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+
+    var data = {
+      "invite": inviteId
+    };
+
+    late CancelInviteModel cancelInviteModel;
+    try {
+      var response = await dio.request(
+        '/workspaces/$workspaceId/cancel_invite/',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 202) {
+        cancelInviteModel = CancelInviteModel.onSuccess();
+      } else {
+        cancelInviteModel = CancelInviteModel.onError(response.data);
+      }
+    } on DioException catch(e) {
+      cancelInviteModel = CancelInviteModel.error(handleDioError(e));
+    }
+    return cancelInviteModel;
   }
 }

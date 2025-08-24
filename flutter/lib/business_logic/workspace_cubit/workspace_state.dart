@@ -105,3 +105,17 @@ class SentInvitesRetrievingFailedState extends WorkspaceState {
 
   SentInvitesRetrievingFailedState(this.errorMessage);
 }
+
+class InviteCancelingState extends WorkspaceState {}
+
+class InviteCancelingSucceededState extends WorkspaceState {
+  CancelInviteModel cancelInviteModel;
+
+  InviteCancelingSucceededState(this.cancelInviteModel);
+}
+
+class InviteCancelingFailedState extends WorkspaceState {
+  String errorMessage;
+
+  InviteCancelingFailedState(this.errorMessage);
+}

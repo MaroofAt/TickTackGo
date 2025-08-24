@@ -59,7 +59,7 @@ class TaskCubit extends Cubit<TaskState> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedStartDate,
-      firstDate: DateTime(2000),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2025, 12, 31),
     );
     if (picked != null && picked != selectedStartDate) {
@@ -72,7 +72,7 @@ class TaskCubit extends Cubit<TaskState> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedEndDate,
-      firstDate: DateTime(2000),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2025, 12, 31), // Changed to end of 2025
     );
     if (picked != null && picked != selectedEndDate) {
