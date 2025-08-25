@@ -50,7 +50,9 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
                 label: 'Parent Project',
                 value: _selectedParent,
                 items: widget.parentProjects.keys.toList(),
-                onChanged: (val) => setState(() => _selectedParent = val),
+                onChanged: (val) => setState(() {
+                  _selectedParent = val;
+                }),
               ),
               const SizedBox(height: 12),
               SizedBox(
@@ -68,7 +70,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
           width: width(context) * 0.2,
           child: TextButton(
             onPressed: () => popScreen(context),
-            child: MyText.text1('Cancel',textColor: Colors.red),
+            child: MyText.text1('Cancel', textColor: Colors.red),
           ),
         ),
         SizedBox(
@@ -123,6 +125,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
       child: Row(
         children: [
           MyText.text1('pick color', fontSize: 18, textColor: white),
+          const SizedBox(width: 20),
           Container(
             height: width(context) * 0.03,
             width: width(context) * 0.03,
@@ -166,14 +169,15 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: darkGrey,
           title: SizedBox(
               width: width(context),
               height: height(context) * 0.05,
-              child: MyText.text1('Pick a color', textColor: black, textAlign: TextAlign.center)),
+              child: MyText.text1('Pick a color',
+                  textColor: white, textAlign: TextAlign.center)),
           content: SizedBox(
             width: width(context) * 0.9,
-            height: height(context) * 0.48,
+            height: height(context) * 0.42,
             child: ColorPicker(
               pickerColor: selectedColor,
               onColorChanged: (Color color) {
@@ -181,7 +185,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
                   selectedColor = color;
                 });
               },
-              showLabel: true,
+              showLabel: false,
               pickerAreaHeightPercent: 0.8,
             ),
           ),
@@ -190,7 +194,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
               width: width(context) * 0.2,
               height: height(context) * 0.05,
               child: TextButton(
-                child: MyText.text1('Select'),
+                child: MyText.text1('Select', textColor: white),
                 onPressed: () {
                   popScreen(context);
                 },

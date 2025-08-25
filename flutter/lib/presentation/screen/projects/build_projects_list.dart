@@ -67,6 +67,7 @@ class BuildProjectsList extends StatelessWidget {
           if (hex.length == 6) hex = 'ff$hex'; // Adds opacity if not provided
           color = Color(int.parse(hex, radix: 16));
         }
+        print(projects[index].subProjects);
         return BuildProjectListItem(
             projects[index],
             color,

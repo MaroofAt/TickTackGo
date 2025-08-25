@@ -67,7 +67,9 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
               );
             }
             for (var element in state.fetchedTasks) {
-              tasksTitles.addAll({element.title: element.id});
+              if(element.status != 'completed') {
+                tasksTitles.addAll({element.title: element.id});
+              }
             }
             tasksTitles.addAll({'canceled': 0});
             return Row(
