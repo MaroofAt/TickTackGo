@@ -13,7 +13,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 GET http://127.0.0.1:8000/api/issues/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Mjc0MzIwLCJpYXQiOjE3NTUyNzA3MjAsImp0aSI6IjIwYjBkNWNkZTk3MjQzODc5MzQxMjIyYTYzNmQwMWJlIiwidXNlcl9pZCI6MX0.m1SeGI9hUZuHNa5WGyD8slW1lrsOaShMoYoKqY76Wxg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2MTYxNjIxLCJpYXQiOjE3NTYxNTgwMjEsImp0aSI6ImNiN2YxZDNlMmZiYzQ2OWQ5ZGVlM2Y4ZmRmNTBhMmZmIiwidXNlcl9pZCI6MX0.-fsVa_7uG-GQIrmqshbsAZkpCGtBio4me4rzxIfRjvg
 
 {
     "project": 1
@@ -70,3 +70,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
     "project": 1,
     "issue": 1
 }
+
+###
+
+
+GET http://127.0.0.1:8000/api/issues/1/mark_issue_as_solved/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2MTYxNjIxLCJpYXQiOjE3NTYxNTgwMjEsImp0aSI6ImNiN2YxZDNlMmZiYzQ2OWQ5ZGVlM2Y4ZmRmNTBhMmZmIiwidXNlcl9pZCI6MX0.-fsVa_7uG-GQIrmqshbsAZkpCGtBio4me4rzxIfRjvg
+
