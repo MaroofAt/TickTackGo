@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/issues/issue_model.dart';
+import 'package:pr1/data/models/issues/list_issues_model.dart';
 
 import '../../../core/constance/colors.dart';
 import '../../../core/constance/strings.dart';
@@ -10,13 +11,14 @@ import 'detalies_issue.dart';
 
 
 class Notsolveissue extends StatelessWidget {
-
+ final List<ListIssuesModel> issues;
+ Notsolveissue({required this.issues});
   @override
   Widget build(BuildContext context) {
     return   ListView.builder(
-      itemCount: unsolvedIssues.length,
+      itemCount: issues.length,
       itemBuilder: (context, index) {
-        Issue issue=unsolvedIssues[index];
+        var issue=issues[index];
         return Stack(
           children: [
             Card(
@@ -25,7 +27,7 @@ class Notsolveissue extends StatelessWidget {
               child: ListTile(
                 title: Text(issue.title,
                     style: TextStyle(color: white)),
-                trailing:issue.isResolved!=true? Icon(Icons.close, color: ampleOrange):Icon(Icons.check,color: ampleOrange),
+                trailing:issue.solved!=true? Icon(Icons.close, color: ampleOrange):Icon(Icons.check,color: ampleOrange),
                 onTap: () {
                   Navigator.pushNamed(
                     context,

@@ -44,7 +44,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
             children: [
               Container(
                 width: width(context) * 0.35,
-                child: MyImages.networkImage(fetchTasksModel.image),
+                child: MyImages.networkImage(widget.fetchTasksModel.image),
               ),
               // MyCircle.circle(width(context) * 0.35, color: Colors.white),
               Column(

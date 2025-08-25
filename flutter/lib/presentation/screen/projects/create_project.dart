@@ -121,7 +121,6 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
     return MyGestureDetector.gestureDetector(
       onTap: openColorPicker,
       child: Row(
-        spacing: 20,
         children: [
           MyText.text1('pick color', fontSize: 18, textColor: white),
           Container(

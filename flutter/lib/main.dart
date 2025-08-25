@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/business_logic/comment_cubit.dart';
+import 'package:pr1/business_logic/issues/issues_cubit.dart';
 import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/API/comments.dart';
+import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
+import 'business_logic/replay/replay_cubit.dart';
 import 'core/API/notification.dart';
 import 'core/variables/global_var.dart';
 import 'firebase_options.dart';
@@ -32,9 +35,11 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => CommentCubit(Commentapi())),
-
+BlocProvider(create: (context)=> IssuesCubit(IssueApi())),
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => SplashCubit()),
+        BlocProvider(create: (_) => ReplyCubit(IssueApi())),
+
       ],
       child: MaterialApp(
         navigatorKey: navigatorKey,

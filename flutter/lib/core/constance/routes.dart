@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
@@ -20,7 +22,7 @@ import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
 import 'package:pr1/presentation/screen/workspace/workspaces_show_page.dart';
 
 import '../../business_logic/auth_cubit/auth_cubit.dart';
-import '../../data/models/issues/issue_model.dart';
+import '../../data/models/issues/issue_create.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   signupRoute: (context) => const Signupnew(),
@@ -29,10 +31,11 @@ Map<String, Widget Function(BuildContext)> routes = {
         create: (context) => AuthCubit(),
         child: const Verifypage(),
       ),
-  issueRout:(context) => const All_Issues(),
   issuesdetalies: (context) {
-    final issue = ModalRoute.of(context)!.settings.arguments as Issue;
-    return Detalies_Issue(issue: issue);
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final issueid = args["issueId"] as int;
+    final projectid = args["projectId"] as int;
+    return Detalies_Issue( issueId: issueid, projectId: projectid,);
   },
   onboardingMainRoute: (context) => const OnboardingMain(),
   introQuestionsRoute: (context) => BlocProvider(
