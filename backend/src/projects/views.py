@@ -543,6 +543,39 @@ class IssueViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+    @extend_schema(
+        summary="Mark Issue As Solved",
+        operation_id="mark_issue_as_solved",
+        description="Mark the issue as solved by the user who created this issue only",
+        tags=['Projects/Issue'],
+                request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                },
+            }
+        }
+    )
+    @action(detail=True , methods=['get'] , serializer_class=IssueSerializer)
+    def mark_issue_as_solved(self , request , *args, **kwargs):
+        user = request.user.id
+        issue_id = kwargs.get('pk')
+        issue = Issue.objects.filter(pk=issue_id)
+        if not issue.exists():
+            return Response({"error":"this issue does not exist :( "} , status.HTTP_404_NOT_FOUND)
+        issue = Issue.objects.get(id=issue_id)
+        print(f"{issue.user.id}    {user} ")
+        if not issue.user.id == user:
+            return Response({"error":"you are not the creator of the issue "} , status.HTTP_400_BAD_REQUEST)
+        if issue.solved is True:
+            return Response({"message":"Issue already solved"} , status.HTTP_400_BAD_REQUEST)
+            
+        issue.solved = True
+        issue.save()
+        serializer = self.get_serializer(issue)
+        return Response(serializer.data , status.HTTP_200_OK)
+
+
     @extend_schema(exclude=True)
     def update(self, request, *args, **kwargs):
         return method_not_allowed()
