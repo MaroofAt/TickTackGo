@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/issues/issues_cubit.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
+import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
@@ -13,6 +15,8 @@ import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
+
+import '../issues/all_issues.dart';
 
 class BuildProjectListItem extends StatelessWidget {
   final Project projectsModel;
@@ -76,6 +80,20 @@ class BuildProjectListItem extends StatelessWidget {
                     ],
                   ),
                   Container(
+                    margin: const EdgeInsets.only(left:  10),
+                    child: MyGestureDetector.gestureDetector(
+                      onTap: () {
+                        pushScreen(
+                          context,
+                          BlocProvider(
+                            create: (context) => IssuesCubit(IssueApi()),
+                            child: All_Issues(project_Id: projectsModel.id,)
+                          ),
+                        );
+                      },
+                      child: MyIcons.icon(Icons.bug_report_outlined, color: lightGrey),
+                    ),
+                  ),    Container(
                     margin: const EdgeInsets.only(right: 15.0),
                     child: MyGestureDetector.gestureDetector(
                       onTap: () {
