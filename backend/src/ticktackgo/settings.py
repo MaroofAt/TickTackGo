@@ -15,6 +15,7 @@ import os
 from dotenv import load_dotenv
 from datetime import timedelta
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -215,6 +216,18 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10  # 10MB
 MAX_WORKSPACES_COUNT_FOR_SINGLE_USER = 10
 MAX_MEMBERS_COUNT_FOR_SINGLE_WORKSPACE = 20
 
+    # -Points
+        # priority
+HIGH_PRIORITY_MISSION = 10
+MEDIUM_PRIORITY_MISSION = 8
+LOW_PRIORITY_MISSION = 6
+        # time
+FINISHED_BEFORE_TIME = 10
+FINISHED_ON_TIME = 8
+FINISHED_AFTER_TIME = 5
+        # task_long
+DAY_POINTS = 1
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -235,3 +248,9 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY' , '')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET' , '')
 
+
+#firebase notification
+# Firebase settings
+FIREBASE_CONFIG = os.getenv('FIREBASE_CONFIG')
+
+SERVICE_ACCOUNT_FILE = os.getenv('SERVICE_ACCOUNT_FILE')

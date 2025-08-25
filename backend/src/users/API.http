@@ -3,8 +3,8 @@ POST http://127.0.0.1:8000/api/users/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "Ali",
-    "email": "alialmusfi@gmail.com",
+    "username": "Alio2",
+    "email": "alialmusfi172@gmail.com",
     "password": "aloosh1234",
     "how_to_use_website": "small_team",
     "what_do_you_do": "software_or_it",
@@ -45,7 +45,7 @@ POST http://127.0.0.1:8000/api/users/token/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "alialmusfi@gmail.com",
+    "email": "shadii@gmail.com",
     "password": "aloosh1234"
 }
 
@@ -109,6 +109,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 GET http://127.0.0.1:8000/api/users/show_invites/ HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0NDg0OTk5LCJpYXQiOjE3NTQ0ODEzOTksImp0aSI6IjQ5MzhiN2JmZjc2YzQ2YjZhNWMyMDI5MDlkY2FlNTQxIiwidXNlcl9pZCI6M30.xFHdvAvZewL9w8ToG4mTekVoNTY6mgAkEqil241LHfs
+
+
+###
+
+
+POST http://127.0.0.1:8000/api/users/show_sent_invites/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1NTI5OTE2LCJpYXQiOjE3NTU1MjYzMTYsImp0aSI6ImFhOTI1ZmY4YmM4MjRmODJhNzgyMGRkM2ZmM2RlZTUwIiwidXNlcl9pZCI6MX0.N70EnYfjlio945yIHlncczzWHm77UXcTAzlWBmtVfho
+
+{
+    "workspace": 1
+}
 
 
 ###

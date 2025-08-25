@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
@@ -37,7 +38,8 @@ class InvitesList extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: MyImages.decorationImage(
-                    isAssetImage: true,
+                    isAssetImage: false,
+                    //TODO display workspace image
                     image: 'assets/images/workspace_images/img.png',
                   ),
                 ),

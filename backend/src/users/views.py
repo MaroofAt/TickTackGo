@@ -17,16 +17,16 @@ from drf_spectacular.utils import extend_schema
 
 from datetime import timedelta
 
-from .models import User , User_OTP
-from .serializers import UserSerializer , RegisterSerializer
+from .models import User , User_OTP , Device
+from .serializers import UserSerializer , RegisterSerializer , NotificationSerializer , DeviceSerializer
 from django.utils import timezone
 from .utils import send_otp_email_to_user
 from .filters import UserFilter
 
-from workspaces.serializers import InviteSerializer , ShowInvitesSerializer
-from workspaces.models import Invite , Workspace_Membership
+from workspaces.serializers import InviteSerializer , ShowInvitesSerializer , PointsSerializer
+from workspaces.models import Invite , Workspace_Membership, Points
 from tasks.models import Task
-from tools.responses import exception_response
+from tools.responses import exception_response, required_response
 from tools.roles_check import is_workspace_owner
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
@@ -213,6 +213,28 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
     
 
+    @extend_schema(
+        summary="Register Device",
+        operation_id="register_device",
+        description="Register the device to send notification to the device",
+        tags=["User/Device"]
+    )
+    @action(detail=False , methods=['post'] , serializer_class=DeviceSerializer)
+    def register_device(self, request):
+        serializer = DeviceSerializer(data=request.data)
+        if serializer.is_valid():
+            device, created = Device.objects.update_or_create(
+                user=request.user,
+                registration_id=serializer.validated_data['registration_id'],
+                defaults={
+                    'device_type': serializer.validated_data.get('device_type'),
+                    'active': True
+                }
+            )
+            return Response(DeviceSerializer(device).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
+
+
     # Invite section
 
     @extend_schema(
@@ -271,6 +293,7 @@ class UserViewSet(viewsets.ModelViewSet):
             workspace = invite.workspace,
             role = 'member'
         )
+        Points.objects.create(user = request.user, workspace = invite.workspace)
 
         serializer = self.get_serializer(invite)
         return Response(serializer.data , status=status.HTTP_201_CREATED)
@@ -314,16 +337,21 @@ class UserViewSet(viewsets.ModelViewSet):
         description="show all invites that aare sent by the user ",
         tags=["Users/Invite"],
     )
-    @action(detail=False , methods=['get'] , serializer_class=ShowInvitesSerializer)
+    @action(detail=False , methods=['post'] , serializer_class=ShowInvitesSerializer)
     def show_sent_invites(self , request):
         workspace_id = request.data.get('workspace')
+        if not workspace_id:
+            return Response(
+                {"error":"worksapce ID is required!"}
+            )
+        
         if is_workspace_owner(request.user.id,workspace_id):
-            invites = Invite.objects.filter(sender=request.user).all()
+            invites = Invite.objects.filter(sender=request.user , workspace=workspace_id).all()
             serializer = self.get_serializer(invites , many = True)
             # return Response({"receiver_id": request.user.id , "invites": serializer.data} , status=status.HTTP_200_OK)
             return Response(serializer.data , status=status.HTTP_200_OK)
         return Response(
-            {"detail": "User is not the owner"},
+            {"error": "User is not the owner"},
             status=status.HTTP_400_BAD_REQUEST
             )
     

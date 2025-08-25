@@ -218,6 +218,7 @@ Column buildTextFieldsColumn(
     TextEditingController titleController,
     TextEditingController descriptionController) {
   return Column(
+    spacing: 20,
     children: [
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,97 +261,94 @@ Column buildTextFieldsColumn(
   );
 }
 
-Positioned buildBottomContainer(
+Container buildBottomContainer(
     BuildContext context,
     TextEditingController titleController,
     TextEditingController descriptionController,
     int workspaceId,
     int projectId) {
-  return Positioned(
-    bottom: 0,
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      height: height(context) * 0.1,
-      width: width(context),
-      decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          boxShadow: [
-            BoxShadow(
-                color: lightGrey.withAlpha(50), spreadRadius: 5, blurRadius: 5)
-          ]),
-      child: SizedBox(
-        width: width(context) * 0.9,
-        height: height(context) * 0.05,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            BlocConsumer<TaskCubit, TaskState>(
-              listener: (context, state) {
-                if (state is TaskCreatingSucceededState) {
-                  popScreen(context, true);
-                }
-                if (state is TaskCreatingFailedState) {
-                  MyAlertDialog.showAlertDialog(
-                    context,
-                    content: state.errorMessage,
-                    firstButtonText: okText,
-                    firstButtonAction: () {
-                      popScreen(context);
-                    },
-                    secondButtonText: '',
-                    secondButtonAction: () {},
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state is TaskCreatingState) {
-                  return MyButtons.primaryButton(
-                    () {},
-                    Theme.of(context).primaryColor,
-                    child: Center(
-                      child: LoadingIndicator.circularProgressIndicator(),
-                    ),
-                  );
-                }
-                return SizedBox(
-                  height: height(context) * 0.05,
-                  child: MyButtons.primaryButton(
-                    () {
-                      BlocProvider.of<TaskCubit>(context).createTask(
-                        titleController.text,
-                        descriptionController.text,
-                        workspaceId,
-                        projectId,
-                      );
-                    },
-                    Theme.of(context).primaryColor,
-                    child: Center(
-                      child: MyText.text1(
-                        'Create Task',
-                        textColor: white,
-                        fontSize: 18,
-                      ),
-                    ),
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    height: height(context) * 0.1,
+    width: width(context),
+    decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        boxShadow: [
+          BoxShadow(
+              color: lightGrey.withAlpha(50), spreadRadius: 5, blurRadius: 5)
+        ]),
+    child: SizedBox(
+      width: width(context) * 0.9,
+      height: height(context) * 0.05,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          BlocConsumer<TaskCubit, TaskState>(
+            listener: (context, state) {
+              if (state is TaskCreatingSucceededState) {
+                popScreen(context, true);
+              }
+              if (state is TaskCreatingFailedState) {
+                MyAlertDialog.showAlertDialog(
+                  context,
+                  content: state.errorMessage,
+                  firstButtonText: okText,
+                  firstButtonAction: () {
+                    popScreen(context);
+                  },
+                  secondButtonText: '',
+                  secondButtonAction: () {},
+                );
+              }
+            },
+            builder: (context, state) {
+              if (state is TaskCreatingState) {
+                return MyButtons.primaryButton(
+                  () {},
+                  Theme.of(context).primaryColor,
+                  child: Center(
+                    child: LoadingIndicator.circularProgressIndicator(),
                   ),
                 );
-              },
-            ),
-            SizedBox(
-              height: height(context) * 0.05,
-              width: width(context) * 0.3,
-              child: MyButtons.primaryButton(
-                () {
-                  popScreen(context);
-                },
-                darkGrey,
-                child: Center(
-                  child: MyText.text1('Cancel', textColor: Colors.white),
+              }
+              return SizedBox(
+                height: height(context) * 0.05,
+                child: MyButtons.primaryButton(
+                  () {
+                    BlocProvider.of<TaskCubit>(context).createTask(
+                      titleController.text,
+                      descriptionController.text,
+                      workspaceId,
+                      projectId,
+                    );
+                  },
+                  Theme.of(context).primaryColor,
+                  child: Center(
+                    child: MyText.text1(
+                      'Create Task',
+                      textColor: white,
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
+              );
+            },
+          ),
+          SizedBox(
+            height: height(context) * 0.05,
+            width: width(context) * 0.3,
+            child: MyButtons.primaryButton(
+              () {
+                popScreen(context);
+              },
+              darkGrey,
+              child: Center(
+                child: MyText.text1('Cancel', textColor: Colors.white),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );

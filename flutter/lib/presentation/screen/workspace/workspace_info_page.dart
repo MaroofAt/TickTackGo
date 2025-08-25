@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
+import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
@@ -9,6 +10,7 @@ import 'package:pr1/core/functions/user_functions.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/screen/invitation/invitation_search.dart';
 import 'package:pr1/presentation/screen/workspace/build_members_list.dart';
+import 'package:pr1/presentation/screen/workspace/sent_invites_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspace_info_header.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/divider.dart';
@@ -39,7 +41,8 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
         widget.workspaceId == retrieveWorkspace!.id) {
       return;
     }
-    BlocProvider.of<WorkspaceCubit>(context).fetchWorkspace(widget.workspaceId);
+    BlocProvider.of<WorkspaceCubit>(context)
+        .retrieveWorkspace(widget.workspaceId);
   }
 
   @override
@@ -49,16 +52,18 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
         body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
           builder: (context, state) {
             if (state is WorkspaceRetrievingSucceededState) {
-              RetrieveWorkspaceModel retrieveWorkspace =
-                  state.retrieveWorkspace;
+              retrieveWorkspace = state.retrieveWorkspace;
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  spacing: 20,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    WorkspaceInfoHeader(retrieveWorkspace),
+                    WorkspaceInfoHeader(retrieveWorkspace!),
                     MyDivider.horizontalDivider(
                         thickness: 2, color: Colors.grey),
+
+                    buildShowInvitesText(context),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -76,7 +81,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                                 create: (context) => InvitationCubit(),
                                 child: InvitationSearch(
                                     senderId: 1,
-                                    workspaceId: retrieveWorkspace.id),
+                                    workspaceId: retrieveWorkspace!.id),
                               ),
                             );
                           },
@@ -103,12 +108,16 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                     ),
                     Expanded(
                       child: BuildMembersList(
-                        retrieveWorkspace,
+                        retrieveWorkspace!,
                       ),
                     ),
+
                     // Delete Button
-                    isAdmin(retrieveWorkspace.owner!.id)
-                        ? buildDeleteButton(context)
+                    isAdmin(retrieveWorkspace!.owner!.id)
+                        ? BlocProvider(
+                            create: (context) => WorkspaceCubit(),
+                            child: buildDeleteButton(context),
+                          )
                         : Container(),
                   ],
                 ),
@@ -126,29 +135,83 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
     );
   }
 
-  Center buildDeleteButton(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
+  Widget buildShowInvitesText(BuildContext context) {
+    return MyGestureDetector.gestureDetector(
+      onTap: () {
+        pushScreen(
+          context,
+          BlocProvider(
+            create: (context) => WorkspaceCubit(),
+            child: SentInvitesPage(
+                retrieveWorkspace!.id, retrieveWorkspace!.title),
+          ),
+        );
+      },
+      child: Container(
+        width: width(context),
+        color: transparent,
+        child: MyText.text1(
+          'show sent invites?',
+          textColor: Colors.blue,
+          fontSize: 20,
+          textAlign: TextAlign.end,
         ),
-        onPressed: () {
+      ),
+    );
+  }
+
+  Widget buildDeleteButton(BuildContext context) {
+    return BlocConsumer<WorkspaceCubit, WorkspaceState>(
+      listener: (_, state) {
+        if (state is DeletingWorkspaceSucceededState) {
+          popScreen(context);
+          popScreen(context, true);
+        }
+        if (state is DeletingWorkspaceFailedState) {
+          popScreen(context);
           MyAlertDialog.showAlertDialog(
             context,
-            content: alertDialogQuestion,
-            firstButtonText: deleteText,
+            content: state.errorMessage,
+            firstButtonText: okText,
             firstButtonAction: () {
-              //TODO delete workspace request
-            },
-            secondButtonText: cancelText,
-            secondButtonAction: () {
               popScreen(context);
             },
+            secondButtonText: '',
+            secondButtonAction: () {},
           );
-        },
-        child: MyText.text1(deleteButtonText, fontSize: 18),
-      ),
+        }
+      },
+      builder: (context, state) {
+        if (state is DeletingWorkspaceState) {
+          return Center(
+            child: LoadingIndicator.circularProgressIndicator(),
+          );
+        }
+        return Center(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              MyAlertDialog.showAlertDialog(
+                context,
+                content: alertDialogQuestion,
+                firstButtonText: deleteText,
+                firstButtonAction: () {
+                  BlocProvider.of<WorkspaceCubit>(context)
+                      .deleteWorkspace(retrieveWorkspace!.id);
+                },
+                secondButtonText: cancelText,
+                secondButtonAction: () {
+                  popScreen(context);
+                },
+              );
+            },
+            child: MyText.text1(deleteButtonText, fontSize: 18),
+          ),
+        );
+      },
     );
   }
 }

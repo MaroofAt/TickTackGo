@@ -8,8 +8,7 @@ import '../variables/api_variables.dart';
 
 Future<void> getUser() async {
   try {
-    final int userId = getUserIdFromToken(token);
-
+    final userId = getUserIdFromToken(token);
 
     final response = await dio.get(
       '/users/$userId/',

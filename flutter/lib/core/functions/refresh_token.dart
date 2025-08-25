@@ -36,7 +36,7 @@ int getUserIdFromToken(String token) {
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
     if (decodedToken.containsKey('user_id')) {
-      return decodedToken['user_id'] as int;
+      return int.parse(decodedToken['user_id']);
     } else {
       throw Exception('User ID not found in token');
     }

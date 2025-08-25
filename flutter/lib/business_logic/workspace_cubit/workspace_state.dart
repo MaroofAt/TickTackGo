@@ -63,3 +63,59 @@ class WorkspaceRetrievingFailedState extends WorkspaceState {
 }
 
 class RefreshTokenState extends WorkspaceState {}
+
+class DeletingWorkspaceState extends WorkspaceState {}
+
+class DeletingWorkspaceSucceededState extends WorkspaceState {
+  DeleteWorkspaceModel deleteWorkspaceModel;
+
+  DeletingWorkspaceSucceededState(this.deleteWorkspaceModel);
+}
+
+class DeletingWorkspaceFailedState extends WorkspaceState {
+  String errorMessage;
+
+  DeletingWorkspaceFailedState(this.errorMessage);
+}
+
+class KickingMemberFromWorkspaceState extends WorkspaceState {}
+
+class KickingMemberFromWorkspaceSucceededState extends WorkspaceState {
+  KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel;
+
+  KickingMemberFromWorkspaceSucceededState(this.kickMemberFromWorkspaceModel);
+}
+
+class KickingMemberFromWorkspaceFailedState extends WorkspaceState {
+  String errorMessage;
+
+  KickingMemberFromWorkspaceFailedState(this.errorMessage);
+}
+
+class SentInvitesRetrievingState extends WorkspaceState {}
+
+class SentInvitesRetrievingSucceededState extends WorkspaceState {
+  List<SentInvitesModel> sentInvitesModel;
+
+  SentInvitesRetrievingSucceededState(this.sentInvitesModel);
+}
+
+class SentInvitesRetrievingFailedState extends WorkspaceState {
+  String errorMessage;
+
+  SentInvitesRetrievingFailedState(this.errorMessage);
+}
+
+class InviteCancelingState extends WorkspaceState {}
+
+class InviteCancelingSucceededState extends WorkspaceState {
+  CancelInviteModel cancelInviteModel;
+
+  InviteCancelingSucceededState(this.cancelInviteModel);
+}
+
+class InviteCancelingFailedState extends WorkspaceState {
+  String errorMessage;
+
+  InviteCancelingFailedState(this.errorMessage);
+}

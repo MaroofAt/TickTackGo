@@ -7,9 +7,13 @@ import 'package:pr1/core/API/workspace.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/core/variables/global_var.dart';
+import 'package:pr1/data/models/workspace/cancel_invite_model.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
+import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
+import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
+import 'package:pr1/data/models/workspace/sent_invites_model.dart';
 
 part 'workspace_state.dart';
 
@@ -71,7 +75,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     }
   }
 
-  Future<void> fetchWorkspace(int workspaceId) async {
+  Future<void> retrieveWorkspace(int workspaceId) async {
     emit(WorkspaceRetrievingState());
 
     RetrieveWorkspaceModel retrieveWorkspace =
@@ -81,6 +85,59 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
       emit(WorkspaceRetrievingSucceededState(retrieveWorkspace));
     } else {
       emit(WorkspaceRetrievingFailedState(retrieveWorkspace.errorMessage));
+    }
+  }
+
+  Future<void> deleteWorkspace(int workspaceId) async {
+    emit(DeletingWorkspaceState());
+    DeleteWorkspaceModel deleteWorkspaceModel =
+        await WorkspaceApi.deleteWorkspace(workspaceId, token);
+    if (deleteWorkspaceModel.errorMessage.isEmpty) {
+      emit(DeletingWorkspaceSucceededState(deleteWorkspaceModel));
+    } else {
+      emit(DeletingWorkspaceFailedState(deleteWorkspaceModel.errorMessage));
+    }
+  }
+
+  Future<void> kickMember(int workspaceId, int memberId) async {
+    emit(KickingMemberFromWorkspaceState());
+
+    KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel =
+        await WorkspaceApi.kickMember(workspaceId, memberId, token);
+
+    if (kickMemberFromWorkspaceModel.errorMessage.isEmpty) {
+      emit(KickingMemberFromWorkspaceSucceededState(
+          kickMemberFromWorkspaceModel));
+      retrieveWorkspace(workspaceId);
+    } else {
+      emit(KickingMemberFromWorkspaceFailedState(
+          kickMemberFromWorkspaceModel.errorMessage));
+    }
+  }
+
+  Future<void> sentInvites(int workspaceId) async {
+    emit(SentInvitesRetrievingState());
+
+    List<SentInvitesModel> sentInvitesModel =
+        await WorkspaceApi.sentInvites(workspaceId, token);
+
+    if (sentInvitesModel[0].errorMessage.isEmpty) {
+      emit(SentInvitesRetrievingSucceededState(sentInvitesModel));
+    } else {
+      emit(SentInvitesRetrievingFailedState(sentInvitesModel[0].errorMessage));
+    }
+  }
+
+  Future<void> cancelInvites(int workspaceId, int inviteId) async {
+    emit(InviteCancelingState());
+
+    CancelInviteModel cancelInviteModel =
+        await WorkspaceApi.cancelInvite(workspaceId, inviteId, token);
+
+    if (cancelInviteModel.errorMessage.isEmpty) {
+      sentInvites(workspaceId);
+    } else {
+      emit(InviteCancelingFailedState(cancelInviteModel.errorMessage));
     }
   }
 }

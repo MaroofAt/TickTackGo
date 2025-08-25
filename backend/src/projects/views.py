@@ -10,9 +10,11 @@ from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
 from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , IsProjectMember
 
 from users.models import User
+from tasks.models import Task_Dependencies
 
 from tools.responses import exception_response , required_response , method_not_allowed
 from tools.roles_check import is_project_workspace_member , is_project_member
+from tools.dependencie_functions import dfs_cycle_check
 
 from .models import Project, Project_Membership , Issue ,Issue_Replies
 from .serializers import ProjectSerializer , ProjectMembershipSerializer , IssueSerializer , ShowIssueSerializer,  IssueRepliesSerializer , ShowIssueRepliesSerializer
@@ -52,6 +54,35 @@ class ProjectViewSet(viewsets.ModelViewSet):
             }.update(super().get_serializer_context())
         """
         return super().get_serializer_context()
+    
+
+
+
+    @extend_schema(
+        summary="Check for Cycles in Project Dependencies",
+        operation_id="check_cycles",
+        description=(
+            "Checks if any tasks inside a given workspace project "
+            "form a cycle that makes scheduling impossible. "
+        ),
+        tags=["Projects"],
+    )
+    @action(detail=True, methods=['get'], url_path='check-cycles')
+    def check_cycles(self, request, pk=None):
+
+        # Get all dependencies for tasks belonging to projects in this workspace
+        dependencies = Task_Dependencies.objects.filter(
+            target_task__project=pk
+        )
+        print(dependencies)
+        print(pk)
+
+        cycle_exists, cycle_path = dfs_cycle_check(dependencies)
+
+        return Response({
+            "has_invalid_cycle": cycle_exists,
+            "cycle_path": cycle_path if cycle_exists else None
+        })
         
     
 
@@ -359,7 +390,17 @@ class IssueViewSet(viewsets.ModelViewSet):
         summary="Retrieve Issue",
         operation_id="retrieve_issue",
         description="Retrieve the issue in the project",
-        tags=['Projects/Issue']
+        tags=['Projects/Issue'],
+                request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'project': {'type':'integar' , 'example':1 },
+
+                },
+                'required':['issue' , 'body']
+            }
+        },
     )
     def retrieve(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
@@ -424,7 +465,18 @@ class IssueViewSet(viewsets.ModelViewSet):
         summary="List replie",
         operation_id="list_replie",
         description="List the replie to the issue",
-        tags=['Projects/Issue']
+        tags=['Projects/Issue'],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'project': {'type':'integar' , 'example':1},
+                    'issue': {'type':'integar' , 'example':1 },
+
+                },
+                'required':['issue' , 'project']
+            }
+        }
     )
     @action(detail=False , methods=['get'] , serializer_class=ShowIssueRepliesSerializer)
     def list_replie(self , request , *args, **kwargs):
@@ -454,7 +506,18 @@ class IssueViewSet(viewsets.ModelViewSet):
         summary="Retrieve replie",
         operation_id="retrieve_replie",
         description="Retrieve the replie to the issue",
-        tags=['Projects/Issue']
+        tags=['Projects/Issue'],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'project': {'type':'integar' , 'example':1 },
+                    'issue': {'type':'integar' , 'example':1 },
+
+                },
+                'required':['issue' , 'project']
+            }
+        }
     )
     @action(detail=True , methods=['get'] , serializer_class=ShowIssueRepliesSerializer)
     def retrieve_replie(self , request , *args, **kwargs):

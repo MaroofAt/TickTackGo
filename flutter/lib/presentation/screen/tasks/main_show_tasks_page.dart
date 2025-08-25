@@ -53,6 +53,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
             ),
           );
         },
+        backgroundColor: Theme.of(context).primaryColor,
         child: Center(child: MyIcons.icon(Icons.add)),
       ),
       appBar: ShowTasksAppBar.showTasksAppBar(context),

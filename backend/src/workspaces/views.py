@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.db.models import Max
 
 from rest_framework import viewsets , status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
-from drf_spectacular.utils import extend_schema , OpenApiExample
+from drf_spectacular.utils import extend_schema , OpenApiExample , OpenApiParameter
 
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
@@ -14,8 +14,8 @@ from tools.responses import method_not_allowed, exception_response, required_res
 from tools.roles_check import is_workspace_owner , is_workspace_member
 
 
-from .models import Workspace , Workspace_Membership , Invite
-from .serializers import WorkspaceSerializer , InviteSerializer
+from .models import Workspace , Workspace_Membership , Invite , Points
+from .serializers import WorkspaceSerializer , InviteSerializer , PointsSerializer
 from django.utils import timezone
 from .permissions import IsWorkspaceMember, IsWorkspaceOwner
 
@@ -29,7 +29,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         self.permission_classes = [IsAuthenticated]
         if self.action == 'retrieve':
             self.permission_classes.append(IsWorkspaceMember)
-        if self.action == 'kick_member':
+        if self.action == 'kick_member' or self.action == 'get_user_points':
             self.permission_classes.append(IsWorkspaceOwner)
 
         return super().get_permissions()
@@ -221,6 +221,74 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         status=status.HTTP_400_BAD_REQUEST
     )
     
+    # Points
+
+    @extend_schema(
+        summary="Get User Points",
+        operation_id="get_user_points",
+        description="owner can get users points",
+        tags=["Workspaces/Points"],
+        parameters=[
+            OpenApiParameter(
+                name='user',
+                type=int,
+                description='user id that u wants to get his/her points',
+                required=True
+            )
+        ]
+    )
+    @action(detail=True , methods=['get'] , serializer_class=PointsSerializer)
+    def get_user_points(self , request , pk):
+        try:
+            user_id = request.GET['user']
+            if not user_id:
+                return required_response('user (query-param)')
+            points_object = Points.objects.filter(user_id=user_id, workspace_id=pk).first()
+            if not points_object:
+                return Response({'detail': 'points_object not found!'}, status=status.HTTP_404_NOT_FOUND)
+            serializer = self.get_serializer(points_object)
+            return Response(serializer.data , status=status.HTTP_200_OK)
+        except Exception as e:
+            return exception_response(e)
+
+    @extend_schema(
+        summary='Get Points Statistics',
+        operation_id='get_points_statistics',
+        description='getting points statistics such as the best hard-worker and the best important-mission-solver and  the best discipline-member',
+        tags=['Workspaces/Points']
+    )
+    @action(detail=True , methods=['get'])
+    def get_points_statistics(self, request, pk):
+        instance = self.get_object()
+        
+        best_hard_work_record = Points.objects.filter(workspace=instance).order_by('-hard_worker').first()
+        best_important_mission_solver_record = Points.objects.filter(workspace=instance).order_by('-important_mission_solver').first()
+        best_discipline_member_record = Points.objects.filter(workspace=instance).order_by('-discipline_member').first()
+        best_member_record = Points.objects.filter(workspace=instance).order_by('-total').first()
+        
+        return Response(
+            {
+                "best_hard_worker":{
+                    "user_id" : best_hard_work_record.user_id,
+                    "hard_worker_points": best_hard_work_record.hard_worker
+                },
+                "best_important_mission_solver_record":{
+                    "user_id" : best_important_mission_solver_record.user_id,
+                    "important_mission_solver_points": best_important_mission_solver_record.important_mission_solver
+                },
+                "best_discipline_member_record":{
+                    "user_id" : best_discipline_member_record.user_id,
+                    "discipline_member_points": best_discipline_member_record.discipline_member
+                },
+                "best_member_record":{
+                    "user_id" : best_member_record.user_id,
+                    "total_points": best_member_record.total
+                }
+            },
+            status=status.HTTP_200_OK
+        )
+
+
     # Invite section
     
     @extend_schema(
@@ -228,6 +296,15 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         operation_id="invite_user",
         description="Owner can invite User ",
         tags=["Workspaces/Invite"],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'receiver': {'type':'integer', 'example':1}
+                },
+                'required': ['receiver']
+            }
+        }
     )
     @action(detail=True , methods=['post'] , serializer_class=InviteSerializer)
     def invite_user(self , request , pk):

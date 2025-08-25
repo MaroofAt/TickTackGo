@@ -101,7 +101,7 @@ class BuildProjectListItem extends StatelessWidget {
                           context,
                           BlocProvider(
                             create: (context) => ProjectsCubit(),
-                            child: ProjectInfo(projectsModel.id, color),
+                            child: ProjectInfo(projectsModel.id, color, workspaceId),
                           ),
                         );
                       },

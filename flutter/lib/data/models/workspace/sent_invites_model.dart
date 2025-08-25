@@ -1,4 +1,4 @@
-class UserInvitesModel {
+class SentInvitesModel {
   int id;
   Receiver? sender;
   Receiver? receiver;
@@ -9,7 +9,7 @@ class UserInvitesModel {
   DateTime? updatedAt;
   String errorMessage;
 
-  UserInvitesModel({
+  SentInvitesModel({
     required this.id,
     required this.sender,
     required this.receiver,
@@ -21,8 +21,8 @@ class UserInvitesModel {
     required this.errorMessage,
   });
 
-  factory UserInvitesModel.onSuccess(Map<String, dynamic> json) =>
-      UserInvitesModel(
+  factory SentInvitesModel.onSuccess(Map<String, dynamic> json) =>
+      SentInvitesModel(
         id: json["id"],
         sender: Receiver.fromJson(json["sender"]),
         receiver: Receiver.fromJson(json["receiver"]),
@@ -34,8 +34,8 @@ class UserInvitesModel {
         errorMessage: '',
       );
 
-  factory UserInvitesModel.onError(Map<String, dynamic> json) =>
-      UserInvitesModel(
+  factory SentInvitesModel.onError(Map<String, dynamic> json) =>
+      SentInvitesModel(
         id: 0,
         sender: null,
         receiver: null,
@@ -47,8 +47,8 @@ class UserInvitesModel {
         errorMessage: json["detail"] ?? json["message"],
       );
 
-  factory UserInvitesModel.error(String errorMessage) =>
-      UserInvitesModel(
+  factory SentInvitesModel.error(String errorMessage) =>
+      SentInvitesModel(
         id: 0,
         sender: null,
         receiver: null,

@@ -10,15 +10,15 @@ import 'package:pr1/presentation/widgets/text.dart';
 class ProjectInfo extends StatefulWidget {
   final int projectId;
   final Color color;
+  final int workspaceId;
 
-  const ProjectInfo(this.projectId, this.color, {super.key});
+  const ProjectInfo(this.projectId, this.color, this.workspaceId, {super.key});
 
   @override
   State<ProjectInfo> createState() => _ProjectInfoState();
 }
 
 class _ProjectInfoState extends State<ProjectInfo> {
-
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,8 @@ class _ProjectInfoState extends State<ProjectInfo> {
         child: BlocBuilder<ProjectsCubit, ProjectsState>(
           builder: (context, state) {
             if (state is ProjectRetrievingSucceededState) {
-              return BuildProjectInfoPage(state.retrieveProjectModel);
+              return BuildProjectInfoPage(
+                  state.retrieveProjectModel, widget.workspaceId);
             }
             return Center(
               child: LoadingIndicator.circularProgressIndicator(),

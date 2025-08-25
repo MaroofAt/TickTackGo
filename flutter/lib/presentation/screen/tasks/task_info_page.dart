@@ -6,6 +6,7 @@ import 'package:pr1/business_logic/comment_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/comments/comment.dart';
 import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
 import 'package:pr1/presentation/screen/tasks/task_info_app_bar.dart';
@@ -14,9 +15,9 @@ import 'package:pr1/presentation/widgets/circle.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/images.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-import '../../../core/API/comments.dart';
 class TaskInfoPage extends StatefulWidget {
   final FetchTasksModel fetchTasksModel;
 
@@ -32,18 +33,22 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
     super.initState();
     context.read<CommentCubit>().fetchComments(widget.fetchTasksModel.id);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TaskInfoAppBar.taskInfoAppBar(context, widget.fetchTasksModel.title),
+      appBar:
+          TaskInfoAppBar.taskInfoAppBar(context, widget.fetchTasksModel.title),
       body: SizedBox(
         height: height(context),
         width: width(context),
         child: SingleChildScrollView(
           child: Column(
+            spacing: 20,
             children: [
               Container(
                 width: width(context) * 0.35,
+                height: height(context) * 0.2,
                 child: MyImages.networkImage(widget.fetchTasksModel.image),
               ),
               // MyCircle.circle(width(context) * 0.35, color: Colors.white),
@@ -57,9 +62,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                     margin: const EdgeInsets.only(top: 10.0),
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Theme
-                          .of(context)
-                          .primaryColor),
+                      border: Border.all(color: Theme.of(context).primaryColor),
                     ),
                     child: Scrollbar(
                       child: ListView(
@@ -76,6 +79,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                 ],
               ),
               Column(
+                spacing: 20,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,35 +92,53 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         white,
                         Icons.circle_outlined,
                       ),
-                      MyGestureDetector.gestureDetector(
-                        onTap: () {
-                          if (widget.fetchTasksModel.status == 'in_progress') {
-                            // BlocProvider.of<TaskCubit>(context).completeTask();
+                      BlocConsumer<TaskCubit, TaskState>(
+                        listener: (context, state) {
+                          if(state is TaskCompletingSucceededState) {
+                            popScreen(context, true);
                           }
                         },
-                        child: Container(
-                          height: height(context) * 0.05,
-                          width: width(context) * 0.28,
-                          decoration: BoxDecoration(
-                              color: widget.fetchTasksModel.status == 'pending'
-                                  ? lightGrey
-                                  : Theme
-                                  .of(context)
-                                  .secondaryHeaderColor,
-                              borderRadius: BorderRadius.circular(16)),
-                          child: Center(
-                            child: MyText.text1('Completed?',
-                                textColor: Colors.black),
-                          ),
-                        ),
+                        builder: (context, state) {
+                          if(state is TaskCompletingState) {
+                            return Container(
+                              height: height(context) * 0.05,
+                              width: width(context) * 0.28,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: LoadingIndicator.circularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          return MyGestureDetector.gestureDetector(
+                            onTap: () {
+                              if (widget.fetchTasksModel.status == 'in_progress') {
+                                BlocProvider.of<TaskCubit>(context).completeTask(widget.fetchTasksModel.id);
+                              }
+                            },
+                            child: Container(
+                              height: height(context) * 0.05,
+                              width: width(context) * 0.28,
+                              decoration: BoxDecoration(
+                                  color: widget.fetchTasksModel.status != 'in_progress'
+                                      ? lightGrey
+                                      : Theme.of(context).secondaryHeaderColor,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: MyText.text1('Completed?',
+                                    textColor: Colors.black),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
                   buildTwoTextRow(
                     context,
                     ' Due Date',
-                    ' ${DateFormat('yyyy-MM-d').format(
-                       widget. fetchTasksModel.dueDate!)}',
+                    ' ${DateFormat('yyyy-MM-d').format(widget.fetchTasksModel.dueDate!)}',
                     Icons.date_range,
                     white,
                   ),
@@ -138,33 +160,59 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         Icons.people,
                         white,
                       ),
-                      MyGestureDetector.gestureDetector(
-                        onTap: () {
-                          BlocProvider.of<TaskCubit>(context).cancelTask(
-                              widget. fetchTasksModel.id);
+                      BlocConsumer<TaskCubit, TaskState>(
+                        listener: (context, state) {
+                          if(state is TaskCancelingSucceededState) {
+                            popScreen(context, true);
+                          }
                         },
-                        child: Container(
-                          height: height(context) * 0.05,
-                          width: width(context) * 0.28,
-                          decoration: BoxDecoration(
-                              color: widget.fetchTasksModel.status == 'completed'
-                                  ? lightGrey
-                                  : Theme
-                                  .of(context)
-                                  .secondaryHeaderColor,
-                              borderRadius: BorderRadius.circular(16)),
-                          child: Center(
-                            child: MyText.text1('Cancel?',
-                                textColor: Colors.black),
-                          ),
-                        ),
+                        builder: (context, state) {
+                          if (state is TaskCancelingState) {
+                            return Container(
+                              height: height(context) * 0.05,
+                              width: width(context) * 0.28,
+                              decoration: BoxDecoration(
+                                  color: widget.fetchTasksModel.status ==
+                                          'completed'
+                                      ? lightGrey
+                                      : Theme.of(context).secondaryHeaderColor,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: LoadingIndicator
+                                    .circularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          return MyGestureDetector.gestureDetector(
+                            onTap: () {
+                              if (widget.fetchTasksModel.status != 'completed') {
+                                BlocProvider.of<TaskCubit>(context)
+                                    .cancelTask(widget.fetchTasksModel.id);
+                              }
+                            },
+                            child: Container(
+                              height: height(context) * 0.05,
+                              width: width(context) * 0.28,
+                              decoration: BoxDecoration(
+                                  color: widget.fetchTasksModel.status ==
+                                          'completed'
+                                      ? lightGrey
+                                      : Theme.of(context).secondaryHeaderColor,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: MyText.text1('Cancel?',
+                                    textColor: Colors.black),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
                 ],
               ),
               DefaultTabController(
-                length: 2,
+                length: 3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -173,22 +221,26 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       unselectedLabelColor: Colors.grey,
                       indicatorColor: Colors.blue,
                       tabs: [
-                        Tab(text: 'Subtasks'),
                         Tab(text: 'Comments'),
+                        Tab(text: 'Subtasks'),
+                        Tab(text: 'Assignees'),
                       ],
                     ),
                     SizedBox(
-                      height: 200, // Adjust height as needed
+                      height: height(context) * 0.22,
                       child: TabBarView(
                         children: [
-                          // Subtasks Tab
-                          _buildSubtasksTab(),
                           // Comments Tab
                           BlocBuilder<CommentCubit, CommentState>(
                             builder: (context, comments) {
-                              return _buildCommentsTab(comments,context);
+                              return _buildCommentsTab(comments, context);
                             },
                           ),
+
+                          // Subtasks Tab
+                          _buildSubtasksTab(),
+
+
                         ],
                       ),
                     ),
@@ -252,6 +304,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
       ),
     );
   }
+
   Widget _buildCommentsTab(CommentState state, BuildContext context) {
     final TextEditingController _commentController = TextEditingController();
 
@@ -278,9 +331,10 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                     final comment = state.comments[index];
                     return Stack(
                       children: [
-                        SizedBox(height: 5,),
+                        SizedBox(height: 5),
                         Card(
-                          margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 5),
                           color: Colors.grey[800],
                           child: ListTile(
                             title: Text(
@@ -324,17 +378,17 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
             },
           ),
         ),
-
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
-    ,child: Row(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
             children: [
               Expanded(
                 child: TextField(
                   controller: _commentController,
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                   decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                     hintText: "Write a comment...",
                     hintStyle: TextStyle(color: Colors.white54, fontSize: 14),
                     border: OutlineInputBorder(
@@ -362,7 +416,5 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
         ),
       ],
     );
-
   }
-
 }

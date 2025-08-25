@@ -3,10 +3,14 @@ import 'dart:io';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/local_data/local_data.dart';
+import 'package:pr1/data/models/workspace/cancel_invite_model.dart';
 import 'package:pr1/data/models/workspace/create_workspace_model.dart';
 import 'package:dio/dio.dart';
+import 'package:pr1/data/models/workspace/delete_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
+import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
+import 'package:pr1/data/models/workspace/sent_invites_model.dart';
 
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
@@ -124,5 +128,133 @@ class WorkspaceApi {
       retrieveWorkspace = RetrieveWorkspaceModel.error(handleDioError(e));
     }
     return retrieveWorkspace;
+  }
+
+  static Future<DeleteWorkspaceModel> deleteWorkspace(int workspaceId, String token) async {
+    var headers = {
+      'Authorization': 'Bearer $token'
+    };
+
+    late DeleteWorkspaceModel deleteWorkspaceModel;
+
+    try {
+      var response = await dio.request(
+        '/workspaces/$workspaceId/',
+        options: Options(
+          method: 'DELETE',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 204) {
+        deleteWorkspaceModel = DeleteWorkspaceModel.onSuccess();
+      } else {
+        deleteWorkspaceModel = DeleteWorkspaceModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      deleteWorkspaceModel = DeleteWorkspaceModel.error(handleDioError(e));
+    }
+    return deleteWorkspaceModel;
+  }
+
+  static Future<KickMemberFromWorkspaceModel> kickMember(int workspaceId, int memberId, String token) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var data = {
+      "member": memberId
+    };
+
+    late KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel;
+
+    try {
+      var response = await dio.request(
+        '/workspaces/$workspaceId/kick_member/',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 204) {
+        kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.onSuccess();
+      } else {
+        kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.error(handleDioError(e));
+    }
+    return kickMemberFromWorkspaceModel;
+  }
+
+  static Future<List<SentInvitesModel>> sentInvites(int workspaceId, String token) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var data = {
+      "workspace": workspaceId,
+    };
+
+    late List<SentInvitesModel> sentInvitesModel;
+
+    try {
+      var response = await dio.request(
+        '/users/show_sent_invites/',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        sentInvitesModel =
+            data.map((json) => SentInvitesModel.onSuccess(json)).toList();
+      } else {
+        sentInvitesModel = [SentInvitesModel.onError(response.data)];
+      }
+    } on DioException catch (e) {
+        sentInvitesModel = [SentInvitesModel.error(handleDioError(e))];
+    }
+    return sentInvitesModel;
+  }
+
+  static Future<CancelInviteModel> cancelInvite(int workspaceId, int inviteId, String token) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+
+    var data = {
+      "invite": inviteId
+    };
+
+    late CancelInviteModel cancelInviteModel;
+    try {
+      var response = await dio.request(
+        '/workspaces/$workspaceId/cancel_invite/',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 202) {
+        cancelInviteModel = CancelInviteModel.onSuccess();
+      } else {
+        cancelInviteModel = CancelInviteModel.onError(response.data);
+      }
+    } on DioException catch(e) {
+      cancelInviteModel = CancelInviteModel.error(handleDioError(e));
+    }
+    return cancelInviteModel;
   }
 }
