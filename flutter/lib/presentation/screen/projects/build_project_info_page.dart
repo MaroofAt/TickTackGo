@@ -28,6 +28,7 @@ class BuildProjectInfoPage extends StatelessWidget {
       height: height(context),
       child: SingleChildScrollView(
         child: Column(
+          spacing: 20,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MyText.text1(
@@ -39,6 +40,7 @@ class BuildProjectInfoPage extends StatelessWidget {
             buildCreateAtRow(),
             buildCompletedRow(),
             Column(
+              spacing: 20,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
