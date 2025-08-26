@@ -25,7 +25,7 @@ class IsTaskProjectMember(BasePermission):
         task_id = fetch_task_id(request, view, "IsTaskProjectCanEdit", fetch_from_pk=True)
         return is_task_project_member(user_id=request.user,task_id=task_id)
     
-class IsTaskProjectMember(BasePermission):
+class IsEditableTask(BasePermission):
     message = 'The Task Is Not Editable (Is Not Pending)'
 
     def has_permission(self, request, view):

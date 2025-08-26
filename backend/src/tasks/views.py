@@ -15,7 +15,7 @@ from .models import Task, Comment , Inbox_Tasks, Task_Dependencies
 from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers , CreateCommentSerializer
 
 
-from .permissions import IsTaskProjectMember, IsTaskProjectOwner
+from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask
 
 
 from projects.permissions import IsProjectMember
@@ -56,6 +56,8 @@ class TaskViewSet(viewsets.ModelViewSet):
             self.permission_classes.append(IsTaskProjectMember)
         if self.action == 'assign_task_to_user':
             self.permission_classes.append(IsTaskProjectOwner)
+        if self.action == 'create':
+            self.permission_classes.append(IsEditableTask)
         return super().get_permissions()
 
     @extend_schema(
