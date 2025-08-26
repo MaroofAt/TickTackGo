@@ -44,7 +44,6 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
         width: width(context),
         child: SingleChildScrollView(
           child: Column(
-            spacing: 20,
             children: [
               Container(
                 width: width(context) * 0.35,
@@ -79,7 +78,6 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                 ],
               ),
               Column(
-                spacing: 20,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

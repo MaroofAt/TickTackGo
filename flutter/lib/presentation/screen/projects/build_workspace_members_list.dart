@@ -82,7 +82,6 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
-                                  spacing: 20,
                                   children: [
                                     // Container(
                                     //   height: height(context) * 0.07,

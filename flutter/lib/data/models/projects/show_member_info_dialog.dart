@@ -33,7 +33,6 @@ class _ShowMemberInfoDialogState extends State<ShowMemberInfoDialog> {
         height: height(context) * 0.2,
         width: width(context) * 0.8,
         child: Column(
-          spacing: 20,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -51,7 +50,6 @@ class _ShowMemberInfoDialogState extends State<ShowMemberInfoDialog> {
             MyText.text1('Email: ${widget.memberElement.member.email}',
                 textColor: white, fontSize: 18),
             Row(
-              spacing: 20,
               children: [
                 MyText.text1('Role: ', textColor: white, fontSize: 18),
                 WordSwitch(
