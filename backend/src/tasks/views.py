@@ -122,14 +122,14 @@ class TaskViewSet(viewsets.ModelViewSet):
         #         **request.data
         #     }
         # )
-        if serializer.is_valid():
-            serializer.save()
-         
-            return Response(serializer.data , status=status.HTTP_201_CREATED)
-        
         user = User.objects.filter(id=request.user.id).first()
         worksapce = Workspace.objects.filter(id=worksapce).first()
         result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigne new task to you in {worksapce.title}')
+        if serializer.is_valid():
+            serializer.save()
+         
+            return Response({serializer.data , result} , status=status.HTTP_201_CREATED)
+        
 
         return Response({serializer.errors , result} , status=status.HTTP_400_BAD_REQUEST)
 
