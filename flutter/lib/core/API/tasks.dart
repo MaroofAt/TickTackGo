@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
+import 'package:pr1/data/models/tasks/assign_task_model.dart';
 import 'package:pr1/data/models/tasks/cancel_task_model.dart';
 import 'package:pr1/data/models/tasks/complete_task_model.dart';
 import 'package:pr1/data/models/tasks/create_task_model.dart';
@@ -23,7 +24,6 @@ class TaskApi {
       required String token,
       required int? parentTask,
       File? image}) async {
-
     Map<String, String> headers;
 
     Map<String, Object> data = {
@@ -39,7 +39,7 @@ class TaskApi {
       'assignees': []
     };
 
-    if(parentTask != null && parentTask != 0) {
+    if (parentTask != null && parentTask != 0) {
       data.addAll({'perent_task': parentTask});
     }
 
@@ -176,13 +176,14 @@ class TaskApi {
     return cancelTaskModel;
   }
 
-  static Future<CompleteTaskModel> completeTask(int taskId, String token) async {
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+  static Future<CompleteTaskModel> completeTask(
+      int taskId, String token) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
 
-      late CompleteTaskModel completeTaskModel;
+    late CompleteTaskModel completeTaskModel;
 
     try {
       var response = await dio.request(
@@ -195,14 +196,46 @@ class TaskApi {
 
       if (response.statusCode == 200) {
         completeTaskModel = CompleteTaskModel.onSuccess();
-      }
-      else {
+      } else {
         completeTaskModel = CompleteTaskModel.onError(response.data);
       }
     } on DioException catch (e) {
-        completeTaskModel = CompleteTaskModel.error(handleDioError(e));
+      completeTaskModel = CompleteTaskModel.error(handleDioError(e));
     }
     return completeTaskModel;
   }
 
+  static Future<AssignTaskModel> assignTask(int taskId, String token) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var data = {
+      "assignees": [3]
+    };
+
+    late AssignTaskModel assignTaskModel;
+
+    try {
+      var response = await dio.request(
+        '/tasks/$taskId/assign_task_to_user/',
+        options: Options(
+          method: 'PATCH',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 202) {
+        assignTaskModel = AssignTaskModel.onSuccess(response.data);
+      } else {
+        assignTaskModel = AssignTaskModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      assignTaskModel = AssignTaskModel.error(handleDioError(e));
+    }
+
+    return assignTaskModel;
+  }
 }

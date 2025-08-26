@@ -8,6 +8,7 @@ import 'package:pr1/core/API/tasks.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/core/variables/global_var.dart';
+import 'package:pr1/data/models/tasks/assign_task_model.dart';
 import 'package:pr1/data/models/tasks/cancel_task_model.dart';
 import 'package:pr1/data/models/tasks/complete_task_model.dart';
 import 'package:pr1/data/models/tasks/create_task_model.dart';
@@ -193,6 +194,18 @@ class TaskCubit extends Cubit<TaskState> {
       emit(TaskCompletingSucceededState(completeTaskModel));
     } else {
       emit(TaskCompletingFailedState(completeTaskModel.errorMessage));
+    }
+  }
+
+  Future<void> assignTask(int taskId) async {
+    emit(TaskAssigningState());
+
+    AssignTaskModel assignTaskModel = await TaskApi.assignTask(taskId, token);
+
+    if(assignTaskModel.errorMessage.isEmpty) {
+      emit(TaskAssigningSucceededState(assignTaskModel));
+    } else {
+      emit(TaskAssigningFailedState(assignTaskModel.errorMessage));
     }
   }
 

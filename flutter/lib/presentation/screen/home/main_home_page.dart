@@ -10,6 +10,7 @@ import 'package:pr1/data/local_data/local_data.dart';
 import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import 'package:pr1/presentation/screen/home/card_builder.dart';
 import 'package:pr1/presentation/screen/home/main_home_page_shimmer.dart';
+import 'package:pr1/presentation/screen/home/motivational_section.dart';
 import 'package:pr1/presentation/screen/home/task_card.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
@@ -131,21 +132,22 @@ class _MainHomePageState extends State<MainHomePage> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    MyText.text1(
-                      allTasksText,
-                      textColor: Colors.white,
-                      fontSize: 18,
-                    ),
-                    const SizedBox(height: 15),
-                    Expanded(
-                      child: ListView(
-                        children: const [
-                          TaskCard(),
-                          TaskCard(),
-                          TaskCard(),
-                        ],
-                      ),
-                    ),
+                    // MyText.text1(
+                    //   allTasksText,
+                    //   textColor: Colors.white,
+                    //   fontSize: 18,
+                    // ),
+                    // const SizedBox(height: 15),
+                    // Expanded(
+                    //   child: ListView(
+                    //     children: const [
+                    //       TaskCard(),
+                    //       TaskCard(),
+                    //       TaskCard(),
+                    //     ],
+                    //   ),
+                    // ),
+                    MotivationalSection(),
                   ],
                 ),
         ),
