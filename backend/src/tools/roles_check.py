@@ -88,10 +88,12 @@ def is_task_project_member(user_id, task_id):
         return False
     task = task.first()
     
-    project = Project.objects.filter(id=task.project)
-    if not project.exists():
+    # project = Project.objects.filter(id=task.project)
+    project = task.project
+    # if not project.exists():
+    if not project:
         return False
-    project = project.first()
+    # project = project.first()
 
     if Project_Membership.objects.filter(member_id=user_id, project=project).exists():
             return True
