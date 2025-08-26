@@ -56,7 +56,6 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  spacing: 20,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     WorkspaceInfoHeader(retrieveWorkspace!),

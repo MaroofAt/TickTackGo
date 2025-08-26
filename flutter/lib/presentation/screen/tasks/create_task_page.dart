@@ -36,13 +36,11 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
                 child: Column(
-                  spacing: 20,
                   children: [
                     buildSelectImage(context),
                     BlocBuilder<TaskCubit, TaskState>(
                       builder: (context, state) {
                         return Column(
-                          spacing: 20,
                           children: [
                             buildTextFieldsColumn(context, _titleController,
                                 _descriptionController),
