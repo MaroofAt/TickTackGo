@@ -49,7 +49,8 @@ class Task(TimeStampedModel):
         User,
         through="Assignee",
         through_fields=('task', 'assignee'),
-        related_name='tasks'
+        related_name='tasks',
+        
     )
     class Task_Status(models.TextChoices):
         PENDING = 'pending'

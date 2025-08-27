@@ -56,7 +56,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             self.permission_classes.append(IsTaskProjectMember)
         if self.action == 'assign_task_to_user':
             self.permission_classes.append(IsTaskProjectOwner)
-        if self.action == 'create':
+        if self.action == 'update':
             self.permission_classes.append(IsEditableTask)
         return super().get_permissions()
 
@@ -124,16 +124,23 @@ class TaskViewSet(viewsets.ModelViewSet):
         #         **request.data
         #     }
         # )
+
         user = User.objects.filter(id=request.user.id).first()
-        worksapce = Workspace.objects.filter(id=worksapce).first()
+        worksapce = Workspace.objects.filter(id=request.data.get('workspace')).first()
         result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigne new task to you in {worksapce.title}')
         if serializer.is_valid():
             serializer.save()
          
-            return Response({serializer.data , result} , status=status.HTTP_201_CREATED)
+            return Response({
+                'data': serializer.data,
+                'result': result
+            }, status=status.HTTP_201_CREATED)
         
 
-        return Response({serializer.errors , result} , status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'errors': serializer.errors,
+            'result': result
+        }, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         summary="Cancel Task",
