@@ -24,6 +24,11 @@ class BuildProjectsList extends StatelessWidget {
 
     for (var element in projects) {
       parentProjects.addAll({element.title: element.id});
+      if (element.subProjects.isNotEmpty) {
+        for (var subElement in element.subProjects) {
+          parentProjects.addAll({subElement.title: subElement.id});
+        }
+      }
     }
 
     showDialog(
@@ -68,11 +73,12 @@ class BuildProjectsList extends StatelessWidget {
           color = Color(int.parse(hex, radix: 16));
         }
         return BuildProjectListItem(
-            projects[index],
-            color,
-            newWidth ?? width(context) * 0.7,
-            newMargin ?? width(context) * 0.01,
-            workspaceId);
+          projects[index],
+          color,
+          newWidth ?? width(context) * 0.7,
+          newMargin ?? width(context) * 0.03,
+          workspaceId,
+        );
       },
     );
   }
