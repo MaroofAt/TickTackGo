@@ -25,8 +25,12 @@ class BuildProjectListItem extends StatelessWidget {
   final double marginFromLeft;
   final int workspaceId;
 
-  const BuildProjectListItem(this.projectsModel, this.color,
-      this.containerWidth, this.marginFromLeft, this.workspaceId,
+  const BuildProjectListItem(
+      this.projectsModel,
+      this.color,
+      this.containerWidth,
+      this.marginFromLeft,
+      this.workspaceId,
       {super.key});
 
   @override
@@ -82,18 +86,20 @@ class BuildProjectListItem extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(left:  10),
+                        margin: const EdgeInsets.only(left: 10),
                         child: MyGestureDetector.gestureDetector(
                           onTap: () {
                             pushScreen(
                               context,
                               BlocProvider(
                                   create: (context) => IssuesCubit(IssueApi()),
-                                  child: All_Issues(project_Id: projectsModel.id,)
-                              ),
+                                  child: All_Issues(
+                                    project_Id: projectsModel.id,
+                                  )),
                             );
                           },
-                          child: MyIcons.icon(Icons.bug_report_outlined, color: lightGrey),
+                          child: MyIcons.icon(Icons.bug_report_outlined,
+                              color: lightGrey),
                         ),
                       ),
                       const SizedBox(width: 20),
@@ -105,11 +111,13 @@ class BuildProjectListItem extends StatelessWidget {
                               context,
                               BlocProvider(
                                 create: (context) => ProjectsCubit(),
-                                child: ProjectInfo(projectsModel.id, color, workspaceId),
+                                child: ProjectInfo(
+                                    projectsModel.id, color, workspaceId),
                               ),
                             );
                           },
-                          child: MyIcons.icon(Icons.info_outline, color: lightGrey),
+                          child: MyIcons.icon(Icons.info_outline,
+                              color: lightGrey),
                         ),
                       ),
                     ],
@@ -121,8 +129,8 @@ class BuildProjectListItem extends StatelessWidget {
                 ? BuildProjectsList(
                     projectsModel.subProjects,
                     workspaceId,
-                    newWidth: containerWidth * 0.9,
-                    newMargin: marginFromLeft * 1.2,
+                    newWidth: width(context) * 0.6,
+                    newMargin: marginFromLeft * 2,
                   )
                 : Container(),
           ],
