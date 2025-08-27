@@ -39,7 +39,7 @@ class ProjectMembershipSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     
     workspace = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all())
-    parent_project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.filter(workspace=None) , required=False) #workspace.get_queryset().first()
+    parent_project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.none() , required=False)
     members = serializers.SerializerMethodField()
     class Meta:
         model=Project
@@ -89,6 +89,17 @@ class ProjectSerializer(serializers.ModelSerializer):
             self.fields['parent_project'] = ProjectSerializer(read_only=True)
         
         self.fields['workspace'].queryset = Workspace.objects.filter(owner=self.context['request'].user) # just workspaces that the user owns, so he can't assign to other workspaces
+        if data is not serializers.empty:
+            workspace_id = data.get('workspace')
+            if workspace_id:
+                self.fields['parent_project'].queryset = Project.objects.filter(
+                    workspace_id=workspace_id
+                )
+        # Also handle the case when we have an instance (for updates)
+        elif self.instance and hasattr(self.instance, 'workspace'):
+            self.fields['parent_project'].queryset = Project.objects.filter(
+                workspace=self.instance.workspace
+            )
     
 
     def create(self, validated_data):
