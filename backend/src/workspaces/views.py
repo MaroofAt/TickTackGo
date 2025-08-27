@@ -13,6 +13,7 @@ from rest_framework.exceptions import ValidationError
 from tools.responses import method_not_allowed, exception_response, required_response
 from tools.roles_check import is_workspace_owner , is_workspace_member
 
+from projects.models import Project_Membership , Project
 
 from .models import Workspace , Workspace_Membership , Invite , Points
 from .serializers import WorkspaceSerializer , InviteSerializer , PointsSerializer
@@ -400,8 +401,16 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
                     {"detail": 'membership doesn\'t exist'},
                     status=status.HTTP_404_NOT_FOUND
                 )
+            projects_in_workspace = Project.objects.filter(workspace=pk)
+            # print(f"\n\n1\n\n")
+            projects_memberships = Project_Membership.objects.filter(project__in=projects_in_workspace, member_id=member)
+            # print(f"\n\n2\n\n")
             try:
+                # print(f"\n\n3\n\n")
                 membership_object.delete()
+                for project_membership in projects_memberships:
+                    project_membership.delete()
+                # print(f"\n\n4\n\n")
             except Exception as ex:
                 return Response(
                     {'error': 'can\'t delete the membership object'},
