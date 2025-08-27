@@ -320,6 +320,7 @@ Container buildBottomContainer(
                       descriptionController.text,
                       workspaceId,
                       projectId,
+                      []
                     );
                   },
                   Theme.of(context).primaryColor,

@@ -79,7 +79,6 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
           child: BlocConsumer<ProjectsCubit, ProjectsState>(
             listener: (context, state) {
               if (state is ProjectCreatingFailedState) {
-                popScreen(context);
                 MyAlertDialog.showAlertDialog(
                   context,
                   content: state.errorMessage,
@@ -90,6 +89,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
                   secondButtonText: '',
                   secondButtonAction: () {},
                 );
+                popScreen(context);
               }
               if (state is ProjectCreatingSucceededState) {
                 popScreen(context, true);

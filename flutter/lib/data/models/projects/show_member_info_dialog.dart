@@ -8,7 +8,9 @@ import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/circle.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
+import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/images.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 import 'package:pr1/presentation/widgets/word_switch.dart';
 
@@ -30,7 +32,7 @@ class _ShowMemberInfoDialogState extends State<ShowMemberInfoDialog> {
     return AlertDialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       content: SizedBox(
-        height: height(context) * 0.2,
+        height: height(context) * 0.25,
         width: width(context) * 0.8,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -45,32 +47,48 @@ class _ShowMemberInfoDialogState extends State<ShowMemberInfoDialog> {
             //     image: MyImages.decorationImage(isAssetImage: false, image: memberElement.member.image),
             //   ),
             // ),
+            CircleAvatar(
+              // backgroundImage: NetworkImage(user!.image),
+              radius: width(context) * 0.08,
+              child: MyIcons.icon(Icons.person, size: width(context) * 0.1),
+            ),
+            const SizedBox(height: 20),
             MyText.text1('Name: ${widget.memberElement.member.username}',
                 textColor: white, fontSize: 18),
+            const SizedBox(height: 20),
             MyText.text1('Email: ${widget.memberElement.member.email}',
                 textColor: white, fontSize: 18),
+            const SizedBox(height: 20),
             Row(
               children: [
                 MyText.text1('Role: ', textColor: white, fontSize: 18),
-                WordSwitch(
-                  firstOption: 'editor',
-                  secondOption: 'viewer',
-                  selectedValue: widget.memberElement.role,
-                  height: height(context) * 0.04,
-                  onChanged: (String value) {
-                    if (isAdmin(widget.ownerId)) {
-                      BlocProvider.of<ProjectsCubit>(context).changeUserRole(
-                        widget.memberElement.member.id,
-                        widget.projectId,
-                        value,
-                      );
-                      setState(() {
-                        widget.memberElement.role = value;
-                      });
+                const SizedBox(width: 20),
+                BlocBuilder<ProjectsCubit, ProjectsState>(
+                  builder: (context, state) {
+                    if(state is ChangingUserRoleState) {
+                      return Center(child: LoadingIndicator.circularProgressIndicator());
                     }
+                    return WordSwitch(
+                      firstOption: 'editor',
+                      secondOption: 'viewer',
+                      selectedValue: widget.memberElement.role,
+                      height: height(context) * 0.04,
+                      onChanged: (String value) {
+                        if (isAdmin(widget.ownerId)) {
+                          BlocProvider.of<ProjectsCubit>(context).changeUserRole(
+                            widget.memberElement.member.id,
+                            widget.projectId,
+                            value,
+                          );
+                          setState(() {
+                            widget.memberElement.role = value;
+                          });
+                        }
+                      },
+                      selectedColor: Theme.of(context).primaryColor,
+                      selectedTextColor: black,
+                    );
                   },
-                  selectedColor: Theme.of(context).primaryColor,
-                  selectedTextColor: black,
                 ),
               ],
             ),

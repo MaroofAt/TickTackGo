@@ -50,8 +50,7 @@ BlocProvider(create: (context)=> IssuesCubit(IssueApi())),
         theme: theme(),
         // theme: ThemeData.dark(),
         routes: routes,
-        home:
-        MyApptest(),
+        home: const SplashScreen(),
       ),
     );
   }

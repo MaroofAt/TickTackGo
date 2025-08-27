@@ -119,7 +119,8 @@ class TaskCubit extends Cubit<TaskState> {
     emit(TaskInitial());
   }
 
-  Future<void> createTask(String title, String description, int workspaceId, int projectId) async {
+  Future<void> createTask(
+      String title, String description, int workspaceId, int projectId, List<int> assignees) async {
     if (title.isEmpty || description.isEmpty) return;
     emit(TaskCreatingState());
 
@@ -138,6 +139,8 @@ class TaskCubit extends Cubit<TaskState> {
         priority: selectedPriority,
         locked: locked,
         parentTask: parentTask,
+        assignees: assignees,
+        image: image,
         token: token);
 
     if (createTaskModel.errorMessage.isEmpty) {
@@ -188,7 +191,8 @@ class TaskCubit extends Cubit<TaskState> {
   Future<void> completeTask(int taskId) async {
     emit(TaskCompletingState());
 
-    CompleteTaskModel completeTaskModel = await TaskApi.completeTask(taskId, token);
+    CompleteTaskModel completeTaskModel =
+        await TaskApi.completeTask(taskId, token);
 
     if (completeTaskModel.errorMessage.isEmpty) {
       emit(TaskCompletingSucceededState(completeTaskModel));
@@ -202,11 +206,10 @@ class TaskCubit extends Cubit<TaskState> {
 
     AssignTaskModel assignTaskModel = await TaskApi.assignTask(taskId, token);
 
-    if(assignTaskModel.errorMessage.isEmpty) {
+    if (assignTaskModel.errorMessage.isEmpty) {
       emit(TaskAssigningSucceededState(assignTaskModel));
     } else {
       emit(TaskAssigningFailedState(assignTaskModel.errorMessage));
     }
   }
-
 }

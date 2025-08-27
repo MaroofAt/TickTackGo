@@ -59,10 +59,12 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     WorkspaceInfoHeader(retrieveWorkspace!),
+                    const SizedBox(height: 20),
                     MyDivider.horizontalDivider(
                         thickness: 2, color: Colors.grey),
-
+                    const SizedBox(height: 20),
                     buildShowInvitesText(context),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -105,12 +107,12 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 20),
                     Expanded(
                       child: BuildMembersList(
                         retrieveWorkspace!,
                       ),
                     ),
-
                     // Delete Button
                     isAdmin(retrieveWorkspace!.owner!.id)
                         ? BlocProvider(

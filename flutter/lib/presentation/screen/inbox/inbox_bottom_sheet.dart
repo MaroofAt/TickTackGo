@@ -203,6 +203,8 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                             BlocProvider.of<InboxCubit>(context)
                                 .destroyInboxTask(widget.inboxTasksModel!.id);
                             popScreen(context);
+                          } else {
+                            popScreen(context);
                           }
                         },
                       ),
