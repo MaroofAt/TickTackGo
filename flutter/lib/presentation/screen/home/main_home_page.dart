@@ -56,7 +56,7 @@ class _MainHomePageState extends State<MainHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
-                          backgroundImage: NetworkImage(user!.image),
+                          // backgroundImage: NetworkImage(user!.image),
                           radius: width(context) * 0.1,
                           child: MyIcons.icon(Icons.person,
                               size: width(context) * 0.1),

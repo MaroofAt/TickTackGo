@@ -23,20 +23,22 @@ class TaskApi {
       required bool locked,
       required String token,
       required int? parentTask,
+      required List<int> assignees,
       File? image}) async {
     Map<String, String> headers;
 
-    Map<String, Object> data = {
-      'title': title,
-      'description': description,
-      'start_date': startDate,
-      'due_date': dueDate,
-      'workspace': workspaceId,
-      'project': projectId,
-      'status': status,
-      'priority': priority,
-      'locked': locked.toString(),
-      'assignees': []
+    Map<String, Object?> data = {
+      "title": title,
+      "description": description,
+      "start_date": startDate,
+      "due_date": dueDate,
+      "workspace": workspaceId,
+      "project": projectId,
+      "perent_task": parentTask,
+      "priority": priority,
+      "locked": locked,
+      "reminder": null,
+      "assignees": assignees,
     };
 
     if (parentTask != null && parentTask != 0) {

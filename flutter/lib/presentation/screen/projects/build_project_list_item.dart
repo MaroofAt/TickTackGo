@@ -79,34 +79,40 @@ class BuildProjectListItem extends StatelessWidget {
                       MyText.text1(projectsModel.title, textColor: white),
                     ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(left:  10),
-                    child: MyGestureDetector.gestureDetector(
-                      onTap: () {
-                        pushScreen(
-                          context,
-                          BlocProvider(
-                            create: (context) => IssuesCubit(IssueApi()),
-                            child: All_Issues(project_Id: projectsModel.id,)
-                          ),
-                        );
-                      },
-                      child: MyIcons.icon(Icons.bug_report_outlined, color: lightGrey),
-                    ),
-                  ),    Container(
-                    margin: const EdgeInsets.only(right: 15.0),
-                    child: MyGestureDetector.gestureDetector(
-                      onTap: () {
-                        pushScreen(
-                          context,
-                          BlocProvider(
-                            create: (context) => ProjectsCubit(),
-                            child: ProjectInfo(projectsModel.id, color, workspaceId),
-                          ),
-                        );
-                      },
-                      child: MyIcons.icon(Icons.info_outline, color: lightGrey),
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left:  10),
+                        child: MyGestureDetector.gestureDetector(
+                          onTap: () {
+                            pushScreen(
+                              context,
+                              BlocProvider(
+                                  create: (context) => IssuesCubit(IssueApi()),
+                                  child: All_Issues(project_Id: projectsModel.id,)
+                              ),
+                            );
+                          },
+                          child: MyIcons.icon(Icons.bug_report_outlined, color: lightGrey),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Container(
+                        margin: const EdgeInsets.only(right: 15.0),
+                        child: MyGestureDetector.gestureDetector(
+                          onTap: () {
+                            pushScreen(
+                              context,
+                              BlocProvider(
+                                create: (context) => ProjectsCubit(),
+                                child: ProjectInfo(projectsModel.id, color, workspaceId),
+                              ),
+                            );
+                          },
+                          child: MyIcons.icon(Icons.info_outline, color: lightGrey),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -36,8 +36,11 @@ class BuildProjectInfoPage extends StatelessWidget {
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
+            const SizedBox(height: 20),
             buildCreateAtRow(),
+            const SizedBox(height: 20),
             buildCompletedRow(),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -80,6 +83,7 @@ class BuildProjectInfoPage extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
                 SizedBox(
                   height: height(context) * 0.5,
                   child: BlocProvider(
