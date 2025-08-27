@@ -39,7 +39,7 @@ class ProjectMembershipSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     
     workspace = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all())
-    parent_project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.filter(workspace=workspace.get_queryset().first()) , required=False)
+    parent_project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.filter(workspace=None) , required=False) #workspace.get_queryset().first()
     members = serializers.SerializerMethodField()
     class Meta:
         model=Project
