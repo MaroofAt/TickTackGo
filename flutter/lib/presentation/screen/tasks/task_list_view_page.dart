@@ -16,6 +16,7 @@ class TaskListViewPage extends StatelessWidget {
         shrinkWrap: true,
         itemCount: fetchedTasks.length,
         itemBuilder: (context, index) {
+          print(fetchedTasks[0].id);
           return TaskListItem(fetchedTasks[index], color);
         },
       ),

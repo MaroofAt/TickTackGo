@@ -320,7 +320,7 @@ Container buildBottomContainer(
                       descriptionController.text,
                       workspaceId,
                       projectId,
-                      []
+                      BlocProvider.of<TaskCubit>(context).assignees,
                     );
                   },
                   Theme.of(context).primaryColor,

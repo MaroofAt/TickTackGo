@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_page.dart';
 import 'package:pr1/presentation/screen/tasks/show_tasks_app_bar.dart';
 import 'package:pr1/presentation/screen/tasks/task_list_view_page.dart';
@@ -26,6 +28,11 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
   @override
   void initState() {
     super.initState();
+    _getNeededData();
+  }
+
+  _getNeededData() {
+    BlocProvider.of<ProjectsCubit>(context).retrieveProject(widget.projectId);
     BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
   }
 
@@ -33,9 +40,29 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<ProjectsCubit, ProjectsState>(
+      builder: (context, state) {
+        if (state is ProjectRetrievingSucceededState) {
+          return buildTaskList(context, state.retrieveProjectModel);
+        }
+        return Scaffold(
+          body: Center(
+            child: LoadingIndicator.circularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+
+  Scaffold buildTaskList(
+      BuildContext context, RetrieveProjectModel retrieveProjectModel) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Map<String, int> assignees = {};
+          for(var element in retrieveProjectModel.members) {
+            assignees.addAll({element.member.username: element.member.id});
+          }
           pushScreen(
             context,
             BlocProvider(
@@ -48,7 +75,11 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
                   }
                 },
                 child: CreateTaskPage(
-                    widget.projectId, widget.workspaceId, tasksTitles),
+                  widget.projectId,
+                  widget.workspaceId,
+                  tasksTitles,
+                  assignees,
+                ),
               ),
             ),
           );
@@ -67,7 +98,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
               );
             }
             for (var element in state.fetchedTasks) {
-              if(element.status != 'completed') {
+              if (element.status != 'completed') {
                 tasksTitles.addAll({element.title: element.id});
               }
             }
