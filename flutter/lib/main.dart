@@ -26,7 +26,6 @@ Future<void> main() async {
   );
   // await  initOneSignal();
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {

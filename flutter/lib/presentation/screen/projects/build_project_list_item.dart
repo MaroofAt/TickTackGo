@@ -25,12 +25,8 @@ class BuildProjectListItem extends StatelessWidget {
   final double marginFromLeft;
   final int workspaceId;
 
-  const BuildProjectListItem(
-      this.projectsModel,
-      this.color,
-      this.containerWidth,
-      this.marginFromLeft,
-      this.workspaceId,
+  const BuildProjectListItem(this.projectsModel, this.color,
+      this.containerWidth, this.marginFromLeft, this.workspaceId,
       {super.key});
 
   @override
@@ -39,8 +35,11 @@ class BuildProjectListItem extends StatelessWidget {
       onTap: () {
         pushScreen(
           context,
-          BlocProvider(
-            create: (context) => TaskCubit(),
+          MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => TaskCubit()),
+              BlocProvider(create: (context) => ProjectsCubit()),
+            ],
             child: MainShowTasksPage(projectsModel.id, color, workspaceId),
           ),
         );
