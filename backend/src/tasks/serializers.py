@@ -44,6 +44,8 @@ class TaskSerializer(serializers.ModelSerializer):
     def get_status_message(self, obj):
         if can_start(obj.pk):
             return ""
+        obj.locked = True
+        obj.save()
         return "Task can't start... it depends on another task."
     
     def create(self, validated_data):
@@ -135,7 +137,6 @@ class TaskDependenciesSerializers(serializers.ModelSerializer):
                 "this type of dependencie will create a scheduling impossibility."
             })
         
-        print(validated_data['target_task'].project.workspace)
         return super().create(validated_data)
 
 class InboxTaskSerializer(serializers.ModelSerializer):

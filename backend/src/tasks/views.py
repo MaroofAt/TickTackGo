@@ -89,15 +89,15 @@ class TaskViewSet(viewsets.ModelViewSet):
                 'properties': {
                     'title': {'type': 'string', 'example': 'Task 1'},
                     'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
-                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
-                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
+                    'start_date': {'type': 'Date', 'example': '2025-08-28'},
+                    'due_date': {'type': 'Date', 'example': '2025-08-30'},
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
                     'perent_task': {'type':'integer' , 'example':1 or None},
                     'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
-                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
+                    'reminder': {'type': 'Date', 'example': '2025-08-29'},
                 }
             }            
         }
@@ -593,11 +593,11 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-    def get_permissions(self):
-        self.permission_classes = [IsAuthenticated]
-        if self.action in ['update', 'destroy']:
-            self.permission_classes.append(IsTaskProjectOwner)
-        return super().get_permissions()
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_staff:
+            qs = qs.filter(condition_task__project__workspace__owner=self.request.user)
+        return qs
 
     @extend_schema(
         summary="List all task dependencies",
@@ -606,7 +606,6 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
         tags=["Task_Dependencies"],
     )
     def list(self, request, *args, **kwargs):
-        #self.permission_classes.append(IsTaskProjectOwner)
         return super().list(request, *args, **kwargs)
 
     @extend_schema(
@@ -642,7 +641,8 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
         tags=["Task_Dependencies"],
     )
     def create(self, request, *args, **kwargs):
-        if not is_project_owner(request.user.id , request.data.get('condition_task').project):
+        task = Task.objects.get(id=request.data.get('condition_task'))
+        if not is_project_owner(request.user.id , task.project):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
         return super().create(request, *args, **kwargs)
 
@@ -654,7 +654,6 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
         tags=["Task_Dependencies"],
     )
     def update(self, request, *args, **kwargs):
-        #self.permission_classes.append(IsTaskProjectOwner)
         return super().update(request, *args, **kwargs)
 
     @extend_schema(
@@ -664,5 +663,4 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
         tags=["Task_Dependencies"],
     )
     def destroy(self, request, *args, **kwargs):
-        #self.permission_classes.append(IsTaskProjectOwner)
         return super().destroy(request, *args, **kwargs)
