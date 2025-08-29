@@ -312,13 +312,20 @@ class IssueViewSet(viewsets.ModelViewSet):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
 
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_staff:
+            qs = Issue.objects.filter(project__members=self.request.user)
+        return qs
+
     
     def get_permissions(self):
         self.permission_classes = [IsAuthenticated]
-        if self.action == 'list':
-            self.permission_classes.append(IsProjectMember)
-        if self.action == 'retrieve':
-            self.permission_classes.append(IsProjectWorkspaceMember)
+        # if self.action == 'list':
+        #     self.permission_classes.append(IsProjectMember)
+        # if self.action == 'retrieve':
+        #     self.permission_classes.append(IsProjectWorkspaceMember)
         if self.action == 'create':
             self.permission_classes.append(IsProjectMember)
         return super().get_permissions()
@@ -368,23 +375,24 @@ class IssueViewSet(viewsets.ModelViewSet):
         tags=['Projects/Issue']
     )
     def list(self, request, *args, **kwargs):
-
-        if not request.data.get('project'):
-            return Response(
-                {"error": "Project ID is required in request data"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        # print(self.get_queryset)
+        # if not request.data.get('project'):
+        #     return Response(
+        #         {"error": "Project ID is required in request data"},
+        #         status=status.HTTP_400_BAD_REQUEST
+        #     )
         
-        if not is_project_workspace_member(request.user.id, request.data.get('project')):
-            return Response(
-                {"error": "You are not a member of this project"},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # if not is_project_workspace_member(request.user.id, request.data.get('project')):
+        #     return Response(
+        #         {"error": "You are not a member of this project"},
+        #         status=status.HTTP_403_FORBIDDEN
+        #     )
         
-        issues = Issue.objects.filter(project=request.data.get('project'))
-        serializer = self.get_serializer(issues, many=True)
+        # issues = Issue.objects.filter(project=request.data.get('project'))
+        # serializer = self.get_serializer(issues, many=True)
         
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response(serializer.data, status=status.HTTP_200_OK)
+        return super().list(request, *args, **kwargs)
     
     @extend_schema(
         summary="Retrieve Issue",
@@ -403,23 +411,24 @@ class IssueViewSet(viewsets.ModelViewSet):
         },
     )
     def retrieve(self, request, *args, **kwargs):
-        pk = kwargs.get('pk')
-        if not request.data.get('project'):
-            return Response(
-                {"error": "Project ID is required in request data"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        # pk = kwargs.get('pk')
+        # if not request.data.get('project'):
+        #     return Response(
+        #         {"error": "Project ID is required in request data"},
+        #         status=status.HTTP_400_BAD_REQUEST
+        #     )
         
-        if not is_project_workspace_member(request.user.id, request.data.get('project')):
-            return Response(
-                {"error": "You are not a member of this project"},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # if not is_project_workspace_member(request.user.id, request.data.get('project')):
+        #     return Response(
+        #         {"error": "You are not a member of this project"},
+        #         status=status.HTTP_403_FORBIDDEN
+        #     )
         
-        issues = Issue.objects.filter(project=request.data.get('project') , pk=pk)
-        serializer = self.get_serializer(issues, many=True)
+        # issues = Issue.objects.filter(project=request.data.get('project') , pk=pk)
+        # serializer = self.get_serializer(issues, many=True)
         
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response(serializer.data, status=status.HTTP_200_OK)
+        return super().retrieve(request, *args, **kwargs)
     
     @extend_schema(
         summary="Create Replie",
