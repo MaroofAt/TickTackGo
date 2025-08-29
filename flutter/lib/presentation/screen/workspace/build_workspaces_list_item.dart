@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/points_cubit/points_cubit.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
+import 'package:pr1/presentation/screen/workspace_points/points_statistics.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
@@ -47,27 +50,45 @@ class BuildListItem extends StatelessWidget {
                         : MyImages.decorationImage(
                             isAssetImage: false,
                             image: fetchWorkspacesModel.image,
-                            ),
+                          ),
                   ),
                 ),
                 MyText.text1(fetchWorkspacesModel.title,
                     fontSize: 18, textColor: white),
               ],
             ),
-            MyButtons.primaryButton(
-              onArrowTap,
-              Theme.of(context).scaffoldBackgroundColor,
-              child: BlocBuilder<ProjectsCubit, ProjectsState>(
-                builder: (context, state) {
-                  return MyIcons.icon(
-                    !BlocProvider.of<ProjectsCubit>(context)
-                            .checkForIconType(fetchWorkspacesModel.id)
-                        ? Icons.keyboard_arrow_right
-                        : Icons.keyboard_arrow_down_outlined,
-                    color: lightGrey,
-                  );
-                },
-              ),
+            Row(
+              children: [
+                MyGestureDetector.gestureDetector(
+                  onTap: () {
+                    pushScreen(
+                        context,
+                        BlocProvider(
+                          create: (context) => PointsCubit(),
+                          child: PointsStatistics(fetchWorkspacesModel.id, fetchWorkspacesModel.title),
+                        ));
+                  },
+                  child: Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: MyIcons.icon(Icons.star, color: yellow),
+                  ),
+                ),
+                MyButtons.primaryButton(
+                  onArrowTap,
+                  Theme.of(context).scaffoldBackgroundColor,
+                  child: BlocBuilder<ProjectsCubit, ProjectsState>(
+                    builder: (context, state) {
+                      return MyIcons.icon(
+                        !BlocProvider.of<ProjectsCubit>(context)
+                                .checkForIconType(fetchWorkspacesModel.id)
+                            ? Icons.keyboard_arrow_right
+                            : Icons.keyboard_arrow_down_outlined,
+                        color: lightGrey,
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),
