@@ -41,6 +41,11 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
     return BlocBuilder<ProjectsCubit, ProjectsState>(
       builder: (context, state) {
         if (state is ProjectRetrievingSucceededState) {
+          for (var element in state.retrieveProjectModel.members) {
+            BlocProvider.of<ProjectsCubit>(context)
+                .assignees
+                .addAll({element.member.username: element.member.id});
+          }
           return buildTaskList(context, state.retrieveProjectModel);
         }
         return Scaffold(
@@ -57,10 +62,6 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Map<String, int> assignees = {};
-          for (var element in retrieveProjectModel.members) {
-            assignees.addAll({element.member.username: element.member.id});
-          }
           pushScreen(
             context,
             BlocProvider(
@@ -76,7 +77,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
                   widget.projectId,
                   widget.workspaceId,
                   BlocProvider.of<TaskCubit>(context).tasksTitles,
-                  assignees,
+                  BlocProvider.of<ProjectsCubit>(context).assignees,
                 ),
               ),
             ),
@@ -85,7 +86,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
         backgroundColor: Theme.of(context).primaryColor,
         child: Center(child: MyIcons.icon(Icons.add)),
       ),
-      appBar: ShowTasksAppBar.showTasksAppBar(context),
+      appBar: ShowTasksAppBar.showTasksAppBar(context, retrieveProjectModel.title),
       body: BlocBuilder<TaskCubit, TaskState>(
         builder: (context, state) {
           if (state is TaskFetchingSucceededState) {

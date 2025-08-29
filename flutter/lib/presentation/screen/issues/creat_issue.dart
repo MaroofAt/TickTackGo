@@ -44,7 +44,7 @@ class _CreateIssueState extends State<CreateIssue> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      // backgroundColor:ampleOrange,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Text('Create New Issue'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
