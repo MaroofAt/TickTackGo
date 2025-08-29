@@ -102,7 +102,14 @@ class SubTaskSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 class ShowTaskSerializer(serializers.ModelSerializer):
     sub_tasks = SubTaskSerializer(many=True, read_only=True)
-    assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
+    #assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
+    assignees = serializers.SlugRelatedField(
+        many=True,
+        read_only=False,
+        queryset=User.objects.all(),
+        slug_field='username'
+    )
+    status_message = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Task
         fields = [
@@ -124,6 +131,7 @@ class ShowTaskSerializer(serializers.ModelSerializer):
             'locked',
             'reminder',
             'sub_tasks',
+            'status_message'
         ]
         extra_kwargs = {
             'id': {'read_only':True},
@@ -132,6 +140,16 @@ class ShowTaskSerializer(serializers.ModelSerializer):
             'assignees': {'read_only': True},
             'sub_tasks': {'read_only': True},
         }
+
+    def get_status_message(self, obj):
+        if can_start(obj.pk):
+            obj.locked = False
+            obj.save()
+            return ""
+        
+        obj.locked = True
+        obj.save()
+        return "Task can't start... it depends on another task."
 class CreateCommentSerializer(serializers.ModelSerializer):
         class Meta:
             model= Comment
