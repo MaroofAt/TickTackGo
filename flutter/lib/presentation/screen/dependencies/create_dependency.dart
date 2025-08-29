@@ -51,7 +51,7 @@ class _CreateDependencyState extends State<CreateDependency> {
                   children: [
                     SizedBox(
                       height: height(context) * 0.1,
-                      width: width(context) * 0.25,
+                      width: width(context) * 0.28,
                       child: _buildDropdown(
                         label: 'condition',
                         value: _selectedConditionTask,
@@ -66,7 +66,7 @@ class _CreateDependencyState extends State<CreateDependency> {
                     const SizedBox(width: 10.0),
                     SizedBox(
                       height: height(context) * 0.1,
-                      width: width(context) * 0.25,
+                      width: width(context) * 0.28,
                       child: _buildDropdown(
                         label: 'target',
                         value: _selectedTargetTask,

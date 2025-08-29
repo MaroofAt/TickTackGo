@@ -6,7 +6,12 @@ Future<PermissionStatus> checkPermissionStatus(Permission permission) async {
 }
 
 Future<PermissionStatus> requestPermission(Permission permission) async {
-  var status = await permission.status;
-  status = await permission.request();
+  final status = await permission.status;
+
+  if (status.isDenied || status.isRestricted || status.isLimited) {
+    final result = await permission.request();
+    return result;
+  }
+
   return status;
 }

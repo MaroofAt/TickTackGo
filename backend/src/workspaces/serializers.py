@@ -159,6 +159,14 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             raise e
 
 class PointsSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = [
+                'id',
+                'username'
+            ]
+    user = UserSerializer(read_only=True)
     class Meta:
         model = Points
         fields = [

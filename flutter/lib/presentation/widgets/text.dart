@@ -43,7 +43,7 @@ class MyText {
             fontSize: fontSize,
             fontWeight: fontWeight,
             overflow: overflow,
-            fontFamily: 'DMSerifText',
+            fontFamily: 'PTSerif',
             letterSpacing: letterSpacing,
             wordSpacing: wordSpacing,
           ),

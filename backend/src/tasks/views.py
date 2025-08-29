@@ -12,7 +12,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExampl
 
 
 from .models import Task, Comment , Inbox_Tasks, Task_Dependencies
-from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers , CreateCommentSerializer
+from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers , CreateCommentSerializer , ShowTaskSerializer
 
 
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask
@@ -71,15 +71,15 @@ class TaskViewSet(viewsets.ModelViewSet):
                 'properties': {
                     'title': {'type': 'string', 'example': 'Task 1'},
                     'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
-                    'start_date': {'type': 'Date', 'example': '2025-08-28'},
-                    'due_date': {'type': 'Date', 'example': '2025-08-28'},
+                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
+                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
-                    'parent_task': {'type':'integer' , 'example':1 or None},
+                    'perent_task': {'type':'integer' , 'example':1 or None},
                     'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
-                    'reminder': {'type': 'Date', 'example': '2025-08-28'},
+                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
                 # 'required': ['title']
@@ -89,15 +89,15 @@ class TaskViewSet(viewsets.ModelViewSet):
                 'properties': {
                     'title': {'type': 'string', 'example': 'Task 1'},
                     'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
-                    'start_date': {'type': 'Date', 'example': '2025-08-28'},
-                    'due_date': {'type': 'Date', 'example': '2025-08-30'},
+                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
+                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
                     'perent_task': {'type':'integer' , 'example':1 or None},
                     'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
-                    'reminder': {'type': 'Date', 'example': '2025-08-29'},
+                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
                 }
             }            
         }
@@ -252,15 +252,18 @@ class TaskViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         try:
-            queryset = self.filter_queryset(self.get_queryset())
+            # queryset = self.filter_queryset(self.get_queryset())
 
-            for task in queryset:
-                if can_start(task.pk) and task.status == 'pending':
-                    task.change_status_when_start()
+            # for task in queryset:
+            #     if can_start(task.pk) and task.status == 'pending':
+            #         task.change_status_when_start()
 
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
-
+            # serializer = self.get_serializer(queryset, many=True)
+            # return Response(serializer.data)
+            print(request.query_params.get('project'))
+            queryset = Task.objects.filter(parent_task__isnull=True , project=request.query_params.get('project'))
+            serializer = ShowTaskSerializer(queryset, many=True)
+            return Response(serializer.data , status.HTTP_200_OK)
         except Exception as e:
             return exception_response(e)
     
@@ -285,7 +288,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             "application/json":{
                 'type': 'object',
                 "properties":{
-                    "assignees":{"type":"[string]", "example":"[username]"}
+                    "assignees":{"type":"[integer]", "example":"[1,2,3,4]"}
                 },
                 "required": ["assignees"]
             }
@@ -593,11 +596,11 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        if not self.request.user.is_staff:
-            qs = qs.filter(condition_task__project__workspace__owner=self.request.user)
-        return qs
+    def get_permissions(self):
+        self.permission_classes = [IsAuthenticated]
+        if self.action in ['update', 'destroy']:
+            self.permission_classes.append(IsTaskProjectOwner)
+        return super().get_permissions()
 
     @extend_schema(
         summary="List all task dependencies",
@@ -606,6 +609,7 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
         tags=["Task_Dependencies"],
     )
     def list(self, request, *args, **kwargs):
+        #self.permission_classes.append(IsTaskProjectOwner)
         return super().list(request, *args, **kwargs)
 
     @extend_schema(
@@ -641,8 +645,7 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
         tags=["Task_Dependencies"],
     )
     def create(self, request, *args, **kwargs):
-        task = Task.objects.get(id=request.data.get('condition_task'))
-        if not is_project_owner(request.user.id , task.project):
+        if not is_project_owner(request.user.id , request.data.get('condition_task').project):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
         return super().create(request, *args, **kwargs)
 
@@ -654,6 +657,7 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
         tags=["Task_Dependencies"],
     )
     def update(self, request, *args, **kwargs):
+        #self.permission_classes.append(IsTaskProjectOwner)
         return super().update(request, *args, **kwargs)
 
     @extend_schema(
@@ -663,4 +667,5 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
         tags=["Task_Dependencies"],
     )
     def destroy(self, request, *args, **kwargs):
+        #self.permission_classes.append(IsTaskProjectOwner)
         return super().destroy(request, *args, **kwargs)

@@ -91,10 +91,11 @@ class BuildProjectListItem extends StatelessWidget {
                             pushScreen(
                               context,
                               BlocProvider(
-                                  create: (context) => IssuesCubit(IssueApi()),
-                                  child: All_Issues(
-                                    project_Id: projectsModel.id,
-                                  )),
+                                create: (context) => IssuesCubit(IssueApi()),
+                                child: All_Issues(
+                                  project_Id: projectsModel.id,
+                                ),
+                              ),
                             );
                           },
                           child: MyIcons.icon(Icons.bug_report_outlined,
@@ -128,7 +129,7 @@ class BuildProjectListItem extends StatelessWidget {
                 ? BuildProjectsList(
                     projectsModel.subProjects,
                     workspaceId,
-                    newWidth: width(context) * 0.62,
+                    newWidth: width(context) * 0.68,
                     newMargin: marginFromLeft * 1.5,
                   )
                 : Container(),

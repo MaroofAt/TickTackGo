@@ -19,6 +19,7 @@ from .models import Workspace , Workspace_Membership , Invite , Points
 from .serializers import WorkspaceSerializer , InviteSerializer , PointsSerializer
 from django.utils import timezone
 from .permissions import IsWorkspaceMember, IsWorkspaceOwner
+from users.models import User
 
 # Create your views here.
 class WorkspaceViewSet(viewsets.ModelViewSet):
@@ -267,22 +268,28 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         best_discipline_member_record = Points.objects.filter(workspace=instance).order_by('-discipline_member').first()
         best_member_record = Points.objects.filter(workspace=instance).order_by('-total').first()
         
+        username = User.objects.filter(pk=best_hard_work_record.user_id).first().username
+
         return Response(
             {
                 "best_hard_worker":{
                     "user_id" : best_hard_work_record.user_id,
+                    "username": username,
                     "hard_worker_points": best_hard_work_record.hard_worker
                 },
                 "best_important_mission_solver_record":{
                     "user_id" : best_important_mission_solver_record.user_id,
+                    "username": username,
                     "important_mission_solver_points": best_important_mission_solver_record.important_mission_solver
                 },
                 "best_discipline_member_record":{
                     "user_id" : best_discipline_member_record.user_id,
+                    "username": username,
                     "discipline_member_points": best_discipline_member_record.discipline_member
                 },
                 "best_member_record":{
                     "user_id" : best_member_record.user_id,
+                    "username": username,
                     "total_points": best_member_record.total
                 }
             },

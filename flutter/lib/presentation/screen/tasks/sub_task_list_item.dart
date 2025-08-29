@@ -6,15 +6,17 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
+import 'package:pr1/presentation/screen/tasks/sub_task_info_page.dart';
 import 'package:pr1/presentation/screen/tasks/task_info_page.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-class TaskListItem extends StatelessWidget {
-  final FetchTasksModel fetchTask;
+class SubTaskListItem extends StatelessWidget {
+  final SubTask subTask;
   final Color color;
+  final int projectId;
 
-  const TaskListItem(this.fetchTask, this.color, {super.key});
+  const SubTaskListItem(this.subTask, this.color, this.projectId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +29,7 @@ class TaskListItem extends StatelessWidget {
             child: PopScope(
               onPopInvokedWithResult: (didPop, result) {
                 if (didPop && result != null) {
-                  BlocProvider.of<TaskCubit>(context)
-                      .fetchTasks(fetchTask.project);
+                  BlocProvider.of<TaskCubit>(context).fetchTasks(projectId);
 
                   /*
                   * remove from tasksTitles
@@ -39,7 +40,7 @@ class TaskListItem extends StatelessWidget {
                       .removeWhere((key, value) => key == result);
                 }
               },
-              child: TaskInfoPage(fetchTask),
+              child: SubTaskInfoPage(subTask),
             ),
           ),
         );
@@ -62,46 +63,47 @@ class TaskListItem extends StatelessWidget {
             )
           ],
         ),
-        child: Row(
-          children: [
-            SizedBox(
-              width: width(context) * 0.32,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  MyText.text1(fetchTask.title,
-                      textColor: white, textAlign: TextAlign.center),
-                  Container(
-                    width: width(context) * 0.25,
-                    height: height(context) * 0.04,
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(24),
+        child: SizedBox(
+          width: width(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    MyText.text1(subTask.title,
+                        textColor: white, textAlign: TextAlign.center),
+                    Container(
+                      width: width(context) * 0.25,
+                      height: height(context) * 0.04,
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Center(child: MyText.text1(subTask.status)),
                     ),
-                    child: Center(child: MyText.text1(fetchTask.status)),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 20),
-            SizedBox(
-              width: width(context) * 0.4,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  MyText.text1(
-                     'Created At:\n ${DateFormat('yyyy-MM-d').format(fetchTask.dueDate!)}',
-                      textColor: Colors.grey),
-
-                  MyText.text1(
-                      'Due date:\n ${DateFormat('yyyy-MM-d').format(fetchTask.dueDate!)}',
-                      textColor: Colors.grey),
-                ],
+              const SizedBox(width: 20),
+              SizedBox(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    MyText.text1(
+                        'Created At:\n ${DateFormat('yyyy-MM-d').format(subTask.dueDate!)}',
+                        textColor: Colors.grey),
+                    MyText.text1(
+                        'Due date:\n ${DateFormat('yyyy-MM-d').format(subTask.dueDate!)}',
+                        textColor: Colors.grey),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
