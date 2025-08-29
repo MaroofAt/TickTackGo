@@ -65,7 +65,8 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                 ],
               ),
               leading: IconButton(
-                onPressed: () => popScreen(context),
+                onPressed: () {
+                  popScreen(context);},
                 icon: Icon(Icons.arrow_back_sharp, color: ampleOrange),
               ),
             ),
@@ -98,10 +99,9 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                         color: ampleOrange,
                       ),
                       child: IconButton(
-                        onPressed: () {
-                          setState(() async {
-                            await  context.read<IssuesCubit>().marksolved( projectId: widget.projectId, context: context, issueID: widget.issueId);
-                          });
+                        onPressed: ()  async {
+
+                             await context.read<IssuesCubit>().marksolved( projectId: widget.projectId, context: context, issueID: widget.issueId);
                         },
                         icon: issue.solved
                             ? const Icon(Icons.check, color: Colors.white, size: 30)

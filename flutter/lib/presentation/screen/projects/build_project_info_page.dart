@@ -110,14 +110,13 @@ final int projectId;
                     )
                   ),
                   onTap: () async {
-                    print("testtttt ");
                     List<FetchTasksModel> fetchedTasks =
                         await TaskApi.fetchTasks(projectId, token);
                      Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) =>  TasksGanttChart(tasks: fetchedTasks)),
                     );
-                   
+
 
                   },
                 ),

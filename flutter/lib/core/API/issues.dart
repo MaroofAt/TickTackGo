@@ -75,45 +75,65 @@ class IssueApi {
       throw Exception('Unexpected error: $e');
     }
   }
-
-  Future <ListIssuesModel> RetrieveIssue({
+  Future<ListIssuesModel> RetrieveIssue({
     required int issueId,
     required int projectId,
   }) async {
     try {
-      final response = await dio.get(
-        '/issues/$issueId/',
-        data: {
-          "project": projectId,
-        },
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        ),
+      List<ListIssuesModel> allIssues = await get_All_Issues(projectId: projectId);
+
+      final issue = allIssues.firstWhere(
+            (item) => item.id == issueId,
+        orElse: () => throw Exception('Issue $issueId not found in project $projectId'),
       );
 
-      if (response.statusCode == 200) {
-        print("Issue $issueId fetched successfully ✅");
-        print("Response data: ${response.data}");
-        print("Response data type: ${response.data.runtimeType}");
-        if (response.data is List<dynamic> && response.data.isNotEmpty) {
-          return ListIssuesModel.fromJson(response.data[0]);
-        } else {
-          throw Exception('No issue found or invalid response format');
-        }
-      } else {
-        throw Exception('Failed to fetch issue: ${response.statusCode}');
-      }
-    } on DioException catch (e) {
-      print("Dio error: ${e.response?.data ?? e.message}");
-      throw Exception('Dio error: ${e.response?.data ?? e.message}');
+      print("Issue $issueId found in project $projectId ✅");
+      return issue;
+
     } catch (e) {
-      throw Exception('Unexpected error: $e');
+      throw Exception('Error retrieving issue: $e');
     }
   }
+
+
+  // Future <ListIssuesModel> RetrieveIssue({
+  //   required int issueId,
+  //   required int projectId,
+  // }) async {
+  //   try {
+  //     final response = await dio.get(
+  //       '/issues/$issueId/',
+  //       data: {
+  //         "project": projectId,
+  //       },
+  //       options: Options(
+  //         headers: {
+  //           'Authorization': 'Bearer $token',
+  //           'accept': 'application/json',
+  //           'Content-Type': 'application/json',
+  //         },
+  //       ),
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       print("Issue $issueId fetched successfully ✅");
+  //       print("Response data: ${response.data}");
+  //       print("Response data type: ${response.data.runtimeType}");
+  //       if (response.data is List<dynamic> && response.data.isNotEmpty) {
+  //         return ListIssuesModel.fromJson(response.data[0]);
+  //       } else {
+  //         throw Exception('No issue found or invalid response format');
+  //       }
+  //     } else {
+  //       throw Exception('Failed to fetch issue: ${response.statusCode}');
+  //     }
+  //   } on DioException catch (e) {
+  //     print("Dio error: ${e.response?.data ?? e.message}");
+  //     throw Exception('Dio error: ${e.response?.data ?? e.message}');
+  //   } catch (e) {
+  //     throw Exception('Unexpected error: $e');
+  //   }
+  // }
 
   Future<void> createReplie({
     required String body,
