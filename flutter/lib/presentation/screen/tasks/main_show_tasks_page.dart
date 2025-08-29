@@ -44,8 +44,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
         if (state is ProjectRetrievingSucceededState) {
           for (var element in state.retrieveProjectModel.members) {
             BlocProvider.of<ProjectsCubit>(context)
-                .assignees
-                .addAll({element.member.username: element.member.id});
+                .assignees.add(element.member.username);
           }
           return buildTaskList(context, state.retrieveProjectModel);
         }

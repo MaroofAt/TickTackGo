@@ -16,7 +16,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   bool projectsAreOpened = false;
   int? selectedWorkspaceId;
 
-  Map<String, int> assignees = {};
+  List<String> assignees = [];
 
   bool checkOwnerOrEditor() {
     List<int> ownerAndEditorIds = [];

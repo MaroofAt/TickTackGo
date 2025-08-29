@@ -23,7 +23,7 @@ class TaskApi {
       required bool locked,
       required String token,
       required int? parentTask,
-      required List<int> assignees,
+      required List<String> assignees,
       File? image}) async {
     Map<String, String> headers;
 
@@ -34,15 +34,12 @@ class TaskApi {
       "due_date": dueDate,
       "workspace": workspaceId,
       "project": projectId,
-      "perent_task": parentTask,
       "priority": priority,
-      "locked": locked,
-      "reminder": null,
       "assignees": assignees,
     };
 
     if (parentTask != null && parentTask != 0) {
-      data.addAll({'perent_task': parentTask});
+      data.addAll({'parent_task': parentTask});
     }
 
     if (image == null) {
@@ -83,7 +80,6 @@ class TaskApi {
         createTaskModel = CreateTaskModel.onError(response.data);
       }
     } on DioException catch (e) {
-      print(e.toString());
       createTaskModel = CreateTaskModel.error(handleDioError(e));
     }
     return createTaskModel;
