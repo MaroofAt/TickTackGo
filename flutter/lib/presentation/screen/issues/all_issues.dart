@@ -24,7 +24,7 @@ class _All_IssuesState extends State<All_Issues> {
   @override
   void initState() {
     super.initState();
-    context.read<IssuesCubit>().fetchIssues(widget.project_Id);
+     context.read<IssuesCubit>().fetchIssues(widget.project_Id);
   }
 
   @override
