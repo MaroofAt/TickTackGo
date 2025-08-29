@@ -262,7 +262,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             # return Response(serializer.data)
             queryset = Task.objects.filter(parent_task__isnull=True)
             serializer = ShowTaskSerializer(queryset, many=True)
-
+            return Response(serializer , status.HTTP_200_OK)
         except Exception as e:
             return exception_response(e)
     
