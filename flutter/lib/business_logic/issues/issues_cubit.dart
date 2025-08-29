@@ -126,6 +126,7 @@ class IssuesCubit extends Cubit<IssuesState> {
           context: context,
           builder: (_) =>
               AlertDialog(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: const Text("Success"),
                 content: const Text(
                     "The issue was marked as solved successfully ✅",style: TextStyle(color: white),),
@@ -148,6 +149,7 @@ class IssuesCubit extends Cubit<IssuesState> {
             context: context,
             builder: (_) =>
                 AlertDialog(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   title: const Text("Notice"),
                   content: const Text("This issue is already solved.",style: TextStyle(color: white),),
                   actions: [
