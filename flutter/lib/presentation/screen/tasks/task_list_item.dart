@@ -46,7 +46,7 @@ class TaskListItem extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
-        padding: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
+        padding: const EdgeInsets.only(left: 5.0, top: 5, bottom: 5),
         height: height(context) * 0.12,
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
@@ -65,24 +65,38 @@ class TaskListItem extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-              width: width(context) * 0.4,
+              width: width(context) * 0.32,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  MyText.text1(fetchTask.title,
+                      textColor: white, textAlign: TextAlign.center),
                   Container(
-                    width: width(context) * 0.2,
-                    height: height(context) * 0.03,
+                    width: width(context) * 0.25,
+                    height: height(context) * 0.04,
                     decoration: BoxDecoration(
                       color: color,
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Center(child: MyText.text1(fetchTask.status)),
                   ),
-                  MyText.text1(fetchTask.title,
-                      textColor: white, textAlign: TextAlign.center),
+                ],
+              ),
+            ),
+            const SizedBox(width: 20),
+            SizedBox(
+              width: width(context) * 0.4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                   MyText.text1(
-                      DateFormat('yyyy-MM-d').format(fetchTask.dueDate!),
+                     'Created At:\n ${DateFormat('yyyy-MM-d').format(fetchTask.dueDate!)}',
+                      textColor: Colors.grey),
+
+                  MyText.text1(
+                      'Due date:\n ${DateFormat('yyyy-MM-d').format(fetchTask.dueDate!)}',
                       textColor: Colors.grey),
                 ],
               ),

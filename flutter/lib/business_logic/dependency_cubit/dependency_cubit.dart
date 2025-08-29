@@ -4,7 +4,7 @@ import 'package:pr1/core/API/dependencies.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/dependencies/create_dependencies_model.dart';
 import 'package:pr1/presentation/screen/dependencies/create_dependency.dart';
-import 'package:pr1/presentation/screen/dependencies/delete_dependency_model.dart';
+import 'package:pr1/data/models/dependencies/delete_dependency_model.dart';
 
 part 'dependency_state.dart';
 
