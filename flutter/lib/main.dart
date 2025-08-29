@@ -9,7 +9,6 @@ import 'package:pr1/core/API/comments.dart';
 import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/gannt_chart/gannt_chart.dart';
-import 'package:pr1/presentation/screen/gannt_chart/gantt_test.dart';
 import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
