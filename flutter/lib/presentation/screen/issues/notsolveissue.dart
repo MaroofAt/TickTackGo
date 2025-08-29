@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/issues/issue_model.dart';
 import 'package:pr1/data/models/issues/list_issues_model.dart';
 
+import '../../../business_logic/issues/issues_cubit.dart';
 import '../../../core/constance/colors.dart';
 import '../../../core/constance/strings.dart';
 import '../../../core/variables/issues_variables.dart';
@@ -28,12 +30,19 @@ class Notsolveissue extends StatelessWidget {
                 title: Text(issue.title,
                     style: TextStyle(color: white)),
                 trailing:issue.solved!=true? Icon(Icons.close, color: ampleOrange):Icon(Icons.check,color: ampleOrange),
-                onTap: () {
-                  Navigator.pushNamed(
+                onTap: () async {
+                  final value = await Navigator.pushNamed(
                     context,
                     issuesdetalies,
-                    arguments: issue, // Pass your issue object here
+                    arguments: {
+                      "issueId": issue.id,
+                      "projectId": issue.project.id,
+                    },
                   );
+
+                  if (value == true) {
+                    context.read<IssuesCubit>().fetchIssues(issue.project.id);
+                  }
                 },
               ),
 
