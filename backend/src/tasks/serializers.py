@@ -103,7 +103,6 @@ class SubTaskSerializer(serializers.ModelSerializer):
 class ShowTaskSerializer(serializers.ModelSerializer):
     sub_tasks = SubTaskSerializer(many=True, read_only=True)
     assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
-    status_message = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Task
         fields = [
@@ -124,7 +123,7 @@ class ShowTaskSerializer(serializers.ModelSerializer):
             'priority',
             'locked',
             'reminder',
-            'status_message',
+            'sub_tasks',
         ]
         extra_kwargs = {
             'id': {'read_only':True},
