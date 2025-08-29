@@ -90,7 +90,49 @@ class TaskSerializer(serializers.ModelSerializer):
             return super().update(instance=instance,validated_data=validated_data)
         
 
-
+class SubTaskSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Task
+        fields = [
+            'id', 'title', 'description', 'start_date', 'due_date', 
+            'complete_date', 'status', 'priority', 'locked', 'reminder',
+            'out_dated', 'image'
+        ]
+        read_only_fields = ['id']
+class ShowTaskSerializer(serializers.ModelSerializer):
+    sub_tasks = SubTaskSerializer(many=True, read_only=True)
+    assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
+    status_message = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = Task
+        fields = [
+            'id',
+            'title',
+            'description',
+            'start_date',
+            'due_date',
+            'complete_date',
+            'creator',
+            'workspace',
+            'project',
+            'image',
+            'out_dated',
+            'parent_task',
+            'assignees',
+            'status',
+            'priority',
+            'locked',
+            'reminder',
+            'status_message',
+        ]
+        extra_kwargs = {
+            'id': {'read_only':True},
+            'complete_date': {'read_only': True},
+            'out_dated': {'read_only': True},
+            'assignees': {'read_only': True},
+            'sub_tasks': {'read_only': True},
+        }
 class CreateCommentSerializer(serializers.ModelSerializer):
         class Meta:
             model= Comment

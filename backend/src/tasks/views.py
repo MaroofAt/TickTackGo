@@ -12,7 +12,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExampl
 
 
 from .models import Task, Comment , Inbox_Tasks, Task_Dependencies
-from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers , CreateCommentSerializer
+from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers , CreateCommentSerializer , ShowTaskSerializer
 
 
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask
@@ -252,14 +252,16 @@ class TaskViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         try:
-            queryset = self.filter_queryset(self.get_queryset())
+            # queryset = self.filter_queryset(self.get_queryset())
 
-            for task in queryset:
-                if can_start(task.pk) and task.status == 'pending':
-                    task.change_status_when_start()
+            # for task in queryset:
+            #     if can_start(task.pk) and task.status == 'pending':
+            #         task.change_status_when_start()
 
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
+            # serializer = self.get_serializer(queryset, many=True)
+            # return Response(serializer.data)
+            queryset = Task.objects.filter(parent_task__isnull=True)
+            serializer = ShowTaskSerializer(queryset, many=True)
 
         except Exception as e:
             return exception_response(e)

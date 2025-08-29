@@ -286,7 +286,35 @@ class ProjectViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return exception_response(e)
 
+    @extend_schema(
+        summary = "list project issues",
+        description="List all issues belonging to a specific project (only if user is a member).",
+        tags=["Projects/Issue"],
+        parameters=[
+            OpenApiParameter(
+                name="project_id",
+                type=int,
+                location=OpenApiParameter.PATH,
+                description="ID of the project to fetch issues for",
+                required=True,
+            )
+        ],
+        responses={200: IssueSerializer(many=True)},
+    )
+    @action(detail=False, methods=["get"], url_path=r"project/(?P<project_id>\d+)/issues")
+    def list_project_issues(self, request, project_id=None):
+        user = request.user
+        try:
+            project = Project.objects.get(id=project_id, members=user)
+        except Project.DoesNotExist:
+            return Response(
+                {"detail": "You are not a member of this project or it doesn't exist."},
+                status=403,
+            )
 
+        issues = Issue.objects.filter(project=project)
+        serializer = self.get_serializer(issues, many=True)
+        return Response(serializer.data)
 
 
 
