@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 
-import signals
+from .signals import send_welcome_notification
 
 from drf_spectacular.utils import extend_schema
 
@@ -231,7 +231,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     'active': True
                 }
             )
-            signals.send_welcome_notification(User , request.user , True)
+            send_welcome_notification(User , request.user , True)
             return Response(DeviceSerializer(device).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
 
