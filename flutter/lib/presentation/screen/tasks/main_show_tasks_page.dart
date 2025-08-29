@@ -32,7 +32,6 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
   }
 
   _getNeededData() {
-    print(widget.projectId);
     BlocProvider.of<ProjectsCubit>(context).retrieveProject(widget.projectId);
     BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
   }
