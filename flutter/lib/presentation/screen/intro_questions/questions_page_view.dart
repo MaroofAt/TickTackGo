@@ -48,10 +48,9 @@ class _QuestionsPageViewState extends State<QuestionsPageView> {
                       return MyGestureDetector.gestureDetector(
                         onTap: () {
                           setState(() {
-                            selectedOption = introQuestions[index]
-                                .answers[answerIndex];
+                            selectedOption = introQuestions[index].answers.keys.elementAt(answerIndex);
                           });
-                          selectedOptions[index] = introQuestions[index].answers[answerIndex];
+                          selectedOptions[index] = introQuestions[index].answers.values.elementAt(answerIndex);
                         },
                         child: Container(
                           margin: const EdgeInsets.symmetric(
@@ -63,7 +62,7 @@ class _QuestionsPageViewState extends State<QuestionsPageView> {
                                 .scaffoldBackgroundColor,
                             border: Border.all(
                                 color: introQuestions[index]
-                                    .answers[answerIndex] ==
+                                    .answers.keys.elementAt(answerIndex) ==
                                     selectedOption
                                     ? Theme.of(context).secondaryHeaderColor
                                     : white,
@@ -73,9 +72,9 @@ class _QuestionsPageViewState extends State<QuestionsPageView> {
                           child: Center(
                             child: MyText.text1(
                                 introQuestions[index]
-                                    .answers[answerIndex],
+                                    .answers.keys.elementAt(answerIndex),
                                 textColor: introQuestions[index]
-                                    .answers[answerIndex] ==
+                                    .answers.keys.elementAt(answerIndex) ==
                                     selectedOption
                                     ? Theme.of(context).secondaryHeaderColor
                                     : white,

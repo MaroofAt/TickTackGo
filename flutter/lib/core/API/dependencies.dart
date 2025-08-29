@@ -3,6 +3,7 @@ import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/models/dependencies/create_dependencies_model.dart';
 import 'package:pr1/data/models/dependencies/fetch_dependencies_model.dart';
+import 'package:pr1/presentation/screen/dependencies/delete_dependency_model.dart';
 
 class DependenciesApi {
   static Future<CreateDependencyModel> createDependency(
@@ -39,5 +40,31 @@ class DependenciesApi {
       createDependencyModel = CreateDependencyModel.error(handleDioError(e));
     }
     return createDependencyModel;
+  }
+
+  static Future<DeleteDependencyModel> deleteDependency(
+      int dependencyId, String token) async {
+    var headers = {'Authorization': 'Bearer $token'};
+
+    late DeleteDependencyModel deleteDependencyModel;
+
+    try {
+      var response = await dio.request(
+        '/tasks-dependencies/$dependencyId/',
+        options: Options(
+          method: 'DELETE',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 204) {
+        deleteDependencyModel = DeleteDependencyModel.onSuccess();
+      } else {
+        deleteDependencyModel = DeleteDependencyModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      deleteDependencyModel = DeleteDependencyModel.error(handleDioError(e));
+    }
+    return deleteDependencyModel;
   }
 }

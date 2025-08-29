@@ -14,27 +14,28 @@ List<String> selectedOptions = [
 
 
 List<IntroQuestionsModel> introQuestions = [
-  IntroQuestionsModel('What do you do?',[
-    'Software/IT',
-    'HR/operations',
-    'Sales \$ marketing',
-    'Education',
-    'Finance',
-    'Health',
-    'Student',
-    'Architecture engineer',
-    'Other',
-  ]),
-  IntroQuestionsModel('How to use website?',[
-    'Own tasks management',
-    'Small team',
-    'Medium company',
-  ]),
-  IntroQuestionsModel('how did you get here?',[
-    'Google search',
-    'Friends',
-    'Youtube',
-    'Instagram',
-    'Facebook',
-  ]),
+  IntroQuestionsModel('What do you do?',
+      {
+    'Software/IT': 'software_or_it',
+    'HR/operations': 'hr_or_operations',
+    'Sales \$ marketing': 'sales_and_marketing',
+    'Education': 'education',
+    'Finance': 'finance',
+    'Health': 'healthhealth',
+    'Student': 'student',
+    'Architecture engineer': 'architecture_engineer',
+    'Other': 'other',
+  }),
+  IntroQuestionsModel('How to use website?', {
+    'Own tasks management': 'own_tasks_management',
+    'Small team': 'small_team',
+    'Medium team': 'medium_team',
+  }),
+  IntroQuestionsModel('how did you get here?', {
+    'Google search': 'google_search',
+    'Friends': 'friends',
+    'Youtube': 'youtube',
+    'Instagram': 'instagram',
+    'Facebook': 'facebook',
+  }),
 ];
