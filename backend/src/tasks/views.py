@@ -71,15 +71,15 @@ class TaskViewSet(viewsets.ModelViewSet):
                 'properties': {
                     'title': {'type': 'string', 'example': 'Task 1'},
                     'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
-                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
-                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
+                    'start_date': {'type': 'Date', 'example': '2025-08-28'},
+                    'due_date': {'type': 'Date', 'example': '2025-08-28'},
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
-                    'perent_task': {'type':'integer' , 'example':1 or None},
+                    'parent_task': {'type':'integer' , 'example':1 or None},
                     'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
-                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
+                    'reminder': {'type': 'Date', 'example': '2025-08-28'},
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
                 # 'required': ['title']
@@ -285,7 +285,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             "application/json":{
                 'type': 'object',
                 "properties":{
-                    "assignees":{"type":"[integer]", "example":"[1,2,3,4]"}
+                    "assignees":{"type":"[string]", "example":"[username]"}
                 },
                 "required": ["assignees"]
             }
