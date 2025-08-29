@@ -6,6 +6,7 @@ import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
 import 'package:pr1/presentation/screen/dependencies/create_dependency.dart';
+import 'package:pr1/presentation/screen/tasks/show_sub_tasks.dart';
 import 'package:pr1/presentation/screen/tasks/task_list_item.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/snack_bar.dart';
@@ -65,8 +66,21 @@ class TaskListViewPage extends StatelessWidget {
               ),
             );
           }
-          print(fetchedTasks[index - 1].id);
-          return TaskListItem(fetchedTasks[index - 1], color);
+          return Column(
+            children: [
+              TaskListItem(fetchedTasks[index - 1], color),
+              fetchedTasks[index - 1].subTasks.isNotEmpty
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(),
+                        ShowSubTasks(fetchedTasks[index - 1].subTasks, color,
+                            fetchedTasks[index].project),
+                      ],
+                    )
+                  : Container(),
+            ],
+          );
         },
       ),
     );
