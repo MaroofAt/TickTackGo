@@ -16,6 +16,13 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   bool projectsAreOpened = false;
   int? selectedWorkspaceId;
 
+  Map<String, int> assignees = {};
+
+  bool checkOwnerOrEditor() {
+    List<int> ownerAndEditorIds = [];
+    return true;
+  }
+
   Future<void> fetchProjects(int workspaceId) async {
     emit(ProjectsFetchingState());
 
@@ -82,8 +89,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     }
   }
 
-  Future<void> changeUserRole(
-      int userId, int projectId, String newRole) async {
+  Future<void> changeUserRole(int userId, int projectId, String newRole) async {
     emit(ChangingUserRoleState());
 
     ChangeUserRoleModel changeUserRoleModel =
