@@ -21,10 +21,10 @@ class Task {
 
 Task convertToTask(CreateTaskModel task) {
   return Task(
-    name: task.title,
-    start: task.startDate ?? DateTime.now(),
-    end: task.dueDate ?? DateTime.now().add(const Duration(days: 1)),
-    progress: (task.completeDate != null) ? 1.0 : 0.3,
-    color: task.outDated ? Colors.red : Colors.green,
+    name: task.data!.title,
+    start: task.data!.startDate ?? DateTime.now(),
+    end: task.data!.dueDate ?? DateTime.now().add(const Duration(days: 1)),
+    progress: (task.data!.completeDate != null) ? 1.0 : 0.3,
+    color: task.data!.outDated ? Colors.red : Colors.green,
   );
 }

@@ -241,7 +241,7 @@ Column buildTextFieldsColumn(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MyText.text1(
-            'Description',
+            'Description *',
             textColor: white,
             fontWeight: FontWeight.bold,
             fontSize: 16,

@@ -36,8 +36,6 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
     BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
   }
 
-  Map<String, int> tasksTitles = {};
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProjectsCubit, ProjectsState>(
@@ -60,7 +58,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Map<String, int> assignees = {};
-          for(var element in retrieveProjectModel.members) {
+          for (var element in retrieveProjectModel.members) {
             assignees.addAll({element.member.username: element.member.id});
           }
           pushScreen(
@@ -77,7 +75,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
                 child: CreateTaskPage(
                   widget.projectId,
                   widget.workspaceId,
-                  tasksTitles,
+                  BlocProvider.of<TaskCubit>(context).tasksTitles,
                   assignees,
                 ),
               ),
@@ -99,10 +97,14 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
             }
             for (var element in state.fetchedTasks) {
               if (element.status != 'completed') {
-                tasksTitles.addAll({element.title: element.id});
+                BlocProvider.of<TaskCubit>(context)
+                    .tasksTitles
+                    .addAll({element.title: element.id});
               }
             }
-            tasksTitles.addAll({'canceled': 0});
+            BlocProvider.of<TaskCubit>(context)
+                .tasksTitles
+                .addAll({'canceled': 0});
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,

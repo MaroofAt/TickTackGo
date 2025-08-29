@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 const String baseUrl = 'http://10.0.2.2:8000/api';
-const String outbaseurl= 'http://192.168.230.106:8000/api';
+const String outbaseurl= 'http://192.168.1.129:8000/api';
 
 BaseOptions options = BaseOptions(
   baseUrl: baseUrl,
