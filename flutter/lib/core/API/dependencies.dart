@@ -2,8 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/models/dependencies/create_dependencies_model.dart';
-import 'package:pr1/data/models/dependencies/fetch_dependencies_model.dart';
-import 'package:pr1/presentation/screen/dependencies/delete_dependency_model.dart';
+import 'package:pr1/data/models/dependencies/delete_dependency_model.dart';
 
 class DependenciesApi {
   static Future<CreateDependencyModel> createDependency(

@@ -194,7 +194,9 @@ Stack buildSelectImage(BuildContext context) {
         child: BlocListener<TaskCubit, TaskState>(
           listener: (context, state) {},
           child: MyGestureDetector.gestureDetector(
-            onTap: BlocProvider.of<TaskCubit>(context).getTaskImage,
+            onTap: () {
+              BlocProvider.of<TaskCubit>(context).getTaskImage();
+            },
             child: Container(
               width: width(context) * 0.08,
               height: width(context) * 0.08,

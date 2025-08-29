@@ -150,14 +150,6 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                     Icons.date_range,
                     white,
                   ),
-                  // buildTwoTextRow(
-                  //   context,
-                  //   ' Assignees',
-                  //   //TODO assignees people
-                  //   ' ${DateFormat('yyyy-MM-d').format(fetchTasksModel.dueDate!)}',
-                  //   Icons.people,
-                  //   white,
-                  // ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,7 +158,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         context,
                         ' Priority',
                         ' ${widget.fetchTasksModel.priority}',
-                        Icons.people,
+                        Icons.priority_high_outlined,
                         white,
                       ),
                       BlocConsumer<TaskCubit, TaskState>(
