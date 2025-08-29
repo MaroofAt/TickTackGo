@@ -15,17 +15,23 @@ import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'business_logic/replay/replay_cubit.dart';
+import 'core/API/handel_notification.dart';
 import 'core/API/notification.dart';
+import 'core/API/notivications_api.dart';
 import 'core/variables/global_var.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await  initOneSignal();
+  // await  initOneSignal()
+  await NotificationApi().getDeviceToken();
+  await NotificationHandel().initNotification();
   runApp(const MyApp());
 }
 

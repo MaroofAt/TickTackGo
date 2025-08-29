@@ -37,6 +37,7 @@ Map<String, Widget Function(BuildContext)> routes = {
     final projectid = args["projectId"] as int;
     return Detalies_Issue( issueId: issueid, projectId: projectid,);
   },
+
   onboardingMainRoute: (context) => const OnboardingMain(),
   introQuestionsRoute: (context) => BlocProvider(
         create: (context) => IntroQuestionsCubit(),
