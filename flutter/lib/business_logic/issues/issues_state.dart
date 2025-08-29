@@ -15,6 +15,8 @@ class IssueLoaded extends IssuesState {
   IssueLoaded(this.issues);
 }
 
+class IssuesolvedLoaded extends IssuesState {
+}
 class IssueCreated extends IssuesState {
   // final ListIssuesModel issue;
   // IssueCreated(this.issue);

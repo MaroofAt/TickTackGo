@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 import '../../data/models/issues/list_issues_model.dart';
 import '../../data/models/issues/showreplie.dart';
+import '../constance/colors.dart';
 import '../variables/api_variables.dart';
 import '../variables/global_var.dart';
 
@@ -46,16 +48,17 @@ class IssueApi {
     String? search,
   }) async {
     try {
-      final queryParams = { if (ordering != null) "ordering": ordering, if (search != null) "search": search, };
-      final response = await dio.get( '/issues/',
+      final queryParams = {
+        if (ordering != null) "ordering": ordering,
+        if (search != null) "search": search,
+      };
+      final response = await dio.get('/issues/',
         queryParameters: queryParams,
-        data: { "project": projectId, },
+        data: { "project": projectId,},
         options: Options(
           headers: { 'Authorization': 'Bearer $token',
             'accept': 'application/json',
-            'Content-Type': 'application/json', }, ), );
-
-
+            'Content-Type': 'application/json',},),);
 
 
       if (response.statusCode == 200) {
@@ -63,7 +66,6 @@ class IssueApi {
 
         final data = response.data as List;
         return data.map((e) => ListIssuesModel.fromJson(e)).toList();
-
       } else {
         throw Exception('Failed to fetch issues: ${response.statusCode}');
       }
@@ -77,7 +79,7 @@ class IssueApi {
   Future <ListIssuesModel> RetrieveIssue({
     required int issueId,
     required int projectId,
-  }) async { 
+  }) async {
     try {
       final response = await dio.get(
         '/issues/$issueId/',
@@ -144,20 +146,18 @@ class IssueApi {
       throw Exception('Unexpected error: $e');
     }
   }
-  Future <List<ShowReplie>> get_Replie({
-    required int projectId,  required int issueID,
-  }) async {
+
+  Future <List<ShowReplie>> get_Replie(
+      {required int projectId, required int issueID,}) async {
     try {
-      final response = await dio.get( '/issues/list_replie/',
+      final response = await dio.get('/issues/list_replie/',
         data: { "project": projectId,
-          "issue":issueID
+          "issue": issueID
         },
         options: Options(
           headers: { 'Authorization': 'Bearer $token',
             'accept': 'application/json',
-            'Content-Type': 'application/json', }, ), );
-
-
+            'Content-Type': 'application/json',},),);
 
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -166,9 +166,6 @@ class IssueApi {
         print("Response data type: ${response.data.runtimeType}");
         final data = response.data as List;
         return data.map((e) => ShowReplie.fromJson(e)).toList();
-
-
-
       } else {
         throw Exception('Failed to fetch issues: ${response.statusCode}');
       }

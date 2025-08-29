@@ -99,8 +99,8 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                       ),
                       child: IconButton(
                         onPressed: () {
-                          setState(() {
-                            issue.solved = !issue.solved;
+                          setState(() async {
+                            await  context.read<IssuesCubit>().marksolved( projectId: widget.projectId, context: context, issueID: widget.issueId);
                           });
                         },
                         icon: issue.solved
