@@ -12,6 +12,7 @@ import 'package:pr1/presentation/screen/projects/build_members_list.dart';
 import 'package:pr1/presentation/screen/projects/build_workspace_members_list.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
+import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 import '../../../core/API/tasks.dart';
@@ -21,10 +22,10 @@ import '../gannt_chart/gantt_chart.dart';
 class BuildProjectInfoPage extends StatelessWidget {
   final int workspaceId;
   final RetrieveProjectModel retrieveProjectModel;
-final int projectId;
-   BuildProjectInfoPage(this.retrieveProjectModel, this.workspaceId,
-      {required this.projectId}
-      );
+  final int projectId;
+
+  BuildProjectInfoPage(this.retrieveProjectModel, this.workspaceId,
+      {required this.projectId});
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +37,43 @@ final int projectId;
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MyText.text1(
-              retrieveProjectModel.title,
-              textColor: white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MyText.text1(
+                  retrieveProjectModel.title,
+                  textColor: white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+                MyGestureDetector.gestureDetector(
+                  onTap: () async {
+                    List<FetchTasksModel> fetchedTasks =
+                        await TaskApi.fetchTasks(projectId, token);
+                    pushScreen(context, TasksGanttChart(tasks: fetchedTasks));
+                  },
+                  child: Container(
+                      margin: const EdgeInsets.only(left: 30),
+                      padding: const EdgeInsets.all(10),
+                      height: height(context) * 0.05,
+                      width: width(context) * 0.4,
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Center(
+                        child: Row(
+                          children: [
+                            MyText.text1("Gantt chart", fontSize: 20),
+                            SizedBox(
+                              width: width(context) * 0.03,
+                            ),
+                            MyIcons.icon(Icons.arrow_forward_rounded,
+                                color: Colors.black45)
+                          ],
+                        ),
+                      )),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             buildCreateAtRow(),
@@ -66,8 +99,9 @@ final int projectId;
                             ],
                             child: PopScope(
                               onPopInvokedWithResult: (didPop, result) {
-                                if(didPop && result != null) {
-                                  BlocProvider.of<ProjectsCubit>(context).retrieveProject(retrieveProjectModel.id);
+                                if (didPop && result != null) {
+                                  BlocProvider.of<ProjectsCubit>(context)
+                                      .retrieveProject(retrieveProjectModel.id);
                                 }
                               },
                               child: BuildWorkspaceMembersList(
@@ -89,37 +123,8 @@ final int projectId;
                     ),
                   ],
                 ),
-                SizedBox(height: 10,),
-                GestureDetector(
-                  child: Container(
-                    margin: EdgeInsets.only(left: 30),
-                    padding: EdgeInsets.all(10),
-                    height: height(context) * 0.07,
-                    width: width(context)*0.8 ,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(12)),
-                    child: Center(
-                      child: Row(
-                        children: [
-                          Text("Gantt chart",style: TextStyle(fontSize: 20,fontFamily: 'PTSerif'))
-                       , SizedBox(width: width(context)*0.4,)
-                          ,Icon(Icons.arrow_forward_rounded,color:Colors.black45)
-                        ],
-                      ),
-                    )
-                  ),
-                  onTap: () async {
-                    print("testtttt ");
-                    List<FetchTasksModel> fetchedTasks =
-                        await TaskApi.fetchTasks(projectId, token);
-                     Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>  TasksGanttChart(tasks: fetchedTasks)),
-                    );
-                   
-
-                  },
+                const SizedBox(
+                  height: 10,
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
