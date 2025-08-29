@@ -34,7 +34,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
           builder: (context, state) {
             if (state is ProjectRetrievingSucceededState) {
               return BuildProjectInfoPage(
-                  state.retrieveProjectModel, widget.workspaceId);
+                  state.retrieveProjectModel, widget.workspaceId, projectId: widget.projectId,);
             }
             return Center(
               child: LoadingIndicator.circularProgressIndicator(),

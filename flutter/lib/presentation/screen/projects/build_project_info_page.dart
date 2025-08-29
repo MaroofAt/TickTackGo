@@ -6,6 +6,7 @@ import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/presentation/screen/projects/build_members_list.dart';
 import 'package:pr1/presentation/screen/projects/build_workspace_members_list.dart';
@@ -13,12 +14,17 @@ import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
+import '../../../core/API/tasks.dart';
+import '../../../data/models/tasks/fetch_tasks_model.dart';
+import '../gannt_chart/gantt_chart.dart';
+
 class BuildProjectInfoPage extends StatelessWidget {
   final int workspaceId;
   final RetrieveProjectModel retrieveProjectModel;
-
-  const BuildProjectInfoPage(this.retrieveProjectModel, this.workspaceId,
-      {super.key});
+final int projectId;
+   BuildProjectInfoPage(this.retrieveProjectModel, this.workspaceId,
+      {required this.projectId}
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +88,38 @@ class BuildProjectInfoPage extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(height: 10,),
+                GestureDetector(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 30),
+                    padding: EdgeInsets.all(10),
+                    height: height(context) * 0.07,
+                    width: width(context)*0.8 ,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Text("Gantt chart",style: TextStyle(fontSize: 20,fontFamily: 'PTSerif'))
+                       , SizedBox(width: width(context)*0.4,)
+                          ,Icon(Icons.arrow_forward_rounded,color:Colors.black45)
+                        ],
+                      ),
+                    )
+                  ),
+                  onTap: () async {
+                    print("testtttt ");
+                    List<FetchTasksModel> fetchedTasks =
+                        await TaskApi.fetchTasks(projectId, token);
+                     Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  TasksGanttChart(tasks: fetchedTasks)),
+                    );
+                   
+
+                  },
                 ),
                 const SizedBox(height: 20),
                 SizedBox(

@@ -8,6 +8,8 @@ import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/refresh_token.dart';
 import 'package:pr1/data/models/auth/sign_up_model.dart';
 
+import '../../core/API/handel_notification.dart';
+import '../../core/API/notivications_api.dart';
 import '../../core/API/user.dart';
 import '../../core/functions/navigation_functions.dart';
 import '../../core/variables/api_variables.dart';
@@ -23,6 +25,7 @@ class AuthCubit extends Cubit<AuthState> {
   bool isloading = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final NotificationHandel _notificationhandel = NotificationHandel();
 
   ///////////SignUp
   Future<void> sendEmailForOTP(String email,String name ,String password, BuildContext context) async {
@@ -148,6 +151,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   ///////login
   Future<void> login(String email, String password, BuildContext context) async {
+    await _notificationhandel.initNotification();
     isloading = true;
     emit(LoginLoadingState());
 
@@ -170,6 +174,16 @@ class AuthCubit extends Cubit<AuthState> {
         await saveTokens(accessToken, refreshToken);
         token=accessToken;
         refresh = refreshToken;
+        if (FCMuserToken != null  && deviceType != null) {
+          NotificationApi().registerDevice(
+            registrationId: FCMuserToken!,
+            deviceType: deviceType!,
+          );
+        }else {
+          print("FCM Token is null, device not registered yet");
+        }
+
+
         pushNamedAndRemoveUntil(context, mainHomePageRoute);
         emit(SuccessfulyLoginState());
       }else if (response.statusCode == 401 && response.data.isNotEmpty ) {
