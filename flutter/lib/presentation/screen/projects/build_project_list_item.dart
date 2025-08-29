@@ -128,8 +128,8 @@ class BuildProjectListItem extends StatelessWidget {
                 ? BuildProjectsList(
                     projectsModel.subProjects,
                     workspaceId,
-                    newWidth: width(context) * 0.6,
-                    newMargin: marginFromLeft * 2,
+                    newWidth: width(context) * 0.62,
+                    newMargin: marginFromLeft * 1.5,
                   )
                 : Container(),
           ],

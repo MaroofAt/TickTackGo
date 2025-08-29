@@ -159,7 +159,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         },
         child: InputDecorator(
           decoration: const InputDecoration(),
-          child: MyText.text1('Select users', textColor: white),
+          child: MyText.text1('Select users *', textColor: white),
         ),
       ),
     );

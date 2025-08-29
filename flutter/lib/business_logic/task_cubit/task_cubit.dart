@@ -54,6 +54,7 @@ class TaskCubit extends Cubit<TaskState> {
   int? parentTask;
   String selectedPriority = 'medium';
   String selectedStatus = 'pending';
+  Map<String, int> tasksTitles = {};
 
   File? image;
 
@@ -130,7 +131,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> createTask(String title, String description, int workspaceId,
       int projectId, List<int> assignees) async {
-    if (title.isEmpty || description.isEmpty) return;
+    if (title.isEmpty || description.isEmpty || assignees.isEmpty) return;
     emit(TaskCreatingState());
 
     String startDate =
@@ -191,6 +192,7 @@ class TaskCubit extends Cubit<TaskState> {
     CancelTaskModel cancelTaskModel = await TaskApi.cancelTask(taskId, token);
 
     if (cancelTaskModel.errorMessage.isEmpty) {
+
       emit(TaskCancelingSucceededState(cancelTaskModel));
     } else {
       emit(TaskCancelingFailedState(cancelTaskModel.errorMessage));

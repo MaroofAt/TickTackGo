@@ -1,24 +1,55 @@
 class CreateTaskModel {
+  Data? data;
+  Result? result;
+  String errorMessage;
+
+  CreateTaskModel({
+    required this.data,
+    required this.result,
+    required this.errorMessage,
+  });
+
+  factory CreateTaskModel.onSuccess(Map<String, dynamic> json) =>
+      CreateTaskModel(
+        data: Data.fromJson(json["data"]),
+        result: null,
+        errorMessage: '',
+      );
+
+  factory CreateTaskModel.onError(Map<String, dynamic> json) => CreateTaskModel(
+        data: null,
+        result: null,
+        errorMessage: json["detail"] ?? json["message"],
+      );
+
+  factory CreateTaskModel.error(String errorMessage) => CreateTaskModel(
+    data: null,
+    result: null,
+    errorMessage: errorMessage,
+  );
+}
+
+class Data {
   int id;
   String title;
   String description;
-  DateTime? startDate;
-  DateTime? dueDate;
-  DateTime? completeDate;
+  DateTime startDate;
+  DateTime dueDate;
+  dynamic completeDate;
   int creator;
   int workspace;
   int project;
-  String image;
+  dynamic image;
   bool outDated;
-  int? parentTask;
+  dynamic parentTask;
   List<dynamic> assignees;
   String status;
   String priority;
   bool locked;
-  DateTime? reminder;
-  String errorMessage;
+  dynamic reminder;
+  String statusMessage;
 
-  CreateTaskModel({
+  Data({
     required this.id,
     required this.title,
     required this.description,
@@ -36,19 +67,16 @@ class CreateTaskModel {
     required this.priority,
     required this.locked,
     required this.reminder,
-    required this.errorMessage,
+    required this.statusMessage,
   });
 
-  factory CreateTaskModel.onSuccess(Map<String, dynamic> json) =>
-      CreateTaskModel(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
         title: json["title"],
         description: json["description"],
         startDate: DateTime.parse(json["start_date"]),
         dueDate: DateTime.parse(json["due_date"]),
-        completeDate: json["complete_date"] == null
-            ? null
-            : DateTime(json["complete_date"]),
+        completeDate: json["complete_date"],
         creator: json["creator"],
         workspace: json["workspace"],
         project: json["project"],
@@ -60,48 +88,53 @@ class CreateTaskModel {
         priority: json["priority"],
         locked: json["locked"],
         reminder: json["reminder"],
-        errorMessage: '',
+        statusMessage: json["status_message"],
       );
 
-  factory CreateTaskModel.onError(Map<String, dynamic> json) => CreateTaskModel(
-        id: 0,
-        title: '',
-        description: '',
-        startDate: null,
-        dueDate: null,
-        completeDate: null,
-        creator: 0,
-        workspace: 0,
-        project: 0,
-        image: '',
-        outDated: false,
-        parentTask: 0,
-        assignees: [],
-        status: '',
-        priority: '',
-        locked: false,
-        reminder: null,
-        errorMessage: json["detail"] ?? json["message"],
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "title": title,
+        "description": description,
+        "start_date":
+            "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
+        "due_date":
+            "${dueDate.year.toString().padLeft(4, '0')}-${dueDate.month.toString().padLeft(2, '0')}-${dueDate.day.toString().padLeft(2, '0')}",
+        "complete_date": completeDate,
+        "creator": creator,
+        "workspace": workspace,
+        "project": project,
+        "image": image,
+        "out_dated": outDated,
+        "parent_task": parentTask,
+        "assignees": List<dynamic>.from(assignees.map((x) => x)),
+        "status": status,
+        "priority": priority,
+        "locked": locked,
+        "reminder": reminder,
+        "status_message": statusMessage,
+      };
+}
+
+class Result {
+  bool success;
+  String? error;
+  String details;
+
+  Result({
+    required this.success,
+    required this.error,
+    required this.details,
+  });
+
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+        success: json["success"],
+        error: json["error"],
+        details: json["details"],
       );
 
-  factory CreateTaskModel.error(String errorMessage) => CreateTaskModel(
-        id: 0,
-        title: '',
-        description: '',
-        startDate: null,
-        dueDate: null,
-        completeDate: null,
-        creator: 0,
-        workspace: 0,
-        project: 0,
-        image: '',
-        outDated: false,
-        parentTask: 0,
-        assignees: [],
-        status: '',
-        priority: '',
-        locked: false,
-        reminder: null,
-        errorMessage: errorMessage,
-      );
+  Map<String, dynamic> toJson() => {
+        "success": success,
+        "error": error,
+        "details": details,
+      };
 }

@@ -26,8 +26,17 @@ class TaskListItem extends StatelessWidget {
             create: (context) => TaskCubit(),
             child: PopScope(
               onPopInvokedWithResult: (didPop, result) {
-                if(didPop && result != null) {
-                  BlocProvider.of<TaskCubit>(context).fetchTasks(fetchTask.project);
+                if (didPop && result != null) {
+                  BlocProvider.of<TaskCubit>(context)
+                      .fetchTasks(fetchTask.project);
+
+                  /*
+                  * remove from tasksTitles
+                  * so it doesn't appear in the parent projects list
+                  */
+                  BlocProvider.of<TaskCubit>(context)
+                      .tasksTitles
+                      .removeWhere((key, value) => key == result);
                 }
               },
               child: TaskInfoPage(fetchTask),
