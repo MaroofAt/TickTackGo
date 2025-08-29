@@ -121,7 +121,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     List<SentInvitesModel> sentInvitesModel =
         await WorkspaceApi.sentInvites(workspaceId, token);
 
-    if (sentInvitesModel[0].errorMessage.isEmpty) {
+    if (sentInvitesModel.isEmpty || sentInvitesModel[0].errorMessage.isEmpty) {
       emit(SentInvitesRetrievingSucceededState(sentInvitesModel));
     } else {
       emit(SentInvitesRetrievingFailedState(sentInvitesModel[0].errorMessage));

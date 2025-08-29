@@ -116,8 +116,8 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           return MyGestureDetector.gestureDetector(
                             onTap: () {
                               if (widget.fetchTasksModel.status ==
-                                  'in_progress' && widget.fetchTasksModel.assignees
-                                  .contains(user!.id)) {
+                                      'in_progress' &&
+                                  !widget.fetchTasksModel.locked) {
                                 BlocProvider.of<TaskCubit>(context)
                                     .completeTask(widget.fetchTasksModel.id);
                               }
@@ -126,8 +126,9 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                               height: height(context) * 0.05,
                               width: width(context) * 0.28,
                               decoration: BoxDecoration(
-                                  color: widget.fetchTasksModel.status !=
-                                          'in_progress'
+                                  color: (widget.fetchTasksModel.status !=
+                                              'in_progress' ||
+                                          widget.fetchTasksModel.locked)
                                       ? lightGrey
                                       : Theme.of(context).secondaryHeaderColor,
                                   borderRadius: BorderRadius.circular(16)),
@@ -194,10 +195,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           return MyGestureDetector.gestureDetector(
                             onTap: () {
                               if (widget.fetchTasksModel.status !=
-                                      'completed' &&
-                                  widget.fetchTasksModel.assignees
-                                      .contains(user!.id)) {
-
+                                  'completed') {
                                 BlocProvider.of<TaskCubit>(context)
                                     .cancelTask(widget.fetchTasksModel.id);
                               }
@@ -221,6 +219,17 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: width(context),
+                    child: buildTwoTextRow(
+                      context,
+                      'Locked',
+                      widget.fetchTasksModel.locked.toString(),
+                      Icons.lock,
+                      white,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -235,8 +244,8 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       indicatorColor: Colors.blue,
                       tabs: [
                         Tab(text: 'Comments'),
-                        Tab(text: 'Subtasks'),
                         Tab(text: 'Assignees'),
+                        Tab(text: 'Messages'),
                       ],
                     ),
                     SizedBox(
@@ -251,8 +260,8 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           ),
 
                           // Subtasks Tab
-                          _buildSubtasksTab(),
-                          _buildSubtasksTab(),
+                          _buildAssigneesTab(),
+                          _buildMessagesTab(),
                         ],
                       ),
                     ),
@@ -288,28 +297,50 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
     );
   }
 
-  Widget _buildSubtasksTab() {
+  Widget _buildAssigneesTab() {
+    return Expanded(
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+        ),
+        itemCount: widget.fetchTasksModel.assignees.length,
+        itemBuilder: (context, index) {
+          return Container(
+            width: width(context),
+            margin: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Center(
+              child: MyText.text1(widget.fetchTasksModel.assignees[index],
+                  fontSize: 16, textColor: white),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMessagesTab() {
+    String message = widget.fetchTasksModel.statusMessage.isEmpty
+        ? 'No messages for this task'
+        : widget.fetchTasksModel.statusMessage;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Our Design Process',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.only(left: 32.0, top: 4),
-            child: InkWell(
-              onTap: () {},
-              child: const Text(
-                'Blocker: The brief from client was not clear so it took time to understand it.',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 12,
-                ),
-              ),
+            child: MyText.text1(
+              message,
+              textColor: ampleOrange,
+              fontSize: 18,
             ),
           ),
         ],

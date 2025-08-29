@@ -13,6 +13,7 @@ import 'package:pr1/presentation/screen/gannt_chart/gantt_test.dart';
 import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'business_logic/replay/replay_cubit.dart';
 import 'core/API/notification.dart';
 import 'core/variables/global_var.dart';
