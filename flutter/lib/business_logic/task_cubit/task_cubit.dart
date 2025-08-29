@@ -50,7 +50,7 @@ class TaskCubit extends Cubit<TaskState> {
   TimeOfDay endTime = const TimeOfDay(hour: 14, minute: 0);
   bool locked = false;
   String? selectedParent;
-  List<int> assignees = [];
+  List<String> assignees = [];
   int? parentTask;
   String selectedPriority = 'medium';
   String selectedStatus = 'pending';
@@ -122,15 +122,15 @@ class TaskCubit extends Cubit<TaskState> {
   }
 
   void fillAssigneesList(
-      bool? checked, String item, Map<String, int> assigneesMap) {
+      bool? checked, String item) {
     checked!
-        ? assignees.add(assigneesMap[item]!)
-        : assignees.remove(assigneesMap[item]);
+        ? assignees.add(item)
+        : assignees.remove(item);
         emit(TaskInitial());
   }
 
   Future<void> createTask(String title, String description, int workspaceId,
-      int projectId, List<int> assignees) async {
+      int projectId, List<String> assignees) async {
     if (title.isEmpty || description.isEmpty || assignees.isEmpty) return;
     emit(TaskCreatingState());
 
