@@ -10,7 +10,14 @@ from users.models import User
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
+    # assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
+    assignees = serializers.SlugRelatedField(
+        many=True,
+        read_only=False,
+        queryset=User.objects.all(),
+        slug_field='username'
+    )
+    parent_task = serializers.PrimaryKeyRelatedField(queryset=Task.objects.all() , required=False)
     status_message = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Task
@@ -43,7 +50,10 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def get_status_message(self, obj):
         if can_start(obj.pk):
+            obj.locked = False
+            obj.save()
             return ""
+        
         obj.locked = True
         obj.save()
         return "Task can't start... it depends on another task."
