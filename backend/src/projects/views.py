@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema , OpenApiParameter , OpenApiExample
 
 from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
-from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , IsProjectMember
+from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , IsProjectMember , ProjectNotArchived
 
 from users.models import User
 from tasks.models import Task_Dependencies , Task
@@ -34,6 +34,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             self.permission_classes.append(IsProjectWorkspaceMember)
         if self.action == 'change_user_role' or self.action == 'add_user_to_project' or self.action == 'archive_project' or self.action == 'archive_project_no_restrictions':
             self.permission_classes.append(IsProjectWorkspaceOwner)
+            self.permission_classes.append(ProjectNotArchived)
         if self.action == 'create':
             self.permission_classes.append(IsWorkspaceOwner)
         return super().get_permissions()
