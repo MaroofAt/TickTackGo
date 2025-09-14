@@ -15,7 +15,7 @@ from .models import Task, Comment , Inbox_Tasks, Task_Dependencies
 from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers , CreateCommentSerializer , ShowTaskSerializer
 
 
-from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask
+from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask, TaskProjectNotArchived , IsTaskProjectCanEdit
 
 
 from projects.permissions import IsProjectMember
@@ -52,12 +52,21 @@ class TaskViewSet(viewsets.ModelViewSet):
         self.permission_classes = [IsAuthenticated]
         if self.action == 'list':
             self.permission_classes.append(IsProjectMember)
-        if self.action == 'retrieve' or self.action == 'create_comment' or self.action == 'list_comment':
+        if self.action == 'retrieve' or self.action == 'list_comment':
             self.permission_classes.append(IsTaskProjectMember)
+        if self.action == 'create_comment':
+            self.permission_classes.append(IsTaskProjectMember)
+            self.permission_classes.append(TaskProjectNotArchived)
         if self.action == 'assign_task_to_user':
             self.permission_classes.append(IsTaskProjectOwner)
-        if self.action == 'update':
+            self.permission_classes.append(TaskProjectNotArchived)
+        if self.action == 'update' or self.action == 'partial_update':
             self.permission_classes.append(IsEditableTask)
+            self.permission_classes.append(TaskProjectNotArchived)
+        if self.action == 'cancel' or self.action == 'mark_as_completed' or self.action == 'cancel_task':
+            self.permission_classes.append(TaskProjectNotArchived)
+        if self.action == 'create' or self.action == 'destroy':
+            self.permission_classes.append(IsTaskProjectCanEdit)
         return super().get_permissions()
 
     @extend_schema(
