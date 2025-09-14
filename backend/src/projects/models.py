@@ -43,8 +43,8 @@ class Project(TimeStampedModel):
 
     def save(self, *args , **kwargs):
         try:
-            if (self.ended == True):
-                raise Exception('This Project Has Ended! User Can\'t Edit It Anymore')
+            # if (self.ended == True):
+            #     raise Exception('This Project Has Ended! User Can\'t Edit It Anymore')
             if (not self.validate_color()):
                 raise Exception('Color Code is Not Valid! ( it does not start with "#" )')
         except Exception as e:

@@ -15,7 +15,8 @@ class TaskSerializer(serializers.ModelSerializer):
         many=True,
         read_only=False,
         queryset=User.objects.all(),
-        slug_field='username'
+        slug_field='username',
+        required=False
     )
     parent_task = serializers.PrimaryKeyRelatedField(queryset=Task.objects.all() , required=False)
     status_message = serializers.SerializerMethodField(read_only=True)
