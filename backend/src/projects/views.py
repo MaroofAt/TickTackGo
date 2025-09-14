@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
@@ -10,7 +11,7 @@ from workspaces.permissions import IsWorkspaceMember, IsWorkspaceOwner
 from projects.permissions import IsProjectWorkspaceMember , IsProjectWorkspaceOwner , IsProjectMember
 
 from users.models import User
-from tasks.models import Task_Dependencies
+from tasks.models import Task_Dependencies , Task
 
 from tools.responses import exception_response , required_response , method_not_allowed
 from tools.roles_check import is_project_workspace_member , is_project_member
@@ -31,7 +32,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             self.permission_classes.append(IsWorkspaceMember)
         if self.action == 'retrieve' or self.action == 'destroy':
             self.permission_classes.append(IsProjectWorkspaceMember)
-        if self.action == 'change_user_role' or self.action == 'add_user_to_project':
+        if self.action == 'change_user_role' or self.action == 'add_user_to_project' or self.action == 'archive_project' or self.action == 'archive_project_no_restrictions':
             self.permission_classes.append(IsProjectWorkspaceOwner)
         if self.action == 'create':
             self.permission_classes.append(IsWorkspaceOwner)
@@ -151,6 +152,100 @@ class ProjectViewSet(viewsets.ModelViewSet):
     )
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+    
+    @extend_schema(
+        summary="Archive Project",
+        operation_id="archive_project",
+        description="Archive the specified project",
+        tags=["Projects"],
+        request=None
+    )
+    @action(detail=True, methods=['patch'])
+    def archive_project(self, request, pk):
+        try:
+            # getting project specified
+            project = self.get_object()
+            # making sure there is no uncompleted tasks
+            tasks_in_project = Task.objects.filter(project=project).exclude(status='completed')
+            if tasks_in_project:
+                return Response(
+                    {'detail':'Can\'t archive this project because there is still tasks not completed yet !'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            # making sure there is no sub-projects not archived
+            sub_projects = Project.objects.filter(parent_project=project, ended=False)
+            if sub_projects:
+                return Response(
+                    {'detail':'Can\'t archive this project because there is still sub-projects not archived yet !'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            # make sure it is not already archived (more performance)
+            if project.ended:
+                return Response(
+                    {'detail': 'this project is already archived !'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            # updating
+            project.ended = True
+            project.save()
+            # serialization
+            serializer = self.get_serializer(project)            
+            return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
+        except Exception as e:
+            return exception_response(e)
+        
+    @extend_schema(
+        summary="Archive Project No Restrictions",
+        operation_id="archive_project_no_restrictions",
+        description="Archive the specified project and destroy not completed tasks in project/sub-projects and archive all sub_projects",
+        tags=["Projects"],
+        request=None
+    )
+    @action(detail=True, methods=['patch'])
+    def archive_project_no_restrictions(self, request, pk):
+        try:
+            # getting project specified
+            project = self.get_object()
+            # make sure it is not already archived (more performance)
+            if project.ended:
+                return Response(
+                    {'detail': 'this project is already archived !'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            with transaction.atomic():
+                # destroy all uncompleted tasks
+                uncompleted_tasks_in_project = Task.objects.filter(project=project).exclude(status='completed')
+                if uncompleted_tasks_in_project:
+                    for task in uncompleted_tasks_in_project:
+                        task.delete()
+                # archive all sub-projects not archived and destroy there uncompleted tasks
+                sub_projects = Project.objects.filter(parent_project=project, ended=False)
+                if sub_projects:
+                    for sub_project in sub_projects:
+                        uncompleted_tasks_in_sub_projects = Task.objects.filter(project=sub_project).exclude(status='completed')
+                        if uncompleted_tasks_in_sub_projects:
+                            for task in uncompleted_tasks_in_sub_projects:
+                                task.delete()
+                        sub_project.ended = True
+                        sub_project.save()
+                # updating
+                project.ended = True
+                project.save()
+                # serialization
+                serializer = self.get_serializer(project)            
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_202_ACCEPTED
+                )
+            return Response(
+                {'detail': 'didn\'t work correctly something happened, this api is broken for now ! we will fix that, please try again later'},
+                status=status.HTTP_205_RESET_CONTENT
+            )
+        except Exception as e:
+            return exception_response(e)
     
     @extend_schema(
         summary="Change User Role In Project",

@@ -219,7 +219,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     ########################################################################################################
                     return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
             
-            return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Task can\'t be Completed (it is not in-progress) '} , status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return exception_response(e)
 
