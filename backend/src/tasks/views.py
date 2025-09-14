@@ -76,13 +76,11 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
                     'perent_task': {'type':'integer' , 'example':1 or None},
-                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
-                    'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '9/6/2025'},
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
-                # 'required': ['title']
+                'required': ['title', 'start_date', 'due_date', 'workspace', 'project', 'priority']
             },
             'application/json': {
                 'type': 'object',
@@ -94,11 +92,10 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
                     'perent_task': {'type':'integer' , 'example':1 or None},
-                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
-                    'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '9/6/2025'},
-                }
+                },
+                'required': ['title', 'start_date', 'due_date', 'workspace', 'project', 'priority']
             }            
         }
     )
@@ -110,6 +107,18 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         if not can_edit_project(request.user.id , request.data.get('project')):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
+        
+        if not request.data.get('start_date'):
+            return required_response('start_date')
+        if not request.data.get('due_date'):
+            return required_response('due_date')
+        start_date = timezone.datetime.strptime(request.data.get('start_date'), r"%Y-%m-%d").date()
+        due_date = timezone.datetime.strptime(request.data.get('due_date'), r"%Y-%m-%d").date()
+        start_date_more_than_due_date = (start_date > due_date)
+        print(start_date_more_than_due_date)
+        if start_date_more_than_due_date:
+            return Response({"detail": "start date is after the due date! that means the project will start after it finished already!"} , status=status.HTTP_400_BAD_REQUEST)
+
         data = request.data.copy()
         data.update({
             'creator': request.user.id,
@@ -126,8 +135,8 @@ class TaskViewSet(viewsets.ModelViewSet):
         # )
 
         user = User.objects.filter(id=request.user.id).first()
-        worksapce = Workspace.objects.filter(id=request.data.get('workspace')).first()
-        result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigne new task to you in {worksapce.title}')
+        workspace = Workspace.objects.filter(id=request.data.get('workspace')).first()
+        result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigned new task to you in {workspace.title}')
         if serializer.is_valid():
             serializer.save()
          
