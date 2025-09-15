@@ -10,7 +10,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'check-task-statuses':{
-        'task': 'tools.tasks.check_task_statuses',
+        'task': 'tasks.tasks.check_task_statuses',
         'schedule': 300.0,
     }
 }

@@ -13,10 +13,11 @@ def check_task_statuses():
         status='pending',
         start_date__lte = timezone.now().date()
     )
+    print(f'\n\n{tasks}\n\n')
 
     for task in tasks:
-        if can_start(task.id):
-            continue
+        # if can_start(task.id):
+        #     continue
         task.status = 'in_progress'
         task.save()
         users = User.objects.filter(task.assignees)
