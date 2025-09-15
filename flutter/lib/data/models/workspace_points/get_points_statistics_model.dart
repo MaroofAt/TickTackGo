@@ -46,51 +46,61 @@ class GetPointsStatisticsModel {
 
 class BestDisciplineMemberRecord {
   int userId;
+  String username;
   int disciplineMemberPoints;
 
   BestDisciplineMemberRecord({
     required this.userId,
+    required this.username,
     required this.disciplineMemberPoints,
   });
 
   factory BestDisciplineMemberRecord.fromJson(Map<String, dynamic> json) =>
       BestDisciplineMemberRecord(
         userId: json["user_id"],
+        username: json["username"],
         disciplineMemberPoints: json["discipline_member_points"],
       );
 
   Map<String, dynamic> toJson() => {
         "user_id": userId,
+        "username": username,
         "discipline_member_points": disciplineMemberPoints,
       };
 }
 
 class BestHardWorker {
   int userId;
+  String username;
   int hardWorkerPoints;
 
   BestHardWorker({
     required this.userId,
+    required this.username,
     required this.hardWorkerPoints,
   });
 
   factory BestHardWorker.fromJson(Map<String, dynamic> json) => BestHardWorker(
         userId: json["user_id"],
+        username: json["username"],
         hardWorkerPoints: json["hard_worker_points"],
       );
 
   Map<String, dynamic> toJson() => {
         "user_id": userId,
+        "username": username,
         "hard_worker_points": hardWorkerPoints,
       };
 }
 
 class BestImportantMissionSolverRecord {
   int userId;
+  String username;
   int importantMissionSolverPoints;
 
   BestImportantMissionSolverRecord({
     required this.userId,
+    required this.username,
     required this.importantMissionSolverPoints,
   });
 
@@ -98,32 +108,38 @@ class BestImportantMissionSolverRecord {
           Map<String, dynamic> json) =>
       BestImportantMissionSolverRecord(
         userId: json["user_id"],
+        username: json["username"],
         importantMissionSolverPoints: json["important_mission_solver_points"],
       );
 
   Map<String, dynamic> toJson() => {
         "user_id": userId,
+        "username": username,
         "important_mission_solver_points": importantMissionSolverPoints,
       };
 }
 
 class BestMemberRecord {
   int userId;
+  String username;
   int totalPoints;
 
   BestMemberRecord({
     required this.userId,
+    required this.username,
     required this.totalPoints,
   });
 
   factory BestMemberRecord.fromJson(Map<String, dynamic> json) =>
       BestMemberRecord(
         userId: json["user_id"],
+        username: json["username"],
         totalPoints: json["total_points"],
       );
 
   Map<String, dynamic> toJson() => {
         "user_id": userId,
+        "username": username,
         "total_points": totalPoints,
       };
 }

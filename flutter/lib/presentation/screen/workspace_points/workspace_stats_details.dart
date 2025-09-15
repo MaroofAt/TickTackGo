@@ -17,24 +17,28 @@ class WorkspaceGetPointsStatisticsModelDetailScreen extends StatelessWidget {
           StatCard(
             title: '🏅 Hard Worker',
             userId: getPointsStatisticsModel.bestHardWorker!.userId,
+            userName: getPointsStatisticsModel.bestHardWorker!.username,
             points: getPointsStatisticsModel.bestHardWorker!.hardWorkerPoints,
           ),
           StatCard(
             title: '🎯 Mission Solver',
             userId:
             getPointsStatisticsModel.bestImportantMissionSolverRecord!.userId,
+            userName: getPointsStatisticsModel.bestImportantMissionSolverRecord!.username,
             points: getPointsStatisticsModel
                 .bestImportantMissionSolverRecord!.importantMissionSolverPoints,
           ),
           StatCard(
             title: '📋 Discipline Member',
             userId: getPointsStatisticsModel.bestDisciplineMemberRecord!.userId,
+            userName: getPointsStatisticsModel.bestDisciplineMemberRecord!.username,
             points: getPointsStatisticsModel
                 .bestDisciplineMemberRecord!.disciplineMemberPoints,
           ),
           StatCard(
             title: '👑 Best Member',
             userId: getPointsStatisticsModel.bestMemberRecord!.userId,
+            userName: getPointsStatisticsModel.bestMemberRecord!.username,
             points: getPointsStatisticsModel.bestMemberRecord!.totalPoints,
           ),
         ],
