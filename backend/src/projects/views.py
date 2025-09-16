@@ -145,11 +145,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return required_response('workspace')
         
         # one level of sub-projects
-        parent_project = Project.objects.filter(request.data.get('parent_project')).first()
-        if parent_project:
-            if parent_project.parent_project is not None:
+        if request.data.get('parent_project'):
+            parent_project = Project.objects.filter(id=request.data.get('parent_project')).first()
+            if parent_project:
+                if parent_project.parent_project is not None:
+                    return Response(
+                        {'detail': 'Can\'t Create Sub-Project inside other Sub-Project. (you can only create sub-projects in an independent project)'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            else:
                 return Response(
-                    {'detail': 'Can\'t Create Sub-Project inside other Sub-Project. (you can only create sub-projects in an independent project)'},
+                    {'detail': 'parent_project specified doesn\'t exist!'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         
