@@ -85,7 +85,9 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
                     'parent_task': {'type':'integer' , 'example':1 or None},
+                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '2025-9-6'},
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
@@ -101,10 +103,13 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
                     'parent_task': {'type':'integer' , 'example':1 or None},
+                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '2025-9-6'},
                 },
                 'required': ['title', 'start_date', 'due_date', 'workspace', 'project', 'priority']
+
             }            
         }
     )
@@ -116,6 +121,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         if not can_edit_project(request.user.id , request.data.get('project')):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
+
         
         if not request.data.get('start_date'):
             return required_response('start_date')
@@ -127,6 +133,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         print(start_date_more_than_due_date)
         if start_date_more_than_due_date:
             return Response({"detail": "start date is after the due date! that means the project will start after it finished already!"} , status=status.HTTP_400_BAD_REQUEST)
+
         if request.data.get('parent_task') is not None:
             parent_task = Task.objects.filter(pk = request.data.get('parent_task')).first()
             if parent_task.parent_task is not None:
