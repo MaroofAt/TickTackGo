@@ -1,4 +1,5 @@
 from django.db.models import Max
+from django.db import transaction
 
 from rest_framework import viewsets , status
 from rest_framework.response import Response
@@ -14,6 +15,7 @@ from tools.responses import method_not_allowed, exception_response, required_res
 from tools.roles_check import is_workspace_owner , is_workspace_member
 
 from projects.models import Project_Membership , Project
+from tasks.models import Task, Assignee
 
 from .models import Workspace , Workspace_Membership , Invite , Points
 from .serializers import WorkspaceSerializer , InviteSerializer , PointsSerializer
@@ -402,27 +404,48 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
                     {'detail': 'can\'t kick a person who is not a member of the workspace'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            membership_object = Workspace_Membership.objects.filter(member_id=member,workspace=pk).first()
-            if not membership_object:
-                return Response(
-                    {"detail": 'membership doesn\'t exist'},
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            projects_in_workspace = Project.objects.filter(workspace=pk)
-            # print(f"\n\n1\n\n")
-            projects_memberships = Project_Membership.objects.filter(project__in=projects_in_workspace, member_id=member)
-            # print(f"\n\n2\n\n")
-            try:
-                # print(f"\n\n3\n\n")
-                membership_object.delete()
-                for project_membership in projects_memberships:
-                    project_membership.delete()
-                # print(f"\n\n4\n\n")
-            except Exception as ex:
-                return Response(
-                    {'error': 'can\'t delete the membership object'},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
+            with transaction.atomic():
+                # deleting all user projects-memberships in this workspace
+                membership_object = Workspace_Membership.objects.filter(member_id=member,workspace=pk).first()
+                if not membership_object:
+                    return Response(
+                        {"detail": 'membership doesn\'t exist'},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+                projects_in_workspace = Project.objects.filter(workspace=pk)
+                # print(f"\n\n1\n\n")
+                projects_memberships = Project_Membership.objects.filter(project__in=projects_in_workspace, member_id=member)
+                # print(f"\n\n2\n\n")
+                try:
+                    # print(f"\n\n3\n\n")
+                    membership_object.delete()
+                    for project_membership in projects_memberships:
+                        project_membership.delete()
+                    # print(f"\n\n4\n\n")
+                except Exception as ex:
+                    return Response(
+                        {
+                            'error': 'can\'t delete the membership object',
+                            'Exception': str(ex)
+                        },
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+                
+                # unassign user from tasks in workspace
+                tasks = Task.objects.filter(project__in=projects_in_workspace).exclude(status="completed")
+                assignments = Assignee.objects.filter(assignee=member,task__in=tasks)
+                try:
+                    for assignment in assignments:
+                        assignment.delete()
+                except Exception as ex:
+                    return Response(
+                        {
+                            'error': 'can\'t delete user assignment',
+                            'Exception': str(ex)
+                        },
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+
             return Response(
                 {},
                 status=status.HTTP_204_NO_CONTENT
