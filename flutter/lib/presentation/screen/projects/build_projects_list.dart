@@ -24,11 +24,6 @@ class BuildProjectsList extends StatelessWidget {
 
     for (var element in projects) {
       parentProjects.addAll({element.title: element.id});
-      if (element.subProjects.isNotEmpty) {
-        for (var subElement in element.subProjects) {
-          parentProjects.addAll({subElement.title: subElement.id});
-        }
-      }
     }
 
     showDialog(

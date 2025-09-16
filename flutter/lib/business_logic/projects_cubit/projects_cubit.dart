@@ -18,11 +18,6 @@ class ProjectsCubit extends Cubit<ProjectsState> {
 
   List<String> assignees = [];
 
-  bool checkOwnerOrEditor() {
-    List<int> ownerAndEditorIds = [];
-    return true;
-  }
-
   Future<void> fetchProjects(int workspaceId) async {
     emit(ProjectsFetchingState());
 
