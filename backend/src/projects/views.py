@@ -373,7 +373,7 @@ class IssueViewSet(viewsets.ModelViewSet):
                 'type': 'object',
                 'properties':{
                     'title': {'type':'string' , 'example':"New Issue" },
-                    'desctiption': {'type':'string' , 'example':"description for the new issue" },
+                    'description': {'type':'string' , 'example':"description for the new issue" },
                     'project': {'type':'integar' , 'example':1 },
 
                 },
@@ -400,27 +400,29 @@ class IssueViewSet(viewsets.ModelViewSet):
         summary="List Issue",
         operation_id="list_issue",
         description="List the issue in the project",
-        tags=['Projects/Issue']
+        tags=['Projects/Issue'],
     )
-    def list(self, request, *args, **kwargs):
+    @action(detail=True , methods=["get"] , serializer_class= ShowIssueSerializer )
+    def list_issue(self, request, *args, **kwargs):
         # print(self.get_queryset)
         # if not request.data.get('project'):
         #     return Response(
         #         {"error": "Project ID is required in request data"},
         #         status=status.HTTP_400_BAD_REQUEST
         #     )
+        project_pk = kwargs.get('pk')
+        if not is_project_workspace_member(request.user.id, project_pk):
+            return Response(
+                {"error": "You are not a member of this project"},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
-        # if not is_project_workspace_member(request.user.id, request.data.get('project')):
-        #     return Response(
-        #         {"error": "You are not a member of this project"},
-        #         status=status.HTTP_403_FORBIDDEN
-        #     )
-        
-        # issues = Issue.objects.filter(project=request.data.get('project'))
-        # serializer = self.get_serializer(issues, many=True)
+        print(project_pk)
+        issues = Issue.objects.filter(project_id=project_pk)
+        serializer = self.get_serializer(issues, many=True)
         
         # return Response(serializer.data, status=status.HTTP_200_OK)
-        return super().list(request, *args, **kwargs)
+        return Response(serializer.data)
     
     @extend_schema(
         summary="Retrieve Issue",

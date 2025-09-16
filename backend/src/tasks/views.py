@@ -71,15 +71,15 @@ class TaskViewSet(viewsets.ModelViewSet):
                 'properties': {
                     'title': {'type': 'string', 'example': 'Task 1'},
                     'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
-                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
-                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
+                    'start_date': {'type': 'Date', 'example': '2025-6-6'},
+                    'due_date': {'type': 'Date', 'example': '2025-9-6'},
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
-                    'perent_task': {'type':'integer' , 'example':1 or None},
+                    'parent_task': {'type':'integer' , 'example':1 or None},
                     'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
-                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
+                    'reminder': {'type': 'Date', 'example': '2025-9-6'},
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
                 # 'required': ['title']
@@ -89,15 +89,15 @@ class TaskViewSet(viewsets.ModelViewSet):
                 'properties': {
                     'title': {'type': 'string', 'example': 'Task 1'},
                     'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
-                    'start_date': {'type': 'Date', 'example': '6/6/2025'},
-                    'due_date': {'type': 'Date', 'example': '9/6/2025'},
+                    'start_date': {'type': 'Date', 'example': '2025-6-6'},
+                    'due_date': {'type': 'Date', 'example': '2025-9-6'},
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
-                    'perent_task': {'type':'integer' , 'example':1 or None},
+                    'parent_task': {'type':'integer' , 'example':1 or None},
                     'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
-                    'reminder': {'type': 'Date', 'example': '9/6/2025'},
+                    'reminder': {'type': 'Date', 'example': '2025-9-6'},
                 }
             }            
         }
@@ -110,7 +110,12 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         if not can_edit_project(request.user.id , request.data.get('project')):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
+        if request.data.get('parent_task') is not None:
+            parent_task = Task.objects.filter(pk = request.data.get('parent_task')).first()
+            if parent_task.parent_task is not None:
+                return Response({"error": "you can't create sup_task to a sup_task"} , status=status.HTTP_400_BAD_REQUEST)
         data = request.data.copy()
+        # print(request.data.get(''))
         data.update({
             'creator': request.user.id,
             'status': 'pending'  
@@ -157,7 +162,9 @@ class TaskViewSet(viewsets.ModelViewSet):
         if not task.exists():
             return Response({"detail": "Task already not existe"} , status=status.HTTP_404_NOT_FOUND)
         task = task.first()
-
+        
+        if task.status != 'pending':
+            return Response({'detail': 'Task is not in the pending status '} , status.HTTP_400_BAD_REQUEST)
         # if not is_project_owner(request.user.id , task.project):
         #     return Response({"detail": "User is not the Owner of the workspace"} , status=status.HTTP_400_BAD_REQUEST)
 
