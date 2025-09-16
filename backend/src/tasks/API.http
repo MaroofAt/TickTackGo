@@ -1,15 +1,15 @@
 POST http://127.0.0.1:8000/api/tasks/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3ODYzMzkwLCJpYXQiOjE3NTc4NTk3OTAsImp0aSI6IjQ1NTM2YjY0NDY2MDQ3YjA5ZTk1MWM0ZTJhNTIzYTUxIiwidXNlcl9pZCI6IjEifQ.ZL2S199rWh3oNnVi7je29xs0hdDivqy_N-xLQWS0Htw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2Mjk3NDk5LCJpYXQiOjE3NTYyOTM4OTksImp0aSI6IjgxZTBhMDRkODc4YzRmZDg4NjE0ZGQxMTk5NmMxMjRhIiwidXNlcl9pZCI6IjEifQ.z8HIpTpEe86NnmhS2hHMAtHmm5T9Q-xXCZ_Xq_v6cTY
 
 {
-    "title": "supTask 1",
+    "title": "Task 1",
     "description": "ABU Alish AMAK",
     "start_date": "2025-6-6",
     "due_date": "2025-6-9",
     "workspace": 1,
     "project": 1,
-    "perent_task": 1,
+    "perent_task": null,
     "status": "completed",
     "priority": "high",
     "locked": false,
