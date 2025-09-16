@@ -7,12 +7,14 @@ import 'package:pr1/presentation/widgets/text.dart';
 class StatCard extends StatelessWidget {
   final String title;
   final int userId;
+  final String userName;
   final int points;
 
   const StatCard({
     super.key,
     required this.title,
     required this.userId,
+    required this.userName,
     required this.points,
   });
 
@@ -27,7 +29,13 @@ class StatCard extends StatelessWidget {
           child: MyIcons.icon(Icons.person, size: width(context) * 0.1),
         ),
         title: MyText.text1(title, textColor: white),
-        subtitle: MyText.text1('Points: $points', textColor: white),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MyText.text1('User name: $userName', textColor: white),
+            MyText.text1('Points: $points', textColor: white),
+          ],
+        ),
       ),
     );
   }

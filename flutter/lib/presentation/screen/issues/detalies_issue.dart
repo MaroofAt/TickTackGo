@@ -12,6 +12,7 @@ class Detalies_Issue extends StatefulWidget {
   final int issueId;
   final int projectId;
 
+
   const Detalies_Issue({
     super.key,
     required this.issueId,
@@ -24,7 +25,7 @@ class Detalies_Issue extends StatefulWidget {
 
 class _Detalies_IssueState extends State<Detalies_Issue> {
   final TextEditingController commentcontroller = TextEditingController();
-
+  bool updated = false;
   @override
   void initState() {
     super.initState();
@@ -41,7 +42,14 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IssuesCubit, IssuesState>(
+    return PopScope(
+        canPop: true,
+        onPopInvokedWithResult: (didPop, result) {
+      if (didPop) {
+        // Navigator.pop(context, updated);
+      }
+    },
+    child:BlocBuilder<IssuesCubit, IssuesState>(
       builder: (context, state) {
         if (state is IssueLoadedSingle) {
           final issue = state.issue;
@@ -65,7 +73,9 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                 ],
               ),
               leading: IconButton(
-                onPressed: () => popScreen(context),
+                onPressed: () {
+                  Navigator.pop(context, updated);
+                },
                 icon: Icon(Icons.arrow_back_sharp, color: ampleOrange),
               ),
             ),
@@ -98,10 +108,12 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                         color: ampleOrange,
                       ),
                       child: IconButton(
-                        onPressed: () {
-                          setState(() async {
-                            await  context.read<IssuesCubit>().marksolved( projectId: widget.projectId, context: context, issueID: widget.issueId);
-                          });
+                        onPressed: ()  async {
+
+                             await context.read<IssuesCubit>().marksolved( projectId: widget.projectId, context: context, issueID: widget.issueId);
+                             setState(() {
+                               updated = true;
+                             });
                         },
                         icon: issue.solved
                             ? const Icon(Icons.check, color: Colors.white, size: 30)
@@ -206,6 +218,6 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
           return const Center(child: Text("Loading..."));
         }
       },
-    );
+    ));
   }
 }

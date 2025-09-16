@@ -19,27 +19,27 @@ import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
-class TaskInfoPage extends StatefulWidget {
-  final FetchTasksModel fetchTasksModel;
+class SubTaskInfoPage extends StatefulWidget {
+  final SubTask subTask;
 
-  const TaskInfoPage(this.fetchTasksModel, {super.key});
+  const SubTaskInfoPage(this.subTask, {super.key});
 
   @override
-  _TaskInfoPageState createState() => _TaskInfoPageState();
+  _SubTaskInfoPageState createState() => _SubTaskInfoPageState();
 }
 
-class _TaskInfoPageState extends State<TaskInfoPage> {
+class _SubTaskInfoPageState extends State<SubTaskInfoPage> {
   @override
   void initState() {
     super.initState();
-    context.read<CommentCubit>().fetchComments(widget.fetchTasksModel.id);
+    context.read<CommentCubit>().fetchComments(widget.subTask.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          TaskInfoAppBar.taskInfoAppBar(context, widget.fetchTasksModel.title),
+      TaskInfoAppBar.taskInfoAppBar(context, widget.subTask.title),
       body: SizedBox(
         height: height(context),
         width: width(context),
@@ -49,7 +49,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
               Container(
                 width: width(context) * 0.35,
                 height: height(context) * 0.2,
-                child: MyImages.networkImage(widget.fetchTasksModel.image),
+                child: MyImages.networkImage(widget.subTask.image),
               ),
               // MyCircle.circle(width(context) * 0.35, color: Colors.white),
               Column(
@@ -69,7 +69,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         physics: const AlwaysScrollableScrollPhysics(),
                         children: [
                           MyText.text1(
-                            widget.fetchTasksModel.description,
+                            widget.subTask.description,
                             textColor: Colors.white,
                           ),
                         ],
@@ -88,7 +88,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       buildTwoTextRow(
                         context,
                         ' Status',
-                        ' ${widget.fetchTasksModel.status}',
+                        ' ${widget.subTask.status}',
                         Icons.access_time,
                         white,
                         Icons.circle_outlined,
@@ -96,7 +96,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       BlocConsumer<TaskCubit, TaskState>(
                         listener: (context, state) {
                           if (state is TaskCompletingSucceededState) {
-                            popScreen(context, widget.fetchTasksModel.title);
+                            popScreen(context, widget.subTask.title);
                           }
                         },
                         builder: (context, state) {
@@ -115,20 +115,20 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           }
                           return MyGestureDetector.gestureDetector(
                             onTap: () {
-                              if (widget.fetchTasksModel.status ==
-                                      'in_progress' &&
-                                  !widget.fetchTasksModel.locked) {
+                              if (widget.subTask.status ==
+                                  'in_progress' &&
+                                  !widget.subTask.locked) {
                                 BlocProvider.of<TaskCubit>(context)
-                                    .completeTask(widget.fetchTasksModel.id);
+                                    .completeTask(widget.subTask.id);
                               }
                             },
                             child: Container(
                               height: height(context) * 0.05,
                               width: width(context) * 0.28,
                               decoration: BoxDecoration(
-                                  color: (widget.fetchTasksModel.status !=
-                                              'in_progress' ||
-                                          widget.fetchTasksModel.locked)
+                                  color: (widget.subTask.status !=
+                                      'in_progress' ||
+                                      widget.subTask.locked)
                                       ? lightGrey
                                       : Theme.of(context).secondaryHeaderColor,
                                   borderRadius: BorderRadius.circular(16)),
@@ -146,7 +146,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                   buildTwoTextRow(
                     context,
                     ' Due Date',
-                    ' ${DateFormat('yyyy-MM-d').format(widget.fetchTasksModel.dueDate!)}',
+                    ' ${DateFormat('yyyy-MM-d').format(widget.subTask.dueDate!)}',
                     Icons.date_range,
                     white,
                   ),
@@ -157,14 +157,14 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                       buildTwoTextRow(
                         context,
                         ' Priority',
-                        ' ${widget.fetchTasksModel.priority}',
+                        ' ${widget.subTask.priority}',
                         Icons.priority_high_outlined,
                         white,
                       ),
                       BlocConsumer<TaskCubit, TaskState>(
                         listener: (context, state) {
                           if (state is TaskCancelingSucceededState) {
-                            popScreen(context, widget.fetchTasksModel.title);
+                            popScreen(context, widget.subTask.title);
                           }
                         },
                         builder: (context, state) {
@@ -173,8 +173,8 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                               height: height(context) * 0.05,
                               width: width(context) * 0.28,
                               decoration: BoxDecoration(
-                                  color: widget.fetchTasksModel.status ==
-                                          'completed'
+                                  color: widget.subTask.status ==
+                                      'completed'
                                       ? lightGrey
                                       : Theme.of(context).secondaryHeaderColor,
                                   borderRadius: BorderRadius.circular(16)),
@@ -186,18 +186,18 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           }
                           return MyGestureDetector.gestureDetector(
                             onTap: () {
-                              if (widget.fetchTasksModel.status !=
+                              if (widget.subTask.status !=
                                   'completed') {
                                 BlocProvider.of<TaskCubit>(context)
-                                    .cancelTask(widget.fetchTasksModel.id);
+                                    .cancelTask(widget.subTask.id);
                               }
                             },
                             child: Container(
                               height: height(context) * 0.05,
                               width: width(context) * 0.28,
                               decoration: BoxDecoration(
-                                  color: widget.fetchTasksModel.status ==
-                                          'completed'
+                                  color: widget.subTask.status ==
+                                      'completed'
                                       ? lightGrey
                                       : Theme.of(context).secondaryHeaderColor,
                                   borderRadius: BorderRadius.circular(16)),
@@ -217,7 +217,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                     child: buildTwoTextRow(
                       context,
                       'Locked',
-                      widget.fetchTasksModel.locked.toString(),
+                      widget.subTask.locked.toString(),
                       Icons.lock,
                       white,
                     ),
@@ -297,7 +297,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
   //         mainAxisSpacing: 10.0,
   //         crossAxisSpacing: 10.0,
   //       ),
-  //       itemCount: widget.fetchTasksModel.assignees.length,
+  //       itemCount: widget.subTask.assignees.length,
   //       itemBuilder: (context, index) {
   //         return Container(
   //           width: width(context),
@@ -308,7 +308,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
   //             borderRadius: BorderRadius.circular(16),
   //           ),
   //           child: Center(
-  //             child: MyText.text1(widget.fetchTasksModel.assignees[index],
+  //             child: MyText.text1(widget.subTask.assignees[index],
   //                 fontSize: 16, textColor: white),
   //           ),
   //         );
@@ -318,9 +318,9 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
   // }
 
   // Widget _buildMessagesTab() {
-  //   String message = widget.fetchTasksModel.statusMessage.isEmpty
+  //   String message = widget.subTask.statusMessage.isEmpty
   //       ? 'No messages for this task'
-  //       : widget.fetchTasksModel.statusMessage;
+  //       : widget.subTask.statusMessage;
   //   return SingleChildScrollView(
   //     padding: const EdgeInsets.all(16.0),
   //     child: Column(
@@ -423,7 +423,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                   decoration: const InputDecoration(
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                     hintText: "Write a comment...",
                     hintStyle: TextStyle(color: Colors.white54, fontSize: 14),
                     border: OutlineInputBorder(
@@ -439,7 +439,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                   final text = _commentController.text.trim();
                   if (text.isNotEmpty) {
                     BlocProvider.of<CommentCubit>(context).addComment(
-                      widget.fetchTasksModel.id,
+                      widget.subTask.id,
                       text,
                     );
                     _commentController.clear();

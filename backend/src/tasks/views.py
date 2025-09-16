@@ -15,7 +15,7 @@ from .models import Task, Comment , Inbox_Tasks, Task_Dependencies
 from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer , UpdateInboxTaskSerializer, TaskDependenciesSerializers , CreateCommentSerializer , ShowTaskSerializer
 
 
-from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask
+from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask, TaskProjectNotArchived , IsTaskProjectCanEdit
 
 
 from projects.permissions import IsProjectMember
@@ -52,12 +52,21 @@ class TaskViewSet(viewsets.ModelViewSet):
         self.permission_classes = [IsAuthenticated]
         if self.action == 'list':
             self.permission_classes.append(IsProjectMember)
-        if self.action == 'retrieve' or self.action == 'create_comment' or self.action == 'list_comment':
+        if self.action == 'retrieve' or self.action == 'list_comment':
             self.permission_classes.append(IsTaskProjectMember)
+        if self.action == 'create_comment':
+            self.permission_classes.append(IsTaskProjectMember)
+            self.permission_classes.append(TaskProjectNotArchived)
         if self.action == 'assign_task_to_user':
             self.permission_classes.append(IsTaskProjectOwner)
-        if self.action == 'update':
+            self.permission_classes.append(TaskProjectNotArchived)
+        if self.action == 'update' or self.action == 'partial_update':
             self.permission_classes.append(IsEditableTask)
+            self.permission_classes.append(TaskProjectNotArchived)
+        if self.action == 'cancel' or self.action == 'mark_as_completed' or self.action == 'cancel_task':
+            self.permission_classes.append(TaskProjectNotArchived)
+        if self.action == 'create' or self.action == 'destroy':
+            self.permission_classes.append(IsTaskProjectCanEdit)
         return super().get_permissions()
 
     @extend_schema(
@@ -82,7 +91,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'reminder': {'type': 'Date', 'example': '2025-9-6'},
                     'image': {'type': 'string' , 'format': 'binary'}
                 },
-                # 'required': ['title']
+                'required': ['title', 'start_date', 'due_date', 'workspace', 'project', 'priority']
             },
             'application/json': {
                 'type': 'object',
@@ -98,7 +107,9 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '2025-9-6'},
-                }
+                },
+                'required': ['title', 'start_date', 'due_date', 'workspace', 'project', 'priority']
+
             }            
         }
     )
@@ -110,6 +121,19 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         if not can_edit_project(request.user.id , request.data.get('project')):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
+
+        
+        if not request.data.get('start_date'):
+            return required_response('start_date')
+        if not request.data.get('due_date'):
+            return required_response('due_date')
+        start_date = timezone.datetime.strptime(request.data.get('start_date'), r"%Y-%m-%d").date()
+        due_date = timezone.datetime.strptime(request.data.get('due_date'), r"%Y-%m-%d").date()
+        start_date_more_than_due_date = (start_date > due_date)
+        print(start_date_more_than_due_date)
+        if start_date_more_than_due_date:
+            return Response({"detail": "start date is after the due date! that means the project will start after it finished already!"} , status=status.HTTP_400_BAD_REQUEST)
+
         if request.data.get('parent_task') is not None:
             parent_task = Task.objects.filter(pk = request.data.get('parent_task')).first()
             if parent_task.parent_task is not None:
@@ -131,8 +155,8 @@ class TaskViewSet(viewsets.ModelViewSet):
         # )
 
         user = User.objects.filter(id=request.user.id).first()
-        worksapce = Workspace.objects.filter(id=request.data.get('workspace')).first()
-        result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigne new task to you in {worksapce.title}')
+        workspace = Workspace.objects.filter(id=request.data.get('workspace')).first()
+        result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigned new task to you in {workspace.title}')
         if serializer.is_valid():
             serializer.save()
          
@@ -217,7 +241,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     ########################################################################################################
                     return Response({'detail': 'Task Completed :) '} , status=status.HTTP_200_OK)
             
-            return Response({'detail': 'Task can\'t be Completed '} , status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Task can\'t be Completed (it is not in-progress) '} , status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return exception_response(e)
 
@@ -675,4 +699,5 @@ class TaskDependenciesViewSet(viewsets.ModelViewSet):
     )
     def destroy(self, request, *args, **kwargs):
         #self.permission_classes.append(IsTaskProjectOwner)
+
         return super().destroy(request, *args, **kwargs)

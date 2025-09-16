@@ -26,7 +26,20 @@ from drf_spectacular.utils import extend_schema , extend_schema_view
 from users.views import GoogleAuthView
 
 api_patterns = [
-    path('users/token/' , extend_schema_view(post=extend_schema(tags=['Users/Auth'], summary="Token"))(TokenObtainPairView.as_view()) , name='token_obtain_pair'),
+    path('users/token/' , extend_schema_view(
+        post=extend_schema(
+            tags=['Users/Auth'],
+            summary="Token",
+            request={
+                'application/json':{
+                    'type':'object',
+                    'properties':{
+                        'email':{'type':'string', 'example':'m@m.com'},
+                        'password':{'type':'string', 'example':'12345678'}
+                    }
+                }
+            }
+        ))(TokenObtainPairView.as_view()) , name='token_obtain_pair'),
     path('users/token/refresh/' , extend_schema_view(post=extend_schema(tags=['Users/Auth'], summary="Refresh Token"))(TokenRefreshView.as_view()) , name='token_refresh'),
     path('' , include('users.urls') ),
     path('' , include('workspaces.urls') ),

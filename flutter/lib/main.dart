@@ -28,8 +28,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   // await  initOneSignal()
-  await NotificationApi().getDeviceToken();
-  await NotificationHandel().initNotification();
+  // await NotificationApi().getDeviceToken();
+  // await NotificationHandel().initNotification();
   runApp(const MyApp());
 }
 

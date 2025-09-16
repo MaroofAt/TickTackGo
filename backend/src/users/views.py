@@ -21,7 +21,7 @@ from .models import User , User_OTP , Device
 from .serializers import UserSerializer , RegisterSerializer , NotificationSerializer , DeviceSerializer
 from django.utils import timezone
 from .utils import send_otp_email_to_user
-from .filters import UserFilter
+from .filters import UserFilter , UserSearchFilter
 
 from workspaces.serializers import InviteSerializer , ShowInvitesSerializer , PointsSerializer
 from workspaces.models import Invite , Workspace_Membership, Points
@@ -45,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
     # filtering/searching/ordering
     filter_backends = [
         DjangoFilterBackend,
-        filters.SearchFilter,
+        UserSearchFilter,
         filters.OrderingFilter,
     ]
     filterset_class = UserFilter

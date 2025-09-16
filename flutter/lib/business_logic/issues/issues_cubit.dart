@@ -57,7 +57,6 @@ class IssuesCubit extends Cubit<IssuesState> {
     }
   }
 
-
   Future<void> fetchSingleIssue({
     required int issueId,
     required int projectId,
@@ -70,10 +69,42 @@ class IssuesCubit extends Cubit<IssuesState> {
       );
 
       emit(IssueLoadedSingle(issueData));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(IssueError(e.toString()));
     }
   }
+
+  void updateIssueSolvedLocally(int issueId) {
+    if (state is IssueLoaded) {
+      final currentIssues = (state as IssueLoaded).issues;
+
+      final updatedIssues = currentIssues.map((issue) {
+        if (issue.id == issueId) {
+          return issue.copyWith(solved: true);
+        }
+        return issue;
+      }).toList();
+
+      emit(IssueLoaded(updatedIssues));
+    }
+  }
+
+  // Future<void> fetchSingleIssue({
+  //   required int issueId,
+  //   required int projectId,
+  // }) async {
+  //   emit(IssueLoading());
+  //   try {
+  //     final issueData = await _issueApi.RetrieveIssue(
+  //       issueId: issueId,
+  //       projectId: projectId,
+  //     );
+  //
+  //     emit(IssueLoadedSingle(issueData));
+  //   } catch (e) {
+  //     emit(IssueError(e.toString()));
+  //   }
+  // }
 
 //   Future<void> makesolved({
 //     required int issueId,

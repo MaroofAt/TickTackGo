@@ -46,3 +46,17 @@ class IsProjectWorkspaceOwner(permissions.BasePermission):
         if Workspace_Membership.objects.filter(member=request.user , workspace=project.workspace, role='owner').exists():
             return True
         return False
+    
+class ProjectNotArchived(permissions.BasePermission):
+    message = "This Project Is Archived"
+
+    def has_permission(self, request, view):
+        project_id = fetch_project_id(request, view, "ProjectNotArchived", fetch_from_pk=True)
+        
+        if not Project.objects.filter(id=project_id).exists():
+            return False
+        project = Project.objects.get(id=project_id)
+        
+        if project.ended:
+            return False
+        return True

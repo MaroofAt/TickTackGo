@@ -28,6 +28,23 @@ class ListIssuesModel {
       project: Project.fromJson(json['project']),
     );
   }
+  ListIssuesModel copyWith({
+    int? id,
+    String? title,
+    String? description,
+    CommentUser? user,
+    bool? solved,
+    Project? project,
+  }) {
+    return ListIssuesModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      user: user ?? this.user,
+      solved: solved ?? this.solved,
+      project: project ?? this.project,
+    );
+  }
 }
 
 class Project {
