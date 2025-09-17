@@ -252,8 +252,8 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           ),
 
                           // // Subtasks Tab
-                          // _buildAssigneesTab(),
-                          // _buildMessagesTab(),
+                          _buildAssigneesTab(),
+                          _buildMessagesTab(),
                         ],
                       ),
                     ),
@@ -289,56 +289,56 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
     );
   }
 
-  // Widget _buildAssigneesTab() {
-  //   return Expanded(
-  //     child: GridView.builder(
-  //       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //         crossAxisCount: 3,
-  //         mainAxisSpacing: 10.0,
-  //         crossAxisSpacing: 10.0,
-  //       ),
-  //       itemCount: widget.fetchTasksModel.assignees.length,
-  //       itemBuilder: (context, index) {
-  //         return Container(
-  //           width: width(context),
-  //           margin: const EdgeInsets.all(12.0),
-  //           padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
-  //           decoration: BoxDecoration(
-  //             color: Colors.grey[900],
-  //             borderRadius: BorderRadius.circular(16),
-  //           ),
-  //           child: Center(
-  //             child: MyText.text1(widget.fetchTasksModel.assignees[index],
-  //                 fontSize: 16, textColor: white),
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
+  Widget _buildAssigneesTab() {
+    return Expanded(
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+        ),
+        itemCount: widget.fetchTasksModel.assignees.length,
+        itemBuilder: (context, index) {
+          return Container(
+            width: width(context),
+            margin: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Center(
+              child: MyText.text1(widget.fetchTasksModel.assignees[index],
+                  fontSize: 16, textColor: white),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
-  // Widget _buildMessagesTab() {
-  //   String message = widget.fetchTasksModel.statusMessage.isEmpty
-  //       ? 'No messages for this task'
-  //       : widget.fetchTasksModel.statusMessage;
-  //   return SingleChildScrollView(
-  //     padding: const EdgeInsets.all(16.0),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         const SizedBox(height: 8),
-  //         Padding(
-  //           padding: const EdgeInsets.only(left: 32.0, top: 4),
-  //           child: MyText.text1(
-  //             message,
-  //             textColor: ampleOrange,
-  //             fontSize: 18,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget _buildMessagesTab() {
+    String message = widget.fetchTasksModel.statusMessage.isEmpty
+        ? 'No messages for this task'
+        : widget.fetchTasksModel.statusMessage;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.only(left: 32.0, top: 4),
+            child: MyText.text1(
+              message,
+              textColor: ampleOrange,
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildCommentsTab(CommentState state, BuildContext context) {
     final TextEditingController _commentController = TextEditingController();
