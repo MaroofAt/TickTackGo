@@ -18,7 +18,7 @@ from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask, TaskProjectNotArchived , IsTaskProjectCanEdit
 
 
-from projects.permissions import IsProjectMember
+from projects.permissions import IsProjectMember , CanEditProject
 from workspaces.models import Points , Workspace
 from users.models import User
 
@@ -66,7 +66,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         if self.action == 'cancel' or self.action == 'mark_as_completed' or self.action == 'cancel_task':
             self.permission_classes.append(TaskProjectNotArchived)
         if self.action == 'create' or self.action == 'destroy':
-            self.permission_classes.append(IsTaskProjectCanEdit)
+            self.permission_classes.append(CanEditProject)
         return super().get_permissions()
 
     @extend_schema(
@@ -102,7 +102,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'due_date': {'type': 'Date', 'example': '2025-9-6'},
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
-                    'parent_task': {'type':'integer' , 'example':1 or None},
+                    'parent_task': {'type':'integer' ,'nullable':True, 'example':1 or None },
                     'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
@@ -116,6 +116,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     # @action(detail=True , methods=['post'] , serializer_class=TaskSerializer)
     def create(self, request, *args, **kwargs):
         # return super().create(request, *args, **kwargs)
+        print('Aliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
         if not is_project_owner(request.user.id , request.data.get('project')):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
         
@@ -134,7 +135,8 @@ class TaskViewSet(viewsets.ModelViewSet):
         if start_date_more_than_due_date:
             return Response({"detail": "start date is after the due date! that means the project will start after it finished already!"} , status=status.HTTP_400_BAD_REQUEST)
 
-        if request.data.get('parent_task') is not None:
+        print(request.data.get('parent_task'))
+        if request.data.get('parent_task') not in [None, '', 0, '0']:
             parent_task = Task.objects.filter(pk = request.data.get('parent_task')).first()
             if parent_task.parent_task is not None:
                 return Response({"error": "you can't create sup_task to a sup_task"} , status=status.HTTP_400_BAD_REQUEST)
