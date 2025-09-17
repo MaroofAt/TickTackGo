@@ -10,6 +10,8 @@ class IsTaskProjectCanEdit(BasePermission):
     message = 'The Authenticated User Can\'t Edit The Specified Task Or The Task Is Not Exist'
 
     def has_permission(self, request, view):
+        # task_id = view.kwargs.get('task_id') or request.data.get('task_id')
+        # print(f'/////////////////////////{request.data}////////////////////////////////')
         task_id = fetch_task_id(request, view, "IsTaskProjectCanEdit", fetch_from_pk=True)
         return can_edit_task(user_id=request.user, task_id=task_id)
 
