@@ -80,6 +80,7 @@ class TaskApi {
         createTaskModel = CreateTaskModel.onError(response.data);
       }
     } on DioException catch (e) {
+      print(e.toString());
       createTaskModel = CreateTaskModel.error(handleDioError(e));
     }
     return createTaskModel;
