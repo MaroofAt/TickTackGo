@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 
 
-from .models import Task, Assignee, Comment ,  Inbox_Tasks, Task_Dependencies
+from .models import Task, Assignee, Comment ,  Inbox_Tasks, Task_Dependencies , Attachment
 from tools.dependencie_functions import creates_problems, can_start
 
 from users.models import User
@@ -20,6 +20,22 @@ class TaskSerializer(serializers.ModelSerializer):
     )
     parent_task = serializers.PrimaryKeyRelatedField(queryset=Task.objects.all() , required=False)
     status_message = serializers.SerializerMethodField(read_only=True)
+    class AttachmentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Attachment
+            fields = [
+                'id',
+                'file',
+                'created_at',
+                'updated_at'
+            ]
+            extra_kwargs = {
+                'id': {'read_only':True},
+                'file': {'read_only':True},
+                'created_at': {'read_only':True},
+                'updated_at': {'read_only':True}
+            }
+    attachments = AttachmentSerializer(read_only=False , many=True)
     class Meta:
         model = Task
         fields = [
@@ -41,12 +57,17 @@ class TaskSerializer(serializers.ModelSerializer):
             'locked',
             'reminder',
             'status_message',
+            'attachments',
         ]
         extra_kwargs = {
             'id': {'read_only':True},
             'complete_date': {'read_only': True},
             'out_dated': {'read_only': True},
-            'assignees': {'read_only': False}
+            'assignees': {'read_only': False},
+            'attachments': {
+                'read_only': False,
+                'required': False
+            }
         }
 
     def get_status_message(self, obj):
@@ -60,22 +81,36 @@ class TaskSerializer(serializers.ModelSerializer):
         return "Task can't start... it depends on another task."
     
     def create(self, validated_data):
-        if validated_data.get('assignees'):
-            assignees = validated_data.pop('assignees')
-            with transaction.atomic():
-                instance = super().create(validated_data)
+        there_is_assignees, there_is_attachments = False
+        if 'assignees' in validated_data:
+            there_is_assignees = True
+        if 'attachments' in validated_data:
+            there_is_attachments = True
+            
+        with transaction.atomic():
+            # attachments & assignees save handling
+            if there_is_assignees:
+                assignees = validated_data.pop('assignees')
+            if there_is_attachments:
+                attachments = validated_data.pop('attachments')    
+            instance = super().create(validated_data)
+            if there_is_assignees:
                 for assignee in assignees:
                     if not Assignee.objects.filter(assignee=assignee,task_id=instance.id).exists():
                         Assignee.objects.create(
                             assignee=assignee,
                             task=instance
                         )
-            return instance
-        else:
-            return super().create(validated_data)
+            if there_is_attachments:
+                for attachment in attachments:
+                    Attachment.objects.create(
+                        file=attachment,
+                        task=instance
+                    )
+        return instance
     
-    def update(self, instance, validated_data):
-        print(f"\n\n{validated_data}\n\n")
+    def update(self, instance, validated_data): #TODO: Fix assignees handling + handle attachments update
+        # print(f"\n\n{validated_data}\n\n")
         if validated_data.get('assignees'):
             assignees = validated_data.pop('assignees')
             with transaction.atomic():
