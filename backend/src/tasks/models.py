@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from tools.models import TimeStampedModel
 from users.models import User
 from workspaces.models import Workspace
@@ -159,4 +160,45 @@ class Inbox_Tasks(TimeStampedModel):
 
         return super().save(*args , **kwargs)
 
+def file_upload_path(instance, filename):
+    if not instance.id:
+        # Handle case where instance isn't saved yet
+        return f'Files/tasks_attachments/temp/{filename}'
+    videos_extensions = (".mp4" , ".avi" , ".mkv")
+    images_extensions = (".jpg" , ".jpeg" , ".png",".gif" , ".svg" , ".tiff",".webp" , ".bmp")
+    if instance.name.endswith('.pdf'):
+        return f'Files/tasks_attachments/pdf/{filename}'
+    elif instance.name.endswith('.txt'):
+        return f'Files/tasks_attachments/txt/{filename}'
+    elif instance.name.endswith('.md'):
+        return f'Files/tasks_attachments/markdown/{filename}'
+    elif instance.name.endswith('.pptx'):
+        return f'Files/tasks_attachments/microsoft/powerpoint/{filename}'
+    elif instance.name.endswith('.xlsx'):
+        return f'Files/tasks_attachments/microsoft/excel/{filename}'
+    elif instance.name.endswith('.docx'):
+        return f'Files/tasks_attachments/microsoft/word/{filename}'
+    elif (instance.name.endswith(videos_extensions)):
+        return f'Files/tasks_attachments/videos/{filename}'
+    elif (instance.name.endswith(images_extensions)):
+        return f'Files/tasks_attachments/images/{filename}'
+    return f'Files/tasks_attachments/other/{filename}'
+def validate_file_extension(value):
+    extensions = (".txt", ".pdf", ".md",
+                  ".pptx" , ".xlsx" , ".docx",
+                  ".mp4" , ".avi" , ".mkv",
+                  ".jpg" , ".jpeg" , ".png",".gif" , ".svg" , ".tiff",".webp" , ".bmp"
+                )
+    if not value.name.endswith(extensions):
+        raise ValidationError('Only PDF files are allowed.')
+class Attachment(TimeStampedModel):
+    class Meta:
+        db_table = 'attachments'
+    
+    file = models.FileField(
+        upload_to=file_upload_path,
+        validators=[validate_file_extension]
+    )
+
+    task = models.ForeignKey(Task , on_delete=models.CASCADE , related_name='attachments')
 
