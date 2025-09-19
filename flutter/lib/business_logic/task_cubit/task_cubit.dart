@@ -14,6 +14,7 @@ import 'package:pr1/data/models/tasks/complete_task_model.dart';
 import 'package:pr1/data/models/tasks/create_task_model.dart';
 import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
 import 'package:pr1/data/models/tasks/retrieve_task_model.dart';
+import 'package:pr1/data/models/tasks/task_model.dart';
 
 part 'task_state.dart';
 
@@ -121,16 +122,13 @@ class TaskCubit extends Cubit<TaskState> {
     emit(TaskInitial());
   }
 
-  void fillAssigneesList(
-      bool? checked, String item) {
-    checked!
-        ? assignees.add(item)
-        : assignees.remove(item);
-        emit(TaskInitial());
+  void fillAssigneesList(bool? checked, String item) {
+    checked! ? assignees.add(item) : assignees.remove(item);
+    emit(TaskInitial());
   }
 
   Future<void> createTask(String title, String description, int workspaceId,
-      int projectId, List<String> assignees) async {
+      int projectId, List<String> assignees, int parentTask) async {
     if (title.isEmpty || description.isEmpty || assignees.isEmpty) return;
     emit(TaskCreatingState());
 
@@ -192,7 +190,6 @@ class TaskCubit extends Cubit<TaskState> {
     CancelTaskModel cancelTaskModel = await TaskApi.cancelTask(taskId, token);
 
     if (cancelTaskModel.errorMessage.isEmpty) {
-
       emit(TaskCancelingSucceededState(cancelTaskModel));
     } else {
       emit(TaskCancelingFailedState(cancelTaskModel.errorMessage));
@@ -223,4 +220,67 @@ class TaskCubit extends Cubit<TaskState> {
       emit(TaskAssigningFailedState(assignTaskModel.errorMessage));
     }
   }
+
+  TaskModel convertFetchedTaskToTaskModel(int projectId, {FetchTasksModel? fetchTaskModel,
+      SubTask? subTask, List<String>? assignees}) {
+    late TaskModel taskModel;
+    if (subTask != null) {
+      taskModel = TaskModel(
+        id: subTask.id,
+        title: subTask.title,
+        description: subTask.description,
+        startDate: subTask.startDate,
+        dueDate: subTask.dueDate,
+        completeDate: subTask.completeDate,
+        image: subTask.image,
+        outDated: subTask.outDated,
+        projectId: projectId,
+        parentTask: 0,
+        assignees: assignees ?? [],
+        status: subTask.status,
+        priority: subTask.priority,
+        locked: subTask.locked,
+        reminder: subTask.reminder,
+        subTasks: [],
+        statusMessage: '',
+        errorMessage: '',
+      );
+    } else if (fetchTaskModel != null) {
+      taskModel = TaskModel(
+        id: fetchTaskModel.id,
+        title: fetchTaskModel.title,
+        description: fetchTaskModel.description,
+        startDate: fetchTaskModel.startDate,
+        dueDate: fetchTaskModel.dueDate,
+        completeDate: fetchTaskModel.completeDate,
+        image: fetchTaskModel.image,
+        outDated: fetchTaskModel.outDated,
+        parentTask: fetchTaskModel.parentTask,
+        assignees: fetchTaskModel.assignees,
+        projectId: projectId,
+        status: fetchTaskModel.status,
+        priority: fetchTaskModel.priority,
+        locked: fetchTaskModel.locked,
+        reminder: fetchTaskModel.reminder,
+        subTasks: fetchTaskModel.subTasks,
+        statusMessage: fetchTaskModel.statusMessage,
+        errorMessage: fetchTaskModel.errorMessage,
+      );
+    }
+    return taskModel;
+  }
+/*
+  * int id;
+  String title;
+  String description;
+  DateTime startDate;
+  DateTime dueDate;
+  dynamic completeDate;
+  String status;
+  String priority;
+  bool locked;
+  dynamic reminder;
+  bool outDated;
+  String image;
+  */
 }

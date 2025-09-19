@@ -266,6 +266,7 @@ Container buildBottomContainer(
     BuildContext context,
     TextEditingController titleController,
     TextEditingController descriptionController,
+    Map<String, dynamic> taskTitles,
     int workspaceId,
     int projectId) {
   return Container(
@@ -318,12 +319,13 @@ Container buildBottomContainer(
                 child: MyButtons.primaryButton(
                   () {
                     BlocProvider.of<TaskCubit>(context).createTask(
-                      titleController.text,
-                      descriptionController.text,
-                      workspaceId,
-                      projectId,
-                      BlocProvider.of<TaskCubit>(context).assignees,
-                    );
+                        titleController.text,
+                        descriptionController.text,
+                        workspaceId,
+                        projectId,
+                        BlocProvider.of<TaskCubit>(context).assignees,
+                        taskTitles[BlocProvider.of<TaskCubit>(context)
+                            .selectedParent]);
                   },
                   Theme.of(context).primaryColor,
                   child: Center(

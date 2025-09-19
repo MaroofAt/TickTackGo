@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
-import 'package:pr1/presentation/screen/tasks/create_task_page.dart';
+import 'package:pr1/data/models/tasks/task_model.dart';
+import 'package:pr1/presentation/screen/tasks/create_task_floating_button.dart';
 import 'package:pr1/presentation/screen/tasks/show_tasks_app_bar.dart';
 import 'package:pr1/presentation/screen/tasks/task_list_view_page.dart';
-import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
@@ -41,10 +40,8 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
     return BlocBuilder<ProjectsCubit, ProjectsState>(
       builder: (context, state) {
         if (state is ProjectRetrievingSucceededState) {
-          for (var element in state.retrieveProjectModel.members) {
-            BlocProvider.of<ProjectsCubit>(context)
-                .assignees.add(element.member.username);
-          }
+          BlocProvider.of<ProjectsCubit>(context)
+              .setAssignees(state.retrieveProjectModel);
           return buildTaskList(context, state.retrieveProjectModel);
         }
         return Scaffold(
@@ -59,33 +56,10 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
   Scaffold buildTaskList(
       BuildContext context, RetrieveProjectModel retrieveProjectModel) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          pushScreen(
-            context,
-            BlocProvider(
-              create: (context) => TaskCubit(),
-              child: PopScope(
-                onPopInvokedWithResult: (didPop, result) {
-                  if (didPop && result != null) {
-                    BlocProvider.of<TaskCubit>(context)
-                        .fetchTasks(widget.projectId);
-                  }
-                },
-                child: CreateTaskPage(
-                  widget.projectId,
-                  widget.workspaceId,
-                  BlocProvider.of<TaskCubit>(context).tasksTitles,
-                  BlocProvider.of<ProjectsCubit>(context).assignees,
-                ),
-              ),
-            ),
-          );
-        },
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Center(child: MyIcons.icon(Icons.add)),
-      ),
-      appBar: ShowTasksAppBar.showTasksAppBar(context, retrieveProjectModel.title),
+      floatingActionButton:
+          CreateTaskFloatingButton(widget.projectId, widget.workspaceId),
+      appBar:
+          ShowTasksAppBar.showTasksAppBar(context, retrieveProjectModel.title),
       body: BlocBuilder<TaskCubit, TaskState>(
         builder: (context, state) {
           if (state is TaskFetchingSucceededState) {
@@ -95,12 +69,16 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
                     textColor: white, fontSize: 22),
               );
             }
+            List<TaskModel> tasks = [];
             for (var element in state.fetchedTasks) {
               if (element.status != 'completed') {
                 BlocProvider.of<TaskCubit>(context)
                     .tasksTitles
                     .addAll({element.title: element.id});
               }
+              tasks.add(BlocProvider.of<TaskCubit>(context)
+                  .convertFetchedTaskToTaskModel(element.project,
+                      fetchTaskModel: element));
             }
             BlocProvider.of<TaskCubit>(context)
                 .tasksTitles
@@ -110,7 +88,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(),
-                TaskListViewPage(state.fetchedTasks, widget.color),
+                TaskListViewPage(tasks, widget.color),
               ],
             );
           }

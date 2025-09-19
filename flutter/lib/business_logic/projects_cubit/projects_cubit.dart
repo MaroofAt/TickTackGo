@@ -123,4 +123,11 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   bool checkForIconType(int workspaceId) {
     return projectsAreOpened && selectedWorkspaceId == workspaceId;
   }
+
+  setAssignees(RetrieveProjectModel retrieveProjectModel) {
+    for (var element in retrieveProjectModel.members) {
+      assignees.clear();
+      assignees.add(element.member.username);
+    }
+  }
 }

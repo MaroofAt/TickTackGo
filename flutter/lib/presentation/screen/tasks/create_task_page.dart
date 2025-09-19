@@ -128,7 +128,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             Positioned(
               bottom: 0,
               child: buildBottomContainer(context, _titleController,
-                  _descriptionController, widget.workspaceId, widget.projectId),
+                  _descriptionController, widget.tasksTitles, widget.workspaceId, widget.projectId),
             ),
           ],
         ),
