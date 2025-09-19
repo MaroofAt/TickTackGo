@@ -24,61 +24,21 @@ class TaskListViewPage extends StatelessWidget {
       width: width(context) * 0.8,
       child: ListView.builder(
         shrinkWrap: true,
-        itemCount: fetchedTasks.length + 1,
+        itemCount: fetchedTasks.length,
         itemBuilder: (context, index) {
-          if (index == 0) {
-            return MyGestureDetector.gestureDetector(
-              onTap: () {
-                Map<String, int> tasks = {};
-                for (var element in fetchedTasks) {
-                  tasks.addAll({element.title: element.id});
-                }
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return BlocProvider(
-                      create: (context) => DependencyCubit(),
-                      child: PopScope(
-                        onPopInvokedWithResult: (didPop, result) {
-                          if (didPop && result != null) {
-                            MySnackBar.mySnackBar(
-                              'Created successfully',
-                              backgroundColor: Colors.green,
-                            );
-                          }
-                        },
-                        child: CreateDependency(tasks),
-                      ),
-                    );
-                  },
-                );
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 10.0),
-                width: width(context),
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: MyText.text1(
-                  'Create dependency?',
-                  textColor: Colors.blue,
-                  textAlign: TextAlign.start,
-                  fontSize: 22,
-                ),
-              ),
-            );
-          }
           return Column(
             children: [
-              TaskListItem(fetchedTasks[index - 1], color),
-              fetchedTasks[index - 1].subTasks.isNotEmpty
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(),
-                        ShowSubTasks(fetchedTasks[index - 1].subTasks, color,
-                            fetchedTasks[index].project),
-                      ],
-                    )
-                  : Container(),
+              TaskListItem(fetchedTasks[index], color),
+              // fetchedTasks[index - 1].subTasks.isNotEmpty
+              //     ? Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Container(),
+              //           ShowSubTasks(fetchedTasks[index - 1].subTasks, color,
+              //               fetchedTasks[index].project),
+              //         ],
+              //       )
+              //     : Container(),
             ],
           );
         },

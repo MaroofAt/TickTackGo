@@ -22,6 +22,25 @@ class MyCircle {
     );
   }
 
+  static Container circleWithNetworkImage(
+    double radius, {
+    double? height,
+    double? width,
+    Color? color,
+    required String networkImage,
+  }) {
+    return Container(
+      height: height ?? radius,
+      width: width ?? radius,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        image:
+            MyImages.decorationImage(isAssetImage: false, image: networkImage),
+      ),
+    );
+  }
+
   static Container circleWithFileImage(
     double radius, {
     double? height,

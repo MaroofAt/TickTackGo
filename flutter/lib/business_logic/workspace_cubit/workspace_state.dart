@@ -119,3 +119,17 @@ class InviteCancelingFailedState extends WorkspaceState {
 
   InviteCancelingFailedState(this.errorMessage);
 }
+
+class WorkspaceUpdatingState extends WorkspaceState {}
+
+class WorkspaceUpdatingSucceededState extends WorkspaceState {
+  UpdateWorkspaceModel updateWorkspaceModel;
+
+  WorkspaceUpdatingSucceededState(this.updateWorkspaceModel);
+}
+
+class WorkspaceUpdatingFailedState extends WorkspaceState {
+  String errorMessage;
+
+  WorkspaceUpdatingFailedState(this.errorMessage);
+}
