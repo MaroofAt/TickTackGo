@@ -6,16 +6,29 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/circle.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
+import 'package:pr1/presentation/widgets/images.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 import 'package:pr1/presentation/widgets/text_field.dart';
 
-class CreateWorkspacePage extends StatelessWidget {
-  CreateWorkspacePage({super.key});
+class CreateUpdateWorkspacePage extends StatelessWidget {
+  CreateUpdateWorkspacePage(
+      {this.title,
+      this.description,
+      this.image,
+      this.retrieveWorkspaceModel,
+      super.key});
+
+  String? image;
+  String? title;
+  String? description;
+  RetrieveWorkspaceModel? retrieveWorkspaceModel;
 
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -34,7 +47,10 @@ class CreateWorkspacePage extends StatelessWidget {
                 Column(
                   children: [
                     SizedBox(height: height(context) * 0.08),
-                    MyText.text1(pageTitle, fontSize: 25, textColor: white),
+                    title == null
+                        ? MyText.text1(pageTitle,
+                            fontSize: 25, textColor: white)
+                        : Container(),
                     SizedBox(height: height(context) * 0.02),
                     Column(
                       children: [
@@ -60,17 +76,21 @@ class CreateWorkspacePage extends StatelessWidget {
                             return Stack(
                               children: [
                                 BlocProvider.of<WorkspaceCubit>(context)
-                                            .image ==
+                                            .image !=
                                         null
-                                    ? MyCircle.circle(
-                                        width(context) * 0.35,
-                                        color: white,
-                                      )
-                                    : MyCircle.circleWithFileImage(
+                                    ? MyCircle.circleWithFileImage(
                                         width(context) * 0.35,
                                         file: BlocProvider.of<WorkspaceCubit>(
                                                 context)
-                                            .image!),
+                                            .image!)
+                                    : image != null
+                                        ? MyCircle.circle(width(context) * 0.35,
+                                            child:
+                                                MyImages.networkImage(image!))
+                                        : MyCircle.circle(
+                                            width(context) * 0.35,
+                                            color: white,
+                                          ),
                                 Positioned(
                                   bottom: 0,
                                   right: 0,
@@ -141,7 +161,7 @@ class CreateWorkspacePage extends StatelessWidget {
                               MyTextField.textField(
                                 context,
                                 _titleController,
-                                hint: titleHint,
+                                hint: title ?? titleHint,
                                 textColor: white,
                                 borderColor: greatMagenda,
                               ),
@@ -151,7 +171,7 @@ class CreateWorkspacePage extends StatelessWidget {
                               MyTextField.textField(
                                 context,
                                 _descriptionController,
-                                hint: descriptionHint,
+                                hint: description ?? descriptionHint,
                                 type: TextInputType.multiline,
                                 textColor: white,
                                 minLines: 1,
@@ -167,23 +187,55 @@ class CreateWorkspacePage extends StatelessWidget {
                 ),
                 SizedBox(height: height(context) * 0.26),
                 SizedBox(
-                  width: width(context) * 0.45,
-                  height: height(context) * 0.06,
-                  child: MyButtons.primaryButton(
-                    () {
-                      BlocProvider.of<WorkspaceCubit>(context).createWorkSpace(
-                        _titleController.text,
-                        _descriptionController.text,
-                      );
-                    },
-                    Theme.of(context).secondaryHeaderColor,
-                    child: MyText.text1(
-                      createButtonText,
-                      fontSize: 20,
-                      textColor: white,
-                    ),
-                  ),
-                ),
+                    width: width(context) * 0.45,
+                    height: height(context) * 0.06,
+                    child: BlocConsumer<WorkspaceCubit, WorkspaceState>(
+                      listener: (context, state) {
+                        if (state is CreatedWorkspaceState ||
+                            state is WorkspaceUpdatingSucceededState) {
+                          // popScreen(context, true);
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is CreatingWorkspaceState ||
+                            state is WorkspaceUpdatingState) {
+                          return MyButtons.primaryButton(
+                            () {},
+                            Theme.of(context).secondaryHeaderColor,
+                            child: Center(
+                              child: LoadingIndicator.circularProgressIndicator(
+                                  color: black),
+                            ),
+                          );
+                        }
+                        return MyButtons.primaryButton(
+                          () {
+                            if (title == null) {
+                              BlocProvider.of<WorkspaceCubit>(context)
+                                  .createWorkSpace(
+                                _titleController.text,
+                                _descriptionController.text,
+                              );
+                            } else {
+                              BlocProvider.of<WorkspaceCubit>(context)
+                                  .updateWorkspace(
+                                retrieveWorkspaceModel!.id,
+                                _titleController.text,
+                                _descriptionController.text,
+                                retrieveWorkspaceModel!,
+                              );
+                            }
+                          },
+                          Theme.of(context).secondaryHeaderColor,
+                          child: MyText.text1(
+                            title == null ? createButtonText : 'Update',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            textColor: black,
+                          ),
+                        );
+                      },
+                    )),
               ],
             ),
           ),

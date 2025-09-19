@@ -14,6 +14,7 @@ import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
 import 'package:pr1/data/models/workspace/sent_invites_model.dart';
+import 'package:pr1/data/models/workspace/update_workspace.dart';
 
 part 'workspace_state.dart';
 
@@ -52,7 +53,6 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
         await WorkspaceApi.createWorkspace(title, description, image, token);
     if (createWorkspaceModel.errorMessage.isEmpty) {
       emit(CreatedWorkspaceState(createWorkspaceModel));
-      fetchWorkspaces();
     } else {
       emit(CreateWorkspaceFailedState(createWorkspaceModel.errorMessage));
     }
@@ -138,6 +138,30 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
       sentInvites(workspaceId);
     } else {
       emit(InviteCancelingFailedState(cancelInviteModel.errorMessage));
+    }
+  }
+
+  Future<void> updateWorkspace(int workspaceId, String title,
+      String description, RetrieveWorkspaceModel retrieveWorkspace) async {
+    if (title.isEmpty && description.isEmpty && image == null) return;
+
+    if (title.isEmpty) {
+      title = retrieveWorkspace.title;
+    }
+
+    if (description.isEmpty) {
+      description = retrieveWorkspace.description;
+    }
+
+    emit(WorkspaceUpdatingState());
+    UpdateWorkspaceModel updateWorkspaceModel =
+        await WorkspaceApi.updateWorkspace(
+            workspaceId, title, description, image, token);
+
+    if (updateWorkspaceModel.errorMessage.isEmpty) {
+      emit(WorkspaceUpdatingSucceededState(updateWorkspaceModel));
+    } else {
+      emit(WorkspaceUpdatingFailedState(updateWorkspaceModel.errorMessage));
     }
   }
 }

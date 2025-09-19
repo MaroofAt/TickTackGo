@@ -11,6 +11,7 @@ import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/data/models/workspace/kick_member_from_workspace.dart';
 import 'package:pr1/data/models/workspace/sent_invites_model.dart';
+import 'package:pr1/data/models/workspace/update_workspace.dart';
 
 class WorkspaceApi {
   static Future<CreateWorkspaceModel> createWorkspace(
@@ -130,10 +131,9 @@ class WorkspaceApi {
     return retrieveWorkspace;
   }
 
-  static Future<DeleteWorkspaceModel> deleteWorkspace(int workspaceId, String token) async {
-    var headers = {
-      'Authorization': 'Bearer $token'
-    };
+  static Future<DeleteWorkspaceModel> deleteWorkspace(
+      int workspaceId, String token) async {
+    var headers = {'Authorization': 'Bearer $token'};
 
     late DeleteWorkspaceModel deleteWorkspaceModel;
 
@@ -157,15 +157,14 @@ class WorkspaceApi {
     return deleteWorkspaceModel;
   }
 
-  static Future<KickMemberFromWorkspaceModel> kickMember(int workspaceId, int memberId, String token) async {
+  static Future<KickMemberFromWorkspaceModel> kickMember(
+      int workspaceId, int memberId, String token) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
-    var data = {
-      "member": memberId
-    };
+    var data = {"member": memberId};
 
     late KickMemberFromWorkspaceModel kickMemberFromWorkspaceModel;
 
@@ -182,15 +181,18 @@ class WorkspaceApi {
       if (response.statusCode == 204) {
         kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.onSuccess();
       } else {
-        kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.onError(response.data);
+        kickMemberFromWorkspaceModel =
+            KickMemberFromWorkspaceModel.onError(response.data);
       }
     } on DioException catch (e) {
-      kickMemberFromWorkspaceModel = KickMemberFromWorkspaceModel.error(handleDioError(e));
+      kickMemberFromWorkspaceModel =
+          KickMemberFromWorkspaceModel.error(handleDioError(e));
     }
     return kickMemberFromWorkspaceModel;
   }
 
-  static Future<List<SentInvitesModel>> sentInvites(int workspaceId, String token) async {
+  static Future<List<SentInvitesModel>> sentInvites(
+      int workspaceId, String token) async {
     var headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -220,21 +222,20 @@ class WorkspaceApi {
         sentInvitesModel = [SentInvitesModel.onError(response.data)];
       }
     } on DioException catch (e) {
-        sentInvitesModel = [SentInvitesModel.error(handleDioError(e))];
+      sentInvitesModel = [SentInvitesModel.error(handleDioError(e))];
     }
     return sentInvitesModel;
   }
 
-  static Future<CancelInviteModel> cancelInvite(int workspaceId, int inviteId, String token) async {
+  static Future<CancelInviteModel> cancelInvite(
+      int workspaceId, int inviteId, String token) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     };
 
-    var data = {
-      "invite": inviteId
-    };
+    var data = {"invite": inviteId};
 
     late CancelInviteModel cancelInviteModel;
     try {
@@ -252,9 +253,58 @@ class WorkspaceApi {
       } else {
         cancelInviteModel = CancelInviteModel.onError(response.data);
       }
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       cancelInviteModel = CancelInviteModel.error(handleDioError(e));
     }
     return cancelInviteModel;
+  }
+
+  static Future<UpdateWorkspaceModel> updateWorkspace(int workspaceId, String title,
+      String description, File? image, String token) async {
+    var headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+
+    FormData data;
+
+    if (image == null) {
+      data = FormData.fromMap({
+        'title': title,
+        'description': description,
+      });
+    } else {
+      data = FormData.fromMap({
+        'title': title,
+        'description': description,
+        'image': await MultipartFile.fromFile(
+          image.path,
+          filename: '$title.jpg',
+        ),
+      });
+    }
+
+    late UpdateWorkspaceModel updateWorkspaceModel;
+
+    try {
+      var response = await dio.request(
+        '/workspaces/$workspaceId/',
+        options: Options(
+          method: 'PATCH',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        updateWorkspaceModel = UpdateWorkspaceModel.onSuccess(response.data);
+      } else {
+        updateWorkspaceModel = UpdateWorkspaceModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+        updateWorkspaceModel = UpdateWorkspaceModel.error(handleDioError(e));
+    }
+    return updateWorkspaceModel;
   }
 }

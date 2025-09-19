@@ -23,10 +23,9 @@ class MyImages {
     );
   }
 
-  static DecorationImage decorationImage(
-      {required bool isAssetImage,
-      required String image,
-      BoxFit fit = BoxFit.cover}) {
+  static DecorationImage decorationImage({required bool isAssetImage,
+    required String image,
+    BoxFit fit = BoxFit.cover}) {
     if (!isAssetImage) {
       image = image.replaceFirst('127.0.0.1', '10.0.2.2');
     }
@@ -39,18 +38,18 @@ class MyImages {
     );
   }
 
-  static Widget networkImage(
-    String imageUrl, {
+  static Widget networkImage(String imageUrl, {
     String placeholder = 'assets/gifs/loading_indicator.gif',
     double? height,
     double? width,
+    BoxFit fit = BoxFit.cover,
   }) {
     return FadeInImage.assetNetwork(
       placeholder: placeholder,
       image: imageUrl,
       height: height,
       width: width,
-      fit: BoxFit.cover,
+      fit: fit,
     );
   }
 

@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
+import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
+import 'package:pr1/presentation/screen/workspace/create_update_workspace_page.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
+import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
@@ -29,11 +36,41 @@ class WorkspaceInfoHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        MyText.text1(
-          retrieveWorkspace.title,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          textColor: Colors.white,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            MyText.text1(
+              retrieveWorkspace.title,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              textColor: Colors.white,
+            ),
+            MyGestureDetector.gestureDetector(
+              onTap: () {
+                pushScreen(
+                  context,
+                  BlocProvider(
+                    create: (context) => WorkspaceCubit(),
+                    child: PopScope(
+                      onPopInvokedWithResult: (didPop, result) {
+                        if (didPop && result != null) {
+                          BlocProvider.of<WorkspaceCubit>(context)
+                              .retrieveWorkspace(retrieveWorkspace.id);
+                        }
+                      },
+                      child: CreateUpdateWorkspacePage(
+                        title: retrieveWorkspace.title,
+                        description: retrieveWorkspace.description,
+                        image: retrieveWorkspace.image,
+                        retrieveWorkspaceModel: retrieveWorkspace,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: MyIcons.icon(Icons.edit, color: Colors.grey),
+            ),
+          ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
