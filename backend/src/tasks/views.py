@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from rest_framework.parsers import MultiPartParser, JSONParser
 from django.utils import timezone
 
 from rest_framework import viewsets , status
@@ -35,6 +35,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser , JSONParser]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -89,7 +90,23 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '2025-9-6'},
-                    'image': {'type': 'string' , 'format': 'binary'}
+                    'assignees': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'integer',
+                            'example': 1
+                        },
+                        'description': 'array of assignee ids'
+                    },
+                    'image': {'type': 'string' , 'format': 'binary'},
+                    'attachments': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'string',
+                            'format': 'binary'
+                        },
+                        'description': 'array of attachment files'
+                    }
                 },
                 'required': ['title', 'start_date', 'due_date', 'workspace', 'project', 'priority']
             },
@@ -107,6 +124,14 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '2025-9-6'},
+                    'assignees': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'integer',
+                            'example': 1
+                        },
+                        'description': 'array of assignee ids'
+                    }
                 },
                 'required': ['title', 'start_date', 'due_date', 'workspace', 'project', 'priority']
 
@@ -130,7 +155,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         start_date = timezone.datetime.strptime(request.data.get('start_date'), r"%Y-%m-%d").date()
         due_date = timezone.datetime.strptime(request.data.get('due_date'), r"%Y-%m-%d").date()
         start_date_more_than_due_date = (start_date > due_date)
-        print(start_date_more_than_due_date)
+        # print(start_date_more_than_due_date)
         if start_date_more_than_due_date:
             return Response({"detail": "start date is after the due date! that means the project will start after it finished already!"} , status=status.HTTP_400_BAD_REQUEST)
 
@@ -145,6 +170,12 @@ class TaskViewSet(viewsets.ModelViewSet):
             'status': 'pending'  
         })
 
+        # print(f'\n\nrequest.FILES = {request.FILES}\n\n')
+        # merged_data = data
+        # merged_data.update(request.FILES)
+        # print(f'\n\nmerged_data = {merged_data}\n\n')
+        # print(f'\n\nrequest.data = {request.data}\n\n')
+        print(f'\n\ndata = {data}\n\n')
         serializer = self.get_serializer(data=data)
         # serializer = self.get_serializer(
         #     data = {
@@ -154,21 +185,21 @@ class TaskViewSet(viewsets.ModelViewSet):
         #     }
         # )
 
-        user = User.objects.filter(id=request.user.id).first()
-        workspace = Workspace.objects.filter(id=request.data.get('workspace')).first()
-        result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigned new task to you in {workspace.title}')
+        # user = User.objects.filter(id=request.user.id).first()
+        # workspace = Workspace.objects.filter(id=request.data.get('workspace')).first()
+        # result = send(request.data.get('assignees') , 'Task added' , f'{user.username} assigned new task to you in {workspace.title}')
         if serializer.is_valid():
             serializer.save()
          
             return Response({
                 'data': serializer.data,
-                'result': result
+                'result': ""#result
             }, status=status.HTTP_201_CREATED)
         
 
         return Response({
             'errors': serializer.errors,
-            'result': result
+            'result': ""#result
         }, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
