@@ -6,6 +6,7 @@ import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/user_functions.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/presentation/screen/projects/build_members_list.dart';
@@ -78,7 +79,29 @@ class BuildProjectInfoPage extends StatelessWidget {
             const SizedBox(height: 20),
             buildCreateAtRow(),
             const SizedBox(height: 20),
-            buildCompletedRow(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                buildCompletedRow(),
+                isAdmin(retrieveProjectModel.members[0].member.id)
+                    ? MyGestureDetector.gestureDetector(
+                        onTap: () {
+                          //TODO send End-Project API
+                        },
+                        child: Container(
+                          height: height(context) * 0.05,
+                          width: width(context) * 0.3,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).secondaryHeaderColor,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Center(
+                            child: MyText.text1('End Project?'),
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
             const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,9 +146,7 @@ class BuildProjectInfoPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 const SizedBox(height: 20),
                 SizedBox(
                   height: height(context) * 0.5,
