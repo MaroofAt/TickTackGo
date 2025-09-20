@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.conf import settings
 from django.db import transaction
 
-from .models import Workspace , Workspace_Membership , Invite, Points
+from .models import Workspace , Workspace_Membership , Invite, Points , Workspace_Invitation
 from projects.models import Project
 from users.models import User 
 
@@ -233,6 +233,19 @@ class ShowInvitesSerializer(serializers.ModelSerializer):
             'expire_date',
             'created_at',
             'updated_at'
+        ]
+
+
+class InvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workspace_Invitation
+        fields = [
+            'id',
+            'workspace',
+            'token',
+            'link',
+            'expires_at',
+            'valid',
         ]
 
 
