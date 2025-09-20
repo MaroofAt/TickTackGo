@@ -14,7 +14,7 @@ class IssueApi {
     required int projectId,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await dio.request(
         '/issues/',
         data: {
           "title": title,
@@ -22,6 +22,7 @@ class IssueApi {
           "project": projectId,
         },
         options: Options(
+          method: 'POST',
           headers: {
             'Authorization': 'Bearer $token',
             'accept': 'application/json',
@@ -31,35 +32,37 @@ class IssueApi {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
         print('Issue created successfully');
       } else {
+        print(response.data);
         throw Exception('Failed to create issue: ${response.statusCode}');
       }
     } on DioException catch (e) {
+      print(e.response!.data);
       throw Exception('Dio error: ${e.response?.data ?? e.message}');
     } catch (e) {
       throw Exception('Unexpected error: $e');
     }
   }
 
-  Future <List<ListIssuesModel>> get_All_Issues({
+  Future<List<ListIssuesModel>> get_All_Issues({
     required int projectId,
     String? ordering,
     String? search,
   }) async {
     try {
-      final queryParams = {
-        if (ordering != null) "ordering": ordering,
-        if (search != null) "search": search,
-      };
-      final response = await dio.get('/issues/',
-        queryParameters: queryParams,
-        data: { "project": projectId,},
+      final response = await dio.request(
+        '/issues/$projectId/list_issue/',
         options: Options(
-          headers: { 'Authorization': 'Bearer $token',
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer $token',
             'accept': 'application/json',
-            'Content-Type': 'application/json',},),);
-
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
 
       if (response.statusCode == 200) {
         print("Issues fetched successfully ✅");
@@ -75,26 +78,27 @@ class IssueApi {
       throw Exception('Unexpected error: $e');
     }
   }
+
   Future<ListIssuesModel> RetrieveIssue({
     required int issueId,
     required int projectId,
   }) async {
     try {
-      List<ListIssuesModel> allIssues = await get_All_Issues(projectId: projectId);
+      List<ListIssuesModel> allIssues =
+          await get_All_Issues(projectId: projectId);
 
       final issue = allIssues.firstWhere(
-            (item) => item.id == issueId,
-        orElse: () => throw Exception('Issue $issueId not found in project $projectId'),
+        (item) => item.id == issueId,
+        orElse: () =>
+            throw Exception('Issue $issueId not found in project $projectId'),
       );
 
       print("Issue $issueId found in project $projectId ✅");
       return issue;
-
     } catch (e) {
       throw Exception('Error retrieving issue: $e');
     }
   }
-
 
   // Future <ListIssuesModel> RetrieveIssue({
   //   required int issueId,
@@ -167,18 +171,22 @@ class IssueApi {
     }
   }
 
-  Future <List<ShowReplie>> get_Replie(
-      {required int projectId, required int issueID,}) async {
+  Future<List<ShowReplie>> get_Replie({
+    required int projectId,
+    required int issueID,
+  }) async {
     try {
-      final response = await dio.get('/issues/list_replie/',
-        data: { "project": projectId,
-          "issue": issueID
-        },
+      final response = await dio.get(
+        '/issues/list_replie/',
+        data: {"project": projectId, "issue": issueID},
         options: Options(
-          headers: { 'Authorization': 'Bearer $token',
+          headers: {
+            'Authorization': 'Bearer $token',
             'accept': 'application/json',
-            'Content-Type': 'application/json',},),);
-
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Replie fetched successfully ✅");
