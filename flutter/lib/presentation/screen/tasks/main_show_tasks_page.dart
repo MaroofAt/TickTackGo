@@ -3,12 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
+import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/show_snack_bar.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/data/models/tasks/task_model.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_floating_button.dart';
 import 'package:pr1/presentation/screen/tasks/show_tasks_app_bar.dart';
 import 'package:pr1/presentation/screen/tasks/task_list_view_page.dart';
+import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
+import 'package:pr1/presentation/widgets/snack_bar.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class MainShowTasksPage extends StatefulWidget {
@@ -32,7 +37,6 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
 
   _getNeededData() {
     BlocProvider.of<ProjectsCubit>(context).retrieveProject(widget.projectId);
-    BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
   }
 
   @override
@@ -42,6 +46,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
         if (state is ProjectRetrievingSucceededState) {
           BlocProvider.of<ProjectsCubit>(context)
               .setAssignees(state.retrieveProjectModel);
+          BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
           return buildTaskList(context, state.retrieveProjectModel);
         }
         return Scaffold(
@@ -60,7 +65,19 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
           CreateTaskFloatingButton(widget.projectId, widget.workspaceId),
       appBar:
           ShowTasksAppBar.showTasksAppBar(context, retrieveProjectModel.title),
-      body: BlocBuilder<TaskCubit, TaskState>(
+      body: BlocConsumer<TaskCubit, TaskState>(
+        listener: (context, state) {
+          if (state is TaskFetchingFailedState) {
+            BlocProvider.of<TaskCubit>(context).close();
+            showSnackBar(
+              context,
+              state.errorMessage,
+              backgroundColor: Colors.red,
+              seconds: 1,
+            );
+            popScreen(context);
+          }
+        },
         builder: (context, state) {
           if (state is TaskFetchingSucceededState) {
             if (state.fetchedTasks.isEmpty) {

@@ -58,6 +58,15 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
                   if (state is WorkspaceRetrievingSucceededState) {
                     RetrieveWorkspaceModel retrieveWorkspaceModel =
                         state.retrieveWorkspace;
+                    if (widget.retrieveProjectModel.members.length == 1) {
+                      return Center(
+                        child: MyText.text1(
+                          '\n\nAdd some member to this workspace so you can add them to this project',
+                          textColor: white,
+                          fontSize: 20,
+                        ),
+                      );
+                    }
                     return Expanded(
                       child: ListView.builder(
                         itemCount: retrieveWorkspaceModel.members.length,

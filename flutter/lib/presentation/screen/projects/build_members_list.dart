@@ -23,6 +23,7 @@ class BuildMembersList extends StatelessWidget {
     return ListView.builder(
       itemCount: retrieveProjectModel.members.length,
       itemBuilder: (context, index) {
+        print(retrieveProjectModel.members.length);
         return buildOneMemberCard(context, index);
       },
     );

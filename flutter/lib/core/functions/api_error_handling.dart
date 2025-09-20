@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 
 String handleDioError(DioException e) {
   if (e.response != null) {
-    if(e.response.runtimeType != Response<dynamic>) {
-      return e.response.toString();
+    if(e.response.runtimeType == Response<dynamic>) {
+      return e.response!.data["detail"];
     }
     return (e.response.runtimeType is! Map<String,dynamic>)
       ? 'something went wrong please Try again later'
