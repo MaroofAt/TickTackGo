@@ -6,6 +6,8 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/core/functions/show_snack_bar.dart';
+import 'package:pr1/core/functions/user_functions.dart';
+import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/data/models/tasks/task_model.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_floating_button.dart';
@@ -47,7 +49,13 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
           BlocProvider.of<ProjectsCubit>(context)
               .setAssignees(state.retrieveProjectModel);
           BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
-          return buildTaskList(context, state.retrieveProjectModel);
+          List<int> editors = [];
+          for (var element in state.retrieveProjectModel.members) {
+            if (element.role == 'editor') {
+              editors.add(element.member.id);
+            }
+          }
+          return buildTaskList(context, state.retrieveProjectModel, editors);
         }
         return Scaffold(
           body: Center(
@@ -58,11 +66,14 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
     );
   }
 
-  Scaffold buildTaskList(
-      BuildContext context, RetrieveProjectModel retrieveProjectModel) {
+  Scaffold buildTaskList(BuildContext context,
+      RetrieveProjectModel retrieveProjectModel, List<int> editors) {
     return Scaffold(
       floatingActionButton:
-          CreateTaskFloatingButton(widget.projectId, widget.workspaceId),
+          isAdmin(retrieveProjectModel.members[0].member.id) ||
+                  editors.contains(user!.id)
+              ? CreateTaskFloatingButton(widget.projectId, widget.workspaceId)
+              : null,
       appBar:
           ShowTasksAppBar.showTasksAppBar(context, retrieveProjectModel.title),
       body: BlocConsumer<TaskCubit, TaskState>(
