@@ -46,9 +46,9 @@ class TaskProjectNotArchived(BasePermission):
         task = Task.objects.get(id=task_id)
         
         
-        if not Project.objects.filter(id=task.project).exists():
+        if not Project.objects.filter(id=task.project.id).exists():
             return False
-        project = Project.objects.get(id=task.project)
+        project = Project.objects.get(id=task.project.id)
         
         if project.ended:
             return False

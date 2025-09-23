@@ -127,20 +127,41 @@ class TaskSerializer(serializers.ModelSerializer):
         return instance
     
     def update(self, instance, validated_data): #TODO: Fix assignees handling + handle attachments update
-        # print(f"\n\n{validated_data}\n\n")
-        if validated_data.get('assignees'):
+        there_is_assignees = False
+        there_is_attachments = False
+        if 'assignees' in validated_data:
             assignees = validated_data.pop('assignees')
-            with transaction.atomic():
-                instance = super().update(instance=instance,validated_data=validated_data)
+            there_is_assignees = True
+        if 'attachments' in validated_data:
+            attachments = validated_data.pop('attachments')
+            there_is_attachments = True
+        
+        with transaction.atomic():
+            # attachments & assignees update handling
+            instance = super().update(instance=instance,validated_data=validated_data)
+            if there_is_assignees:
+                # deleting old task assignees
+                old_assignees = Assignee.objects.filter(task_id=instance.id)
+                for old_assignee in old_assignees:
+                    old_assignee.delete()
+                # creating the new ones
                 for assignee in assignees:
-                    if not Assignee.objects.filter(assignee=assignee,task_id=instance.id).exists():
-                        Assignee.objects.create(
-                            assignee=assignee,
-                            task=instance
-                        )
-            return instance
-        else:
-            return super().update(instance=instance,validated_data=validated_data)
+                    Assignee.objects.create(
+                        assignee=assignee,
+                        task=instance
+                    )
+            if there_is_attachments:
+                # deleting old task attachments
+                old_attachments = Attachment.objects.filter(task=instance)
+                for old_attachment in old_attachments:
+                    old_attachment.delete()
+                # creating the new ones
+                for attachment in attachments:
+                    Attachment.objects.create(
+                        file=attachment,
+                        task=instance
+                    )
+        return instance
         
 
 class SubTaskSerializer(serializers.ModelSerializer):

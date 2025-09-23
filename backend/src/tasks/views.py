@@ -18,11 +18,11 @@ from .serializers import TaskSerializer, CommentSerializer , InboxTaskSerializer
 from .permissions import IsTaskProjectMember, IsTaskProjectOwner , IsEditableTask, TaskProjectNotArchived , IsTaskProjectCanEdit
 
 
-from projects.permissions import IsProjectMember
+from projects.permissions import IsProjectMember , CanEditProject
 from workspaces.models import Points , Workspace
 from users.models import User
 
-from tools.roles_check import can_edit_project , is_creator ,is_project_owner , is_task_project_owner
+from tools.roles_check import can_edit_project , is_creator ,is_project_owner , is_task_project_owner , can_edit_task
 from tools.responses import method_not_allowed, exception_response, required_response
 from tools.dependencie_functions import can_end, can_start
 from tools.points import calculate_task_points
@@ -64,10 +64,11 @@ class TaskViewSet(viewsets.ModelViewSet):
         if self.action == 'update' or self.action == 'partial_update':
             self.permission_classes.append(IsEditableTask)
             self.permission_classes.append(TaskProjectNotArchived)
+            self.permission_classes.append(IsTaskProjectMember)
         if self.action == 'cancel' or self.action == 'mark_as_completed' or self.action == 'cancel_task':
             self.permission_classes.append(TaskProjectNotArchived)
         if self.action == 'create' or self.action == 'destroy':
-            self.permission_classes.append(IsTaskProjectCanEdit)
+            self.permission_classes.append(CanEditProject)
         return super().get_permissions()
 
     @extend_schema(
@@ -119,7 +120,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'due_date': {'type': 'Date', 'example': '2025-9-6'},
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
-                    'parent_task': {'type':'integer' , 'example':1 or None},
+                    'parent_task': {'type':'integer' ,'nullable':True, 'example':1 or None },
                     'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
                     'locked': {'type':'boolean' , 'example':False},
@@ -141,6 +142,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     # @action(detail=True , methods=['post'] , serializer_class=TaskSerializer)
     def create(self, request, *args, **kwargs):
         # return super().create(request, *args, **kwargs)
+        # print('Aliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
         if not is_project_owner(request.user.id , request.data.get('project')):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
         
@@ -159,7 +161,8 @@ class TaskViewSet(viewsets.ModelViewSet):
         if start_date_more_than_due_date:
             return Response({"detail": "start date is after the due date! that means the project will start after it finished already!"} , status=status.HTTP_400_BAD_REQUEST)
 
-        if request.data.get('parent_task') is not None:
+        print(request.data.get('parent_task'))
+        if request.data.get('parent_task') not in [None, '', 0, '0']:
             parent_task = Task.objects.filter(pk = request.data.get('parent_task')).first()
             if parent_task.parent_task is not None:
                 return Response({"error": "you can't create sup_task to a sup_task"} , status=status.HTTP_400_BAD_REQUEST)
@@ -405,14 +408,105 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
     @extend_schema(exclude=True)
-    def update(self, request, *args, **kwargs):
-        return method_not_allowed()
-        return super().update(request, *args, **kwargs)
+    def update(self, request, pk, *args, **kwargs):
+        return super().update(request, pk, *args, **kwargs)
     
-    @extend_schema(exclude=True)
-    def partial_update(self, request, *args, **kwargs):
-        return method_not_allowed()
-        return super().partial_update(request, *args, **kwargs)
+    @extend_schema(
+        summary="Partial Update Task",
+        operation_id="partial_update_task",
+        description="Owner can partial update any task and can_edit can partial update the task he/she created",
+        tags=["Tasks"],
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Task 1'},
+                    'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
+                    'start_date': {'type': 'Date', 'example': '2025-6-6'},
+                    'due_date': {'type': 'Date', 'example': '2025-9-6'},
+                    'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'reminder': {'type': 'Date', 'example': '2025-9-6'},
+                    'assignees': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'integer',
+                            'example': 1
+                        },
+                        'description': 'array of assignee ids'
+                    },
+                    'image': {'type': 'string' , 'format': 'binary'},
+                    'attachments': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'string',
+                            'format': 'binary'
+                        },
+                        'description': 'array of attachment files'
+                    }
+                }
+            },
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Task 1'},
+                    'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
+                    'start_date': {'type': 'Date', 'example': '2025-6-6'},
+                    'due_date': {'type': 'Date', 'example': '2025-9-6'},
+                    'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'reminder': {'type': 'Date', 'example': '2025-9-6'},
+                    'assignees': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'integer',
+                            'example': 1
+                        },
+                        'description': 'array of assignee ids'
+                    }
+                }
+            }            
+        }
+    )
+    def partial_update(self, request, pk, *args, **kwargs):
+        print(f'\n\nInside the view\n\n')
+        # owner or can_edit+he-created-the-task
+        task = self.get_object()
+        is_owner = is_task_project_owner(user_id=request.user,task_id=pk)
+        is_can_edit = can_edit_task(user_id=request.user,task_id=pk)
+        if not is_owner:
+            if not is_can_edit:
+                return Response(
+                    {'detail': 'the user specified is not the owner of the workspace and can\'t edit the task'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            # not owner but can edit
+            if not (task.creator == request.user):
+                # can edit but he is not whom created the task
+                return Response(
+                    {'detail': 'the user specified can-edit in the project but not this task because he is not whom created the task'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            # can edit + created the task
+            
+
+        # the owner
+
+        
+        
+        # popping field that can\'t be updated:
+        if 'locked' in request.data:
+            request.data.pop('locked')
+        if 'status' in request.data:
+            request.data.pop('status')
+        if 'workspace' in request.data:
+            request.data.pop('workspace')
+        if 'project' in request.data:
+            request.data.pop('project')
+        if 'complete_date' in request.data:
+            request.data.pop('complete_date')
+        if 'creator' in request.data:
+            request.data.pop('creator')
+
+        return super().partial_update(request, pk, *args, **kwargs)
     
     @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs):
