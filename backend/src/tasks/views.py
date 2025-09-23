@@ -64,6 +64,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         if self.action == 'update' or self.action == 'partial_update':
             self.permission_classes.append(IsEditableTask)
             self.permission_classes.append(TaskProjectNotArchived)
+            self.permission_classes.append(IsTaskProjectMember)
         if self.action == 'cancel' or self.action == 'mark_as_completed' or self.action == 'cancel_task':
             self.permission_classes.append(TaskProjectNotArchived)
         if self.action == 'create' or self.action == 'destroy':
@@ -466,6 +467,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         }
     )
     def partial_update(self, request, pk, *args, **kwargs):
+        print(f'\n\nInside the view\n\n')
         # owner or can_edit+he-created-the-task
         task = self.get_object()
         is_owner = is_task_project_owner(user_id=request.user,task_id=pk)
@@ -488,12 +490,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         # the owner
 
-        # task must be pending
-        if not task.is_pending():
-            return Response(
-                {'detail': 'this task can\'t be edited because it is not pending any more'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        
         
         # popping field that can\'t be updated:
         if 'locked' in request.data:
