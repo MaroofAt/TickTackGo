@@ -22,7 +22,7 @@ from projects.permissions import IsProjectMember , CanEditProject
 from workspaces.models import Points , Workspace
 from users.models import User
 
-from tools.roles_check import can_edit_project , is_creator ,is_project_owner , is_task_project_owner
+from tools.roles_check import can_edit_project , is_creator ,is_project_owner , is_task_project_owner , can_edit_task
 from tools.responses import method_not_allowed, exception_response, required_response
 from tools.dependencie_functions import can_end, can_start
 from tools.points import calculate_task_points
@@ -407,14 +407,109 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
     @extend_schema(exclude=True)
-    def update(self, request, *args, **kwargs):
-        return method_not_allowed()
-        return super().update(request, *args, **kwargs)
+    def update(self, request, pk, *args, **kwargs):
+        return super().update(request, pk, *args, **kwargs)
     
-    @extend_schema(exclude=True)
-    def partial_update(self, request, *args, **kwargs):
-        return method_not_allowed()
-        return super().partial_update(request, *args, **kwargs)
+    @extend_schema(
+        summary="Partial Update Task",
+        operation_id="partial_update_task",
+        description="Owner can partial update any task and can_edit can partial update the task he/she created",
+        tags=["Tasks"],
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Task 1'},
+                    'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
+                    'start_date': {'type': 'Date', 'example': '2025-6-6'},
+                    'due_date': {'type': 'Date', 'example': '2025-9-6'},
+                    'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'reminder': {'type': 'Date', 'example': '2025-9-6'},
+                    'assignees': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'integer',
+                            'example': 1
+                        },
+                        'description': 'array of assignee ids'
+                    },
+                    'image': {'type': 'string' , 'format': 'binary'},
+                    'attachments': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'string',
+                            'format': 'binary'
+                        },
+                        'description': 'array of attachment files'
+                    }
+                }
+            },
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'title': {'type': 'string', 'example': 'Task 1'},
+                    'description': {'type': 'string', 'example': 'ABU Alish AMAK'},
+                    'start_date': {'type': 'Date', 'example': '2025-6-6'},
+                    'due_date': {'type': 'Date', 'example': '2025-9-6'},
+                    'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
+                    'reminder': {'type': 'Date', 'example': '2025-9-6'},
+                    'assignees': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'integer',
+                            'example': 1
+                        },
+                        'description': 'array of assignee ids'
+                    }
+                }
+            }            
+        }
+    )
+    def partial_update(self, request, pk, *args, **kwargs):
+        # owner or can_edit+he-created-the-task
+        task = self.get_object()
+        is_owner = is_task_project_owner(user_id=request.user,task_id=pk)
+        is_can_edit = can_edit_task(user_id=request.user,task_id=pk)
+        if not is_owner:
+            if not is_can_edit:
+                return Response(
+                    {'detail': 'the user specified is not the owner of the workspace and can\'t edit the task'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            # not owner but can edit
+            if not (task.creator == request.user):
+                # can edit but he is not whom created the task
+                return Response(
+                    {'detail': 'the user specified can-edit in the project but not this task because he is not whom created the task'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            # can edit + created the task
+            
+
+        # the owner
+
+        # task must be pending
+        if not task.is_pending():
+            return Response(
+                {'detail': 'this task can\'t be edited because it is not pending any more'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # popping field that can\'t be updated:
+        if 'locked' in request.data:
+            request.data.pop('locked')
+        if 'status' in request.data:
+            request.data.pop('status')
+        if 'workspace' in request.data:
+            request.data.pop('workspace')
+        if 'project' in request.data:
+            request.data.pop('project')
+        if 'complete_date' in request.data:
+            request.data.pop('complete_date')
+        if 'creator' in request.data:
+            request.data.pop('creator')
+
+        return super().partial_update(request, pk, *args, **kwargs)
     
     @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs):
