@@ -151,7 +151,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   ///////login
   Future<void> login(String email, String password, BuildContext context) async {
-    await _notificationhandel.initNotification();
+    // await _notificationhandel.initNotification();
     isloading = true;
     emit(LoginLoadingState());
 

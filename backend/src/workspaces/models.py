@@ -1,7 +1,13 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
+from django.core.signing import TimestampSigner , SignatureExpired , BadSignature
+
 
 import uuid
+
+from .utils.crypto import Crypto
+
 
 from tools.models import TimeStampedModel #auto insert the created_at & updated_at fields
 from users.models import User
@@ -137,3 +143,61 @@ class Invite(TimeStampedModel):
         if self.status == 'pending':
             return True
         return False
+
+
+def workspace_invitation_expiring_date_time():
+    return timezone.now() + timezone.timedelta(hours=24)
+class Workspace_Invitation(TimeStampedModel):
+    class Meta:
+        db_table = 'workspace_invitations'
+    
+    workspace = models.ForeignKey(Workspace , on_delete=models.CASCADE , related_name='invitation_links')
+    token = models.CharField(max_length=255 , unique=True , editable=False)
+    link = models.CharField(max_length=255 , unique=True)
+    expires_at = models.DateTimeField(editable=False)
+    valid = models.BooleanField(default=True)
+
+    def save(self , *args , **kwargs ):
+        print("///////////////////////////////////////////////////////////////////////////////////")
+        if not self.id:
+            if Workspace_Invitation.objects.filter(
+                workspace = self.workspace,
+                valid = True
+            ).exists():
+                raise Exception('This Workspace already have an invitation link')
+            
+            self.token = self.create_Invitation_token()
+
+            crypto = Crypto()
+            encrypted_token = crypto.encrypt(str(self.token))
+            self.link = f'{settings.BASE_URL}/invite-link/{encrypted_token}/join-us'
+            # print(f'{self.link}////////////////////////////////////////////////////////////////////////')
+            self.expires_at = workspace_invitation_expiring_date_time()
+        return super().save(*args , **kwargs)
+    
+    def create_Invitation_token(self):
+        workspace = Workspace.objects.filter(id = self.workspace.id).first()
+        signer = TimestampSigner()
+        return signer.sign(str(workspace.code))
+    
+    def did_expired(self):
+        return (self.expires_at < timezone.now())
+    
+    # def is_invitation_valid(self):
+    #     try:
+    #         if self.expires_at < timezone.now():
+    #             return False
+    #         signer = TimestampSigner()
+            
+    #         try:
+    #             original = signer.unsign(self.token , max_age=(60*60*24))
+    #             return True
+    #         except SignatureExpired:
+    #             return False
+    #         except BadSignature:
+    #             return False
+    #     except Exception as e:
+    #         return e
+        
+        
+

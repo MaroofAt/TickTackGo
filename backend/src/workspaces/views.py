@@ -1,5 +1,7 @@
 from django.db.models import Max
 from django.db import transaction
+from django.core.signing import TimestampSigner , SignatureExpired , BadSignature
+
 
 from rest_framework import viewsets , status
 from rest_framework.response import Response
@@ -17,10 +19,11 @@ from tools.roles_check import is_workspace_owner , is_workspace_member
 from projects.models import Project_Membership , Project
 from tasks.models import Task, Assignee
 
-from .models import Workspace , Workspace_Membership , Invite , Points
-from .serializers import WorkspaceSerializer , InviteSerializer , PointsSerializer
+from .models import Workspace , Workspace_Membership , Invite , Points , Workspace_Invitation
+from .serializers import WorkspaceSerializer , InviteSerializer , PointsSerializer , InvitationSerializer
 from django.utils import timezone
 from .permissions import IsWorkspaceMember, IsWorkspaceOwner
+from .utils.crypto import Crypto
 from users.models import User
 
 # Create your views here.
@@ -452,3 +455,157 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             )
         except Exception as e:
             return exception_response(e)
+        
+
+        
+    ## Invitation Link #########################
+    
+
+    def is_invitation_valid(self , expires_at , token):
+        try:
+            if expires_at < timezone.now():
+                return False
+            signer = TimestampSigner()
+            
+            try:
+                original = signer.unsign(token , max_age=(60*60*24))
+                return True
+            except SignatureExpired:
+                return False
+            except BadSignature:
+                return False
+        except Exception as e:
+            return e    
+
+
+    def extract_token(self , link):
+        # Split by 'invite-link/' and then by '/join-us'
+        parts = link.split('invite-link/')
+        if len(parts) > 1:
+            token_part = parts[1].split('/join-us')[0]
+            return token_part
+        return None
+
+
+    @extend_schema(
+        summary="Create Invitation Link",
+        operation_id="create_invitation_link",
+        description="Create invitation link and seend it to any user to join the workspace",
+        tags=["Workspace/Invitation_Link"],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'workspace':{'type':'integer' , 'example':1}
+                }
+            }
+        }
+    )
+    @action(detail=False , methods=['post'] , serializer_class=InvitationSerializer)
+    def create_invitation_link(self , request):
+        
+        workspace = Workspace.objects.filter(id = request.data.get('workspace'))
+        if not workspace.exists():
+            return Response({"message":"Workspace doesn't exist :( "} , status.HTTP_404_NOT_FOUND)
+        if not is_workspace_owner(request.user.id , request.data.get('workspace')):
+            return Response({"message":"You aren't the Owner of the workspace :( "} , status.HTTP_400_BAD_REQUEST)
+
+        workspace = workspace.get()
+
+        old_invitation_link = Workspace_Invitation.objects.filter(workspace=request.data.get('workspace') , valid = True)
+        if old_invitation_link.exists():
+            old_invitation_link = old_invitation_link.get()
+            if self.is_invitation_valid(old_invitation_link.expires_at , old_invitation_link.token):
+                return Response({"message":"there is already a valid invitation for this workspace!"} , status.HTTP_400_BAD_REQUEST)
+            else:
+                old_invitation_link.valid = False
+                old_invitation_link.save()
+
+        invitation = Workspace_Invitation.objects.create(workspace=workspace)
+        # invitation.save()
+        return Response({"link":invitation.link} , status.HTTP_201_CREATED)
+        
+    @extend_schema(
+        summary="Get Workspace Invitation Link",
+        operation_id="get_workspace_invitation_link",
+        description="show the invitation link to the owner to seend it to user",
+        tags=['Workspace/Invitation_Link'],
+        # request={
+        #     'application/json':{
+        #         'type': 'object',
+        #         'properties':{
+        #             'workspace':{'type':'integer' , 'example':1}
+        #         }
+        #     }
+        # }
+    )
+    @action(detail=True , methods=['get'] , serializer_class=InvitationSerializer)
+    def get_workspace_invitation_link(self , request , *args, **kwargs):
+
+        workspace_id = kwargs.get('pk')
+
+        workspace = Workspace.objects.filter(id = workspace_id)
+        if not workspace.exists():
+            return Response({"message":"Workspace doesn't exist :( "} , status.HTTP_404_NOT_FOUND)
+        if not is_workspace_owner(request.user.id , workspace_id):
+            return Response({"message":"You aren't the Owner of the workspace :( "} , status.HTTP_400_BAD_REQUEST)
+        
+        workspace = workspace.get()
+        
+        invitation = Workspace_Invitation.objects.filter(workspace=workspace_id , valid=True)
+        if not invitation.exists():
+            return Response({"message":"there is no invitation for this workspace or the old one has been expired!"} , status.HTTP_404_NOT_FOUND )
+        
+        invitation = invitation.get()
+
+        if not self.is_invitation_valid(invitation.expires_at , invitation.token):
+            invitation.valid = False
+            invitation.save() 
+            return Response({"message":"invitation has been expired!"} , status.HTTP_400_BAD_REQUEST)
+        
+
+        return Response({"link": invitation.link} , status.HTTP_200_OK)
+    
+
+    @extend_schema(
+        summary="Join Workspace By Invitation Link",
+        operation_id="join_workspace_by_invitation_link",
+        description="Join the user to worksapce by using the invitation link",
+        tags=['Workspace/Invitation_Link'],
+        request={
+            'application/json':{
+                'type': 'object',
+                'properties':{
+                    'link':{'type':'url' , 'example':'http://127.0.0.1:8000/invite-link/encrypted_token/join-us'}
+                }
+            }
+        }
+    )
+    @action(detail=False , methods=['post'] , serializer_class=InvitationSerializer)
+    def join_workspace_by_invitation_link(self , request):
+        link = request.data.get('link')
+
+        token = self.extract_token(link)
+        crypto = Crypto()
+        try:
+            token = crypto.decrypt(token)
+        except Exception as e:
+            return Response({"message": "Decryption failed"}, status.HTTP_400_BAD_REQUEST)
+        
+        invitation = Workspace_Invitation.objects.filter(token=token , valid = True)
+        if not invitation.exists():
+            return Response ({"message":"there is no invitation for this workspace!"} , status.HTTP_404_NOT_FOUND)
+        
+        invitation = invitation.get()
+
+        if not self.is_invitation_valid(invitation.expires_at , invitation.token):
+            invitation.valid = False
+            invitation.save()
+            return Response({"message":"invitation has been expired!"} , status.HTTP_400_BAD_REQUEST)
+        
+        Workspace_Membership.objects.create(
+            member = request.user,
+            workspace = invitation.workspace,
+            role = 'member'
+        )
+        return Response(status.HTTP_200_OK)
