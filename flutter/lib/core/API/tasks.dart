@@ -24,10 +24,11 @@ class TaskApi {
       required String token,
       required int? parentTask,
       required List<String> assignees,
+      required List files,
       File? image}) async {
     Map<String, String> headers;
 
-    Map<String, Object?> data = {
+    var data = FormData.fromMap({
       "title": title,
       "description": description,
       "start_date": startDate,
@@ -35,32 +36,20 @@ class TaskApi {
       "workspace": workspaceId,
       "project": projectId,
       "priority": priority,
-      "assignees": assignees,
+      "assignees_display": assignees,
+      'attachments_display': files,
+      'parent_task': parentTask == 0 ? null : parentTask,
+      'image': image == null
+          ? null
+          : await MultipartFile.fromFile(
+              image.path,
+              filename: '$title.jpg',
+            ),
+    });
+    headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
     };
-
-    if (parentTask != null && parentTask != 0) {
-      data.addAll({'parent_task': parentTask});
-    }
-
-    if (image == null) {
-      headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
-    } else {
-      headers = {
-        'Content-Type': 'multipart/form-data',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
-      data.addAll({
-        'image': await MultipartFile.fromFile(
-          image.path,
-          filename: '$title.jpg',
-        ),
-      });
-    }
 
     late CreateTaskModel createTaskModel;
 

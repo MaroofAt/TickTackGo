@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
@@ -7,6 +8,9 @@ import 'package:pr1/core/constance/task_constance.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_app_bar.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_build_methods.dart';
+import 'package:pr1/presentation/widgets/buttons.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
+import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class CreateTaskPage extends StatefulWidget {
@@ -78,14 +82,36 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                 buildParentTask(context),
                               ],
                             ),
-                            buildPriorityWrap(
-                              context,
-                              'Priority',
-                              priorities,
-                              BlocProvider.of<TaskCubit>(context)
-                                  .selectedPriority,
-                              BlocProvider.of<TaskCubit>(context)
-                                  .changeSelectedPriority,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    MyButtons.primaryButton(
+                                      () {
+                                        BlocProvider.of<TaskCubit>(context)
+                                            .uploadAttachments();
+                                      },
+                                      Theme.of(context).secondaryHeaderColor,
+                                      child: MyText.text1('Upload file'),
+                                    ),
+                                    BlocProvider.of<TaskCubit>(context)
+                                                .result ==
+                                            null
+                                        ? Container()
+                                        : buildUploadedFiles(context),
+                                  ],
+                                ),
+                                buildPriorityWrap(
+                                  context,
+                                  'Priority',
+                                  priorities,
+                                  BlocProvider.of<TaskCubit>(context)
+                                      .selectedPriority,
+                                  BlocProvider.of<TaskCubit>(context)
+                                      .changeSelectedPriority,
+                                ),
+                              ],
                             ),
                             // buildPriorityWrap(
                             //   context,
@@ -127,8 +153,13 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             ),
             Positioned(
               bottom: 0,
-              child: buildBottomContainer(context, _titleController,
-                  _descriptionController, widget.tasksTitles, widget.workspaceId, widget.projectId),
+              child: buildBottomContainer(
+                  context,
+                  _titleController,
+                  _descriptionController,
+                  widget.tasksTitles,
+                  widget.workspaceId,
+                  widget.projectId),
             ),
           ],
         ),

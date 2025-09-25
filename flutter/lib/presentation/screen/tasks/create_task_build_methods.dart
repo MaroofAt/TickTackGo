@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -88,12 +89,11 @@ Column buildPriorityWrap(BuildContext context, String label, List<String> list,
     children: [
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        width: width(context),
+        // width: width(context),
         child: MyText.text1('$label :',
             textColor: white, fontSize: 18, textAlign: TextAlign.start),
       ),
-      Wrap(
-        spacing: 10,
+      Column(
         children: list.map(
           (item) {
             return MyGestureDetector.gestureDetector(
@@ -319,13 +319,15 @@ Container buildBottomContainer(
                 child: MyButtons.primaryButton(
                   () {
                     BlocProvider.of<TaskCubit>(context).createTask(
-                        titleController.text,
-                        descriptionController.text,
-                        workspaceId,
-                        projectId,
-                        BlocProvider.of<TaskCubit>(context).assignees,
-                        taskTitles[BlocProvider.of<TaskCubit>(context)
-                            .selectedParent]);
+                      titleController.text,
+                      descriptionController.text,
+                      workspaceId,
+                      projectId,
+                      BlocProvider.of<TaskCubit>(context).assignees,
+                      taskTitles[BlocProvider.of<TaskCubit>(context)
+                              .selectedParent] ??
+                          0,
+                    );
                   },
                   Theme.of(context).primaryColor,
                   child: Center(
@@ -369,5 +371,46 @@ Row buildLockedSwitch(BuildContext context) {
         },
       ),
     ],
+  );
+}
+
+SizedBox buildUploadedFiles(BuildContext context) {
+  return SizedBox(
+    width: width(context) * 0.42,
+    height: width(context) * 0.4,
+    child: ListView.builder(
+      shrinkWrap: true,
+      itemCount: BlocProvider.of<TaskCubit>(context).result!.files.length,
+      itemBuilder: (context, index) {
+        PlatformFile file =
+            BlocProvider.of<TaskCubit>(context).result!.files[index];
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 5),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: ampleOrange,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              SizedBox(
+                width: width(context) * 0.3,
+                child: MyText.text1(file.name, overflow: TextOverflow.ellipsis),
+              ),
+              MyGestureDetector.gestureDetector(
+                onTap: () {
+                  BlocProvider.of<TaskCubit>(context)
+                      .removeFromAttachments(index);
+                },
+                child: MyIcons.icon(
+                  Icons.remove_circle_outline,
+                  color: red,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
   );
 }
