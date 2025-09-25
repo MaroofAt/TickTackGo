@@ -6,7 +6,9 @@ from rest_framework import serializers
 
 
 from .models import Task, Assignee, Comment ,  Inbox_Tasks, Task_Dependencies , Attachment
+
 from tools.dependencie_functions import creates_problems, can_start
+from tools.serializers import FlexibleFileListField
 
 from users.models import User
 
@@ -43,8 +45,8 @@ class TaskSerializer(serializers.ModelSerializer):
                 'updated_at': {'read_only':True}
             }
     attachments_display = AttachmentSerializer(read_only=True , many=True , source='attachments')
-    attachments = serializers.ListField(
-        child = serializers.FileField(max_length=settings.MAX_FILE_SIZE, allow_empty_file=False, use_url=False),
+    attachments = FlexibleFileListField(
+        child = serializers.FileField(max_length=settings.MAX_FILE_SIZE, allow_empty_file=False, use_url=False, required=False),
         required=False,
         write_only=True
     )
