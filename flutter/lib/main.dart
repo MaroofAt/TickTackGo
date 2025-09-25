@@ -8,21 +8,15 @@ import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/API/comments.dart';
 import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/routes.dart';
-import 'package:pr1/presentation/screen/gannt_chart/gannt_chart.dart';
-import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
 import 'business_logic/replay/replay_cubit.dart';
-import 'core/API/handel_notification.dart';
-import 'core/API/notification.dart';
-import 'core/API/notivications_api.dart';
 import 'core/variables/global_var.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -41,11 +35,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => CommentCubit(Commentapi())),
-BlocProvider(create: (context)=> IssuesCubit(IssueApi())),
+        BlocProvider(create: (context) => IssuesCubit(IssueApi())),
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => SplashCubit()),
         BlocProvider(create: (_) => ReplyCubit(IssueApi())),
-
       ],
       child: MaterialApp(
         navigatorKey: navigatorKey,
