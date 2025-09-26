@@ -15,6 +15,7 @@ class TaskApi {
       required String description,
       required String startDate,
       required String dueDate,
+      required String reminder,
       required int workspaceId,
       required int projectId,
       required String status,
@@ -39,7 +40,7 @@ class TaskApi {
       'parent_task': parentTask == 0 ? null : parentTask,
       'status': status,
       'locked': locked,
-      'reminder': null,
+      'reminder': reminder,
       'assignees': assignees
     });
 
