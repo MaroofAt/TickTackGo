@@ -82,15 +82,3 @@ class TaskCompletingFailedState extends TaskState {
 }
 
 class TaskAssigningState extends TaskState {}
-
-class TaskAssigningSucceededState extends TaskState {
-  AssignTaskModel assignTaskModel;
-
-  TaskAssigningSucceededState(this.assignTaskModel);
-}
-
-class TaskAssigningFailedState extends TaskState {
-  String errorMessage;
-
-  TaskAssigningFailedState(this.errorMessage);
-}

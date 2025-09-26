@@ -10,7 +10,6 @@ import 'package:pr1/core/API/tasks.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/core/variables/global_var.dart';
-import 'package:pr1/data/models/tasks/assign_task_model.dart';
 import 'package:pr1/data/models/tasks/cancel_task_model.dart';
 import 'package:pr1/data/models/tasks/complete_task_model.dart';
 import 'package:pr1/data/models/tasks/create_task_model.dart';
@@ -53,11 +52,12 @@ class TaskCubit extends Cubit<TaskState> {
   TimeOfDay endTime = const TimeOfDay(hour: 14, minute: 0);
   bool locked = false;
   String? selectedParent;
-  List<String> assignees = [];
+  List<int> assignees = [];
   int? parentTask;
   String selectedPriority = 'medium';
   String selectedStatus = 'pending';
   Map<String, int> tasksTitles = {};
+  Map<String, int> assigneesMap = {};
 
   File? image;
 
@@ -126,13 +126,13 @@ class TaskCubit extends Cubit<TaskState> {
     emit(TaskInitial());
   }
 
-  void fillAssigneesList(bool? checked, String item) {
+  void fillAssigneesList(bool? checked, int item) {
     checked! ? assignees.add(item) : assignees.remove(item);
     emit(TaskInitial());
   }
 
   Future<void> createTask(String title, String description, int workspaceId,
-      int projectId, List<String> assignees, int parentTask) async {
+      int projectId, List<int> assignees, int parentTask) async {
     if (title.isEmpty || description.isEmpty || assignees.isEmpty) return;
     // emit(TaskCreatingState());
     List apiFiles = [];
@@ -225,18 +225,6 @@ class TaskCubit extends Cubit<TaskState> {
       emit(TaskCompletingSucceededState(completeTaskModel));
     } else {
       emit(TaskCompletingFailedState(completeTaskModel.errorMessage));
-    }
-  }
-
-  Future<void> assignTask(int taskId) async {
-    emit(TaskAssigningState());
-
-    AssignTaskModel assignTaskModel = await TaskApi.assignTask(taskId, token);
-
-    if (assignTaskModel.errorMessage.isEmpty) {
-      emit(TaskAssigningSucceededState(assignTaskModel));
-    } else {
-      emit(TaskAssigningFailedState(assignTaskModel.errorMessage));
     }
   }
 

@@ -48,6 +48,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
         if (state is ProjectRetrievingSucceededState) {
           BlocProvider.of<ProjectsCubit>(context)
               .setAssignees(state.retrieveProjectModel);
+          print(state.retrieveProjectModel.id);
           BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
           List<int> editors = [];
           for (var element in state.retrieveProjectModel.members) {

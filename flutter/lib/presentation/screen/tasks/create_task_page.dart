@@ -17,7 +17,7 @@ class CreateTaskPage extends StatefulWidget {
   final int workspaceId;
   final int projectId;
   final Map<String, int> tasksTitles;
-  final List<String> assignees;
+  final Map<String, int> assignees;
 
   const CreateTaskPage(
       this.projectId, this.workspaceId, this.tasksTitles, this.assignees,
@@ -216,15 +216,15 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           bloc: taskCubit,
           builder: (context, state) {
             return Column(
-              children: widget.assignees.map((item) {
+              children: widget.assignees.keys.map((item) {
                 return CheckboxListTile(
-                  value: taskCubit.assignees.contains(item),
+                  value: taskCubit.assignees.contains(widget.assignees[item]),
                   title: SizedBox(
                       width: width(context) * 0.1,
                       height: width(context) * 0.08,
                       child: MyText.text1(item, textColor: white)),
                   onChanged: (bool? checked) {
-                    taskCubit.fillAssigneesList(checked, item);
+                    taskCubit.fillAssigneesList(checked, widget.assignees[item]!);
                     setState(() {});
                   },
                 );
