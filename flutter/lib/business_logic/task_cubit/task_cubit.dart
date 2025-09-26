@@ -148,7 +148,7 @@ class TaskCubit extends Cubit<TaskState> {
   Future<void> createTask(String title, String description, int workspaceId,
       int projectId, List<int> assignees, int parentTask) async {
     if (title.isEmpty || description.isEmpty || assignees.isEmpty) return;
-    // emit(TaskCreatingState());
+    emit(TaskCreatingState());
     List apiFiles = [];
 
     if (result != null) {
@@ -166,12 +166,14 @@ class TaskCubit extends Cubit<TaskState> {
     String startDate =
         DateFormat('yyyy-M-d').format(selectedStartDate).toString();
     String dueDate = DateFormat('yyyy-M-d').format(selectedEndDate).toString();
+    String reminder = DateFormat('yyyy-M-d').format(selectedReminderDate).toString();
 
     CreateTaskModel createTaskModel = await TaskApi.createTask(
         title: title,
         description: description,
         startDate: startDate,
         dueDate: dueDate,
+        reminder: reminder,
         workspaceId: workspaceId,
         projectId: projectId,
         status: selectedStatus,

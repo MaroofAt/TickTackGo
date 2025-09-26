@@ -33,6 +33,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
   @override
   void initState() {
     super.initState();
+    print(widget.task.reminder);
     context.read<CommentCubit>().fetchComments(widget.task.id);
   }
 
