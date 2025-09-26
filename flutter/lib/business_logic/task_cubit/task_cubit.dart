@@ -48,6 +48,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   DateTime selectedStartDate = DateTime.now();
   DateTime selectedEndDate = DateTime.now();
+  DateTime selectedReminderDate = DateTime.now();
   TimeOfDay startTime = const TimeOfDay(hour: 16, minute: 0);
   TimeOfDay endTime = const TimeOfDay(hour: 14, minute: 0);
   bool locked = false;
@@ -80,11 +81,24 @@ class TaskCubit extends Cubit<TaskState> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedEndDate,
-      firstDate: DateTime.now(),
+      firstDate: selectedStartDate,
       lastDate: DateTime(2025, 12, 31), // Changed to end of 2025
     );
     if (picked != null && picked != selectedEndDate) {
       selectedEndDate = picked;
+      emit(TaskInitial());
+    }
+  }
+
+  Future<void> selectReminderDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedReminderDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025, 12, 31), // Changed to end of 2025
+    );
+    if (picked != null && picked != selectedReminderDate) {
+      selectedReminderDate = picked;
       emit(TaskInitial());
     }
   }
