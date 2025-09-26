@@ -73,6 +73,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                       BlocProvider.of<TaskCubit>(context)
                                           .selectedEndDate,
                                 ),
+                                const SizedBox(height: 10),
+                                buildStartEndDate(
+                                  context,
+                                  label: 'reminder',
+                                  onTap: BlocProvider.of<TaskCubit>(context)
+                                      .selectReminderDate,
+                                  selectedDate:
+                                  BlocProvider.of<TaskCubit>(context)
+                                      .selectedReminderDate,
+                                ),
                               ],
                             ),
                             Row(
@@ -82,45 +92,34 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                 buildParentTask(context),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            buildPriorityWrap(
+                              context,
+                              'Priority',
+                              priorities,
+                              BlocProvider.of<TaskCubit>(context)
+                                  .selectedPriority,
+                              BlocProvider.of<TaskCubit>(context)
+                                  .changeSelectedPriority,
+                            ),
+                            const SizedBox(height: 10),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Column(
-                                  children: [
-                                    MyButtons.primaryButton(
+                                MyButtons.primaryButton(
                                       () {
-                                        BlocProvider.of<TaskCubit>(context)
-                                            .uploadAttachments();
-                                      },
-                                      Theme.of(context).secondaryHeaderColor,
-                                      child: MyText.text1('Upload file'),
-                                    ),
                                     BlocProvider.of<TaskCubit>(context)
-                                                .result ==
-                                            null
-                                        ? Container()
-                                        : buildUploadedFiles(context),
-                                  ],
+                                        .uploadAttachments();
+                                  },
+                                  Theme.of(context).secondaryHeaderColor,
+                                  child: MyText.text1('Upload file'),
                                 ),
-                                buildPriorityWrap(
-                                  context,
-                                  'Priority',
-                                  priorities,
-                                  BlocProvider.of<TaskCubit>(context)
-                                      .selectedPriority,
-                                  BlocProvider.of<TaskCubit>(context)
-                                      .changeSelectedPriority,
-                                ),
+                                BlocProvider.of<TaskCubit>(context)
+                                    .result ==
+                                    null
+                                    ? Container()
+                                    : buildUploadedFiles(context),
                               ],
                             ),
-                            // buildPriorityWrap(
-                            //   context,
-                            //   'status',
-                            //   statuses,
-                            //   BlocProvider.of<TaskCubit>(context).selectedStatus,
-                            //   BlocProvider.of<TaskCubit>(context)
-                            //       .changeSelectedStatus,
-                            // ),
                           ],
                         );
                       },
@@ -146,7 +145,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     // ),
                     SizedBox(
                       height: height(context) * 0.12,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -224,7 +223,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       height: width(context) * 0.08,
                       child: MyText.text1(item, textColor: white)),
                   onChanged: (bool? checked) {
-                    taskCubit.fillAssigneesList(checked, widget.assignees[item]!);
+                    taskCubit.fillAssigneesList(
+                        checked, widget.assignees[item]!);
                     setState(() {});
                   },
                 );
