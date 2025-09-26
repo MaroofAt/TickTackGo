@@ -83,7 +83,7 @@ class Data {
         image: json["image"],
         outDated: json["out_dated"],
         parentTask: json["parent_task"],
-        assignees: List<dynamic>.from(json["assignees"].map((x) => x)),
+        assignees: List<dynamic>.from(json["assignees_display"].map((x) => x)),
         status: json["status"],
         priority: json["priority"],
         locked: json["locked"],
@@ -91,28 +91,6 @@ class Data {
         statusMessage: json["status_message"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-        "description": description,
-        "start_date":
-            "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
-        "due_date":
-            "${dueDate.year.toString().padLeft(4, '0')}-${dueDate.month.toString().padLeft(2, '0')}-${dueDate.day.toString().padLeft(2, '0')}",
-        "complete_date": completeDate,
-        "creator": creator,
-        "workspace": workspace,
-        "project": project,
-        "image": image,
-        "out_dated": outDated,
-        "parent_task": parentTask,
-        "assignees": List<dynamic>.from(assignees.map((x) => x)),
-        "status": status,
-        "priority": priority,
-        "locked": locked,
-        "reminder": reminder,
-        "status_message": statusMessage,
-      };
 }
 
 class Result {

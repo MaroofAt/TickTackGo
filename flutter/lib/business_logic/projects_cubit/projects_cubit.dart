@@ -16,7 +16,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   bool projectsAreOpened = false;
   int? selectedWorkspaceId;
 
-  List<String> assignees = [];
+  Map<String, int> assignees = {};
 
   Future<void> fetchProjects(int workspaceId) async {
     emit(ProjectsFetchingState());
@@ -127,7 +127,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   setAssignees(RetrieveProjectModel retrieveProjectModel) {
     for (var element in retrieveProjectModel.members) {
       assignees.clear();
-      assignees.add(element.member.username);
+      assignees.addAll({element.member.username: element.member.id});
     }
   }
 }
