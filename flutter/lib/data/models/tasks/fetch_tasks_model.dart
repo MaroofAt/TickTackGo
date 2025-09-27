@@ -18,6 +18,7 @@ class FetchTasksModel {
   dynamic reminder;
   List<SubTask> subTasks;
   String statusMessage;
+  List<AttachmentsDisplayModel> attachments;
   String errorMessage;
 
   FetchTasksModel({
@@ -40,6 +41,7 @@ class FetchTasksModel {
     required this.reminder,
     required this.subTasks,
     required this.statusMessage,
+    required this.attachments,
     required this.errorMessage,
   });
 
@@ -57,7 +59,7 @@ class FetchTasksModel {
         image: json["image"],
         outDated: json["out_dated"],
         parentTask: json["parent_task"],
-        assignees: List<String>.from(json["assignees"].map((x) => x)),
+        assignees: List<String>.from(json["assignees_display"].map((x) => x)),
         status: json["status"],
         priority: json["priority"],
         locked: json["locked"],
@@ -65,6 +67,9 @@ class FetchTasksModel {
         subTasks: List<SubTask>.from(
             json["sub_tasks"].map((x) => SubTask.fromJson(x))),
         statusMessage: json["status_message"],
+        attachments: List<AttachmentsDisplayModel>.from(
+            json["attachments_display"]
+                .map((x) => AttachmentsDisplayModel.fromJson(x))),
         errorMessage: '',
       );
 
@@ -88,32 +93,33 @@ class FetchTasksModel {
         reminder: 0,
         subTasks: [],
         statusMessage: '',
+        attachments: [],
         errorMessage: json["detail"] ?? json["message"],
       );
 
   factory FetchTasksModel.error(String errorMessage) => FetchTasksModel(
-    id: 0,
-    title: '',
-    description: '',
-    startDate: null,
-    dueDate: null,
-    completeDate: null,
-    creator: 0,
-    workspace: 0,
-    project: 0,
-    image: '',
-    outDated: false,
-    parentTask: 0,
-    assignees: [],
-    status: '',
-    priority: '',
-    locked: false,
-    reminder: 0,
-    subTasks: [],
-    statusMessage: '',
-    errorMessage: errorMessage,
-  );
-
+        id: 0,
+        title: '',
+        description: '',
+        startDate: null,
+        dueDate: null,
+        completeDate: null,
+        creator: 0,
+        workspace: 0,
+        project: 0,
+        image: '',
+        outDated: false,
+        parentTask: 0,
+        assignees: [],
+        status: '',
+        priority: '',
+        locked: false,
+        reminder: 0,
+        subTasks: [],
+        statusMessage: '',
+        attachments: [],
+        errorMessage: errorMessage,
+      );
 }
 
 class SubTask {
@@ -175,5 +181,34 @@ class SubTask {
         "reminder": reminder,
         "out_dated": outDated,
         "image": image,
+      };
+}
+
+class AttachmentsDisplayModel {
+  int id;
+  String file;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  AttachmentsDisplayModel({
+    required this.id,
+    required this.file,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory AttachmentsDisplayModel.fromJson(Map<String, dynamic> json) =>
+      AttachmentsDisplayModel(
+        id: json["id"],
+        file: json["file"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "file": file,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
       };
 }

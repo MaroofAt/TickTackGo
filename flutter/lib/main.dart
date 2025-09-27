@@ -10,6 +10,7 @@ import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'business_logic/replay/replay_cubit.dart';
 import 'core/variables/global_var.dart';
 import 'firebase_options.dart';

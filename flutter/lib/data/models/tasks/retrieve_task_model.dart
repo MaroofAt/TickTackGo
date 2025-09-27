@@ -16,6 +16,7 @@ class RetrieveTaskModel {
   String priority;
   bool locked;
   DateTime? reminder;
+  List<AttachmentsDisplayModel> attachments;
   String errorMessage;
 
   RetrieveTaskModel({
@@ -36,6 +37,7 @@ class RetrieveTaskModel {
     required this.priority,
     required this.locked,
     required this.reminder,
+    required this.attachments,
     required this.errorMessage,
   });
 
@@ -60,6 +62,7 @@ class RetrieveTaskModel {
         priority: json["priority"],
         locked: json["locked"],
         reminder: json["reminder"],
+        attachments: List<AttachmentsDisplayModel>.from(json["assignees_display"].map((x) => x)),
         errorMessage: '',
       );
 
@@ -82,6 +85,7 @@ class RetrieveTaskModel {
         priority: '',
         locked: false,
         reminder: null,
+        attachments: [],
         errorMessage: json["detail"] ?? json["message"],
       );
 
@@ -103,6 +107,35 @@ class RetrieveTaskModel {
         priority: '',
         locked: false,
         reminder: null,
+        attachments: [],
         errorMessage: errorMessage,
       );
 }
+class AttachmentsDisplayModel {
+    int id;
+    String file;
+    DateTime createdAt;
+    DateTime updatedAt;
+
+    AttachmentsDisplayModel({
+        required this.id,
+        required this.file,
+        required this.createdAt,
+        required this.updatedAt,
+    });
+
+    factory AttachmentsDisplayModel.fromJson(Map<String, dynamic> json) => AttachmentsDisplayModel(
+        id: json["id"],
+        file: json["file"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "file": file,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+    };
+}
+
