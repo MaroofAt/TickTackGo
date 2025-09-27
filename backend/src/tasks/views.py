@@ -87,9 +87,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
                     'parent_task': {'type':'integer' , 'example':1 or None},
-                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
-                    'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '2025-9-6'},
                     'assignees': {
                         'type': 'array',
@@ -121,9 +119,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'workspace': {'type':'integer' , 'example':1},
                     'project': {'type':'integer' , 'example':1},
                     'parent_task': {'type':'integer' ,'nullable':True, 'example':1 or None },
-                    'status': {'type':'string' , 'example':'pending' or 'in_progress' or 'completed'},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
-                    'locked': {'type':'boolean' , 'example':False},
                     'reminder': {'type': 'Date', 'example': '2025-9-6'},
                     'assignees': {
                         'type': 'array',
@@ -325,10 +321,11 @@ class TaskViewSet(viewsets.ModelViewSet):
 
             # serializer = self.get_serializer(queryset, many=True)
             # return Response(serializer.data)
-            print(request.query_params.get('project'))
-            queryset = Task.objects.filter(parent_task__isnull=True , project=request.query_params.get('project'))
-            serializer = ShowTaskSerializer(queryset, many=True)
-            return Response(serializer.data , status.HTTP_200_OK)
+            # print(request.query_params.get('project'))
+            # queryset = Task.objects.filter(parent_task__isnull=True , project=request.query_params.get('project'))
+            # serializer = ShowTaskSerializer(queryset, many=True)
+
+            return super().list(request, *args, **kwargs)
         except Exception as e:
             return exception_response(e)
     
