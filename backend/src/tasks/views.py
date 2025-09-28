@@ -88,7 +88,9 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'project': {'type':'integer' , 'example':1},
                     'parent_task': {'type':'integer' , 'example':1 or None},
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
-                    'reminder': {'type': 'Date', 'example': '2025-9-6'},
+                    'locked': {'type':'boolean' , 'example':False},
+                    'reminder': {'type': 'Timestamp', 'example': '2025-9-6 12:40:00'},
+
                     'assignees': {
                         'type': 'array',
                         'items': {
@@ -120,7 +122,10 @@ class TaskViewSet(viewsets.ModelViewSet):
                     'project': {'type':'integer' , 'example':1},
                     'parent_task': {'type':'integer' ,'nullable':True, 'example':1 or None },
                     'priority': {'type':'string' , 'example':'high' or 'medium' or 'low'},
-                    'reminder': {'type': 'Date', 'example': '2025-9-6'},
+
+                    'locked': {'type':'boolean' , 'example':False},
+                    'reminder': {'type': 'Timestamp', 'example': '2025-9-6 12:40:00'},
+                  
                     'assignees': {
                         'type': 'array',
                         'items': {
@@ -137,6 +142,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     )
     # @action(detail=True , methods=['post'] , serializer_class=TaskSerializer)
     def create(self, request, *args, **kwargs):
+        # print(f'/////////////////////////{request.data}////////////////////////////////')
         # return super().create(request, *args, **kwargs)
         # print('Aliiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
         if not is_project_owner(request.user.id , request.data.get('project')):
@@ -145,7 +151,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         if not can_edit_project(request.user.id , request.data.get('project')):
             return Response({"detail": "User is not the owner or editor in this project"} , status=status.HTTP_400_BAD_REQUEST)
 
-        
         if not request.data.get('start_date'):
             return required_response('start_date')
         if not request.data.get('due_date'):
@@ -157,10 +162,13 @@ class TaskViewSet(viewsets.ModelViewSet):
         if start_date_more_than_due_date:
             return Response({"detail": "start date is after the due date! that means the project will start after it finished already!"} , status=status.HTTP_400_BAD_REQUEST)
 
+
         print(request.data.get('parent_task'))
         if request.data.get('parent_task') not in [None, '', 0, '0']:
+
             parent_task = Task.objects.filter(pk = request.data.get('parent_task')).first()
-            if parent_task.parent_task is not None:
+            print("/////////////////////////////////////////////////////////////////////////////////////")
+            if parent_task.parent_task not in [None , '' , "" ]:
                 return Response({"error": "you can't create sup_task to a sup_task"} , status=status.HTTP_400_BAD_REQUEST)
         data = request.data.copy()
         # print(request.data.get(''))

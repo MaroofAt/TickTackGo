@@ -19,21 +19,21 @@ class IsTaskProjectOwner(BasePermission):
     message = 'The Authenticated User Is Not The Project/Workspace Owner'
 
     def has_permission(self, request, view):
-        task_id = fetch_task_id(request, view, "IsTaskProjectCanEdit", fetch_from_pk=True)
+        task_id = fetch_task_id(request, view, "IsTaskProjectOwner", fetch_from_pk=True)
         return is_task_project_owner(user_id=request.user,task_id=task_id)
     
 class IsTaskProjectMember(BasePermission):
     message = 'The Authenticated User Is Not A Project Member'
 
     def has_permission(self, request, view):
-        task_id = fetch_task_id(request, view, "IsTaskProjectCanEdit", fetch_from_pk=True)
+        task_id = fetch_task_id(request, view, "IsTaskProjectMember", fetch_from_pk=True)
         return is_task_project_member(user_id=request.user,task_id=task_id)
     
 class IsEditableTask(BasePermission):
     message = 'The Task Is Not Editable (Is Not Pending)'
 
     def has_permission(self, request, view):
-        task_id = fetch_task_id(request, view, "IsTaskProjectCanEdit", fetch_from_pk=True)
+        task_id = fetch_task_id(request, view, "IsEditableTask", fetch_from_pk=True)
         return is_task_pending(task_id)
     
 class TaskProjectNotArchived(BasePermission):
