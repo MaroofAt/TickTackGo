@@ -13,6 +13,7 @@ from users.models import User
 
 class TaskSerializer(serializers.ModelSerializer):
     # assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
+    reminder = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     assignees = serializers.PrimaryKeyRelatedField(
         many=True,
         write_only=True,
