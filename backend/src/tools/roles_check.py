@@ -49,7 +49,7 @@ def can_edit_task(user_id , task_id):
         return False
     project = project.first()
 
-    user = Project_Membership.objects.filter(user_id = user_id , project_id = project.id)
+    user = Project_Membership.objects.filter(member = user_id , project_id = project.id)
     if not user.exists():
         return False
     user = user.first()

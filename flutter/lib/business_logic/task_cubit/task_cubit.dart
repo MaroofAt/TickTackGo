@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +10,6 @@ import 'package:pr1/core/API/tasks.dart';
 import 'package:pr1/core/functions/image_picker.dart';
 import 'package:pr1/core/functions/permissions.dart';
 import 'package:pr1/core/variables/global_var.dart';
-import 'package:pr1/data/models/tasks/assign_task_model.dart';
 import 'package:pr1/data/models/tasks/cancel_task_model.dart';
 import 'package:pr1/data/models/tasks/complete_task_model.dart';
 import 'package:pr1/data/models/tasks/create_task_model.dart';
@@ -47,17 +48,21 @@ class TaskCubit extends Cubit<TaskState> {
 
   DateTime selectedStartDate = DateTime.now();
   DateTime selectedEndDate = DateTime.now();
+  DateTime selectedReminderDate = DateTime.now();
   TimeOfDay startTime = const TimeOfDay(hour: 16, minute: 0);
   TimeOfDay endTime = const TimeOfDay(hour: 14, minute: 0);
   bool locked = false;
   String? selectedParent;
-  List<String> assignees = [];
+  List<int> assignees = [];
   int? parentTask;
   String selectedPriority = 'medium';
   String selectedStatus = 'pending';
   Map<String, int> tasksTitles = {};
+  Map<String, int> assigneesMap = {};
 
   File? image;
+
+  FilePickerResult? result;
 
   Future<void> selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -76,11 +81,24 @@ class TaskCubit extends Cubit<TaskState> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedEndDate,
-      firstDate: DateTime.now(),
+      firstDate: selectedStartDate,
       lastDate: DateTime(2025, 12, 31), // Changed to end of 2025
     );
     if (picked != null && picked != selectedEndDate) {
       selectedEndDate = picked;
+      emit(TaskInitial());
+    }
+  }
+
+  Future<void> selectReminderDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedReminderDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025, 12, 31), // Changed to end of 2025
+    );
+    if (picked != null && picked != selectedReminderDate) {
+      selectedReminderDate = picked;
       emit(TaskInitial());
     }
   }
@@ -122,25 +140,40 @@ class TaskCubit extends Cubit<TaskState> {
     emit(TaskInitial());
   }
 
-  void fillAssigneesList(bool? checked, String item) {
+  void fillAssigneesList(bool? checked, int item) {
     checked! ? assignees.add(item) : assignees.remove(item);
     emit(TaskInitial());
   }
 
   Future<void> createTask(String title, String description, int workspaceId,
-      int projectId, List<String> assignees, int parentTask) async {
+      int projectId, List<int> assignees, int parentTask) async {
     if (title.isEmpty || description.isEmpty || assignees.isEmpty) return;
     emit(TaskCreatingState());
+    List apiFiles = [];
+
+    if (result != null) {
+      List<File> files = result!.paths.map((path) => File(path!)).toList();
+      for (var element in files) {
+        apiFiles.add(
+          await MultipartFile.fromFile(
+            element.path,
+            filename: element.path.split('/').last,
+          ),
+        );
+      }
+    }
 
     String startDate =
         DateFormat('yyyy-M-d').format(selectedStartDate).toString();
     String dueDate = DateFormat('yyyy-M-d').format(selectedEndDate).toString();
+    String reminder = DateFormat('yyyy-M-d').format(selectedReminderDate).toString();
 
     CreateTaskModel createTaskModel = await TaskApi.createTask(
         title: title,
         description: description,
         startDate: startDate,
         dueDate: dueDate,
+        reminder: reminder,
         workspaceId: workspaceId,
         projectId: projectId,
         status: selectedStatus,
@@ -149,7 +182,9 @@ class TaskCubit extends Cubit<TaskState> {
         parentTask: parentTask,
         assignees: assignees,
         image: image,
+        files: apiFiles,
         token: token);
+
 
     if (createTaskModel.errorMessage.isEmpty) {
       emit(TaskCreatingSucceededState(createTaskModel));
@@ -209,20 +244,23 @@ class TaskCubit extends Cubit<TaskState> {
     }
   }
 
-  Future<void> assignTask(int taskId) async {
-    emit(TaskAssigningState());
+  Future<void> uploadAttachments() async {
+    result = await FilePicker.platform.pickFiles(allowMultiple: true);
 
-    AssignTaskModel assignTaskModel = await TaskApi.assignTask(taskId, token);
-
-    if (assignTaskModel.errorMessage.isEmpty) {
-      emit(TaskAssigningSucceededState(assignTaskModel));
-    } else {
-      emit(TaskAssigningFailedState(assignTaskModel.errorMessage));
+    if (result != null) {
+      emit(TaskInitial());
     }
   }
 
-  TaskModel convertFetchedTaskToTaskModel(int projectId, {FetchTasksModel? fetchTaskModel,
-      SubTask? subTask, List<String>? assignees}) {
+  Future<void> removeFromAttachments(index) async {
+    result!.files.removeAt(index);
+    emit(TaskInitial());
+  }
+
+  TaskModel convertFetchedTaskToTaskModel(int projectId,
+      {FetchTasksModel? fetchTaskModel,
+      SubTask? subTask,
+      List<String>? assignees}) {
     late TaskModel taskModel;
     if (subTask != null) {
       taskModel = TaskModel(
@@ -269,18 +307,4 @@ class TaskCubit extends Cubit<TaskState> {
     }
     return taskModel;
   }
-/*
-  * int id;
-  String title;
-  String description;
-  DateTime startDate;
-  DateTime dueDate;
-  dynamic completeDate;
-  String status;
-  String priority;
-  bool locked;
-  dynamic reminder;
-  bool outDated;
-  String image;
-  */
 }

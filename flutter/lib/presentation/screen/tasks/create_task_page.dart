@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
@@ -7,13 +8,16 @@ import 'package:pr1/core/constance/task_constance.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_app_bar.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_build_methods.dart';
+import 'package:pr1/presentation/widgets/buttons.dart';
+import 'package:pr1/presentation/widgets/gesture_detector.dart';
+import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class CreateTaskPage extends StatefulWidget {
   final int workspaceId;
   final int projectId;
   final Map<String, int> tasksTitles;
-  final List<String> assignees;
+  final Map<String, int> assignees;
 
   const CreateTaskPage(
       this.projectId, this.workspaceId, this.tasksTitles, this.assignees,
@@ -69,6 +73,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                       BlocProvider.of<TaskCubit>(context)
                                           .selectedEndDate,
                                 ),
+                                const SizedBox(height: 10),
+                                buildStartEndDate(
+                                  context,
+                                  label: 'reminder',
+                                  onTap: BlocProvider.of<TaskCubit>(context)
+                                      .selectReminderDate,
+                                  selectedDate:
+                                  BlocProvider.of<TaskCubit>(context)
+                                      .selectedReminderDate,
+                                ),
                               ],
                             ),
                             Row(
@@ -87,14 +101,25 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                               BlocProvider.of<TaskCubit>(context)
                                   .changeSelectedPriority,
                             ),
-                            // buildPriorityWrap(
-                            //   context,
-                            //   'status',
-                            //   statuses,
-                            //   BlocProvider.of<TaskCubit>(context).selectedStatus,
-                            //   BlocProvider.of<TaskCubit>(context)
-                            //       .changeSelectedStatus,
-                            // ),
+                            const SizedBox(height: 10),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                MyButtons.primaryButton(
+                                      () {
+                                    BlocProvider.of<TaskCubit>(context)
+                                        .uploadAttachments();
+                                  },
+                                  Theme.of(context).secondaryHeaderColor,
+                                  child: MyText.text1('Upload file'),
+                                ),
+                                BlocProvider.of<TaskCubit>(context)
+                                    .result ==
+                                    null
+                                    ? Container()
+                                    : buildUploadedFiles(context),
+                              ],
+                            ),
                           ],
                         );
                       },
@@ -120,15 +145,20 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     // ),
                     SizedBox(
                       height: height(context) * 0.12,
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
             Positioned(
               bottom: 0,
-              child: buildBottomContainer(context, _titleController,
-                  _descriptionController, widget.tasksTitles, widget.workspaceId, widget.projectId),
+              child: buildBottomContainer(
+                  context,
+                  _titleController,
+                  _descriptionController,
+                  widget.tasksTitles,
+                  widget.workspaceId,
+                  widget.projectId),
             ),
           ],
         ),
@@ -185,15 +215,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           bloc: taskCubit,
           builder: (context, state) {
             return Column(
-              children: widget.assignees.map((item) {
+              children: widget.assignees.keys.map((item) {
                 return CheckboxListTile(
-                  value: taskCubit.assignees.contains(item),
+                  value: taskCubit.assignees.contains(widget.assignees[item]),
                   title: SizedBox(
                       width: width(context) * 0.1,
                       height: width(context) * 0.08,
                       child: MyText.text1(item, textColor: white)),
                   onChanged: (bool? checked) {
-                    taskCubit.fillAssigneesList(checked, item);
+                    taskCubit.fillAssigneesList(
+                        checked, widget.assignees[item]!);
                     setState(() {});
                   },
                 );

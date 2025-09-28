@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,7 @@ import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
+import 'package:pr1/presentation/widgets/animated_list_item.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/circle.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
@@ -85,15 +87,15 @@ Column buildStartEndDate(
 Column buildPriorityWrap(BuildContext context, String label, List<String> list,
     String selectedValue, Function(String text) onTap) {
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        width: width(context),
+        // width: width(context),
         child: MyText.text1('$label :',
             textColor: white, fontSize: 18, textAlign: TextAlign.start),
       ),
       Wrap(
-        spacing: 10,
         children: list.map(
           (item) {
             return MyGestureDetector.gestureDetector(
@@ -319,13 +321,15 @@ Container buildBottomContainer(
                 child: MyButtons.primaryButton(
                   () {
                     BlocProvider.of<TaskCubit>(context).createTask(
-                        titleController.text,
-                        descriptionController.text,
-                        workspaceId,
-                        projectId,
-                        BlocProvider.of<TaskCubit>(context).assignees,
-                        taskTitles[BlocProvider.of<TaskCubit>(context)
-                            .selectedParent]);
+                      titleController.text,
+                      descriptionController.text,
+                      workspaceId,
+                      projectId,
+                      BlocProvider.of<TaskCubit>(context).assignees,
+                      taskTitles[BlocProvider.of<TaskCubit>(context)
+                              .selectedParent] ??
+                          0,
+                    );
                   },
                   Theme.of(context).primaryColor,
                   child: Center(
@@ -369,5 +373,49 @@ Row buildLockedSwitch(BuildContext context) {
         },
       ),
     ],
+  );
+}
+
+SizedBox buildUploadedFiles(BuildContext context) {
+  return SizedBox(
+    width: width(context),
+    child: ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: BlocProvider.of<TaskCubit>(context).result!.files.length,
+      itemBuilder: (context, index) {
+        PlatformFile file =
+            BlocProvider.of<TaskCubit>(context).result!.files[index];
+        return AnimatedListItem(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: ampleOrange,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: width(context) * 0.7,
+                  child: MyText.text1(file.name, overflow: TextOverflow.ellipsis),
+                ),
+                MyGestureDetector.gestureDetector(
+                  onTap: () {
+                    BlocProvider.of<TaskCubit>(context)
+                        .removeFromAttachments(index);
+                  },
+                  child: MyIcons.icon(
+                    Icons.remove_circle_outline,
+                    color: red,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ),
   );
 }

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
-import 'package:pr1/data/models/tasks/assign_task_model.dart';
 import 'package:pr1/data/models/tasks/cancel_task_model.dart';
 import 'package:pr1/data/models/tasks/complete_task_model.dart';
 import 'package:pr1/data/models/tasks/create_task_model.dart';
@@ -16,6 +15,7 @@ class TaskApi {
       required String description,
       required String startDate,
       required String dueDate,
+      required String reminder,
       required int workspaceId,
       required int projectId,
       required String status,
@@ -23,48 +23,40 @@ class TaskApi {
       required bool locked,
       required String token,
       required int? parentTask,
-      required List<String> assignees,
+      required List<int> assignees,
+      required List files,
       File? image}) async {
     Map<String, String> headers;
 
-    Map<String, Object?> data = {
-      "title": title,
-      "description": description,
-      "start_date": startDate,
-      "due_date": dueDate,
-      "workspace": workspaceId,
-      "project": projectId,
-      "priority": priority,
-      "assignees": assignees,
+    var data = FormData.fromMap({
+      'files': files,
+      'title': title,
+      'start_date': startDate,
+      'due_date': dueDate,
+      'workspace': workspaceId,
+      'project': projectId,
+      'priority': priority,
+      'description': description,
+      'parent_task': parentTask == 0 ? null : parentTask,
+      'status': status,
+      'locked': locked,
+      'reminder': reminder,
+      'assignees': assignees
+    });
+
+    headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
     };
 
-    if (parentTask != null && parentTask != 0) {
-      data.addAll({'parent_task': parentTask});
-    }
-
-    if (image == null) {
-      headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
-    } else {
-      headers = {
-        'Content-Type': 'multipart/form-data',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
-      data.addAll({
-        'image': await MultipartFile.fromFile(
-          image.path,
-          filename: '$title.jpg',
-        ),
-      });
+    if(files.isNotEmpty || image != null) {
+      headers.addAll({'Content-Type': 'multipart/form-data'});
     }
 
     late CreateTaskModel createTaskModel;
 
     try {
+      print(data);
       var response = await dio.request(
         '/tasks/',
         options: Options(
@@ -203,39 +195,5 @@ class TaskApi {
       completeTaskModel = CompleteTaskModel.error(handleDioError(e));
     }
     return completeTaskModel;
-  }
-
-  static Future<AssignTaskModel> assignTask(int taskId, String token) async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    var data = {
-      "assignees": [3]
-    };
-
-    late AssignTaskModel assignTaskModel;
-
-    try {
-      var response = await dio.request(
-        '/tasks/$taskId/assign_task_to_user/',
-        options: Options(
-          method: 'PATCH',
-          headers: headers,
-        ),
-        data: data,
-      );
-
-      if (response.statusCode == 202) {
-        assignTaskModel = AssignTaskModel.onSuccess(response.data);
-      } else {
-        assignTaskModel = AssignTaskModel.onError(response.data);
-      }
-    } on DioException catch (e) {
-      assignTaskModel = AssignTaskModel.error(handleDioError(e));
-    }
-
-    return assignTaskModel;
   }
 }

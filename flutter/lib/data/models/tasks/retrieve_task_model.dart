@@ -55,7 +55,7 @@ class RetrieveTaskModel {
         image: json["image"],
         outDated: json["out_dated"],
         parentTask: json["parent_task"],
-        assignees: List<dynamic>.from(json["assignees"].map((x) => x)),
+        assignees: List<dynamic>.from(json["assignees_display"].map((x) => x)),
         status: json["status"],
         priority: json["priority"],
         locked: json["locked"],
