@@ -136,6 +136,7 @@ class TaskApi {
         fetchedTasks = [FetchTasksModel.onError(response.data)];
       }
     } on DioException catch (e) {
+      print(e.toString());
       fetchedTasks = [FetchTasksModel.error(handleDioError(e))];
     }
     return fetchedTasks;
