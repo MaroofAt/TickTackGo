@@ -6,6 +6,7 @@ import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/presentation/screen/projects/build_projects_list.dart';
@@ -33,15 +34,14 @@ class BuildProjectListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyGestureDetector.gestureDetector(
       onTap: () {
-        pushScreen(
+        Navigator.pushNamed(
           context,
-          MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (context) => TaskCubit()),
-              BlocProvider(create: (context) => ProjectsCubit()),
-            ],
-            child: MainShowTasksPage(projectsModel.id, color, workspaceId),
-          ),
+          mainShowTasksPage,
+          arguments: {
+            'projectId': projectsModel.id,
+            'workspaceId': workspaceId,
+            'color': color,
+          }
         );
       },
       child: SingleChildScrollView(

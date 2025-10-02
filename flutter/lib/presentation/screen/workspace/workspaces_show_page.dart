@@ -38,19 +38,10 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
       appBar: ShowWorkspacesAppBar.workspacesAppBar(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          pushScreen(
+          pushNamed(
             context,
-            BlocProvider(
-              create: (context) => WorkspaceCubit(),
-              child: PopScope(
-                onPopInvokedWithResult: (didPop, result) {
-                  if (didPop && result != null) {
-                    BlocProvider.of<WorkspaceCubit>(context).fetchWorkspaces();
-                  }
-                },
-                child: CreateUpdateWorkspacePage(),
-              ),
-            ),
+            createUpdateWorkspacePage,
+            args: {'workspaceCubit': BlocProvider.of<WorkspaceCubit>(context)},
           );
         },
         child: MyIcons.icon(Icons.add),
@@ -83,7 +74,7 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
             if (state is WorkspacesFetchingSucceededState) {
               if (state.fetchWorkspacesModel.isEmpty) {
                 return Column(
-                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     MyText.text1(
                       'You are not member in any workspace',

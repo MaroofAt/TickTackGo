@@ -18,8 +18,8 @@ pushReplacementNamed(BuildContext context, String route) {
   Navigator.of(context).pushReplacementNamed(route);
 }
 
-pushNamed(BuildContext context, String route) {
-  Navigator.pushNamed(context, route);
+pushNamed(BuildContext context, String route, {Object? args}) {
+  Navigator.pushNamed(context, route, arguments: args);
 }
 
 pushNamedAndRemoveUntil(BuildContext context, String route) {

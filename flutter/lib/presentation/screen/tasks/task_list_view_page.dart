@@ -22,30 +22,30 @@ class TaskListViewPage extends StatelessWidget {
         itemCount: tasks.length,
         itemBuilder: (context, index) {
           List<TaskModel> subTasks = [];
-          if (tasks[index].subTasks.isNotEmpty) {
-            for (var element in tasks[index].subTasks) {
-              subTasks.add(BlocProvider.of<TaskCubit>(context)
-                  .convertFetchedTaskToTaskModel(tasks[index].projectId,
-                      subTask: element, assignees: tasks[index].assignees));
-            }
-          }
+          // if (tasks[index].subTasks.isNotEmpty) {
+          //   for (var element in tasks[index].subTasks) {
+          //     subTasks.add(BlocProvider.of<TaskCubit>(context)
+          //         .convertFetchedTaskToTaskModel(tasks[index].projectId,
+          //             subTask: element, assignees: tasks[index].assignees));
+          //   }
+          // }
           return Column(
             children: [
               TaskListItem(
                   tasks[index], color, mainWidth ?? width(context) * 0.8),
-              tasks[index].subTasks.isNotEmpty
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(),
-                        TaskListViewPage(
-                          subTasks,
-                          color,
-                          mainWidth: width(context) * 0.7,
-                        ),
-                      ],
-                    )
-                  : Container(),
+              // tasks[index].subTasks.isNotEmpty
+              //     ? Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Container(),
+              //           TaskListViewPage(
+              //             subTasks,
+              //             color,
+              //             mainWidth: width(context) * 0.7,
+              //           ),
+              //         ],
+              //       )
+              //     : Container(),
             ],
           );
         },

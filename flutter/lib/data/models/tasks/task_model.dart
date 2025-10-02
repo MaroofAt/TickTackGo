@@ -16,9 +16,10 @@ class TaskModel {
   String priority;
   bool locked;
   dynamic reminder;
-  List<SubTask> subTasks;
+  // List<SubTask> subTasks;
   String statusMessage;
   String errorMessage;
+  List<AttachmentsDisplayModel> attachments;
 
   TaskModel(
       {required this.id,
@@ -35,8 +36,9 @@ class TaskModel {
       required this.priority,
       required this.locked,
       required this.reminder,
-      required this.subTasks,
+      // required this.subTasks,
       required this.statusMessage,
       required this.projectId,
+      required this.attachments,
       required this.errorMessage});
 }
