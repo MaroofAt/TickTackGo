@@ -11,6 +11,7 @@ import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/comments/comment.dart';
 import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
 import 'package:pr1/data/models/tasks/task_model.dart';
+import 'package:pr1/presentation/screen/tasks/attachments_dialog.dart';
 import 'package:pr1/presentation/screen/tasks/task_info_app_bar.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/circle.dart';
@@ -40,8 +41,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          TaskInfoAppBar.taskInfoAppBar(context, widget.task.title),
+      appBar: TaskInfoAppBar.taskInfoAppBar(context, widget.task.title),
       body: SizedBox(
         height: height(context),
         width: width(context),
@@ -117,19 +117,18 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           }
                           return MyGestureDetector.gestureDetector(
                             onTap: () {
-                              if (widget.task.status ==
-                                      'in_progress' &&
+                              if (widget.task.status == 'in_progress' &&
                                   !widget.task.locked) {
                                 BlocProvider.of<TaskCubit>(context)
                                     .completeTask(widget.task.id);
                               }
                             },
                             child: Container(
+                              margin: const EdgeInsets.only(right: 10),
                               height: height(context) * 0.05,
                               width: width(context) * 0.28,
                               decoration: BoxDecoration(
-                                  color: (widget.task.status !=
-                                              'in_progress' ||
+                                  color: (widget.task.status != 'in_progress' ||
                                           widget.task.locked)
                                       ? lightGrey
                                       : Theme.of(context).secondaryHeaderColor,
@@ -175,8 +174,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                               height: height(context) * 0.05,
                               width: width(context) * 0.28,
                               decoration: BoxDecoration(
-                                  color: widget.task.status ==
-                                          'completed'
+                                  color: widget.task.status == 'completed'
                                       ? lightGrey
                                       : Theme.of(context).secondaryHeaderColor,
                                   borderRadius: BorderRadius.circular(16)),
@@ -188,18 +186,17 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           }
                           return MyGestureDetector.gestureDetector(
                             onTap: () {
-                              if (widget.task.status !=
-                                  'completed') {
+                              if (widget.task.status != 'completed') {
                                 BlocProvider.of<TaskCubit>(context)
                                     .cancelTask(widget.task.id);
                               }
                             },
                             child: Container(
+                              margin: const EdgeInsets.only(right: 10),
                               height: height(context) * 0.05,
                               width: width(context) * 0.28,
                               decoration: BoxDecoration(
-                                  color: widget.task.status ==
-                                          'completed'
+                                  color: widget.task.status == 'completed'
                                       ? lightGrey
                                       : Theme.of(context).secondaryHeaderColor,
                                   borderRadius: BorderRadius.circular(16)),
@@ -214,15 +211,45 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: width(context),
-                    child: buildTwoTextRow(
-                      context,
-                      'Locked',
-                      widget.task.locked.toString(),
-                      Icons.lock,
-                      white,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: width(context) * 0.4,
+                        child: buildTwoTextRow(
+                          context,
+                          'Locked',
+                          widget.task.locked.toString(),
+                          Icons.lock,
+                          white,
+                        ),
+                      ),
+                      MyGestureDetector.gestureDetector(
+                        onTap: () {
+                          if(widget.task.attachments.isNotEmpty) {
+                            showDialog(
+                            context: context,
+                            builder: (context) => AttachmentsDialog(widget.task.attachments),
+                          );
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          width: width(context) * 0.4,
+                          height: width(context) * 0.1,
+                          decoration: BoxDecoration(
+                            color: widget.task.attachments.isNotEmpty
+                                ? Theme.of(context).secondaryHeaderColor
+                            : lightGrey,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Center(
+                            child:
+                                MyText.text1('Attachments', textColor: black),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),

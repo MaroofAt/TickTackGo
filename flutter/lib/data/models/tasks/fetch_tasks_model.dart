@@ -16,7 +16,8 @@ class FetchTasksModel {
   String priority;
   bool locked;
   dynamic reminder;
-  List<SubTask> subTasks;
+
+  // List<SubTask> subTasks;
   String statusMessage;
   List<AttachmentsDisplayModel> attachments;
   String errorMessage;
@@ -39,7 +40,7 @@ class FetchTasksModel {
     required this.priority,
     required this.locked,
     required this.reminder,
-    required this.subTasks,
+    // required this.subTasks,
     required this.statusMessage,
     required this.attachments,
     required this.errorMessage,
@@ -64,8 +65,8 @@ class FetchTasksModel {
         priority: json["priority"],
         locked: json["locked"],
         reminder: json["reminder"],
-        subTasks: List<SubTask>.from(
-            json["sub_tasks"].map((x) => SubTask.fromJson(x))),
+        // subTasks: List<SubTask>.from(
+        //     json["sub_tasks"].map((x) => SubTask.fromJson(x))),
         statusMessage: json["status_message"],
         attachments: List<AttachmentsDisplayModel>.from(
             json["attachments_display"]
@@ -91,7 +92,7 @@ class FetchTasksModel {
         priority: '',
         locked: false,
         reminder: 0,
-        subTasks: [],
+        // subTasks: [],
         statusMessage: '',
         attachments: [],
         errorMessage: json["detail"] ?? json["message"],
@@ -115,11 +116,16 @@ class FetchTasksModel {
         priority: '',
         locked: false,
         reminder: 0,
-        subTasks: [],
+        // subTasks: [],
         statusMessage: '',
         attachments: [],
         errorMessage: errorMessage,
       );
+
+  @override
+  String toString() {
+    return 'FetchTasksModel{id: $id, title: $title, description: $description, startDate: $startDate, dueDate: $dueDate, completeDate: $completeDate, creator: $creator, workspace: $workspace, project: $project, image: $image, outDated: $outDated, parentTask: $parentTask, assignees: $assignees, status: $status, priority: $priority, locked: $locked, reminder: $reminder, statusMessage: $statusMessage, attachments: $attachments, errorMessage: $errorMessage}';
+  }
 }
 
 class SubTask {

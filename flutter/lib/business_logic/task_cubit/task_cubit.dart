@@ -279,7 +279,8 @@ class TaskCubit extends Cubit<TaskState> {
         priority: subTask.priority,
         locked: subTask.locked,
         reminder: subTask.reminder,
-        subTasks: [],
+        attachments: [],
+        // subTasks: [],
         statusMessage: '',
         errorMessage: '',
       );
@@ -300,8 +301,9 @@ class TaskCubit extends Cubit<TaskState> {
         priority: fetchTaskModel.priority,
         locked: fetchTaskModel.locked,
         reminder: fetchTaskModel.reminder,
-        subTasks: fetchTaskModel.subTasks,
+        // subTasks: fetchTaskModel.subTasks,
         statusMessage: fetchTaskModel.statusMessage,
+        attachments: fetchTaskModel.attachments,
         errorMessage: fetchTaskModel.errorMessage,
       );
     }

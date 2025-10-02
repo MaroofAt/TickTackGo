@@ -15,6 +15,7 @@ const String receivedInvitationPageRoute = 'receivedInvitationPageRoute';
 const String mainHomePageRoute = 'mainHomePageRoute';
 const String mainInboxPage = 'mainInboxPage';
 const String mainShowTasksPage = 'mainShowTasksPage';
+const String createUpdateWorkspacePage = 'CreateUpdateWorkspacePage';
 
 ///Splash screen strings
 const String splashScreenLogoPath = 'assets/images/logo_images/logoorgenal.png';

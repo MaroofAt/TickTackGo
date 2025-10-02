@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/screen/workspace/create_update_workspace_page.dart';
@@ -47,25 +48,15 @@ class WorkspaceInfoHeader extends StatelessWidget {
             ),
             MyGestureDetector.gestureDetector(
               onTap: () {
-                pushScreen(
+                pushNamed(
                   context,
-                  BlocProvider(
-                    create: (context) => WorkspaceCubit(),
-                    child: PopScope(
-                      onPopInvokedWithResult: (didPop, result) {
-                        if (didPop && result != null) {
-                          BlocProvider.of<WorkspaceCubit>(context)
-                              .retrieveWorkspace(retrieveWorkspace.id);
-                        }
-                      },
-                      child: CreateUpdateWorkspacePage(
-                        title: retrieveWorkspace.title,
-                        description: retrieveWorkspace.description,
-                        image: retrieveWorkspace.image,
-                        retrieveWorkspaceModel: retrieveWorkspace,
-                      ),
-                    ),
-                  ),
+                  createUpdateWorkspacePage,
+                  args: {
+                    'title': retrieveWorkspace.title,
+                    'description': retrieveWorkspace.description,
+                    'image': retrieveWorkspace.image,
+                    'retrieveWorkspaceModel': retrieveWorkspace,
+                  },
                 );
               },
               child: MyIcons.icon(Icons.edit, color: Colors.grey),

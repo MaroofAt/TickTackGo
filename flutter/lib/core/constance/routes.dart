@@ -6,6 +6,7 @@ import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
 import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
+import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/presentation/screen/auth/signinnew.dart';
@@ -19,6 +20,8 @@ import 'package:pr1/presentation/screen/issues/all_issues.dart';
 import 'package:pr1/presentation/screen/issues/detalies_issue.dart';
 import 'package:pr1/presentation/screen/onboarding/final_onboarding_page.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
+import 'package:pr1/presentation/screen/tasks/main_show_tasks_page.dart';
+import 'package:pr1/presentation/screen/workspace/create_update_workspace_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspaces_show_page.dart';
 
 import '../../business_logic/auth_cubit/auth_cubit.dart';
@@ -32,12 +35,15 @@ Map<String, Widget Function(BuildContext)> routes = {
         child: const Verifypage(),
       ),
   issuesdetalies: (context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final issueid = args["issueId"] as int;
     final projectid = args["projectId"] as int;
-    return Detalies_Issue( issueId: issueid, projectId: projectid,);
+    return Detalies_Issue(
+      issueId: issueid,
+      projectId: projectid,
+    );
   },
-
   onboardingMainRoute: (context) => const OnboardingMain(),
   introQuestionsRoute: (context) => BlocProvider(
         create: (context) => IntroQuestionsCubit(),
@@ -63,4 +69,15 @@ Map<String, Widget Function(BuildContext)> routes = {
         create: (context) => InboxCubit(),
         child: const MainInboxPage(),
       ),
+  mainShowTasksPage: (context) => MultiBlocProvider(
+    providers: [
+      BlocProvider(create: (context) => TaskCubit()),
+      BlocProvider(create: (context) => ProjectsCubit()),
+    ],
+    child: const MainShowTasksPage(),
+  ),
+  createUpdateWorkspacePage: (context) => BlocProvider(
+    create: (context) => WorkspaceCubit(),
+    child: CreateUpdateWorkspacePage(),
+  ),
 };

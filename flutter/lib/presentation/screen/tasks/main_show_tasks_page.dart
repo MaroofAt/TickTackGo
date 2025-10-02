@@ -19,37 +19,43 @@ import 'package:pr1/presentation/widgets/snack_bar.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class MainShowTasksPage extends StatefulWidget {
-  final int projectId;
-  final int workspaceId;
-  final Color color;
-
-  const MainShowTasksPage(this.projectId, this.color, this.workspaceId,
-      {super.key});
+  const MainShowTasksPage({super.key});
 
   @override
   State<MainShowTasksPage> createState() => _MainShowTasksPageState();
 }
 
 class _MainShowTasksPageState extends State<MainShowTasksPage> {
+  int? projectId;
+  int? workspaceId;
+  Color? color;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    // userId = args['userId'];
+    projectId = args['projectId'];
+    workspaceId = args['workspaceId'];
+    color = args['color'];
     _getNeededData();
+    setState(() {});
   }
 
   _getNeededData() {
-    BlocProvider.of<ProjectsCubit>(context).retrieveProject(widget.projectId);
+    BlocProvider.of<ProjectsCubit>(context).retrieveProject(projectId!);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProjectsCubit, ProjectsState>(
       builder: (context, state) {
-        if (state is ProjectRetrievingSucceededState) {
+          if (state
+            is ProjectRetrievingSucceededState) {
           BlocProvider.of<ProjectsCubit>(context)
               .setAssignees(state.retrieveProjectModel);
-          print(state.retrieveProjectModel.id);
-          BlocProvider.of<TaskCubit>(context).fetchTasks(widget.projectId);
+          BlocProvider.of<TaskCubit>(context).fetchTasks(projectId!);
           List<int> editors = [];
           for (var element in state.retrieveProjectModel.members) {
             if (element.role == 'editor') {
@@ -73,7 +79,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
       floatingActionButton:
           isAdmin(retrieveProjectModel.members[0].member.id) ||
                   editors.contains(user!.id)
-              ? CreateTaskFloatingButton(widget.projectId, widget.workspaceId)
+              ? CreateTaskFloatingButton(projectId!, workspaceId!)
               : null,
       appBar:
           ShowTasksAppBar.showTasksAppBar(context, retrieveProjectModel.title),
@@ -117,7 +123,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(),
-                TaskListViewPage(tasks, widget.color),
+                TaskListViewPage(tasks, color!),
               ],
             );
           }
