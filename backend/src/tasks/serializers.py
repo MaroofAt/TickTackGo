@@ -13,9 +13,37 @@ from tools.serializers import FlexibleFileListField
 from users.models import User
 
 
+class SubTaskSerializer(serializers.ModelSerializer):
+    class AttachmentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Attachment
+            fields = [
+                'id',
+                'file',
+                'created_at',
+                'updated_at'
+            ]
+            extra_kwargs = {
+                'id': {'read_only':True},
+                'file': {'read_only':True},
+                'created_at': {'read_only':True},
+                'updated_at': {'read_only':True}
+            }
+    attachments_display = AttachmentSerializer(read_only=True , many=True , source='attachments')
+    
+    class Meta:
+        model = Task
+        fields = [
+            'id', 'title', 'description', 'start_date', 'due_date', 
+            'complete_date', 'creator','status', 'priority', 'locked', 'reminder',
+            'out_dated', 'image' , 'attachments_display'
+        ]
+        read_only_fields = ['id']
 class TaskSerializer(serializers.ModelSerializer):
     # assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
     reminder = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    sub_tasks = SubTaskSerializer(many=True, read_only=True)
+
     assignees = serializers.PrimaryKeyRelatedField(
         many=True,
         write_only=True,
@@ -75,6 +103,7 @@ class TaskSerializer(serializers.ModelSerializer):
             'status_message',
             'attachments',
             'attachments_display',
+            'sub_tasks',
         ]
         extra_kwargs = {
             'id': {'read_only':True},
@@ -84,10 +113,12 @@ class TaskSerializer(serializers.ModelSerializer):
             'assignees_display': {'read_only': True},
             'attachments': {'write_only': True},
             'attachments_display': {'read_only': True},
+            'sub_tasks': {'read_only': True}
         }
 
     def __init__(self, instance=None, data=serializers.empty, **kwargs):
         print(f"\n\nin-serializer data = {data}\n\n")
+        # self.fields['sub_tasks'] = TaskSerializer(many=True, read_only=True)
         super().__init__(instance, data, **kwargs)
 
 
@@ -167,16 +198,6 @@ class TaskSerializer(serializers.ModelSerializer):
         return instance
         
 
-class SubTaskSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Task
-        fields = [
-            'id', 'title', 'description', 'start_date', 'due_date', 
-            'complete_date', 'status', 'priority', 'locked', 'reminder',
-            'out_dated', 'image'
-        ]
-        read_only_fields = ['id']
 class ShowTaskSerializer(serializers.ModelSerializer):
     sub_tasks = SubTaskSerializer(many=True, read_only=True)
     #assignees = serializers.PrimaryKeyRelatedField(read_only=False,many=True, queryset=User.objects.all())
