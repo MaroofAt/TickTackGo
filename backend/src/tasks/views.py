@@ -327,13 +327,13 @@ class TaskViewSet(viewsets.ModelViewSet):
             #     if can_start(task.pk) and task.status == 'pending':
             #         task.change_status_when_start()
 
-            # serializer = self.get_serializer(queryset, many=True)
-            # return Response(serializer.data)
-            # print(request.query_params.get('project'))
-            # queryset = Task.objects.filter(parent_task__isnull=True , project=request.query_params.get('project'))
+            queryset = Task.objects.filter(parent_task__isnull=True , project=request.query_params.get('project'))
+            serializer = self.get_serializer(queryset, many=True)
             # serializer = ShowTaskSerializer(queryset, many=True)
+            return Response(serializer.data)
+            print(request.query_params.get('project'))
 
-            return super().list(request, *args, **kwargs)
+            # return super().list(request, *args, **kwargs)
         except Exception as e:
             return exception_response(e)
     
