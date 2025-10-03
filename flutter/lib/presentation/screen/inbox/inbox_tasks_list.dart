@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
-import 'package:pr1/presentation/screen/inbox/inbox_info_page.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
@@ -26,17 +26,10 @@ class InboxTasksList extends StatelessWidget {
             itemBuilder: (context, index) {
               return MyGestureDetector.gestureDetector(
                 onTap: () {
-                  pushScreen(
-                    context,
-                    PopScope(
-                      onPopInvokedWithResult: (didPop, result) {
-                        if (didPop && result != null) {
-                          BlocProvider.of<InboxCubit>(context).fetchInboxTask();
-                        }
-                      },
-                      child: InboxInfoPage(inboxTasksList[index]),
-                    ),
-                  );
+                  pushNamed(context, inboxInfoPage, args: {
+                    'inboxTasksModel': inboxTasksList[index],
+                    'inboxCubit': context.read<InboxCubit>(),
+                  });
                 },
                 child: Container(
                   padding:

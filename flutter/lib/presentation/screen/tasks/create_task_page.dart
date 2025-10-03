@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
@@ -9,158 +8,174 @@ import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_app_bar.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_build_methods.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
-import 'package:pr1/presentation/widgets/gesture_detector.dart';
-import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class CreateTaskPage extends StatefulWidget {
-  final int workspaceId;
-  final int projectId;
-  final Map<String, int> tasksTitles;
-  final Map<String, int> assignees;
-
-  const CreateTaskPage(
-      this.projectId, this.workspaceId, this.tasksTitles, this.assignees,
-      {super.key});
+  const CreateTaskPage({super.key});
 
   @override
   State<CreateTaskPage> createState() => _CreateTaskPageState();
 }
 
 class _CreateTaskPageState extends State<CreateTaskPage> {
+  int? workspaceId;
+  int? projectId;
+  Map<String, int>? tasksTitles;
+  Map<String, int>? assignees;
+  TaskCubit? taskCubit;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    workspaceId = args['workspaceId'];
+    projectId = args['projectId'];
+    tasksTitles = args['tasksTitles'];
+    assignees = args['assignees'];
+    taskCubit = args['taskCubit'];
+  }
+
   final TextEditingController _titleController = TextEditingController();
 
   final TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CreateTaskAppBar.createTaskAppBar(context),
-      body: SizedBox(
-        height: height(context),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    buildSelectImage(context),
-                    BlocBuilder<TaskCubit, TaskState>(
-                      builder: (context, state) {
-                        return Column(
-                          children: [
-                            buildTextFieldsColumn(context, _titleController,
-                                _descriptionController),
-                            Column(
-                              children: [
-                                buildStartEndDate(
-                                  context,
-                                  label: 'Start Date',
-                                  onTap: BlocProvider.of<TaskCubit>(context)
-                                      .selectStartDate,
-                                  selectedDate:
-                                      BlocProvider.of<TaskCubit>(context)
-                                          .selectedStartDate,
-                                ),
-                                const SizedBox(height: 10),
-                                buildStartEndDate(
-                                  context,
-                                  label: 'End Date',
-                                  onTap: BlocProvider.of<TaskCubit>(context)
-                                      .selectEndDate,
-                                  selectedDate:
-                                      BlocProvider.of<TaskCubit>(context)
-                                          .selectedEndDate,
-                                ),
-                                const SizedBox(height: 10),
-                                buildStartEndDate(
-                                  context,
-                                  label: 'reminder',
-                                  onTap: BlocProvider.of<TaskCubit>(context)
-                                      .selectReminderDate,
-                                  selectedDate:
-                                  BlocProvider.of<TaskCubit>(context)
-                                      .selectedReminderDate,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                buildAssigneesList(context),
-                                buildParentTask(context),
-                              ],
-                            ),
-                            buildPriorityWrap(
-                              context,
-                              'Priority',
-                              priorities,
-                              BlocProvider.of<TaskCubit>(context)
-                                  .selectedPriority,
-                              BlocProvider.of<TaskCubit>(context)
-                                  .changeSelectedPriority,
-                            ),
-                            const SizedBox(height: 10),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                MyButtons.primaryButton(
-                                      () {
-                                    BlocProvider.of<TaskCubit>(context)
-                                        .uploadAttachments();
-                                  },
-                                  Theme.of(context).secondaryHeaderColor,
-                                  child: MyText.text1('Upload file'),
-                                ),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop && result != null) {
+          taskCubit!.fetchTasks(projectId!);
+        }
+      },
+      child: Scaffold(
+        appBar: CreateTaskAppBar.createTaskAppBar(context),
+        body: SizedBox(
+          height: height(context),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      buildSelectImage(context),
+                      BlocBuilder<TaskCubit, TaskState>(
+                        builder: (context, state) {
+                          return Column(
+                            children: [
+                              buildTextFieldsColumn(context, _titleController,
+                                  _descriptionController),
+                              Column(
+                                children: [
+                                  buildStartEndDate(
+                                    context,
+                                    label: 'Start Date',
+                                    onTap: BlocProvider.of<TaskCubit>(context)
+                                        .selectStartDate,
+                                    selectedDate:
+                                        BlocProvider.of<TaskCubit>(context)
+                                            .selectedStartDate,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  buildStartEndDate(
+                                    context,
+                                    label: 'End Date',
+                                    onTap: BlocProvider.of<TaskCubit>(context)
+                                        .selectEndDate,
+                                    selectedDate:
+                                        BlocProvider.of<TaskCubit>(context)
+                                            .selectedEndDate,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  buildStartEndDate(
+                                    context,
+                                    label: 'reminder',
+                                    onTap: BlocProvider.of<TaskCubit>(context)
+                                        .selectReminderDate,
+                                    selectedDate:
+                                        BlocProvider.of<TaskCubit>(context)
+                                            .selectedReminderDate,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  buildAssigneesList(context),
+                                  buildParentTask(context),
+                                ],
+                              ),
+                              buildPriorityWrap(
+                                context,
+                                'Priority',
+                                priorities,
                                 BlocProvider.of<TaskCubit>(context)
-                                    .result ==
-                                    null
-                                    ? Container()
-                                    : buildUploadedFiles(context),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                    // Row(
-                    //   children: [
-                    //     buildStartEndTimeSelector(
-                    //       context,
-                    //       label: 'Start time',
-                    //       onTap: _selectStartTime,
-                    //       timeFormat: _startTime,
-                    //     ),
-                    //     const SizedBox(width: 10),
-                    //     const Text('~'),
-                    //     const SizedBox(width: 10),
-                    //     buildStartEndTimeSelector(
-                    //       context,
-                    //       label: 'End time',
-                    //       onTap: _selectEndTime,
-                    //       timeFormat: _endTime,
-                    //     ),
-                    //   ],
-                    // ),
-                    SizedBox(
-                      height: height(context) * 0.12,
-                    ),
-                  ],
+                                    .selectedPriority,
+                                BlocProvider.of<TaskCubit>(context)
+                                    .changeSelectedPriority,
+                              ),
+                              const SizedBox(height: 10),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  MyButtons.primaryButton(
+                                    () {
+                                      BlocProvider.of<TaskCubit>(context)
+                                          .uploadAttachments();
+                                    },
+                                    Theme.of(context).secondaryHeaderColor,
+                                    child: MyText.text1('Upload file'),
+                                  ),
+                                  BlocProvider.of<TaskCubit>(context).result ==
+                                          null
+                                      ? Container()
+                                      : buildUploadedFiles(context),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      // Row(
+                      //   children: [
+                      //     buildStartEndTimeSelector(
+                      //       context,
+                      //       label: 'Start time',
+                      //       onTap: _selectStartTime,
+                      //       timeFormat: _startTime,
+                      //     ),
+                      //     const SizedBox(width: 10),
+                      //     const Text('~'),
+                      //     const SizedBox(width: 10),
+                      //     buildStartEndTimeSelector(
+                      //       context,
+                      //       label: 'End time',
+                      //       onTap: _selectEndTime,
+                      //       timeFormat: _endTime,
+                      //     ),
+                      //   ],
+                      // ),
+                      SizedBox(
+                        height: height(context) * 0.12,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 0,
-              child: buildBottomContainer(
-                  context,
-                  _titleController,
-                  _descriptionController,
-                  widget.tasksTitles,
-                  widget.workspaceId,
-                  widget.projectId),
-            ),
-          ],
+              Positioned(
+                bottom: 0,
+                child: buildBottomContainer(
+                    context,
+                    _titleController,
+                    _descriptionController,
+                    tasksTitles!,
+                    workspaceId!,
+                    projectId!),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -173,7 +188,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         context,
         label: 'parent task',
         value: BlocProvider.of<TaskCubit>(context).selectedParent,
-        items: widget.tasksTitles.keys.toList(),
+        items: tasksTitles!.keys.toList(),
         onChanged: (val) => setState(
             () => BlocProvider.of<TaskCubit>(context).selectedParent = val),
       ),
@@ -215,16 +230,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           bloc: taskCubit,
           builder: (context, state) {
             return Column(
-              children: widget.assignees.keys.map((item) {
+              children: assignees!.keys.map((item) {
                 return CheckboxListTile(
-                  value: taskCubit.assignees.contains(widget.assignees[item]),
+                  value: taskCubit.assignees.contains(assignees![item]),
                   title: SizedBox(
                       width: width(context) * 0.1,
                       height: width(context) * 0.08,
                       child: MyText.text1(item, textColor: white)),
                   onChanged: (bool? checked) {
                     taskCubit.fillAssigneesList(
-                        checked, widget.assignees[item]!);
+                        checked, assignees![item]!);
                     setState(() {});
                   },
                 );

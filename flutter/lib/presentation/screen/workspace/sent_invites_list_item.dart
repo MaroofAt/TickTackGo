@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
-import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/workspace/sent_invites_model.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';

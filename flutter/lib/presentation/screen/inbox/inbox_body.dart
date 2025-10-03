@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
 import 'package:pr1/presentation/screen/inbox/inbox_tasks_list.dart';
-import 'package:pr1/presentation/widgets/text.dart';
 
 // ignore: must_be_immutable
 class InboxBody extends StatelessWidget {

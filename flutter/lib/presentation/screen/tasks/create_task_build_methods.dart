@@ -13,7 +13,6 @@ import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/circle.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
-import 'package:pr1/presentation/widgets/images.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 import 'package:pr1/presentation/widgets/text_field.dart';

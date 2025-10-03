@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
-import 'package:pr1/data/models/tasks/fetch_tasks_model.dart';
 import 'package:pr1/data/models/tasks/task_model.dart';
 import 'package:pr1/presentation/screen/tasks/task_info_page.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
@@ -22,34 +22,19 @@ class TaskListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyGestureDetector.gestureDetector(
       onTap: () {
-        pushScreen(
+        pushNamed(
           context,
-          BlocProvider(
-            create: (context) => TaskCubit(),
-            child: PopScope(
-              onPopInvokedWithResult: (didPop, result) {
-                if (didPop && result != null) {
-                  BlocProvider.of<TaskCubit>(context)
-                      .fetchTasks(tasks.projectId);
-
-                  /*
-                  * remove from tasksTitles
-                  * so it doesn't appear in the parent projects list
-                  */
-                  BlocProvider.of<TaskCubit>(context)
-                      .tasksTitles
-                      .removeWhere((key, value) => key == result);
-                }
-              },
-              child: TaskInfoPage(tasks),
-            ),
-          ),
+          taskInfoPage,
+          args: {
+            'task': tasks,
+            'taskCubit': context.read<TaskCubit>()
+          },
         );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.only(left: 5.0, top: 5, bottom: 5),
-        height: height(context) * 0.12,
+        height: height(context) * 0.13,
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius:
@@ -93,13 +78,22 @@ class TaskListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  MyText.text1(
-                     'Created At:\n ${DateFormat('yyyy-MM-d').format(tasks.dueDate!)}',
-                      textColor: Colors.grey),
-
-                  MyText.text1(
-                      'Due date:\n ${DateFormat('yyyy-MM-d').format(tasks.dueDate!)}',
-                      textColor: Colors.grey),
+                  Column(
+                    children: [
+                      MyText.text1('Created At:', textColor: Colors.grey),
+                      MyText.text1(
+                          DateFormat('yyyy-MM-d').format(tasks.dueDate!),
+                          textColor: Colors.grey),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      MyText.text1('Due date: ', textColor: Colors.grey),
+                      MyText.text1(
+                          DateFormat('yyyy-MM-d').format(tasks.dueDate!),
+                          textColor: Colors.grey),
+                    ],
+                  ),
                 ],
               ),
             ),

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
+import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/presentation/screen/projects/build_projects_list.dart';
 import 'package:pr1/presentation/screen/workspace/build_workspaces_list_item.dart';
-import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 
 class BuildWorkspacesList extends StatefulWidget {
   final List<FetchWorkspacesModel> fetchWorkspacesModel;
@@ -29,23 +29,10 @@ class _BuildWorkspacesListState extends State<BuildWorkspacesList> {
               BuildListItem(
                 widget.fetchWorkspacesModel[index],
                 onWorkspaceTap: () {
-                  pushScreen(
-                    context,
-                    BlocProvider(
-                      create: (context) => WorkspaceCubit(),
-                      child: PopScope(
-                        onPopInvokedWithResult: (didPop, result) {
-                          if (didPop && result != null) {
-                            BlocProvider.of<WorkspaceCubit>(context)
-                                .fetchWorkspaces();
-                          }
-                        },
-                        child: WorkspaceInfoPage(
-                          widget.fetchWorkspacesModel[index].id,
-                        ),
-                      ),
-                    ),
-                  );
+                  pushNamed(context, workspaceInfoPage, args: {
+                    'workspaceId': widget.fetchWorkspacesModel[index].id,
+                    'workspaceCubit': context.read<WorkspaceCubit>(),
+                  });
                 },
                 onArrowTap: () {
                   BlocProvider.of<ProjectsCubit>(context)

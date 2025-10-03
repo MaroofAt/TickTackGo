@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
-import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';

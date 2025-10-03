@@ -4,27 +4,26 @@ import 'package:pr1/business_logic/replay/replay_cubit.dart'; // ✅ استور�
 import 'package:pr1/business_logic/replay/replay_state.dart'; // ✅ استورد الستيتات تبعو
 import 'package:pr1/business_logic/issues/issues_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
 import '../../../core/constance/constance.dart';
 import '../../widgets/creatTextFiled.dart';
 
-class Detalies_Issue extends StatefulWidget {
+class IssueDetails extends StatefulWidget {
   final int issueId;
   final int projectId;
 
 
-  const Detalies_Issue({
+  const IssueDetails({
     super.key,
     required this.issueId,
     required this.projectId,
   });
 
   @override
-  State<Detalies_Issue> createState() => _Detalies_IssueState();
+  State<IssueDetails> createState() => _IssueDetailsState();
 }
 
-class _Detalies_IssueState extends State<Detalies_Issue> {
-  final TextEditingController commentcontroller = TextEditingController();
+class _IssueDetailsState extends State<IssueDetails> {
+  final TextEditingController commentController = TextEditingController();
   bool updated = false;
   @override
   void initState() {
@@ -62,21 +61,21 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                   Expanded(
                     child: Text(
                       issue.title,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: white, fontSize: 24, fontFamily: 'PTSerif'),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
                   ),
                   const Spacer(),
-                  Icon(Icons.list, color: ampleOrange),
+                  const Icon(Icons.list, color: ampleOrange),
                 ],
               ),
               leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context, updated);
                 },
-                icon: Icon(Icons.arrow_back_sharp, color: ampleOrange),
+                icon: const Icon(Icons.arrow_back_sharp, color: ampleOrange),
               ),
             ),
             body: Column(
@@ -89,7 +88,7 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                       child: ListTile(
                         title: Text(
                           issue.description,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: white,
                               fontSize: 20,
                               fontFamily: 'PTSerif'),
@@ -103,8 +102,8 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                       padding: const EdgeInsets.all(10),
                       width: width(context) * 0.2,
                       height: height(context) * 0.1,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(40)),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(40)),
                         color: ampleOrange,
                       ),
                       child: IconButton(
@@ -129,23 +128,23 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                   child: CreateTextField(
                     iconsuf: IconButton(
                       onPressed: () {
-                        if (commentcontroller.text.isNotEmpty) {
+                        if (commentController.text.isNotEmpty) {
                           context.read<ReplyCubit>().createReply(
-                            body: commentcontroller.text,
+                            body: commentController.text,
                             issueId: widget.issueId,
                             projectId: widget.projectId,
                           );
-                          commentcontroller.clear();
+                          commentController.clear();
                         }  ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Reply added successfully')),
+                          const SnackBar(content: Text('Reply added successfully')),
                         );
                       },
-                      icon: Icon(Icons.send, color: parrotGreen),
+                      icon: const Icon(Icons.send, color: parrotGreen),
                     ),
                     fillcolor: ampleOrange.withOpacity(0.2),
                     text: "Your reply",
-                    icon: Icon(Icons.comment, color: parrotGreen),
-                    controller: commentcontroller,
+                    icon: const Icon(Icons.comment, color: parrotGreen),
+                    controller: commentController,
                   ),
                 ),
 
@@ -171,11 +170,11 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                                   color: Colors.grey[800],
                                   child: ListTile(
                                     title: Text(
-                                      reply.body ?? "",
-                                      style: TextStyle(color: white),
+                                      reply.body,
+                                      style: const TextStyle(color: white),
                                     ),
                                     subtitle: Text(
-                                      "By ${reply.user?.username ?? "Unknown"}",
+                                      "By ${reply.user.username}",
                                       style: const TextStyle(color: Colors.grey),
                                     ),
                                   ),
@@ -186,9 +185,9 @@ class _Detalies_IssueState extends State<Detalies_Issue> {
                                   child: Container(
                                     width: 20,
                                     height: 40,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: ampleOrange,
-                                      borderRadius: const BorderRadius.only(
+                                      borderRadius: BorderRadius.only(
                                         bottomLeft: Radius.circular(400),
                                         topLeft: Radius.circular(400),
                                       ),

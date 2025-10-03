@@ -3,9 +3,7 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/presentation/screen/home/card_builder.dart';
-import 'package:pr1/presentation/screen/home/task_card.dart';
 import 'package:pr1/presentation/screen/home/task_card_shimmer.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 class MainHomePageShimmer extends StatelessWidget {
   const MainHomePageShimmer({super.key});

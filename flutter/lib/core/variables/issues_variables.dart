@@ -1,7 +1,4 @@
-import '../../data/models/comments/comment.dart';
-import '../../data/models/issues/issue_model.dart';
 import '../../data/models/issues/list_issues_model.dart';
-import '../../data/models/user/user.dart';
 
 String all="All";
 // String number_of_issues_notsolved="$notSolvedIssuesCount";

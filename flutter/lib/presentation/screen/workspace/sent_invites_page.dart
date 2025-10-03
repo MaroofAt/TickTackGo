@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
@@ -11,20 +10,24 @@ import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class SentInvitesPage extends StatefulWidget {
-  final int workspaceId;
-  final String workspaceTitle;
-
-  const SentInvitesPage(this.workspaceId, this.workspaceTitle, {super.key});
+  const SentInvitesPage({super.key});
 
   @override
   State<SentInvitesPage> createState() => _SentInvitesPageState();
 }
 
 class _SentInvitesPageState extends State<SentInvitesPage> {
+  int? workspaceId;
+  String? workspaceTitle;
+
   @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<WorkspaceCubit>(context).sentInvites(widget.workspaceId);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    workspaceId = args['workspaceId'];
+    workspaceTitle = args['workspaceTitle'];
+    BlocProvider.of<WorkspaceCubit>(context).sentInvites(workspaceId!);
   }
 
   @override
