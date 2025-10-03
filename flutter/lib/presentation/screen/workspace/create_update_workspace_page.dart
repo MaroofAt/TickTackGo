@@ -54,7 +54,6 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-
         if (didPop && result != null) {
           if (retrieveWorkspaceModel != null) {
             workspaceCubit!.retrieveWorkspace(retrieveWorkspaceModel!.id);

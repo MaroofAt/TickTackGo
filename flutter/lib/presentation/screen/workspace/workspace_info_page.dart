@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
@@ -8,9 +7,7 @@ import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/core/functions/user_functions.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
-import 'package:pr1/presentation/screen/invitation/invitation_search.dart';
 import 'package:pr1/presentation/screen/workspace/build_members_list.dart';
-import 'package:pr1/presentation/screen/workspace/sent_invites_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspace_info_header.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/divider.dart';
@@ -19,9 +16,7 @@ import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class WorkspaceInfoPage extends StatefulWidget {
-  int workspaceId;
-
-  WorkspaceInfoPage(this.workspaceId, {super.key});
+  const WorkspaceInfoPage({super.key});
 
   @override
   State<WorkspaceInfoPage> createState() => _WorkspaceInfoPageState();
@@ -29,108 +24,119 @@ class WorkspaceInfoPage extends StatefulWidget {
 
 class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
   RetrieveWorkspaceModel? retrieveWorkspace;
+  int? workspaceId;
+  WorkspaceCubit? workspaceCubit;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    workspaceId = args['workspaceId'];
+    workspaceCubit = args['workspaceCubit'];
+    getWorkspace();
+  }
 
   @override
   void initState() {
     super.initState();
-    getWorkspace();
   }
 
   getWorkspace() {
-    if (retrieveWorkspace != null &&
-        widget.workspaceId == retrieveWorkspace!.id) {
+    if (retrieveWorkspace != null && workspaceId == retrieveWorkspace!.id) {
       return;
     }
-    BlocProvider.of<WorkspaceCubit>(context)
-        .retrieveWorkspace(widget.workspaceId);
+    BlocProvider.of<WorkspaceCubit>(context).retrieveWorkspace(workspaceId!);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
-          builder: (context, state) {
-            if (state is WorkspaceRetrievingSucceededState) {
-              retrieveWorkspace = state.retrieveWorkspace;
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    WorkspaceInfoHeader(retrieveWorkspace!),
-                    const SizedBox(height: 20),
-                    MyDivider.horizontalDivider(
-                        thickness: 2, color: Colors.grey),
-                    const SizedBox(height: 20),
-                    buildShowInvitesText(context),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MyText.text1(
-                          membersText,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          textColor: Colors.white,
-                        ),
-                        MyGestureDetector.gestureDetector(
-                          onTap: () {
-                            pushScreen(
-                              context,
-                              BlocProvider(
-                                create: (context) => InvitationCubit(),
-                                child: InvitationSearch(
-                                    senderId: 1,
-                                    workspaceId: retrieveWorkspace!.id),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop && result != null) {
+          workspaceCubit!.fetchWorkspaces();
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
+            builder: (context, state) {
+              if (state is WorkspaceRetrievingSucceededState) {
+                retrieveWorkspace = state.retrieveWorkspace;
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WorkspaceInfoHeader(retrieveWorkspace!),
+                      const SizedBox(height: 20),
+                      MyDivider.horizontalDivider(
+                          thickness: 2, color: Colors.grey),
+                      const SizedBox(height: 20),
+                      buildShowInvitesText(context),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          MyText.text1(
+                            membersText,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            textColor: Colors.white,
+                          ),
+                          MyGestureDetector.gestureDetector(
+                            onTap: () {
+                              pushNamed(context, invitationSearch, args: {
+                                'senderId': retrieveWorkspace!.owner!.id,
+                                'workspaceId': retrieveWorkspace!.id,
+                              });
+                            },
+                            child: Container(
+                              height: width(context) * 0.1,
+                              width: width(context) * 0.3,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).secondaryHeaderColor,
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            );
-                          },
-                          child: Container(
-                            height: width(context) * 0.1,
-                            width: width(context) * 0.3,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).secondaryHeaderColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Center(
-                              child: MyText.text1(
-                                'Invite',
-                                textColor:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                fontSize: 20,
-                                letterSpacing: 2,
-                                fontWeight: FontWeight.w500,
+                              child: Center(
+                                child: MyText.text1(
+                                  'Invite',
+                                  textColor:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  fontSize: 20,
+                                  letterSpacing: 2,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Expanded(
-                      child: BuildMembersList(
-                        retrieveWorkspace!,
+                        ],
                       ),
-                    ),
-                    // Delete Button
-                    isAdmin(retrieveWorkspace!.owner!.id)
-                        ? BlocProvider(
-                            create: (context) => WorkspaceCubit(),
-                            child: buildDeleteButton(context),
-                          )
-                        : Container(),
-                  ],
-                ),
-              );
-            } else {
-              return Center(
-                child: LoadingIndicator.circularProgressIndicator(
-                  color: Theme.of(context).secondaryHeaderColor,
-                ),
-              );
-            }
-          },
+                      const SizedBox(height: 20),
+                      Expanded(
+                        child: BuildMembersList(
+                          retrieveWorkspace!,
+                        ),
+                      ),
+                      // Delete Button
+                      isAdmin(retrieveWorkspace!.owner!.id)
+                          ? BlocProvider(
+                              create: (context) => WorkspaceCubit(),
+                              child: buildDeleteButton(context),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                );
+              } else {
+                return Center(
+                  child: LoadingIndicator.circularProgressIndicator(
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
+                );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -139,14 +145,10 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
   Widget buildShowInvitesText(BuildContext context) {
     return MyGestureDetector.gestureDetector(
       onTap: () {
-        pushScreen(
-          context,
-          BlocProvider(
-            create: (context) => WorkspaceCubit(),
-            child: SentInvitesPage(
-                retrieveWorkspace!.id, retrieveWorkspace!.title),
-          ),
-        );
+        pushNamed(context, sentInvitesPage, args: {
+          'workspaceId': retrieveWorkspace!.id,
+          'workspaceTitle': retrieveWorkspace!.title
+        });
       },
       child: Container(
         width: width(context),

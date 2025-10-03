@@ -5,12 +5,9 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/data/models/projects/show_member_info_dialog.dart';
-import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
-import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
-import 'package:pr1/presentation/widgets/word_switch.dart';
 
 class BuildMembersList extends StatelessWidget {
   final RetrieveProjectModel retrieveProjectModel;
@@ -23,7 +20,6 @@ class BuildMembersList extends StatelessWidget {
     return ListView.builder(
       itemCount: retrieveProjectModel.members.length,
       itemBuilder: (context, index) {
-        print(retrieveProjectModel.members.length);
         return buildOneMemberCard(context, index);
       },
     );

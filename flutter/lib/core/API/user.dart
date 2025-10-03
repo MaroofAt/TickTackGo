@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:pr1/core/variables/global_var.dart';
-import 'package:pr1/data/local_data/local_data.dart';
 import '../../data/models/user/all_user.dart';
 import '../../data/models/user/user.dart';
 import '../functions/refresh_token.dart';

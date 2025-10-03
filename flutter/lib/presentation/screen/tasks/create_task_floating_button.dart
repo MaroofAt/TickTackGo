@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
+import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
-import 'package:pr1/presentation/screen/tasks/create_task_page.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
 
 class CreateTaskFloatingButton extends StatelessWidget {
@@ -16,25 +16,13 @@ class CreateTaskFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        pushScreen(
-          context,
-          BlocProvider(
-            create: (context) => TaskCubit(),
-            child: PopScope(
-              onPopInvokedWithResult: (didPop, result) {
-                if (didPop && result != null) {
-                  BlocProvider.of<TaskCubit>(context).fetchTasks(projectId);
-                }
-              },
-              child: CreateTaskPage(
-                projectId,
-                workspaceId,
-                BlocProvider.of<TaskCubit>(context).tasksTitles,
-                BlocProvider.of<ProjectsCubit>(context).assignees,
-              ),
-            ),
-          ),
-        );
+        pushNamed(context, createTaskPage, args: {
+          'workspaceId': workspaceId,
+          'projectId': projectId,
+          'tasksTitles': BlocProvider.of<TaskCubit>(context).tasksTitles,
+          'assignees': BlocProvider.of<ProjectsCubit>(context).assignees,
+          'taskCubit': context.read<TaskCubit>(),
+        });
       },
       backgroundColor: Theme.of(context).primaryColor,
       child: Center(child: MyIcons.icon(Icons.add)),

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pr1/core/variables/api_variables.dart';
 
 Future<File?> pickImage() async {
   File? image;

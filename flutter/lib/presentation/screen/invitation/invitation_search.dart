@@ -7,25 +7,30 @@ import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/invitation/invitation_search_model.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
-import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 import 'package:pr1/presentation/widgets/text_field.dart';
 
 class InvitationSearch extends StatefulWidget {
-  final int senderId;
-  final int workspaceId;
-
-  const InvitationSearch(
-      {required this.senderId, required this.workspaceId, super.key});
+  const InvitationSearch({super.key});
 
   @override
   State<InvitationSearch> createState() => _InvitationSearchState();
 }
 
 class _InvitationSearchState extends State<InvitationSearch> {
-  final List<String> _searchResults = [];
+  int? senderId;
+  int? workspaceId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    senderId = args['senderId'];
+    workspaceId = args['workspaceId'];
+  }
 
   final _controller = TextEditingController();
 
@@ -88,7 +93,8 @@ class _InvitationSearchState extends State<InvitationSearch> {
               },
               builder: (context, state) {
                 if (state is SearchSuccessState) {
-                  InvitationSearchModel invitationSearchModel = state.invitationSearchModel;
+                  InvitationSearchModel invitationSearchModel =
+                      state.invitationSearchModel;
                   return Expanded(
                     child: ListView.builder(
                       itemCount: invitationSearchModel.results.length,
@@ -121,14 +127,14 @@ class _InvitationSearchState extends State<InvitationSearch> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   MyText.text1(
-                                    invitationSearchModel.results[index]
-                                        .username,
+                                    invitationSearchModel
+                                        .results[index].username,
                                     textColor: white,
                                     fontSize: 18,
                                   ),
                                   MyText.text1(
-                                      invitationSearchModel.results[index]
-                                          .email,
+                                      invitationSearchModel
+                                          .results[index].email,
                                       textColor: Colors.grey[400]),
                                 ],
                               ),
@@ -136,9 +142,10 @@ class _InvitationSearchState extends State<InvitationSearch> {
                                 onTap: () {
                                   BlocProvider.of<InvitationCubit>(context)
                                       .inviteUser(
-                                    senderId: widget.senderId,
-                                    workspaceId: widget.workspaceId,
-                                    receiverId: invitationSearchModel.results[index].id,
+                                    senderId: senderId!,
+                                    workspaceId: workspaceId!,
+                                    receiverId:
+                                        invitationSearchModel.results[index].id,
                                   );
                                 },
                                 child: BlocBuilder<InvitationCubit,

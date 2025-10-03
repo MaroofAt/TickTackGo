@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
-import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/core/functions/show_snack_bar.dart';
 import 'package:pr1/core/functions/user_functions.dart';
@@ -13,9 +12,7 @@ import 'package:pr1/data/models/tasks/task_model.dart';
 import 'package:pr1/presentation/screen/tasks/create_task_floating_button.dart';
 import 'package:pr1/presentation/screen/tasks/show_tasks_app_bar.dart';
 import 'package:pr1/presentation/screen/tasks/task_list_view_page.dart';
-import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
-import 'package:pr1/presentation/widgets/snack_bar.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class MainShowTasksPage extends StatefulWidget {

@@ -16,6 +16,17 @@ const String mainHomePageRoute = 'mainHomePageRoute';
 const String mainInboxPage = 'mainInboxPage';
 const String mainShowTasksPage = 'mainShowTasksPage';
 const String createUpdateWorkspacePage = 'CreateUpdateWorkspacePage';
+const String inboxInfoPage = 'InboxInfoPage';
+const String invitationSearch = 'InvitationSearch';
+const String projectInfo = 'ProjectInfo';
+const String taskInfoPage = 'TaskInfoPage';
+const String pointsStatistics = 'PointsStatistics';
+const String workspaceInfoPage = 'WorkspaceInfoPage';
+const String tasksGanttChart = 'tasksGanttChart';
+const String buildWorkspaceMembersList = 'BuildWorkspaceMembersList';
+const String allIssues = 'AllIssues';
+const String createTaskPage = 'CreateTaskPage';
+const String sentInvitesPage = 'SentInvitesPage';
 
 ///Splash screen strings
 const String splashScreenLogoPath = 'assets/images/logo_images/logoorgenal.png';
