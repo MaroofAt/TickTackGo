@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/core/API/projects.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/projects/add_member_to_project.dart';
+import 'package:pr1/data/models/projects/archive_project_model.dart';
 import 'package:pr1/data/models/projects/change_user_role_model.dart';
 import 'package:pr1/data/models/projects/create_project_model.dart';
 import 'package:pr1/data/models/projects/delete_project_model.dart';
@@ -93,6 +94,19 @@ class ProjectsCubit extends Cubit<ProjectsState> {
       emit(ChangingUserRoleSucceededState(changeUserRoleModel));
     } else {
       emit(ChangingUserRoleFailedState(changeUserRoleModel.errorMessage));
+    }
+  }
+
+  Future<void> archiveProject(int projectId) async {
+    emit(ArchivingProjectState());
+
+    ArchiveProjectModel archiveProjectModel =
+        await ProjectsApi.archiveProject(projectId, token);
+
+    if (archiveProjectModel.errorMessage.isEmpty) {
+      emit(ArchivingProjectSucceededState(archiveProjectModel));
+    } else {
+      emit(ArchivingProjectFailedState(archiveProjectModel.errorMessage));
     }
   }
 

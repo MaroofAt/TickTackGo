@@ -84,3 +84,17 @@ class ChangingUserRoleFailedState extends ProjectsState {
 
   ChangingUserRoleFailedState(this.errorMessage);
 }
+
+class ArchivingProjectState extends ProjectsState {}
+
+class ArchivingProjectSucceededState extends ProjectsState {
+  ArchiveProjectModel archiveProjectModel;
+
+  ArchivingProjectSucceededState(this.archiveProjectModel);
+}
+
+class ArchivingProjectFailedState extends ProjectsState {
+  String errorMessage;
+
+  ArchivingProjectFailedState(this.errorMessage);
+}
