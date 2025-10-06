@@ -1,14 +1,11 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
-import 'package:pr1/core/functions/refresh_token.dart';
 import 'package:pr1/data/models/auth/sign_up_model.dart';
 
-import '../../core/API/handel_notification.dart';
 import '../../core/API/notifications_api.dart';
 import '../../core/functions/navigation_functions.dart';
 import '../../core/variables/api_variables.dart';
@@ -20,16 +17,13 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
-  bool isloading = false;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final NotificationHandel _notificationhandel = NotificationHandel();
+  bool isLoading = false;
 
   ///////////SignUp
   Future<void> sendEmailForOTP(
       String email, String name, String password, BuildContext context) async {
     emit(SignupLoadingState());
-    isloading = true;
+    isLoading = true;
 
     print("trying...");
 
@@ -74,11 +68,11 @@ class AuthCubit extends Cubit<AuthState> {
 
         showErrorDialog(context, "Registration Error", errorMessage);
 
-        isloading = false;
+        isLoading = false;
         emit(FailedSignupState(response.data));
       }
     } catch (e) {
-      isloading = false;
+      isLoading = false;
       print(e.toString());
       emit(FailedSignupState("Registration failed"));
     }
@@ -103,7 +97,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
 
     emit(SignupLoadingState());
-    isloading = true;
+    isLoading = true;
     print("trying verify...");
 
     try {
@@ -146,7 +140,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(FailedSignupState(
           e.response?.data?['message'] ?? "Verification failed"));
     } finally {
-      isloading = false;
+      isLoading = false;
     }
   }
 
@@ -154,7 +148,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> login(
       String email, String password, BuildContext context) async {
     // await _notificationhandel.initNotification();
-    isloading = true;
+    isLoading = true;
     emit(LoginLoadingState());
 
     try {
@@ -203,7 +197,7 @@ class AuthCubit extends Cubit<AuthState> {
       print("General Error: $e");
       emit(FailedLoginState("An unexpected error occurred"));
     } finally {
-      isloading = false;
+      isLoading = false;
     }
   }
 

@@ -127,53 +127,53 @@ Column buildPriorityWrap(BuildContext context, String label, List<String> list,
   );
 }
 
-Expanded _buildStartEndTimeSelector(
-  BuildContext context, {
-  required String label,
-  required Function(BuildContext) onTap,
-  required TimeOfDay timeFormat,
-}) {
-  return Expanded(
-    child: InkWell(
-      onTap: () {
-        onTap(context);
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          MyText.text1(
-            label,
-            textColor: white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                MyText.text1(
-                  timeFormat.format(context),
-                  textColor: white,
-                  fontSize: 16,
-                ),
-                const Icon(
-                  Icons.access_time,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
+// Expanded _buildStartEndTimeSelector(
+//   BuildContext context, {
+//   required String label,
+//   required Function(BuildContext) onTap,
+//   required TimeOfDay timeFormat,
+// }) {
+//   return Expanded(
+//     child: InkWell(
+//       onTap: () {
+//         onTap(context);
+//       },
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           MyText.text1(
+//             label,
+//             textColor: white,
+//             fontWeight: FontWeight.bold,
+//             fontSize: 16,
+//           ),
+//           Container(
+//             padding: const EdgeInsets.all(12),
+//             decoration: BoxDecoration(
+//               border: Border.all(color: Colors.grey),
+//               borderRadius: BorderRadius.circular(4),
+//             ),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 MyText.text1(
+//                   timeFormat.format(context),
+//                   textColor: white,
+//                   fontSize: 16,
+//                 ),
+//                 const Icon(
+//                   Icons.access_time,
+//                   size: 20,
+//                   color: Colors.grey,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
 
 Stack buildSelectImage(BuildContext context) {
   return Stack(

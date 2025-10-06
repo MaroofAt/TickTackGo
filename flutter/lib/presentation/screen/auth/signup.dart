@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
-import 'package:pr1/presentation/screen/auth/signin.dart';
 import '../../../core/constance/colors.dart';
-import '../../widgets/creatTextFiled.dart';
+import '../../widgets/create_text_field.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -16,8 +15,8 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   bool loading = false;
   bool _obscurePassword = true;
-  String? erroremail;
-  String? errorpassword;
+  String? errorEmail;
+  String? errorPassword;
   String? errorname;
 
   // Controllers
@@ -33,43 +32,7 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-  bool _validateFields() {
-    setState(() {
-      // Name validation
-      if (_nameController.text.isEmpty) {
-        errorname = 'Please enter your name';
-      } else if (_nameController.text.length < 3) {
-        errorname = 'Name must be at least 3 characters';
-      } else if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(_nameController.text)) {
-        errorname = 'Name can only contain letters and spaces';
-      } else {
-        errorname = null;
-      }
-
-      // Email validation
-      if (_emailController.text.isEmpty) {
-        erroremail = 'Please enter your email';
-      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text)) {
-        erroremail = 'Please enter a valid email';
-      } else {
-        erroremail = null;
-      }
-
-      // Password validation
-      if (_passwordController.text.isEmpty) {
-        errorpassword = 'Please enter your password';
-      } else if (_passwordController.text.length < 8) {
-        errorpassword = 'Password must be at least 8 characters';
-      } else if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$').hasMatch(_passwordController.text)) {
-        errorpassword = 'Password must contain:\n- 1 uppercase\n- 1 lowercase\n- 1 number';
-      } else {
-        errorpassword = null;
-      }
-    });
-
-    return errorname == null && erroremail == null && errorpassword == null;
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +40,7 @@ class _SignUpState extends State<SignUp> {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            // Middle box for the Textfields
+            // Middle box for the Textfield
             Container(
               width: width(context),
               height: height(context),
@@ -91,32 +54,34 @@ class _SignUpState extends State<SignUp> {
                     controller: _nameController,
                   ),
                   if (errorname != null)
-                   Center(
-                    child:  Padding(
-                      padding: const EdgeInsets.only(left: 200, top: 5),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          errorname!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 200, top: 5),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            errorname!,
+                            style: const TextStyle(
+                                color: Colors.red, fontSize: 12),
+                          ),
                         ),
                       ),
                     ),
-                   ),
                   const SizedBox(height: 20),
                   CreateTextField(
                     text: "Your Email",
                     icon: const Icon(Icons.email),
                     controller: _emailController,
                   ),
-                  if (erroremail != null)
+                  if (errorEmail != null)
                     Padding(
                       padding: const EdgeInsets.only(left: 200, top: 5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          erroremail!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          errorEmail!,
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     ),
@@ -126,9 +91,11 @@ class _SignUpState extends State<SignUp> {
                     icon: const Icon(Icons.lock_outline_rounded),
                     obscureText: _obscurePassword,
                     controller: _passwordController,
-                    iconsuf: IconButton(
+                    iconSuf: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: Colors.grey,
                       ),
                       onPressed: () {
@@ -138,14 +105,15 @@ class _SignUpState extends State<SignUp> {
                       },
                     ),
                   ),
-                  if (errorpassword != null)
+                  if (errorPassword != null)
                     Padding(
                       padding: const EdgeInsets.only(left: 20, top: 5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          errorpassword!,
-                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                          errorPassword!,
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                     ),
@@ -158,38 +126,39 @@ class _SignUpState extends State<SignUp> {
               left: 0,
               top: 0,
               child: Container(
+                width: width(context),
+                height: height(context) - 520,
+                decoration: const BoxDecoration(
+                  color: ampleOrange,
+                  borderRadius:
+                      BorderRadius.only(bottomRight: Radius.circular(400)),
+                ),
                 child: Column(
                   children: [
-                    SizedBox(height: 50),
+                    const SizedBox(height: 50),
                     Container(
-                      padding: EdgeInsets.only(top: 90, right: 180),
+                      padding: const EdgeInsets.only(top: 90, right: 180),
                       child: Text(
                         "Create",
                         style: TextStyle(
                           fontSize: 40,
-                          color: Colors.white.withOpacity(1),
+                          color: Colors.white.withAlpha(1),
                           fontFamily: "DMSerifText",
                         ),
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(right: 150),
+                      padding: const EdgeInsets.only(right: 150),
                       child: Text(
                         "Account",
                         style: TextStyle(
                           fontSize: 40,
-                          color: Colors.white.withOpacity(1),
+                          color: Colors.white.withAlpha(1),
                           fontFamily: "DMSerifText",
                         ),
                       ),
                     ),
                   ],
-                ),
-                width: width(context),
-                height: height(context) - 520,
-                decoration: BoxDecoration(
-                  color: ampleOrange,
-                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(400)),
                 ),
               ),
             ),
@@ -201,43 +170,36 @@ class _SignUpState extends State<SignUp> {
               child: Container(
                 width: width(context) - 100,
                 height: height(context) - 610,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: ampleOrange,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(400)),
+                  borderRadius:
+                      BorderRadius.only(topLeft: Radius.circular(400)),
                 ),
                 child: Column(
                   children: [
                     Container(
                       width: 80,
                       height: 80,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: primaryColor,
                         borderRadius: BorderRadius.all(Radius.circular(400)),
                       ),
                       child: IconButton(
-                        onPressed: () {
-                          if (_validateFields()) {
-                            print("All fields are valid");
-                            print("Name: ${_nameController.text}");
-                            print("Email: ${_emailController.text}");
-                            print("Password: ${_passwordController.text}");
-                            // Proceed with sign up
-                           
-                          }
-                        },
+                        onPressed: () {},
                         icon: loading
                             ? CircularProgressIndicator(
                                 strokeWidth: 2.0,
                                 valueColor: AlwaysStoppedAnimation(
-                                  Color(0xf5b99c).withOpacity(1),
+                                  const Color(0xfff5b99c).withAlpha(1),
                                 ),
                               )
-                            : Icon(Icons.arrow_right_alt_sharp),
+                            : const Icon(Icons.arrow_right_alt_sharp),
                         iconSize: 40,
-                        color: Colors.white.withOpacity(1),
+                        color: Colors.white.withAlpha(1),
                       ),
                     ),
                     Container(
+                      margin: const EdgeInsets.only(top: 100, left: 80),
                       child: IconButton(
                         onPressed: () {
                           pushReplacementNamed(context, signinRoute);
@@ -245,7 +207,7 @@ class _SignUpState extends State<SignUp> {
                           //     MaterialPageRoute(builder: (context) => SignIn()));
                         },
                         icon: RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.white,
@@ -258,28 +220,28 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                       ),
-                      margin: EdgeInsets.only(top: 100, left: 80),
                     ),
                   ],
                 ),
               ),
             ),
-         
-             Positioned(bottom: height(context)*0.21,right: width(context)*0.19,child:  Container(
-                    margin: EdgeInsets.only(top: 60),
-                    padding: EdgeInsets.only(right: 180),
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        fontSize: 28,
-                        color: Colors.white.withOpacity(1),
-                        fontFamily: "DMSerifText",
-                      ),
-                    ),
-                  ),)
-         
-         
-         
+
+            Positioned(
+              bottom: height(context) * 0.21,
+              right: width(context) * 0.19,
+              child: Container(
+                margin: const EdgeInsets.only(top: 60),
+                padding: const EdgeInsets.only(right: 180),
+                child: Text(
+                  "Sign Up",
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.white.withAlpha(1),
+                    fontFamily: "DMSerifText",
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/presentation/screen/auth/signup.dart';
-import 'package:pr1/presentation/widgets/creatTextFiled.dart';
+import 'package:pr1/presentation/widgets/create_text_field.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -96,7 +96,7 @@ bool validateFields() {
                     icon: const Icon(Icons.lock_outline_rounded),
                     obscureText: _obscurePassword,
                     controller: _passwordController,
-                    iconsuf: IconButton(
+                    iconSuf: IconButton(
                       icon: Icon(
                         _obscurePassword ? Icons.visibility_off : Icons.visibility,
                         color: Colors.grey,

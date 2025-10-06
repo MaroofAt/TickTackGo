@@ -7,7 +7,6 @@ import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
 import 'package:pr1/data/models/tasks/task_model.dart';
-import 'package:pr1/presentation/screen/tasks/task_info_page.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 

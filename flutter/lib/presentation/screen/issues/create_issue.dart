@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/issues/issues_cubit.dart';
-import 'package:pr1/data/models/issues/issue_create.dart';
-import 'package:pr1/data/models/issues/list_issues_model.dart';
+import 'package:pr1/presentation/widgets/text.dart';
 
 import '../../../core/constance/colors.dart';
-import '../../../data/models/issues/issue_model.dart';
 
 class CreateIssue extends StatefulWidget {
   final int projectId;
@@ -45,19 +43,19 @@ class _CreateIssueState extends State<CreateIssue> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      title: Text('Create New Issue'),
+      title: MyText.text1('Create New Issue'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _titleController,
-            decoration: InputDecoration(labelText: 'Title',),
-            style: TextStyle(color: white),
+            decoration: const InputDecoration(labelText: 'Title',),
+            style: const TextStyle(color: white),
           ),
           TextField(
             controller: _descController,
-            style: TextStyle(color: white),
-            decoration: InputDecoration(labelText: 'Description',
+            style: const TextStyle(color: white),
+            decoration: const InputDecoration(labelText: 'Description',
             ),
             maxLines: 1,
           ),
@@ -66,7 +64,7 @@ class _CreateIssueState extends State<CreateIssue> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
         ),
         BlocBuilder<IssuesCubit, IssuesState>(
           builder: (context, state) {
@@ -85,7 +83,7 @@ class _CreateIssueState extends State<CreateIssue> {
 
                 Navigator.pop(context, true);
               },
-              child: Text('Create'),
+              child: const Text('Create'),
             );
 
           },

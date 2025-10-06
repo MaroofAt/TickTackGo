@@ -11,7 +11,6 @@ import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
 import 'package:pr1/themes/themes.dart';
 import 'business_logic/replay/replay_cubit.dart';
-import 'core/variables/global_var.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -38,12 +37,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => SplashCubit()),
         BlocProvider(create: (_) => ReplyCubit(IssueApi())),
       ],
-      child: MaterialApp.router(
-        routerConfig: router,
+      child: MaterialApp(
         builder: DevicePreview.appBuilder,
         debugShowCheckedModeBanner: false,
         theme: theme(),
         // theme: ThemeData.dark(),
+        routes: routes,
+        home: const SplashScreen(),
       ),
     );
   }

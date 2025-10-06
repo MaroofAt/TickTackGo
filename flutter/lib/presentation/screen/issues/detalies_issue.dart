@@ -5,7 +5,7 @@ import 'package:pr1/business_logic/replay/replay_state.dart'; // ✅ استور�
 import 'package:pr1/business_logic/issues/issues_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import '../../../core/constance/constance.dart';
-import '../../widgets/creatTextFiled.dart';
+import '../../widgets/create_text_field.dart';
 
 class IssueDetails extends StatefulWidget {
   const IssueDetails({super.key});
@@ -24,17 +24,17 @@ class _IssueDetailsState extends State<IssueDetails> {
   void didChangeDependencies() {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final issueid = args["issueId"] as int;
-    final projectid = args["projectId"] as int;
+    final issueId = args["issueId"] as int;
+    final projectId = args["projectId"] as int;
     super.didChangeDependencies();
     context.read<IssuesCubit>().fetchSingleIssue(
-      issueId: issueId!,
-      projectId: projectId!,
+      issueId: issueId,
+      projectId: projectId,
     );
 
     context.read<ReplyCubit>().fetchReplies(
-      projectId: projectId!,
-      issueId: issueId!,
+      projectId: projectId,
+      issueId: issueId,
     );
   }
 
@@ -110,7 +110,7 @@ class _IssueDetailsState extends State<IssueDetails> {
                           ),
                           child: IconButton(
                             onPressed: () async {
-                              await context.read<IssuesCubit>().marksolved(
+                              await context.read<IssuesCubit>().markSolved(
                                   projectId: projectId!,
                                   context: context,
                                   issueID: issueId!);
@@ -132,7 +132,7 @@ class _IssueDetailsState extends State<IssueDetails> {
                       margin:
                           const EdgeInsets.only(left: 15, top: 10, bottom: 10),
                       child: CreateTextField(
-                        iconsuf: IconButton(
+                        iconSuf: IconButton(
                           onPressed: () {
                             if (commentController.text.isNotEmpty) {
                               context.read<ReplyCubit>().createReply(
@@ -149,7 +149,7 @@ class _IssueDetailsState extends State<IssueDetails> {
                           },
                           icon: const Icon(Icons.send, color: parrotGreen),
                         ),
-                        fillcolor: ampleOrange.withOpacity(0.2),
+                        fillcolor: ampleOrange.withValues(alpha: 0.2),
                         text: "Your reply",
                         icon: const Icon(Icons.comment, color: parrotGreen),
                         controller: commentController,
