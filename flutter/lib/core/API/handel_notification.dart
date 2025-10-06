@@ -75,10 +75,10 @@ class NotificationHandel {
       ),
       payload: jsonEncode(message.toMap()),
     );
-    navigatorKey.currentState!.pushNamed(
-      'home',
-      arguments: message,
-    );
+    // navigatorKey.currentState!.pushNamed(
+    //   'home',
+    //   arguments: message,
+    // );
   }
 
   Future<void> initPushNotification() async {

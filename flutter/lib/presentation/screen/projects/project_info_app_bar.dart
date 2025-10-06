@@ -7,7 +7,7 @@ class ProjectInfoAppBar {
   static AppBar projectInfoAppBar(BuildContext context, Color color) {
     return MyAppBar.appBar(
       context,
-      title: MyText.text1('Project Info'),
+      title: MyText.text1('Project Info', textColor: lightGrey),
       foregroundColor: white,
       backgroundColor: color,
     );

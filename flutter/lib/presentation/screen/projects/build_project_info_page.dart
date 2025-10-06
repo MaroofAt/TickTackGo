@@ -10,8 +10,10 @@ import 'package:pr1/core/functions/user_functions.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/presentation/screen/projects/build_members_list.dart';
+import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
 import 'package:pr1/presentation/widgets/icons.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 import '../../../core/API/tasks.dart';
@@ -83,20 +85,36 @@ class BuildProjectInfoPage extends StatelessWidget {
               children: [
                 buildCompletedRow(),
                 isAdmin(retrieveProjectModel.members[0].member.id)
-                    ? MyGestureDetector.gestureDetector(
-                        onTap: () {
-                          //TODO send End-Project API
+                    ? BlocConsumer<ProjectsCubit, ProjectsState>(
+                        listener: (_, state) {
+                          if (state is ArchivingProjectFailedState) {
+                            MyAlertDialog.showAlertDialog(
+                              context,
+                              content: state.errorMessage,
+                              firstButtonText: okText,
+                              firstButtonAction: () {
+                                popScreen(context);
+                              },
+                              secondButtonText: '',
+                              secondButtonAction: () {},
+                            );
+                          }
+                          if(state is ArchivingProjectSucceededState) {
+                            BlocProvider.of<ProjectsCubit>(context).retrieveProject(projectId);
+                          }
                         },
-                        child: Container(
-                          height: height(context) * 0.05,
-                          width: width(context) * 0.3,
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).secondaryHeaderColor,
-                              borderRadius: BorderRadius.circular(12)),
-                          child: Center(
-                            child: MyText.text1('End Project?'),
-                          ),
-                        ),
+                        builder: (_, state) {
+                          if (state is ArchivingProjectState) {
+                            return buildEndProjectButtonContainer(context, LoadingIndicator.circularProgressIndicator());
+                          }
+                          return MyGestureDetector.gestureDetector(
+                            onTap: () {
+                              BlocProvider.of<ProjectsCubit>(context)
+                                  .archiveProject(retrieveProjectModel.id);
+                            },
+                            child: buildEndProjectButtonContainer(context, MyText.text1('End Project?')),
+                          );
+                        },
                       )
                     : Container(),
               ],
@@ -148,10 +166,25 @@ class BuildProjectInfoPage extends StatelessWidget {
     );
   }
 
+  Container buildEndProjectButtonContainer(BuildContext context, Widget child) {
+    return Container(
+      height: height(context) * 0.05,
+      width: width(context) * 0.3,
+      decoration: BoxDecoration(
+          color: retrieveProjectModel.ended
+              ? lightGrey
+              : Theme.of(context).secondaryHeaderColor,
+          borderRadius: BorderRadius.circular(12)),
+      child: Center(
+        child: child,
+      ),
+    );
+  }
+
   Row buildCompletedRow() {
     return Row(
       children: [
-        MyText.text1('completed: ', textColor: white, fontSize: 18),
+        MyText.text1('Ended: ', textColor: white, fontSize: 18),
         MyText.text1(retrieveProjectModel.ended.toString(),
             textColor: white, fontSize: 18),
       ],

@@ -9,14 +9,12 @@ import 'package:pr1/core/functions/refresh_token.dart';
 import 'package:pr1/data/models/auth/sign_up_model.dart';
 
 import '../../core/API/handel_notification.dart';
-import '../../core/API/notivications_api.dart';
-import '../../core/API/user.dart';
+import '../../core/API/notifications_api.dart';
 import '../../core/functions/navigation_functions.dart';
 import '../../core/variables/api_variables.dart';
 import '../../core/variables/global_var.dart';
 import '../../core/variables/intro_questions_variables.dart';
 import '../../data/local_data/local_data.dart';
-import '../../data/models/user/user.dart';
 
 part 'auth_state.dart';
 
@@ -28,16 +26,17 @@ class AuthCubit extends Cubit<AuthState> {
   final NotificationHandel _notificationhandel = NotificationHandel();
 
   ///////////SignUp
-  Future<void> sendEmailForOTP(String email,String name ,String password, BuildContext context) async {
+  Future<void> sendEmailForOTP(
+      String email, String name, String password, BuildContext context) async {
     emit(SignupLoadingState());
     isloading = true;
 
     print("trying...");
 
     var data = FormData.fromMap({
-    "username": name,
-    "email": email,
-    "password": password,
+      "username": name,
+      "email": email,
+      "password": password,
       "what_do_you_do": selectedOptions[0],
       "how_to_use_website": selectedOptions[1],
       "how_did_you_get_here": selectedOptions[2]
@@ -56,7 +55,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (response.statusCode == 200 && response.data.isNotEmpty) {
         print("success");
         print(response.data);
-        pushNamed(context, verfiyeRoute);
+        pushNamed(context, verifyRoute);
         emit(OTPSentSuccess());
       } else if (response.statusCode == 400 && response.data.isNotEmpty) {
         final errorData = response.data;
@@ -65,10 +64,12 @@ class AuthCubit extends Cubit<AuthState> {
         String errorMessage = "";
 
         if (errorData.containsKey('username')) {
-          errorMessage += "Username: ${List<String>.from(errorData['username']).join(', ')}\n";
+          errorMessage +=
+              "Username: ${List<String>.from(errorData['username']).join(', ')}\n";
         }
         if (errorData.containsKey('email')) {
-          errorMessage += "Email: ${List<String>.from(errorData['email']).join(', ')}";
+          errorMessage +=
+              "Email: ${List<String>.from(errorData['email']).join(', ')}";
         }
 
         showErrorDialog(context, "Registration Error", errorMessage);
@@ -150,7 +151,8 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   ///////login
-  Future<void> login(String email, String password, BuildContext context) async {
+  Future<void> login(
+      String email, String password, BuildContext context) async {
     // await _notificationhandel.initNotification();
     isloading = true;
     emit(LoginLoadingState());
@@ -159,9 +161,9 @@ class AuthCubit extends Cubit<AuthState> {
       final response = await dio.post(
         '/users/token/',
         options: Options(
-        method: 'POST',
-        validateStatus: (status) => status! < 500,
-      ),
+          method: 'POST',
+          validateStatus: (status) => status! < 500,
+        ),
         data: {
           'email': email,
           'password': password,
@@ -172,30 +174,25 @@ class AuthCubit extends Cubit<AuthState> {
         final accessToken = response.data['access'];
         final refreshToken = response.data['refresh'];
         await saveTokens(accessToken, refreshToken);
-        token=accessToken;
+        token = accessToken;
         refresh = refreshToken;
-        if (FCMuserToken != null  && deviceType != null) {
+        if (FCMuserToken != null && deviceType != null) {
           NotificationApi().registerDevice(
             registrationId: FCMuserToken!,
             deviceType: deviceType!,
           );
-        }else {
+        } else {
           print("FCM Token is null, device not registered yet");
         }
 
-
         pushNamedAndRemoveUntil(context, mainHomePageRoute);
         emit(SuccessfulyLoginState());
-      }else if (response.statusCode == 401 && response.data.isNotEmpty ) {
+      } else if (response.statusCode == 401 && response.data.isNotEmpty) {
         final errorDetail = response.data['detail'] ?? 'Invalid credentials';
         emit(FailedLoginState(errorDetail.toString()));
-        showErrorDialog(
-            context,
-            "Login Failed",
-            errorDetail is String ? errorDetail : "Invalid email or password"
-        );
-      }
-      else {
+        showErrorDialog(context, "Login Failed",
+            errorDetail is String ? errorDetail : "Invalid email or password");
+      } else {
         print("Login failed: ${response.data}");
         emit(FailedLoginState(response.data.toString()));
       }
@@ -209,6 +206,7 @@ class AuthCubit extends Cubit<AuthState> {
       isloading = false;
     }
   }
+
 //// logout
   Future<void> logout(BuildContext context) async {
     try {
@@ -216,44 +214,47 @@ class AuthCubit extends Cubit<AuthState> {
       await clearTokens();
 
       token = "";
-      refresh ='';
+      refresh = '';
       user = null;
       globalSignUpModel = null;
       await clearTokens();
 
       emit(LogoutSuccessState());
-    pushNamedAndRemoveUntil(
-        context,
-       signupRoute
-      );
+      pushNamedAndRemoveUntil(context, signupRoute);
     } catch (e) {
       print('Error during logout: $e');
       emit(LogoutFailedState('Failed to logout: $e'));
-      showErrorDialog(context, "Logout Error", "Failed to logout. Please try again.");
+      showErrorDialog(
+          context, "Logout Error", "Failed to logout. Please try again.");
     }
   }
+
   void showErrorDialog(BuildContext context, String title, String message) {
     showDialog(
       context: context,
-      builder: (context) =>
-          AlertDialog(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            title: Text(title),
-            content: Text(message,style: const TextStyle(color: white),),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("OK"),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(title),
+        content: Text(
+          message,
+          style: const TextStyle(color: white),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
           ),
+        ],
+      ),
     );
   }
 
   //// Sign in with google
   Future<void> signInWithGoogle() async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email'],
-    serverClientId: "189709970345-kd9qm46btja8ciid052a15r7paditavm.apps.googleusercontent.com");
+    final GoogleSignIn _googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+        serverClientId:
+            "189709970345-kd9qm46btja8ciid052a15r7paditavm.apps.googleusercontent.com");
 
     try {
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
@@ -275,10 +276,8 @@ class AuthCubit extends Cubit<AuthState> {
       print('Auth object: $auth');
 
       print('Google ID Token: $idToken');
-
     } catch (e) {
       print('Sign-in error: $e');
     }
   }
-
 }

@@ -9,4 +9,3 @@ String refresh = '';
 String? FCMuserToken;
 String? deviceType;
 User? user ;
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

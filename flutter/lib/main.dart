@@ -18,9 +18,7 @@ import 'package:firebase_core/firebase_core.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await  initOneSignal()
   // await NotificationApi().getDeviceToken();
   // await NotificationHandel().initNotification();
@@ -40,14 +38,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => SplashCubit()),
         BlocProvider(create: (_) => ReplyCubit(IssueApi())),
       ],
-      child: MaterialApp(
-        navigatorKey: navigatorKey,
+      child: MaterialApp.router(
+        routerConfig: router,
         builder: DevicePreview.appBuilder,
         debugShowCheckedModeBanner: false,
         theme: theme(),
         // theme: ThemeData.dark(),
-        routes: routes,
-        home: const SplashScreen(),
       ),
     );
   }

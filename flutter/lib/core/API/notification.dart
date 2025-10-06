@@ -57,24 +57,24 @@ Future<void> initOneSignal() async {
   //
   // print(
   //     "=====================================================================");
-  OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-
-    showDialog(
-      context: navigatorKey.currentContext!,
-      builder: (_) => AlertDialog(
-        title: Text(event.notification.title ?? "New Notification"),
-        content: Text(event.notification.body ?? ""),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(navigatorKey.currentContext!),
-            child: Text("OK"),
-          ),
-        ],
-      ),
-    );
-    // event.notification.display();
-
-  });
+  // OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+  //
+  //   showDialog(
+  //     context: navigatorKey.currentContext!,
+  //     builder: (_) => AlertDialog(
+  //       title: Text(event.notification.title ?? "New Notification"),
+  //       content: Text(event.notification.body ?? ""),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(navigatorKey.currentContext!),
+  //           child: Text("OK"),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  //   // event.notification.display();
+  //
+  // });
 
 }
   Future<void> sendTokenToServer( String pushToken,String id) async {
