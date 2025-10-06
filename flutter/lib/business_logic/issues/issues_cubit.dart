@@ -1,17 +1,13 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:pr1/core/constance/colors.dart';
 
 import '../../core/API/issues.dart';
 import '../../core/variables/api_variables.dart';
 import '../../core/variables/global_var.dart';
-import '../../core/variables/issues_variables.dart';
-import '../../data/models/issues/issue_create.dart';
 import '../../data/models/issues/list_issues_model.dart';
-import '../../data/models/issues/showreplie.dart';
+
 
 part 'issues_state.dart';
 
@@ -106,23 +102,23 @@ class IssuesCubit extends Cubit<IssuesState> {
   //   }
   // }
 
-//   Future<void> makesolved({
+//   Future<void> makeSolved({
 //     required int issueId,
 //     required int projectId,
 //     required BuildContext context
 //   }) async {
 //     emit(IssueLoading());
 //     try {
-//       final issueData = await _issueApi.marksolved(
+//       final issueData = await _issueApi.markSolved(
 //         issueID: issueId, projectId: projectId, context: context,
 //       );
-//       emit(IssuesolvedLoaded());
+//       emit(IssueSolvedLoaded());
 //     } catch (e) {
 //       emit(IssueError(e.toString()));
 //     }
 //   }
 // }
-  Future<void> marksolved({
+  Future<void> markSolved({
     required BuildContext context,
     required int issueID,
     required int projectId,
@@ -147,7 +143,7 @@ class IssuesCubit extends Cubit<IssuesState> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
 
-        emit(IssuesolvedLoaded());
+        emit(IssueSolvedLoaded());
         fetchSingleIssue(
           issueId: issueID,
           projectId: projectId,
@@ -191,7 +187,7 @@ class IssuesCubit extends Cubit<IssuesState> {
                   ],
                 ),
           );
-          emit(IssuesolvedLoaded());
+          emit(IssueSolvedLoaded());
           fetchSingleIssue(
             issueId: issueID,
             projectId: projectId,
@@ -205,7 +201,7 @@ class IssuesCubit extends Cubit<IssuesState> {
             builder: (_) =>
                 AlertDialog(
                   title: const Text("Error"),
-                  content: Text("Dio error: $errorMessage",style: TextStyle(color: white)),
+                  content: Text("Dio error: $errorMessage",style: const TextStyle(color: white)),
                   actions: [
                     TextButton(
                       child: const Text("OK"),
@@ -230,7 +226,7 @@ class IssuesCubit extends Cubit<IssuesState> {
                 errorMessage.toString().toLowerCase().contains("already solved")
                     ? "This issue is already solved."
                     : "Dio error: $errorMessage",
-                  style: TextStyle(color: white)
+                  style: const TextStyle(color: white)
               ),
               actions: [
                 TextButton(
@@ -248,7 +244,7 @@ class IssuesCubit extends Cubit<IssuesState> {
         builder: (_) =>
             AlertDialog(
               title: const Text("Unexpected Error"),
-              content: Text("Something went wrong: $e",style: TextStyle(color: white)),
+              content: Text("Something went wrong: $e",style: const TextStyle(color: white)),
               actions: [
                 TextButton(
                   child: const Text("OK"),
@@ -263,7 +259,7 @@ class IssuesCubit extends Cubit<IssuesState> {
 // Future<void> fetchReplies(int projectId, int issueId) async {
   //   emit(ReplyLoading());
   //   try {
-  //     final replies = await _issueApi.get_Replie(projectId: projectId, issueID: issueId);
+  //     final replies = await _issueApi.get_Reply(projectId: projectId, issueID: issueId);
   //     emit(ReplyLoaded(replies));
   //   } catch (e) {
   //     emit(IssueError(e.toString()));
@@ -276,7 +272,7 @@ class IssuesCubit extends Cubit<IssuesState> {
 //   }) async {
 //     emit(ReplyCreating());
 //     try {
-//       await _issueApi.createReplie(
+//       await _issueApi.createReply(
 //         body: body,
 //         issueID: issueId,
 //       );

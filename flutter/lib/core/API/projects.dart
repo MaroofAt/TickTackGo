@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/models/projects/add_member_to_project.dart';
+import 'package:pr1/data/models/projects/archive_project_model.dart';
 import 'package:pr1/data/models/projects/change_user_role_model.dart';
 import 'package:pr1/data/models/projects/create_project_model.dart';
 import 'package:pr1/data/models/projects/delete_project_model.dart';
@@ -9,7 +10,8 @@ import 'package:pr1/data/models/projects/fetch_projects_model.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 
 class ProjectsApi {
-  static Future<List<FetchProjectsModel>> fetchProjects(int workspaceId, String token) async {
+  static Future<List<FetchProjectsModel>> fetchProjects(
+      int workspaceId, String token) async {
     var headers = {'Authorization': 'Bearer $token'};
 
     var queryParameters = {'workspace': workspaceId};
@@ -39,11 +41,11 @@ class ProjectsApi {
     return projects;
   }
 
-  static Future<CreateProjectModel> createProject(String title, int workspaceId, String color, int? parentProject, String token) async {
+  static Future<CreateProjectModel> createProject(String title, int workspaceId,
+      String color, int? parentProject, String token) async {
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer $token'
+      'Authorization': 'Bearer $token'
     };
     var data = {
       "title": title,
@@ -79,7 +81,8 @@ class ProjectsApi {
     return createProjectModel;
   }
 
-  static Future<RetrieveProjectModel> retrieveProject(int projectId, String token) async {
+  static Future<RetrieveProjectModel> retrieveProject(
+      int projectId, String token) async {
     var headers = {'Authorization': 'Bearer $token'};
 
     late RetrieveProjectModel retrieveProjectModel;
@@ -104,7 +107,8 @@ class ProjectsApi {
     return retrieveProjectModel;
   }
 
-  static Future<AddMemberToProjectModel> addMemberToProject(int projectId, int userId, String token) async {
+  static Future<AddMemberToProjectModel> addMemberToProject(
+      int projectId, int userId, String token) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -137,7 +141,8 @@ class ProjectsApi {
     return addMemberToProjectModel;
   }
 
-  static Future<ChangeUserRoleModel> changeUserRole(int projectId, String newRole, int userId, String token) async {
+  static Future<ChangeUserRoleModel> changeUserRole(
+      int projectId, String newRole, int userId, String token) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -167,7 +172,8 @@ class ProjectsApi {
     return changeUserRoleModel;
   }
 
-  static Future<DeleteProjectModel> deleteProject(int projectId, String token) async {
+  static Future<DeleteProjectModel> deleteProject(
+      int projectId, String token) async {
     var headers = {'Authorization': 'Bearer $token'};
     late DeleteProjectModel deleteProjectModel;
 
@@ -191,4 +197,29 @@ class ProjectsApi {
     return deleteProjectModel;
   }
 
+  static Future<ArchiveProjectModel> archiveProject(
+      int projectId, String token) async {
+    var headers = {'Authorization': 'Bearer $token'};
+
+    late ArchiveProjectModel archiveProjectModel;
+
+    try {
+      var response = await dio.request(
+        '/projects/$projectId/archive_project/',
+        options: Options(
+          method: 'PATCH',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 202) {
+        archiveProjectModel = ArchiveProjectModel.onSuccess(response.data);
+      } else {
+        archiveProjectModel = ArchiveProjectModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      archiveProjectModel = ArchiveProjectModel.error(handleDioError(e));
+    }
+    return archiveProjectModel;
+  }
 }

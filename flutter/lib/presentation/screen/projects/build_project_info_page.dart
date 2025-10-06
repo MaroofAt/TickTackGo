@@ -66,11 +66,11 @@ class BuildProjectInfoPage extends StatelessWidget {
                         child: Row(
                           children: [
                             MyText.text1("Gantt chart", fontSize: 20),
-                            SizedBox(
-                              width: width(context) * 0.03,
-                            ),
-                            MyIcons.icon(Icons.arrow_forward_rounded,
-                                color: Colors.black45)
+                            SizedBox(width: width(context) * 0.03),
+                            MyIcons.icon(
+                              Icons.arrow_forward_rounded,
+                              color: Colors.black45,
+                            )
                           ],
                         ),
                       )),
@@ -99,20 +99,21 @@ class BuildProjectInfoPage extends StatelessWidget {
                               secondButtonAction: () {},
                             );
                           }
-                          if(state is ArchivingProjectSucceededState) {
-                            BlocProvider.of<ProjectsCubit>(context).retrieveProject(projectId);
+                          if (state is ArchivingProjectSucceededState) {
+                            BlocProvider.of<ProjectsCubit>(context)
+                                .retrieveProject(projectId);
                           }
                         },
                         builder: (_, state) {
                           if (state is ArchivingProjectState) {
-                            return buildEndProjectButtonContainer(context, LoadingIndicator.circularProgressIndicator());
+                            return buildEndProjectButtonContainer(context,
+                                LoadingIndicator.circularProgressIndicator());
                           }
                           return MyGestureDetector.gestureDetector(
-                            onTap: () {
-                              BlocProvider.of<ProjectsCubit>(context)
-                                  .archiveProject(retrieveProjectModel.id);
-                            },
-                            child: buildEndProjectButtonContainer(context, MyText.text1('End Project?')),
+                            onTap: () => BlocProvider.of<ProjectsCubit>(context)
+                                .archiveProject(retrieveProjectModel.id),
+                            child: buildEndProjectButtonContainer(
+                                context, MyText.text1('End Project?')),
                           );
                         },
                       )
