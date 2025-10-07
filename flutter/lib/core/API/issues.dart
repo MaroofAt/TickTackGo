@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
 import '../../data/models/issues/list_issues_model.dart';
 import '../../data/models/issues/showreplie.dart';
-import '../constance/colors.dart';
 import '../variables/api_variables.dart';
 import '../variables/global_var.dart';
 

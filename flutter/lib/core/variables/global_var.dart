@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 
 import '../../data/models/auth/sign_up_model.dart';
 import '../../data/models/user/user.dart';

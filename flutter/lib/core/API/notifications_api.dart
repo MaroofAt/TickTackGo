@@ -39,7 +39,7 @@ class NotificationApi {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token = await messaging.getToken();
     String? device = Platform.isAndroid ? "android" : "ios";
-    if (token != null && device!= null) {
+    if (token != null) {
       FCMuserToken = token;
       deviceType = Platform.isAndroid ? "android" : "ios";
       print('FCM: $FCMuserToken');

@@ -1,5 +1,4 @@
 import '../comments/comment.dart';
-import '../user/user.dart';
 
 class ListIssuesModel {
   int id;

@@ -18,7 +18,7 @@ class _AnimatedListItemState extends State<AnimatedListItem>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
     _opacity = Tween<double>(begin: 0, end: 1).animate(_controller);

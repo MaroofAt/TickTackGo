@@ -58,7 +58,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   width: width(context) * 0.35,
                   height: height(context) * 0.2,
                   child: MyImages.networkImage(task!.image),
@@ -388,7 +388,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
   }
 
   Widget _buildCommentsTab(CommentState state, BuildContext context) {
-    final TextEditingController _commentController = TextEditingController();
+    final TextEditingController commentController = TextEditingController();
 
     return Column(
       children: [
@@ -466,7 +466,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
             children: [
               Expanded(
                 child: TextField(
-                  controller: _commentController,
+                  controller: commentController,
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                   decoration: const InputDecoration(
                     contentPadding:
@@ -483,13 +483,13 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
               IconButton(
                 icon: const Icon(Icons.send, color: Colors.white),
                 onPressed: () {
-                  final text = _commentController.text.trim();
+                  final text = commentController.text.trim();
                   if (text.isNotEmpty) {
                     BlocProvider.of<CommentCubit>(context).addComment(
                       task!.id,
                       text,
                     );
-                    _commentController.clear();
+                    commentController.clear();
                   }
                 },
               ),

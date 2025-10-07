@@ -32,7 +32,7 @@ Widget buildDropdown(
         fillColor: Theme.of(context).scaffoldBackgroundColor,
         focusColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-      value: value,
+      initialValue: value,
       style: const TextStyle(color: Colors.white),
       dropdownColor: Theme.of(context).scaffoldBackgroundColor,
       items: items
@@ -380,7 +380,7 @@ SizedBox buildUploadedFiles(BuildContext context) {
     width: width(context),
     child: ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: BlocProvider.of<TaskCubit>(context).result!.files.length,
       itemBuilder: (context, index) {
         PlatformFile file =

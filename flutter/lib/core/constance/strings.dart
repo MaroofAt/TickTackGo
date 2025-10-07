@@ -1,5 +1,6 @@
 
 ///routes
+library;
 
 const String signinRoute = 'login';
 const String signupRoute = 'signup';
