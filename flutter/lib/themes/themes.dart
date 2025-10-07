@@ -9,9 +9,7 @@ ThemeData theme() {
     hintColor: ash,
     dividerColor: ampleOrange,
     disabledColor: darkGrey,
-    indicatorColor: sleekCyan,
     scaffoldBackgroundColor: primaryColor,
-    dialogBackgroundColor: primaryColor,
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
           fontSize: 30.0,
@@ -40,6 +38,6 @@ ThemeData theme() {
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.grey[800],
-    ),
+    ), dialogTheme: const DialogThemeData(backgroundColor: primaryColor), tabBarTheme: const TabBarThemeData(indicatorColor: sleekCyan),
   );
 }

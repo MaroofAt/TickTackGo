@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import '../variables/global_var.dart';
 import '../variables/api_variables.dart';
 
@@ -40,7 +39,7 @@ class NotificationApi {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token = await messaging.getToken();
     String? device = Platform.isAndroid ? "android" : "ios";
-    if (token != null && device!= null) {
+    if (token != null) {
       FCMuserToken = token;
       deviceType = Platform.isAndroid ? "android" : "ios";
       print('FCM: $FCMuserToken');

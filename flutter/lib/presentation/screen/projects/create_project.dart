@@ -153,7 +153,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
           fillColor: Theme.of(context).scaffoldBackgroundColor,
           focusColor: Theme.of(context).scaffoldBackgroundColor,
         ),
-        value: value,
+        initialValue: value,
         style: const TextStyle(color: Colors.white),
         dropdownColor: Theme.of(context).scaffoldBackgroundColor,
         items: items

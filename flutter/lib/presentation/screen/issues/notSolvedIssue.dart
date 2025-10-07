@@ -19,12 +19,12 @@ class NotSolvedIssue extends StatelessWidget {
         return Stack(
           children: [
             Card(
-              margin: EdgeInsets.symmetric(horizontal:18, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal:18, vertical: 5),
               color: Colors.grey[800],
               child: ListTile(
                 title: Text(issue.title,
-                    style: TextStyle(color: white)),
-                trailing:issue.solved!=true? Icon(Icons.close, color: ampleOrange):Icon(Icons.check,color: ampleOrange),
+                    style: const TextStyle(color: white)),
+                trailing:issue.solved!=true? const Icon(Icons.close, color: ampleOrange):const Icon(Icons.check,color: ampleOrange),
                 onTap: () async {
                   final value = await Navigator.pushNamed(
                     context,
@@ -42,10 +42,10 @@ class NotSolvedIssue extends StatelessWidget {
               ),
 
             ),
-            Positioned(child: Container(width: 20,height: 40,decoration: BoxDecoration(
+            Positioned(left:10,top:12, child: Container(width: 20,height: 40,decoration: const BoxDecoration(
               color: ampleOrange,
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(400),topLeft: Radius.circular(400)),
-            ),),left:10,top:12),
+            ),)),
           ],
         );
       },

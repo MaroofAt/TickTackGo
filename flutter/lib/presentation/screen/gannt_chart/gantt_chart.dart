@@ -49,9 +49,9 @@ class _TasksGanttChartState extends State<TasksGanttChart> {
           backgroundColor: primaryColor,
           leading: IconButton(
               onPressed: () => popScreen(context),
-              icon: Icon(Icons.arrow_back_sharp, color: white)),
-          title: Center(
-              child: const Text('Gantt Chart',
+              icon: const Icon(Icons.arrow_back_sharp, color: white)),
+          title: const Center(
+              child: Text('Gantt Chart',
                   style: TextStyle(
                       color: white, fontSize: 20, fontFamily: 'PTSerif')))),
       body: valid.isEmpty

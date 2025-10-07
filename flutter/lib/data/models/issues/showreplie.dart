@@ -1,5 +1,4 @@
 import 'package:pr1/data/models/comments/comment.dart';
-import '../user/user.dart';
 
 class ShowReplie {
   final int id;

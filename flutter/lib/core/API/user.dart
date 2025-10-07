@@ -33,7 +33,6 @@ Future<void> getUser() async {
 
 Future<AllUser> getAllUser() async {
   try {
-    if (refresh == null) throw Exception('No token found');
     final response = await dio.get(
       '/users/',
       options: Options(

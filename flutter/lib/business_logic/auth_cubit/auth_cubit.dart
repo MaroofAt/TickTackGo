@@ -245,13 +245,13 @@ class AuthCubit extends Cubit<AuthState> {
 
   //// Sign in with google
   Future<void> signInWithGoogle() async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn(
+    final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email'],
         serverClientId:
             "189709970345-kd9qm46btja8ciid052a15r7paditavm.apps.googleusercontent.com");
 
     try {
-      final GoogleSignInAccount? account = await _googleSignIn.signIn();
+      final GoogleSignInAccount? account = await googleSignIn.signIn();
 
       if (account == null) {
         print('Login canceled');

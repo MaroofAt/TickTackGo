@@ -1,7 +1,6 @@
 
 
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
@@ -163,10 +162,10 @@ bool validateFields() {
                         margin: const EdgeInsets.only(left: 50,top:20),
                         child: IconButton(onPressed: () {
                           Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) => SignUp()));
+                              MaterialPageRoute(builder: (context) => const SignUp()));
                         },
                           icon:RichText(
-                            text: TextSpan(
+                            text: const TextSpan(
                               style: TextStyle(fontSize: 20, color: white,  decoration: TextDecoration.underline,
                                   decorationColor: parrotGreen, decorationThickness: 2,fontFamily: "DMSerifText"),
                               text: 'Sign Up',
@@ -177,7 +176,7 @@ bool validateFields() {
                       Container(
                         margin: const EdgeInsets.only(left: 80,top:20),
                         child: RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             style: TextStyle(fontSize: 16,
                                 color: white,
                                 decoration: TextDecoration.underline,
@@ -200,7 +199,7 @@ bool validateFields() {
                 child: Container(
                   width: width(context) - 200,
                   height:height(context) - 350,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color:  parrotGreen,
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(600)),
@@ -213,7 +212,7 @@ bool validateFields() {
                 child: Container(
                     width: width(context),
                     height: height(context) - 450,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: ampleOrange,
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.elliptical(600, 400),
@@ -222,22 +221,22 @@ bool validateFields() {
                     child: Column(
                       children: [
                         Container(
-                            margin: EdgeInsets.only(left: 120, top: 180),
+                            margin: const EdgeInsets.only(left: 120, top: 180),
                             // padding: EdgeInsets.only(top: 90, right: 180),
                             child: Text(
                               "Welcome",
                               style: TextStyle(
                                   fontSize: 40,
-                                  color: Color(0xffffff).withOpacity(1),
+                                  color: const Color(0x00ffffff).withOpacity(1),
                                   fontFamily: "DMSerifText"),
                             )),
                         Container(
-                            margin: EdgeInsets.only(left: 55),
+                            margin: const EdgeInsets.only(left: 55),
                             child: Text(
                               "Back",
                               style: TextStyle(
                                   fontSize: 40,
-                                  color: Color(0xffffff).withOpacity(1),
+                                  color: const Color(0x00ffffff).withOpacity(1),
                                   fontFamily: "DMSerifText"),
                             )),
                       ],
@@ -249,7 +248,7 @@ bool validateFields() {
                 child: Container(
                   width: width(context) - 180,
                   height: height(context) - 680,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color:  parrotGreen,
                     borderRadius:
                     BorderRadius.only(bottomRight: Radius.elliptical(600, 500)),

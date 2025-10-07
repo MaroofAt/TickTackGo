@@ -74,7 +74,7 @@ class MotivationalSection extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           // Motivational Quote Card
           Card(
             color: Colors.grey[900],

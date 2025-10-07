@@ -7,7 +7,7 @@ import 'package:pr1/core/variables/global_var.dart';
 class NotificationHandel {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  final AndroidNotificationChannel _androidChannel = AndroidNotificationChannel(
+  final AndroidNotificationChannel _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
     'High Importance Notifications',
     description: 'This channel is used for important notifications.',
@@ -116,13 +116,13 @@ class NotificationHandel {
 
   Future<void> initLocalNotification() async {
     // ✅ تعريف AndroidInitializationSettings بشكل صحيح
-    final AndroidInitializationSettings androidInitializationSettings =
+    const AndroidInitializationSettings androidInitializationSettings =
     AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    final DarwinInitializationSettings darwinInitializationSettings =
+    const DarwinInitializationSettings darwinInitializationSettings =
     DarwinInitializationSettings();
 
-    final InitializationSettings initializationSettings = InitializationSettings(
+    const InitializationSettings initializationSettings = InitializationSettings(
       android: androidInitializationSettings,
       iOS: darwinInitializationSettings,
     );

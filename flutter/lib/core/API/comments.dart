@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 
 import '../../data/models/comments/comment.dart';
-import '../functions/refresh_token.dart';
 import '../variables/api_variables.dart';
 import '../variables/global_var.dart';
 
