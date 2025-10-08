@@ -7,12 +7,13 @@ plugins {
 
 android {
     namespace = "com.example.pr1"
-    compileSdk = 35
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 36
+    ndkVersion = "29.0.14206865"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -21,7 +22,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.pr1"
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -44,3 +46,7 @@ flutter {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+}
