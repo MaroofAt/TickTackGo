@@ -202,7 +202,7 @@ class _SignUpState extends State<SignUp> {
                       margin: const EdgeInsets.only(top: 100, left: 80),
                       child: IconButton(
                         onPressed: () {
-                          pushReplacementNamed(context, signinRoute);
+                          pushReplacementNamed(context, signInRoute);
                           // Navigator.of(context).pushReplacement(
                           //     MaterialPageRoute(builder: (context) => SignIn()));
                         },

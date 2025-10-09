@@ -1,39 +1,18 @@
 import 'package:flutter/material.dart';
-
-pushScreen(BuildContext context, Widget secondScreen) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => secondScreen),
-  );
-}
-
-pushReplacementScreen(BuildContext context, Widget secondScreen) {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => secondScreen),
-  );
-}
+import 'package:go_router/go_router.dart';
 
 pushReplacementNamed(BuildContext context, String route) {
-  Navigator.of(context).pushReplacementNamed(route);
+  GoRouter.of(context).go(route);
 }
 
-pushNamed(BuildContext context, String route, {Object? args}) {
-  Navigator.pushNamed(context, route, arguments: args);
+pushNamed(BuildContext context, String route, {Map<String, dynamic>? args}) {
+  GoRouter.of(context).pushNamed(route,queryParameters: args ?? {});
 }
 
 pushNamedAndRemoveUntil(BuildContext context, String route) {
-  Navigator.pushNamedAndRemoveUntil(
-    context,
-    route,
-    (route) => false,
-  );
+  GoRouter.of(context).go(route);
 }
 
 popScreen(BuildContext context, [Object? result]) {
-  Navigator.pop(context, result);
-}
-
-popUntil(BuildContext context, String routes) {
-  Navigator.popUntil(context, ModalRoute.withName(routes));
+  GoRouter.of(context).pop();
 }

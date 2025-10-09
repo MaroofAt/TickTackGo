@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
@@ -33,7 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
       String? refresh =
           await BlocProvider.of<SplashCubit>(context).retrieveRefreshToken();
       if (refresh == null) {
-        pushReplacementNamed(context, onboardingMainRoute);
+        // pushReplacementNamed(context, onboardingMainRoute);
+        GoRouter.of(context).go(onboardingMainRoute);
       } else {
         BlocProvider.of<SplashCubit>(context).refreshToken(refresh);
       }
@@ -51,7 +53,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: BlocListener<SplashCubit, SplashState>(
           listener: (context, state) {
             if (state is RefreshTokenSucceededState) {
-              pushReplacementNamed(context, mainHomePageRoute);
+              // pushReplacementNamed(context, mainHomePageRoute);
+              GoRouter.of(context).go(mainHomePageRoute);
             }
             if (state is RefreshTokenFailedState) {
               MyAlertDialog.showAlertDialog(
@@ -59,8 +62,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 content: 'something went wrong please login again',
                 firstButtonText: okText,
                 firstButtonAction: () {
-                  popScreen(context);
-                  pushReplacementNamed(context, signupRoute);
+                  // popScreen(context);
+                  // pushReplacementNamed(context, signupRoute);
+                  GoRouter.of(context).pop();
+                  GoRouter.of(context).go(signupRoute);
                 },
                 secondButtonText: '',
                 secondButtonAction: () {},

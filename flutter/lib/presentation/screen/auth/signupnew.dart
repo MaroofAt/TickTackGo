@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/presentation/screen/auth/sign_in_new.dart';
 
 import '../../../core/functions/navigation_functions.dart';
@@ -242,26 +243,24 @@ class SignUpNewState extends State<SignUpNew> {
                             fontFamily: 'PTSerif'),
                         textAlign: TextAlign.end)),
                 Container(
-                    margin:
-                        const EdgeInsets.only(left: 15, top: 20, bottom: 20),
-                    decoration: const BoxDecoration(
-                        color: ampleOrange,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    width: width(context) * 0.9,
-                    child: IconButton(
-                        onPressed: () {
-                          pushScreen(
-                              context,
-                              BlocProvider(
-                                create: (context) => AuthCubit(),
-                                child: const SignInNew(),
-                              ));
-                        },
-                        icon: const Text("Sign In",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontFamily: 'PTSerif')))),
+                  margin: const EdgeInsets.only(left: 15, top: 20, bottom: 20),
+                  decoration: const BoxDecoration(
+                      color: ampleOrange,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  width: width(context) * 0.9,
+                  child: IconButton(
+                    onPressed: () {
+                      pushNamed(context, signInRoute);
+                    },
+                    icon: const Text(
+                      "Sign In",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'PTSerif'),
+                    ),
+                  ),
+                ),
               ],
             ),
           );

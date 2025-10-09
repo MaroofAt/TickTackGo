@@ -37,13 +37,14 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => SplashCubit()),
         BlocProvider(create: (_) => ReplyCubit(IssueApi())),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         builder: DevicePreview.appBuilder,
         debugShowCheckedModeBanner: false,
         theme: theme(),
         // theme: ThemeData.dark(),
-        routes: routes,
-        home: const SplashScreen(),
+        // routes: routes,
+        // home: const SplashScreen(),
+        routerConfig: AppRouter().router,
       ),
     );
   }
