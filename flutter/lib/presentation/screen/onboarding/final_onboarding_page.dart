@@ -43,10 +43,7 @@ class FinalOnboardingPage extends StatelessWidget {
                 width: width(context) * 0.35,
                 child: MyButtons.primaryButton(
                   () {
-                    pushReplacementScreen(context, BlocProvider(
-                      create: (context) => AuthCubit(),
-                      child:const SignUpNew(),
-                    ));
+                    pushReplacementNamed(context, signupRoute);
                   },
                   Theme.of(context).secondaryHeaderColor,
                   child: MyText.text1(

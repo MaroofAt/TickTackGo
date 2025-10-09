@@ -37,7 +37,6 @@ class BuildProjectsList extends StatelessWidget {
                   BlocProvider.of<ProjectsCubit>(context, listen: false);
               final workspaceCubit =
                   BlocProvider.of<WorkspaceCubit>(context, listen: false);
-
               projectsCubit.onArrowTap(0);
               workspaceCubit.fetchWorkspaces();
             }

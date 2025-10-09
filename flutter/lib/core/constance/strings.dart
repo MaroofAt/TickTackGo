@@ -2,7 +2,8 @@
 ///routes
 library;
 
-const String signinRoute = 'login';
+const String splashScreen = '/';
+const String signInRoute = 'login';
 const String signupRoute = 'signup';
 const String verifyRoute = 'verify';
 const String issueRout = "issues";
