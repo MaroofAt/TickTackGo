@@ -6,7 +6,7 @@ import '../core/API/comments.dart';
 part 'comment_state.dart';
 
 class CommentCubit extends Cubit<CommentState> {
-  final Commentapi _commentApi;
+  final CommentApi _commentApi;
 
   CommentCubit(this._commentApi) : super(CommentInitial());
 

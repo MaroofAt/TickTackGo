@@ -28,7 +28,7 @@ class NotSolvedIssue extends StatelessWidget {
                 onTap: () async {
                   final value = await Navigator.pushNamed(
                     context,
-                    issuesDetails,
+                    issuesDetailsRoute,
                     arguments: {
                       "issueId": issue.id,
                       "projectId": issue.project.id,

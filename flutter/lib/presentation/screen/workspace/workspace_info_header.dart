@@ -46,7 +46,7 @@ class WorkspaceInfoHeader extends StatelessWidget {
               onTap: () {
                 pushNamed(
                   context,
-                  createUpdateWorkspacePage,
+                  createUpdateWorkspacePageName,
                   args: {
                     'title': retrieveWorkspace.title,
                     'description': retrieveWorkspace.description,

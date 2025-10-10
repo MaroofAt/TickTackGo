@@ -30,7 +30,7 @@ class _IntroQuestionsMainState extends State<IntroQuestionsMain> {
               BlocListener<IntroQuestionsCubit, IntroQuestionsState>(
                 listener: (context, state) {
                   if (state is QuestionsFinishedState) {
-                    pushReplacementNamed(context, finalOnboardingPageRoute);
+                    pushReplacementNamed(context, finalOnboardingPageName);
                   }
                 },
                 child: const QuestionsPageView(),

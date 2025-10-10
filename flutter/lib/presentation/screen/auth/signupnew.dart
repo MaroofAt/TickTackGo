@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
@@ -250,7 +251,7 @@ class SignUpNewState extends State<SignUpNew> {
                   width: width(context) * 0.9,
                   child: IconButton(
                     onPressed: () {
-                      pushNamed(context, signInRoute);
+                      pushNamed(context, signInName);
                     },
                     icon: const Text(
                       "Sign In",

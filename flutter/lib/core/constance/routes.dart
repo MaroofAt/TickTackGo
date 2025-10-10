@@ -54,7 +54,8 @@ class AppRouter {
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: splashScreen,
+        path: splashScreenRoute,
+        name: splashScreenName,
         builder: (context, state) => BlocProvider(
           create: (context) => SplashCubit(),
           child: const SplashScreen(),
@@ -62,6 +63,7 @@ class AppRouter {
       ),
       GoRoute(
         path: signInRoute,
+        name: signInName,
         builder: (context, state) => BlocProvider(
           create: (context) => AuthCubit(),
           child: const SignInNew(),
@@ -69,6 +71,7 @@ class AppRouter {
       ),
       GoRoute(
         path: signupRoute,
+        name: signupName,
         builder: (context, state) => BlocProvider(
           create: (context) => AuthCubit(),
           child: const SignUpNew(),
@@ -76,21 +79,25 @@ class AppRouter {
       ),
       GoRoute(
         path: verifyRoute,
+        name: verifyName,
         builder: (context, state) => BlocProvider(
           create: (context) => AuthCubit(),
           child: const VerifyPage(),
         ),
       ),
       GoRoute(
-        path: issuesDetails,
+        path: issuesDetailsRoute,
+        name: issuesDetailsName,
         builder: (context, state) => const IssueDetails(),
       ),
       GoRoute(
         path: onboardingMainRoute,
+        name: onboardingMainName,
         builder: (context, state) => const OnboardingMain(),
       ),
       GoRoute(
         path: introQuestionsRoute,
+        name: introQuestionsName,
         builder: (context, state) => BlocProvider(
           create: (context) => IntroQuestionsCubit(),
           child: const IntroQuestionsMain(),
@@ -98,10 +105,12 @@ class AppRouter {
       ),
       GoRoute(
         path: finalOnboardingPageRoute,
-        builder: (context, state) => const IntroQuestionsMain(),
+        name: finalOnboardingPageName,
+        builder: (context, state) => const FinalOnboardingPage(),
       ),
       GoRoute(
         path: workspacesShowPageRoute,
+        name: workspacesShowPageName,
         builder: (context, state) => MultiBlocProvider(
           providers: [
             BlocProvider<WorkspaceCubit>(create: (context) => WorkspaceCubit()),
@@ -112,6 +121,7 @@ class AppRouter {
       ),
       GoRoute(
         path: receivedInvitationPageRoute,
+        name: receivedInvitationPageName,
         builder: (context, state) => BlocProvider(
           create: (context) => InvitationCubit(),
           child: const ReceivedInvitations(),
@@ -119,17 +129,20 @@ class AppRouter {
       ),
       GoRoute(
         path: mainHomePageRoute,
+        name: mainHomePageName,
         builder: (context, state) => const MainHomePage(),
       ),
       GoRoute(
-        path: mainInboxPage,
+        path: mainInboxPageRoute,
+        name: mainInboxPageName,
         builder: (context, state) => BlocProvider(
           create: (context) => InboxCubit(),
           child: const MainInboxPage(),
         ),
       ),
       GoRoute(
-        path: mainShowTasksPage,
+        path: mainShowTasksPageRoute,
+        name: mainShowTasksPageName,
         builder: (context, state) => MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => ProjectsCubit()),
@@ -139,60 +152,69 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: createUpdateWorkspacePage,
+        path: createUpdateWorkspacePageRoute,
+        name: createUpdateWorkspacePageName,
         builder: (context, state) => BlocProvider(
           create: (context) => ProjectsCubit(),
           child: const CreateUpdateWorkspacePage(),
         ),
       ),
       GoRoute(
-        path: inboxInfoPage,
+        path: inboxInfoPageRoute,
+        name: inboxInfoPageName,
         builder: (context, state) => const InboxInfoPage(),
       ),
       GoRoute(
-        path: invitationSearch,
+        path: invitationSearchRoute,
+        name: invitationSearchName,
         builder: (context, state) => BlocProvider(
           create: (context) => InvitationCubit(),
           child: const InvitationSearch(),
         ),
       ),
       GoRoute(
-        path: projectInfo,
+        path: projectInfoRoute,
+        name: projectInfoName,
         builder: (context, state) => BlocProvider(
           create: (context) => ProjectsCubit(),
           child: const ProjectInfo(),
         ),
       ),
       GoRoute(
-        path: taskInfoPage,
+        path: taskInfoPageRoute,
+        name: taskInfoPageName,
         builder: (context, state) => BlocProvider(
           create: (context) => TaskCubit(),
           child: const TaskInfoPage(),
         ),
       ),
       GoRoute(
-        path: pointsStatistics,
+        path: pointsStatisticsRoute,
+        name: pointsStatisticsName,
         builder: (context, state) => BlocProvider(
           create: (context) => PointsCubit(),
           child: const PointsStatistics(),
         ),
       ),
       GoRoute(
-        path: workspaceInfoPage,
+        path: workspaceInfoPageRoute,
+        name: workspaceInfoPageName,
         builder: (context, state) => BlocProvider(
           create: (context) => WorkspaceCubit(),
           child: const WorkspaceInfoPage(),
         ),
       ),
       GoRoute(
-        path: tasksGanttChart,
+        path: tasksGanttChartRoute,
+        name: tasksGanttChartName,
         builder: (context, state) => BlocProvider(
           create: (context) => WorkspaceCubit(),
           child: const TasksGanttChart(),
         ),
       ),
       GoRoute(
-        path: buildWorkspaceMembersList,
+        path: buildWorkspaceMembersListRoute,
+        name: buildWorkspaceMembersListName,
         builder: (context, state) => MultiBlocProvider(
           providers: [
             BlocProvider(create: (c) => ProjectsCubit()),
@@ -202,14 +224,16 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: allIssues,
+        path: allIssuesRoute,
+        name: allIssuesName,
         builder: (context, state) => BlocProvider(
           create: (context) => IssuesCubit(IssueApi()),
           child: const AllIssues(),
         ),
       ),
       GoRoute(
-        path: sentInvitesPage,
+        path: sentInvitesPageRoute,
+        name: sentInvitesPageName,
         builder: (context, state) => BlocProvider(
           create: (context) => WorkspaceCubit(),
           child: const SentInvitesPage(),
