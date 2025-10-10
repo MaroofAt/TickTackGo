@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pr1"
+    namespace = "com.ticktackgo.pr1"
     compileSdk = 36
     ndkVersion = "29.0.14206865"
 
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.pr1"
+        applicationId = "com.ticktackgo.pr1"
         minSdk = flutter.minSdkVersion
         //noinspection OldTargetApi
         targetSdk = 35
