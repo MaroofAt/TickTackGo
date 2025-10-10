@@ -29,7 +29,7 @@ class _BuildWorkspacesListState extends State<BuildWorkspacesList> {
               BuildListItem(
                 widget.fetchWorkspacesModel[index],
                 onWorkspaceTap: () {
-                  pushNamed(context, workspaceInfoPage, args: {
+                  pushNamed(context, workspaceInfoPageName, args: {
                     'workspaceId': widget.fetchWorkspacesModel[index].id,
                     'workspaceCubit': context.read<WorkspaceCubit>(),
                   });

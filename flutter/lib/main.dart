@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => CommentCubit(Commentapi())),
+        BlocProvider(create: (context) => CommentCubit(CommentApi())),
         BlocProvider(create: (context) => IssuesCubit(IssueApi())),
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => SplashCubit()),

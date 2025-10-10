@@ -86,7 +86,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                           ),
                           MyGestureDetector.gestureDetector(
                             onTap: () {
-                              pushNamed(context, invitationSearch, args: {
+                              pushNamed(context, invitationSearchName, args: {
                                 'senderId': retrieveWorkspace!.owner!.id,
                                 'workspaceId': retrieveWorkspace!.id,
                               });
@@ -145,7 +145,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
   Widget buildShowInvitesText(BuildContext context) {
     return MyGestureDetector.gestureDetector(
       onTap: () {
-        pushNamed(context, sentInvitesPage, args: {
+        pushNamed(context, sentInvitesPageName, args: {
           'workspaceId': retrieveWorkspace!.id,
           'workspaceTitle': retrieveWorkspace!.title
         });

@@ -33,7 +33,7 @@ class VerifyPageState extends State<VerifyPage> {
                       left: 40,
                       child: IconButton(
                         onPressed: () {
-                          pushReplacementNamed(context, signupRoute);
+                          pushReplacementNamed(context, signupName);
                         },
                         icon: const Icon(Icons.arrow_back_sharp),
                       )),

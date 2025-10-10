@@ -43,7 +43,7 @@ class FinalOnboardingPage extends StatelessWidget {
                 width: width(context) * 0.35,
                 child: MyButtons.primaryButton(
                   () {
-                    pushReplacementNamed(context, signupRoute);
+                    pushReplacementNamed(context, signupName);
                   },
                   Theme.of(context).secondaryHeaderColor,
                   child: MyText.text1(

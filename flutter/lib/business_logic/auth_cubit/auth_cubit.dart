@@ -49,7 +49,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (response.statusCode == 200 && response.data.isNotEmpty) {
         print("success");
         print(response.data);
-        pushNamed(context, verifyRoute);
+        pushNamed(context, verifyName);
         emit(OTPSentSuccess());
       } else if (response.statusCode == 400 && response.data.isNotEmpty) {
         final errorData = response.data;
@@ -128,7 +128,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (response.statusCode == 201) {
         print("Verification success!");
-        pushNamedAndRemoveUntil(context, mainHomePageRoute);
+        pushReplacementNamed(context, mainHomePageName);
         login(globalSignUpModel!.email, globalSignUpModel!.password, context);
         emit(SignupVerifiedSuccessState());
       } else {
@@ -179,7 +179,7 @@ class AuthCubit extends Cubit<AuthState> {
           print("FCM Token is null, device not registered yet");
         }
 
-        pushNamedAndRemoveUntil(context, mainHomePageRoute);
+        pushReplacementNamed(context, mainHomePageName);
         emit(SuccessfulyLoginState());
       } else if (response.statusCode == 401 && response.data.isNotEmpty) {
         final errorDetail = response.data['detail'] ?? 'Invalid credentials';
@@ -214,7 +214,7 @@ class AuthCubit extends Cubit<AuthState> {
       await clearTokens();
 
       emit(LogoutSuccessState());
-      pushNamedAndRemoveUntil(context, signupRoute);
+      pushReplacementNamed(context, signupName);
     } catch (e) {
       print('Error during logout: $e');
       emit(LogoutFailedState('Failed to logout: $e'));

@@ -39,7 +39,7 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
         onPressed: () {
           pushNamed(
             context,
-            createUpdateWorkspacePage,
+            createUpdateWorkspacePageName,
             args: {'workspaceCubit': BlocProvider.of<WorkspaceCubit>(context)},
           );
         },

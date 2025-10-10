@@ -2,33 +2,86 @@
 ///routes
 library;
 
-const String splashScreen = '/';
-const String signInRoute = 'login';
-const String signupRoute = 'signup';
-const String verifyRoute = 'verify';
-const String issueRout = "issues";
-const String issuesDetails = 'details';
-const String onboardingMainRoute = 'onboardingMainRoute';
-const String introQuestionsRoute = 'introQuestionsRoute';
-const String finalOnboardingPageRoute = 'finalOnboardingPageRoute';
-const String workspaceInfoRoute = 'workspaceInfoRoute';
-const String workspacesShowPageRoute = 'workspacesShowPageRoute';
-const String receivedInvitationPageRoute = 'receivedInvitationPageRoute';
-const String mainHomePageRoute = 'mainHomePageRoute';
-const String mainInboxPage = 'mainInboxPage';
-const String mainShowTasksPage = 'mainShowTasksPage';
-const String createUpdateWorkspacePage = 'CreateUpdateWorkspacePage';
-const String inboxInfoPage = 'InboxInfoPage';
-const String invitationSearch = 'InvitationSearch';
-const String projectInfo = 'ProjectInfo';
-const String taskInfoPage = 'TaskInfoPage';
-const String pointsStatistics = 'PointsStatistics';
-const String workspaceInfoPage = 'WorkspaceInfoPage';
-const String tasksGanttChart = 'tasksGanttChart';
-const String buildWorkspaceMembersList = 'BuildWorkspaceMembersList';
-const String allIssues = 'AllIssues';
-const String createTaskPage = 'CreateTaskPage';
-const String sentInvitesPage = 'SentInvitesPage';
+const String splashScreenRoute = '/';
+const String splashScreenName = 'splashScreen';
+
+const String signInRoute = '/login';
+const String signInName = 'login';
+
+const String signupRoute = '/signup';
+const String signupName = 'signup';
+
+const String verifyRoute = '/verify';
+const String verifyName = 'verify';
+
+const String issueRout = "/issues";
+const String issueName = "issues";
+
+const String issuesDetailsRoute = '/details';
+const String issuesDetailsName = 'details';
+
+const String onboardingMainRoute = '/onboardingMainRoute';
+const String onboardingMainName = 'onboardingMainRoute';
+
+const String introQuestionsRoute = '/introQuestionsRoute';
+const String introQuestionsName = 'introQuestionsRoute';
+
+const String finalOnboardingPageRoute = '/finalOnboardingPageRoute';
+const String finalOnboardingPageName = 'finalOnboardingPageRoute';
+
+const String workspaceInfoRoute = '/workspaceInfoRoute';
+const String workspaceInfoName = 'workspaceInfoRoute';
+
+const String workspacesShowPageRoute = '/workspacesShowPageRoute';
+const String workspacesShowPageName = 'workspacesShowPageRoute';
+
+const String receivedInvitationPageRoute = '/receivedInvitationPageRoute';
+const String receivedInvitationPageName = 'receivedInvitationPageRoute';
+
+const String mainHomePageRoute = '/mainHomePageRoute';
+const String mainHomePageName = 'mainHomePageRoute';
+
+const String mainInboxPageRoute = '/mainInboxPage';
+const String mainInboxPageName = 'mainInboxPage';
+
+const String mainShowTasksPageRoute = '/mainShowTasksPage';
+const String mainShowTasksPageName = 'mainShowTasksPage';
+
+const String createUpdateWorkspacePageRoute = '/CreateUpdateWorkspacePage';
+const String createUpdateWorkspacePageName = 'CreateUpdateWorkspacePage';
+
+const String inboxInfoPageRoute = '/InboxInfoPage';
+const String inboxInfoPageName = 'InboxInfoPage';
+
+const String invitationSearchRoute = '/InvitationSearch';
+const String invitationSearchName = 'InvitationSearch';
+
+const String projectInfoRoute = '/ProjectInfo';
+const String projectInfoName = 'ProjectInfo';
+
+const String taskInfoPageRoute = '/TaskInfoPage';
+const String taskInfoPageName = 'TaskInfoPage';
+
+const String pointsStatisticsRoute = '/PointsStatistics';
+const String pointsStatisticsName = 'PointsStatistics';
+
+const String workspaceInfoPageRoute = '/WorkspaceInfoPage';
+const String workspaceInfoPageName = 'WorkspaceInfoPage';
+
+const String tasksGanttChartRoute = '/tasksGanttChart';
+const String tasksGanttChartName = 'tasksGanttChart';
+
+const String buildWorkspaceMembersListRoute = '/BuildWorkspaceMembersList';
+const String buildWorkspaceMembersListName = 'BuildWorkspaceMembersList';
+
+const String allIssuesRoute = '/AllIssues';
+const String allIssuesName = 'AllIssues';
+
+const String createTaskPageRoute = '/CreateTaskPage';
+const String createTaskPageName = 'CreateTaskPage';
+
+const String sentInvitesPageRoute = '/SentInvitesPage';
+const String sentInvitesPageName = 'SentInvitesPage';
 
 ///Splash screen strings
 const String splashScreenLogoPath = 'assets/images/logo_images/logoorgenal.png';

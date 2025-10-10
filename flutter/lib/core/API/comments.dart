@@ -5,7 +5,7 @@ import '../variables/api_variables.dart';
 import '../variables/global_var.dart';
 
 
-class Commentapi{
+class CommentApi{
   Future<void> createComment({
     required int taskId,
     required String body,

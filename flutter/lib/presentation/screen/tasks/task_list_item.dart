@@ -23,7 +23,7 @@ class TaskListItem extends StatelessWidget {
       onTap: () {
         pushNamed(
           context,
-          taskInfoPage,
+          taskInfoPageName,
           args: {
             'task': tasks,
             'taskCubit': context.read<TaskCubit>()
