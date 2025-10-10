@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
 from django.contrib import admin
 from django.urls import path , include
 from django.conf import settings
@@ -22,6 +23,7 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from drf_spectacular.utils import extend_schema , extend_schema_view
+from django.views.static import serve
 
 from users.views import GoogleAuthView
 
@@ -54,6 +56,10 @@ urlpatterns = [
     path('api/' , include(api_patterns)),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('.well-known/assetlinks.json', 
+         serve, 
+         {'path': 'assetlinks.json', 'document_root': os.path.join(settings.BASE_DIR, '.well-known')},
+         name='asset_links'),
 ]
 
 if settings.DEBUG:
