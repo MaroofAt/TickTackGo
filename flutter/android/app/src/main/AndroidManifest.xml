@@ -25,7 +25,7 @@
             android:value="${onesignal_google_project_number}" />
 
         <activity
-            android:name="com.ticktackgo.pr1.MainActivity"
+            android:name="com.tickTackGo.pr1.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
@@ -39,13 +39,13 @@
                 android:resource="@style/NormalTheme"
                 />
 
-            <intent-filter android:autoVerify="true">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="tawana-tritheistical-nonconcordantly.ngrok-free.dev" />
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+<!--                <data android:scheme="https" android:host="tawana-tritheistical-nonconcordantly.ngrok-free.dev" />-->
             </intent-filter>
         </activity>
 
@@ -54,9 +54,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <meta-data
-            android:name="flutter_deeplinking_enabled"
-            android:value="true" />
     </application>
 
     <!-- Required to query activities that can process text -->
