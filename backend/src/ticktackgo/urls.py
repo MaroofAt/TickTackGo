@@ -56,6 +56,7 @@ urlpatterns = [
     path('api/' , include(api_patterns)),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('__depug__/',include('debug_toolbar.urls')),
     path('.well-known/assetlinks.json', 
          serve, 
          {'path': 'assetlinks.json', 'document_root': os.path.join(settings.BASE_DIR, '.well-known')},
