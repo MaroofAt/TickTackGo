@@ -26,6 +26,7 @@ from drf_spectacular.utils import extend_schema , extend_schema_view
 from django.views.static import serve
 
 from users.views import GoogleAuthView
+from workspaces.views import WorkspaceViewSet
 
 api_patterns = [
     path('users/token/' , extend_schema_view(
@@ -61,6 +62,7 @@ urlpatterns = [
          serve, 
          {'path': 'assetlinks.json', 'document_root': os.path.join(settings.BASE_DIR, '.well-known')},
          name='asset_links'),
+    path('invite-link/<str:token>/join-us' , WorkspaceViewSet.as_view({'get': 'list'}) , name='workspace_invitation'),
 ]
 
 if settings.DEBUG:
