@@ -11,6 +11,7 @@ import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/API/issues.dart';
+import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/presentation/screen/auth/sign_in_new.dart';
 import 'package:pr1/presentation/screen/auth/signupnew.dart';
@@ -37,6 +38,7 @@ import 'package:pr1/presentation/screen/workspace/create_update_workspace_page.d
 import 'package:pr1/presentation/screen/workspace/sent_invites_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspaces_show_page.dart';
+import 'package:pr1/presentation/screen/workspace_invite_link/accept_reject_invite_link.dart';
 import 'package:pr1/presentation/screen/workspace_points/points_statistics.dart';
 
 import '../../business_logic/auth_cubit/auth_cubit.dart';
@@ -51,7 +53,7 @@ class AppRouter {
   AppRouter._internal();
 
   final GoRouter _router = GoRouter(
-    initialLocation: '/',
+    initialLocation: splashScreenRoute,
     routes: [
       GoRoute(
         path: splashScreenRoute,
@@ -86,9 +88,16 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: issuesDetailsRoute,
+        path: '$issuesDetailsRoute/:projectId/:issueId',
         name: issuesDetailsName,
-        builder: (context, state) => const IssueDetails(),
+        builder: (context, state) {
+          int projectId = int.parse(state.pathParameters['projectId']!);
+          int issueId = int.parse(state.pathParameters['issueId']!);
+          return IssueDetails(
+            projectId: projectId,
+            issueId: issueId,
+          );
+        },
       ),
       GoRoute(
         path: onboardingMainRoute,
@@ -141,15 +150,24 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: mainShowTasksPageRoute,
+        path: '$mainShowTasksPageRoute/:workspaceId/:projectId',
         name: mainShowTasksPageName,
-        builder: (context, state) => MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (context) => ProjectsCubit()),
-            BlocProvider(create: (context) => TaskCubit()),
-          ],
-          child: const MainShowTasksPage(),
-        ),
+        builder: (context, state) {
+          int workspaceId = int.parse(state.pathParameters['workspaceId']!);
+          int projectId = int.parse(state.pathParameters['projectId']!);
+          Color? color = state.extra as Color?;
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => ProjectsCubit()),
+              BlocProvider(create: (context) => TaskCubit()),
+            ],
+            child: MainShowTasksPage(
+              workspaceId: projectId,
+              projectId: workspaceId,
+              color: color ?? lightGrey,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: createUpdateWorkspacePageRoute,
@@ -165,20 +183,36 @@ class AppRouter {
         builder: (context, state) => const InboxInfoPage(),
       ),
       GoRoute(
-        path: invitationSearchRoute,
+        path: '$invitationSearchRoute/:workspaceId/:senderId',
         name: invitationSearchName,
-        builder: (context, state) => BlocProvider(
-          create: (context) => InvitationCubit(),
-          child: const InvitationSearch(),
-        ),
+        builder: (context, state) {
+          int senderId = int.parse(state.pathParameters['senderId']!);
+          int workspaceId = int.parse(state.pathParameters['workspaceId']!);
+          return BlocProvider(
+            create: (context) => InvitationCubit(),
+            child: InvitationSearch(
+              workspaceId: workspaceId,
+              senderId: senderId,
+            ),
+          );
+        },
       ),
       GoRoute(
-        path: projectInfoRoute,
+        path: '$projectInfoRoute/:workspaceId/:projectId',
         name: projectInfoName,
-        builder: (context, state) => BlocProvider(
-          create: (context) => ProjectsCubit(),
-          child: const ProjectInfo(),
-        ),
+        builder: (context, state) {
+          int workspaceId = int.parse(state.pathParameters['workspaceId']!);
+          int projectId = int.parse(state.pathParameters['projectId']!);
+          Color? color = state.extra as Color?;
+          return BlocProvider(
+            create: (context) => ProjectsCubit(),
+            child: ProjectInfo(
+              workspaceId: workspaceId,
+              projectId: projectId,
+              color: color ?? lightGrey,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: taskInfoPageRoute,
@@ -189,12 +223,19 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: pointsStatisticsRoute,
+        path: '$pointsStatisticsRoute/:workspaceId/:workspaceName',
         name: pointsStatisticsName,
-        builder: (context, state) => BlocProvider(
+        builder: (context, state) {
+          String workspaceName = state.pathParameters['workspaceName']!;
+          int workspaceId = int.parse(state.pathParameters['workspaceId']!);
+          return BlocProvider(
           create: (context) => PointsCubit(),
-          child: const PointsStatistics(),
-        ),
+          child: PointsStatistics(
+            workspaceId: workspaceId,
+            workspaceName: workspaceName,
+          ),
+        );
+        },
       ),
       GoRoute(
         path: workspaceInfoPageRoute,
@@ -224,21 +265,35 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: allIssuesRoute,
+        path: '$allIssuesRoute/:projectId',
         name: allIssuesName,
-        builder: (context, state) => BlocProvider(
+        builder: (context, state) {
+          int projectId = int.parse(state.pathParameters['projectId']!);
+          return BlocProvider(
           create: (context) => IssuesCubit(IssueApi()),
-          child: const AllIssues(),
-        ),
+          child: AllIssues(
+            projectId: projectId,
+          ),
+        );
+        },
       ),
       GoRoute(
         path: sentInvitesPageRoute,
         name: sentInvitesPageName,
-        builder: (context, state) => BlocProvider(
+        builder: (context, state) {
+          int workspaceId = int.parse(state.pathParameters['workspaceId']!);
+          return BlocProvider(
           create: (context) => WorkspaceCubit(),
-          child: const SentInvitesPage(),
-        ),
+          child: SentInvitesPage(workspaceId: workspaceId),
+        );
+        },
       ),
+      GoRoute(
+        path: '$acceptRejectInviteLinkRoute/:token',
+        name: acceptRejectInviteLinkName,
+        builder: (context, state) =>
+            AcceptRejectInviteLink(senderToken: state.pathParameters['token']!),
+      )
     ],
   );
 

@@ -6,42 +6,39 @@ import 'package:pr1/presentation/screen/projects/project_info_app_bar.dart';
 import 'package:pr1/presentation/widgets/loading_indicator.dart';
 
 class ProjectInfo extends StatefulWidget {
-  const ProjectInfo({super.key});
+  final int projectId;
+  final Color color;
+  final int workspaceId;
+
+  const ProjectInfo(
+      {required this.workspaceId,
+      required this.projectId,
+      required this.color,
+      super.key});
 
   @override
   State<ProjectInfo> createState() => _ProjectInfoState();
 }
 
 class _ProjectInfoState extends State<ProjectInfo> {
-  int? projectId;
-  Color? color;
-  int? workspaceId;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    projectId = args['projectId'];
-    color = args['color'];
-    workspaceId = args['workspaceId'];
-
-    BlocProvider.of<ProjectsCubit>(context).retrieveProject(projectId!);
+  void initState() {
+    super.initState();
+    BlocProvider.of<ProjectsCubit>(context).retrieveProject(widget.projectId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ProjectInfoAppBar.projectInfoAppBar(context, color!),
+      appBar: ProjectInfoAppBar.projectInfoAppBar(context, widget.color),
       body: Center(
         child: BlocBuilder<ProjectsCubit, ProjectsState>(
           builder: (context, state) {
             if (state is ProjectRetrievingSucceededState) {
               return BuildProjectInfoPage(
                 state.retrieveProjectModel,
-                workspaceId!,
-                projectId: projectId!,
+                widget.workspaceId,
+                projectId: widget.projectId,
               );
             }
             return Center(

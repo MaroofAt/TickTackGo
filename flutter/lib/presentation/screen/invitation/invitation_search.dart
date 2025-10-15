@@ -13,25 +13,17 @@ import 'package:pr1/presentation/widgets/text.dart';
 import 'package:pr1/presentation/widgets/text_field.dart';
 
 class InvitationSearch extends StatefulWidget {
-  const InvitationSearch({super.key});
+  final int senderId;
+  final int workspaceId;
+
+  const InvitationSearch(
+      {required this.workspaceId, required this.senderId, super.key});
 
   @override
   State<InvitationSearch> createState() => _InvitationSearchState();
 }
 
 class _InvitationSearchState extends State<InvitationSearch> {
-  int? senderId;
-  int? workspaceId;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    senderId = args['senderId'];
-    workspaceId = args['workspaceId'];
-  }
-
   final _controller = TextEditingController();
 
   @override
@@ -142,8 +134,8 @@ class _InvitationSearchState extends State<InvitationSearch> {
                                 onTap: () {
                                   BlocProvider.of<InvitationCubit>(context)
                                       .inviteUser(
-                                    senderId: senderId!,
-                                    workspaceId: workspaceId!,
+                                    senderId: widget.senderId,
+                                    workspaceId: widget.workspaceId,
                                     receiverId:
                                         invitationSearchModel.results[index].id,
                                   );

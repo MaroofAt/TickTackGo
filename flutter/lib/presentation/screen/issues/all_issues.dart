@@ -10,23 +10,19 @@ import 'create_issue.dart';
 import 'notSolvedIssue.dart';
 
 class AllIssues extends StatefulWidget {
-  const AllIssues({super.key});
+  final int projectId;
+
+  const AllIssues({required this.projectId, super.key});
 
   @override
   State<AllIssues> createState() => _AllIssuesState();
 }
 
 class _AllIssuesState extends State<AllIssues> {
-  int? projectId;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    projectId = args['projectId'];
-    context.read<IssuesCubit>().fetchIssues(projectId!);
+  void initState() {
+    super.initState();
+    context.read<IssuesCubit>().fetchIssues(widget.projectId);
   }
 
   @override
@@ -116,7 +112,8 @@ class _AllIssuesState extends State<AllIssues> {
                           ),
                           child: Row(
                             children: [
-                              Text(related, style: const TextStyle(color: white)),
+                              Text(related,
+                                  style: const TextStyle(color: white)),
                               Container(
                                 margin: const EdgeInsets.only(top: 5, left: 5),
                                 child: Text("($notSolvedIssues)"),
@@ -144,14 +141,11 @@ class _AllIssuesState extends State<AllIssues> {
                 onPressed: () async {
                   final result = await showDialog<bool>(
                     context: context,
-                    builder: (context) =>
-                        CreateIssue(projectId: projectId!),
+                    builder: (context) => CreateIssue(projectId: widget.projectId),
                   );
 
                   if (result == true) {
-                    await context
-                        .read<IssuesCubit>()
-                        .fetchIssues(projectId!);
+                    await context.read<IssuesCubit>().fetchIssues(widget.projectId);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Issue added successfully')),
                     );

@@ -10,24 +10,20 @@ import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class SentInvitesPage extends StatefulWidget {
-  const SentInvitesPage({super.key});
+  final int workspaceId;
+
+  const SentInvitesPage(
+      {required this.workspaceId, super.key});
 
   @override
   State<SentInvitesPage> createState() => _SentInvitesPageState();
 }
 
 class _SentInvitesPageState extends State<SentInvitesPage> {
-  int? workspaceId;
-  String? workspaceTitle;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    workspaceId = args['workspaceId'];
-    workspaceTitle = args['workspaceTitle'];
-    BlocProvider.of<WorkspaceCubit>(context).sentInvites(workspaceId!);
+  void initState() {
+    super.initState();
+    BlocProvider.of<WorkspaceCubit>(context).sentInvites(widget.workspaceId);
   }
 
   @override

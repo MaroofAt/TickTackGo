@@ -83,6 +83,9 @@ const String createTaskPageName = 'CreateTaskPage';
 const String sentInvitesPageRoute = '/SentInvitesPage';
 const String sentInvitesPageName = 'SentInvitesPage';
 
+const String acceptRejectInviteLinkRoute = '/acceptRejectInviteLink';
+const String acceptRejectInviteLinkName = 'acceptRejectInviteLink';
+
 ///Splash screen strings
 const String splashScreenLogoPath = 'assets/images/logo_images/logoorgenal.png';
 
