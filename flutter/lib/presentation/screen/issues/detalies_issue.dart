@@ -8,7 +8,11 @@ import '../../../core/constance/constance.dart';
 import '../../widgets/create_text_field.dart';
 
 class IssueDetails extends StatefulWidget {
-  const IssueDetails({super.key});
+  final int issueId;
+  final int projectId;
+
+  const IssueDetails(
+      {required this.projectId, required this.issueId, super.key});
 
   @override
   State<IssueDetails> createState() => _IssueDetailsState();
@@ -17,25 +21,19 @@ class IssueDetails extends StatefulWidget {
 class _IssueDetailsState extends State<IssueDetails> {
   final TextEditingController commentController = TextEditingController();
   bool updated = false;
-  int? issueId;
-  int? projectId;
 
   @override
-  void didChangeDependencies() {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final issueId = args["issueId"] as int;
-    final projectId = args["projectId"] as int;
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     context.read<IssuesCubit>().fetchSingleIssue(
-      issueId: issueId,
-      projectId: projectId,
-    );
+          issueId: widget.issueId,
+          projectId: widget.projectId,
+        );
 
     context.read<ReplyCubit>().fetchReplies(
-      projectId: projectId,
-      issueId: issueId,
-    );
+          projectId: widget.projectId,
+          issueId: widget.issueId,
+        );
   }
 
   @override
@@ -111,9 +109,9 @@ class _IssueDetailsState extends State<IssueDetails> {
                           child: IconButton(
                             onPressed: () async {
                               await context.read<IssuesCubit>().markSolved(
-                                  projectId: projectId!,
+                                  projectId: widget.projectId!,
                                   context: context,
-                                  issueID: issueId!);
+                                  issueID: widget.issueId!);
                               setState(() {
                                 updated = true;
                               });
@@ -137,8 +135,8 @@ class _IssueDetailsState extends State<IssueDetails> {
                             if (commentController.text.isNotEmpty) {
                               context.read<ReplyCubit>().createReply(
                                     body: commentController.text,
-                                    issueId: issueId!,
-                                    projectId: projectId!,
+                                    issueId: widget.issueId!,
+                                    projectId: widget.projectId!,
                                   );
                               commentController.clear();
                             }

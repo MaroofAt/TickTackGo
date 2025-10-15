@@ -19,7 +19,7 @@ class TaskInfoPage extends StatefulWidget {
   const TaskInfoPage({super.key});
 
   @override
-  _TaskInfoPageState createState() => _TaskInfoPageState();
+  State<TaskInfoPage> createState() => _TaskInfoPageState();
 }
 
 class _TaskInfoPageState extends State<TaskInfoPage> {

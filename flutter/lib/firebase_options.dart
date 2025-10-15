@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '189709970345',
     projectId: 'taskmanagment-ab14e',
     storageBucket: 'taskmanagment-ab14e.firebasestorage.app',
-    iosBundleId: 'com.example.pr1',
+    iosBundleId: 'com.tickTackGo.pr1',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '189709970345',
     projectId: 'taskmanagment-ab14e',
     storageBucket: 'taskmanagment-ab14e.firebasestorage.app',
-    iosBundleId: 'com.example.pr1',
+    iosBundleId: 'com.tickTackGo.pr1',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
