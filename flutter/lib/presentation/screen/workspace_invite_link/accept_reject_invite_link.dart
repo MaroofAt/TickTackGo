@@ -1,66 +1,69 @@
-// lib/screens/invite_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
+import 'package:pr1/core/constance/colors.dart';
+import 'package:pr1/data/local_data/local_data.dart';
+import 'package:pr1/presentation/widgets/buttons.dart';
+import 'package:pr1/presentation/widgets/loading_indicator.dart';
+import 'package:pr1/presentation/widgets/text.dart';
 
 class AcceptRejectInviteLink extends StatefulWidget {
   final String senderToken;
-  const AcceptRejectInviteLink({super.key, required this.senderToken});
+  const AcceptRejectInviteLink({required this.senderToken, super.key});
 
   @override
   State<AcceptRejectInviteLink> createState() => _AcceptRejectInviteLinkState();
 }
 
 class _AcceptRejectInviteLinkState extends State<AcceptRejectInviteLink> {
-  bool _isLoading = false;
-
-  Future<void> _acceptInvite() async {
-    setState(() => _isLoading = true);
-    try {
-      // Call backend API to join workspace (e.g., POST /api/join-workspace)
-      // await ApiService.joinWorkspace(widget.inviteToken);
-      // On success: Navigate to workspace dashboard or show success snackbar
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Joined workspace!')));
-        Navigator.of(context).popUntil((route) => route.isFirst);  // Or go to home
-      }
-    } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
+  Future<String?> _getToken() async {
+    final String? refresh = await getRefreshToken();
+    return refresh;
   }
 
-  Future<void> _rejectInvite() async {
-    // Optional: Call backend to invalidate token
-    // await ApiService.rejectInvite(widget.inviteToken);
-    if (mounted) Navigator.of(context).pop();  // Back to home
+  Future<void> _refreshToken(BuildContext context) async {
+    final refresh = await _getToken();
+    if (refresh != null) {
+      BlocProvider.of<SplashCubit>(context).refreshToken(refresh);
+      // BlocProvider.of<>(context)
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Join Workspace')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Would you like to join this workspace?',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _acceptInvite,
-              child: _isLoading ? const CircularProgressIndicator() : const Text('Accept'),
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: _rejectInvite,
-              child: const Text('Reject'),
-            ),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          MyText.text1('Would you like to join the workspace?',
+              textColor: white),
+          Row(
+            children: [
+              BlocBuilder<SplashCubit, SplashState>(
+                builder: (context, state) {
+                  return MyButtons.primaryButton(
+                    () {},
+                    Theme.of(context).primaryColor,
+                    child: Center(
+                      child: (state is RefreshTokenLoadingState)
+                          ? LoadingIndicator.circularProgressIndicator()
+                          : MyText.text1('Accept', textColor: white),
+                    ),
+                  );
+                },
+              ),
+              MyButtons.primaryButton(
+                () {
+                  //todo close the application
+                },
+                Theme.of(context).primaryColor,
+                child: Center(
+                  child: MyText.text1('Reject', textColor: white),
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
