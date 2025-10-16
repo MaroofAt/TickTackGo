@@ -186,8 +186,8 @@ class AppRouter {
         path: '$invitationSearchRoute/:workspaceId/:senderId',
         name: invitationSearchName,
         builder: (context, state) {
-          int senderId = int.parse(state.pathParameters['senderId']!);
           int workspaceId = int.parse(state.pathParameters['workspaceId']!);
+          int senderId = int.parse(state.pathParameters['senderId']!);
           return BlocProvider(
             create: (context) => InvitationCubit(),
             child: InvitationSearch(
@@ -291,8 +291,10 @@ class AppRouter {
       GoRoute(
         path: '$acceptRejectInviteLinkRoute/:token',
         name: acceptRejectInviteLinkName,
-        builder: (context, state) =>
-            AcceptRejectInviteLink(senderToken: state.pathParameters['token']!),
+        builder: (context, state) {
+          final senderToken = state.pathParameters['token'] ?? state.extra as String;
+          return AcceptRejectInviteLink(senderToken: senderToken);
+        },
       )
     ],
   );

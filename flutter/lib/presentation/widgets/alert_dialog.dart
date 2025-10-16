@@ -17,8 +17,8 @@ class MyAlertDialog {
       barrierDismissible: false,
       context: context,
       builder: (_) {
-        return AlertDialog(
-          backgroundColor: Theme.of(context).dialogBackgroundColor,
+        return AlertDialog(          
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: const Row(
             children: [
               Icon(

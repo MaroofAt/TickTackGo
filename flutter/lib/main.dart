@@ -11,6 +11,7 @@ import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/API/comments.dart';
 import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/routes.dart';
+import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/themes/themes.dart';
 import 'business_logic/replay/replay_cubit.dart';
 import 'firebase_options.dart';
@@ -40,43 +41,37 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // Handle the initial link that launched the app
-    _handleInitialUri();
-    // Handle links that are received while the app is running
-    _handleIncomingLinks();
+    _setupDeepLink();
   }
 
+  Future<void> _setupDeepLink() async {
+    _appLinks.uriLinkStream.listen(
+      (Uri? uri) {
+        if(uri != null) {
+          _handleDeepLink(uri);
+        }
+      },
+    );
+
+    final Uri? initialLink = await _appLinks.getInitialLink();
+    if(initialLink != null) {
+      _handleDeepLink(initialLink);
+    }
+  }
+
+  void _handleDeepLink(Uri uri) {
+    if(uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'invite-link') {
+      final senderToken = uri.pathSegments[1];
+      if(senderToken.isNotEmpty) {
+        _appRouter.router.go('$acceptRejectInviteLinkRoute/$senderToken');
+      }
+    }
+  }
 
   @override
   void dispose() {
     _linkSubscription?.cancel();
     super.dispose();
-  }
-
-  // UPDATED for app_links
-  Future<void> _handleInitialUri() async {
-    try {
-      print('********************************');
-      print(_appLinks.getInitialLink());
-      final uri = await _appLinks.getInitialLink(); // Use getInitialLink()
-      if (uri != null) {
-        // Use the router to navigate. The path includes the leading '/'
-        _appRouter.router.go(uri.path);
-      }
-    } catch (e) {
-      // An error occurred, maybe log it
-      debugPrint('Failed to get initial URI: $e');
-    }
-  }
-
-  // UPDATED for app_links
-  void _handleIncomingLinks() {
-    _linkSubscription = _appLinks.uriLinkStream.listen((Uri uri) { // The stream provides non-nullable URIs
-      // Use the router to navigate
-      _appRouter.router.go(uri.path);
-    }, onError: (err) {
-      debugPrint('Got error listening to incoming links: $err');
-    });
   }
 
   @override
