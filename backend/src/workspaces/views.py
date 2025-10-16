@@ -576,16 +576,16 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             'application/json':{
                 'type': 'object',
                 'properties':{
-                    'link':{'type':'url' , 'example':'http://127.0.0.1:8000/invite-link/encrypted_token/join-us'}
+                    'token':{'type':'string' , 'example':'132432encrypted_token456756758'}
                 }
             }
         }
     )
     @action(detail=False , methods=['post'] , serializer_class=InvitationSerializer)
     def join_workspace_by_invitation_link(self , request):
-        link = request.data.get('link')
+        token = request.data.get('token')
 
-        token = self.extract_token(link)
+        # token = self.extract_token(link)
         crypto = Crypto()
         try:
             token = crypto.decrypt(token)
@@ -602,6 +602,9 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             invitation.valid = False
             invitation.save()
             return Response({"message":"invitation has been expired!"} , status.HTTP_400_BAD_REQUEST)
+        
+        if Workspace_Membership.objects.filter(member = request.user.id ).exists():
+            return Response({"message":"User already in the workspace "} , status.HTTP_400_BAD_REQUEST)
         
         Workspace_Membership.objects.create(
             member = request.user,
