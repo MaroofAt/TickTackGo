@@ -603,7 +603,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             invitation.save()
             return Response({"message":"invitation has been expired!"} , status.HTTP_400_BAD_REQUEST)
         
-        if Workspace_Membership.objects.filter(member = request.user.id ).exists():
+        if Workspace_Membership.objects.filter(member = request.user.id , workspace = invitation.workspace ).exists():
             return Response({"message":"User already in the workspace "} , status.HTTP_400_BAD_REQUEST)
         
         Workspace_Membership.objects.create(
