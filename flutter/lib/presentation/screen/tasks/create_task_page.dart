@@ -11,30 +11,25 @@ import 'package:pr1/presentation/widgets/buttons.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class CreateTaskPage extends StatefulWidget {
-  const CreateTaskPage({super.key});
+  final int workspaceId;
+  final int projectId;
+  final Map<String, int> tasksTitles;
+  final Map<String, int> assignees;
+  final TaskCubit taskCubit;
+
+  const CreateTaskPage(
+      {required this.workspaceId,
+      required this.projectId,
+      required this.tasksTitles,
+      required this.assignees,
+      required this.taskCubit,
+      super.key});
 
   @override
   State<CreateTaskPage> createState() => _CreateTaskPageState();
 }
 
 class _CreateTaskPageState extends State<CreateTaskPage> {
-  int? workspaceId;
-  int? projectId;
-  Map<String, int>? tasksTitles;
-  Map<String, int>? assignees;
-  TaskCubit? taskCubit;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    workspaceId = args['workspaceId'];
-    projectId = args['projectId'];
-    tasksTitles = args['tasksTitles'];
-    assignees = args['assignees'];
-    taskCubit = args['taskCubit'];
-  }
 
   final TextEditingController _titleController = TextEditingController();
 
@@ -45,7 +40,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop && result != null) {
-          taskCubit!.fetchTasks(projectId!);
+          widget.taskCubit.fetchTasks(widget.projectId);
         }
       },
       child: Scaffold(
@@ -170,9 +165,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     context,
                     _titleController,
                     _descriptionController,
-                    tasksTitles!,
-                    workspaceId!,
-                    projectId!),
+                    widget.tasksTitles,
+                    widget.workspaceId,
+                    widget.projectId),
               ),
             ],
           ),
@@ -188,7 +183,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         context,
         label: 'parent task',
         value: BlocProvider.of<TaskCubit>(context).selectedParent,
-        items: tasksTitles!.keys.toList(),
+        items: widget.tasksTitles.keys.toList(),
         onChanged: (val) => setState(
             () => BlocProvider.of<TaskCubit>(context).selectedParent = val),
       ),
@@ -230,16 +225,15 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           bloc: taskCubit,
           builder: (context, state) {
             return Column(
-              children: assignees!.keys.map((item) {
+              children: widget.assignees.keys.map((item) {
                 return CheckboxListTile(
-                  value: taskCubit.assignees.contains(assignees![item]),
+                  value: taskCubit.assignees.contains(widget.assignees[item]),
                   title: SizedBox(
                       width: width(context) * 0.1,
                       height: width(context) * 0.08,
                       child: MyText.text1(item, textColor: white)),
                   onChanged: (bool? checked) {
-                    taskCubit.fillAssigneesList(
-                        checked, assignees![item]!);
+                    taskCubit.fillAssigneesList(checked, widget.assignees[item]!);
                     setState(() {});
                   },
                 );

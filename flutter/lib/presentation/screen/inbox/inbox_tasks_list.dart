@@ -26,7 +26,7 @@ class InboxTasksList extends StatelessWidget {
             itemBuilder: (context, index) {
               return MyGestureDetector.gestureDetector(
                 onTap: () {
-                  NavigationService().pushNamed(context, inboxInfoPageName, args: {
+                  NavigationService().push(context, inboxInfoPageRoute, args: {
                     'inboxTasksModel': inboxTasksList[index],
                     'inboxCubit': context.read<InboxCubit>(),
                   });

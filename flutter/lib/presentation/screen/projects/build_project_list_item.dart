@@ -75,9 +75,8 @@ class BuildProjectListItem extends StatelessWidget {
                         margin: const EdgeInsets.only(left: 10),
                         child: MyGestureDetector.gestureDetector(
                           onTap: () {
-                            NavigationService().pushNamed(context, allIssuesName, args: {
-                              'projectId': projectsModel.id,
-                            });
+                            NavigationService().push(
+                                context, '$allIssuesRoute/${projectsModel.id}');
                           },
                           child: MyIcons.icon(Icons.bug_report_outlined,
                               color: lightGrey),
@@ -88,11 +87,9 @@ class BuildProjectListItem extends StatelessWidget {
                         margin: const EdgeInsets.only(right: 15.0),
                         child: MyGestureDetector.gestureDetector(
                           onTap: () {
-                            NavigationService().pushNamed(context, projectInfoName, args: {
-                              'projectId': projectsModel.id,
-                              'color': color,
-                              'workspaceId': workspaceId,
-                            });
+                            NavigationService().push(context,
+                                '$projectInfoRoute/$workspaceId/${projectsModel.id}',
+                                args: {'color': color});
                           },
                           child: MyIcons.icon(Icons.info_outline,
                               color: lightGrey),

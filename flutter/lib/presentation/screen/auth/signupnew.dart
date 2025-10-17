@@ -251,7 +251,7 @@ class SignUpNewState extends State<SignUpNew> {
                   width: width(context) * 0.9,
                   child: IconButton(
                     onPressed: () {
-                      NavigationService().pushNamed(context, signInName);
+                      NavigationService().push(context, signInRoute);
                     },
                     icon: const Text(
                       "Sign In",

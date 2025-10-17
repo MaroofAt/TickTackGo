@@ -5,10 +5,12 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/show_snack_bar.dart';
 import 'package:pr1/core/functions/user_functions.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/screen/workspace/build_members_list.dart';
 import 'package:pr1/presentation/screen/workspace/workspace_info_header.dart';
+import 'package:pr1/presentation/screen/workspace_invite_link/create_invitation_link_dialog.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/divider.dart';
 import 'package:pr1/presentation/widgets/gesture_detector.dart';
@@ -16,7 +18,11 @@ import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class WorkspaceInfoPage extends StatefulWidget {
-  const WorkspaceInfoPage({super.key});
+  final int workspaceId;
+  final WorkspaceCubit workspaceCubit;
+
+  const WorkspaceInfoPage(
+      {required this.workspaceId, required this.workspaceCubit, super.key});
 
   @override
   State<WorkspaceInfoPage> createState() => _WorkspaceInfoPageState();
@@ -24,29 +30,20 @@ class WorkspaceInfoPage extends StatefulWidget {
 
 class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
   RetrieveWorkspaceModel? retrieveWorkspace;
-  int? workspaceId;
-  WorkspaceCubit? workspaceCubit;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    workspaceId = args['workspaceId'];
-    workspaceCubit = args['workspaceCubit'];
-    getWorkspace();
-  }
 
   @override
   void initState() {
     super.initState();
+    getWorkspace();
   }
 
   getWorkspace() {
-    if (retrieveWorkspace != null && workspaceId == retrieveWorkspace!.id) {
+    if (retrieveWorkspace != null &&
+        widget.workspaceId == retrieveWorkspace!.id) {
       return;
     }
-    BlocProvider.of<WorkspaceCubit>(context).retrieveWorkspace(workspaceId!);
+    BlocProvider.of<WorkspaceCubit>(context)
+        .retrieveWorkspace(widget.workspaceId);
   }
 
   @override
@@ -54,7 +51,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop && result != null) {
-          workspaceCubit!.fetchWorkspaces();
+          widget.workspaceCubit.fetchWorkspaces();
         }
       },
       child: SafeArea(
@@ -73,7 +70,33 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                       MyDivider.horizontalDivider(
                           thickness: 2, color: Colors.grey),
                       const SizedBox(height: 20),
-                      buildShowInvitesText(context),
+                      SizedBox(
+                        width: width(context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            buildShowInvitesText(context),
+                            MyGestureDetector.gestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const CreateInvitationLinkDialog();
+                                  },
+                                );
+                              },
+                              child: Container(
+                                color: transparent,
+                                child: MyText.text1(
+                                  'create invitation link?',
+                                  textColor: Colors.blue,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,10 +109,20 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                           ),
                           MyGestureDetector.gestureDetector(
                             onTap: () {
-                              NavigationService().pushNamed(context, invitationSearchName, args: {
-                                'senderId': retrieveWorkspace!.owner!.id,
-                                'workspaceId': retrieveWorkspace!.id,
-                              });
+                              if (isAdmin(retrieveWorkspace!.owner!.id)) {
+                                NavigationService().push(
+                                  context,
+                                  '$invitationSearchRoute/${retrieveWorkspace!.owner!.id}/${retrieveWorkspace!.id}',
+                                );
+                              } else {
+                                showSnackBar(
+                                  context,
+                                  'You are not the owner of this workspace',
+                                  backgroundColor: Colors.red,
+                                  seconds: 1,
+                                  milliseconds: 500,
+                                );
+                              }
                             },
                             child: Container(
                               height: width(context) * 0.1,
@@ -145,13 +178,20 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
   Widget buildShowInvitesText(BuildContext context) {
     return MyGestureDetector.gestureDetector(
       onTap: () {
-        NavigationService().pushNamed(context, sentInvitesPageName, args: {
-          'workspaceId': retrieveWorkspace!.id,
-          'workspaceTitle': retrieveWorkspace!.title
-        });
+        if (isAdmin(retrieveWorkspace!.owner!.id)) {
+          NavigationService()
+              .push(context, '$sentInvitesPageRoute/${retrieveWorkspace!.id}');
+        } else {
+          showSnackBar(
+            context,
+            'You are not the owner of this workspace',
+            backgroundColor: Colors.red,
+            seconds: 1,
+            milliseconds: 500,
+          );
+        }
       },
       child: Container(
-        width: width(context),
         color: transparent,
         child: MyText.text1(
           'show sent invites?',

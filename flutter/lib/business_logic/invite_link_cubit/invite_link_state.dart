@@ -32,7 +32,7 @@ class GettingInviteLinkFailedState extends InviteLinkState {
 
 class InviteLinkAcceptingState extends InviteLinkState {}
 
-class InviteLinkAcceptingSucceededState extends InviteLinkState {}
+class InviteLinkAcceptedState extends InviteLinkState {}
 
 class InviteLinkAcceptingFailedState extends InviteLinkState {
   String errorMessage;

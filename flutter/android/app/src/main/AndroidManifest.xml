@@ -49,8 +49,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
-                    android:host="tawana-tritheistical-nonconcordantly.ngrok-free.dev" />
+                    android:host="tawana-tritheistical-nonconcordantly.ngrok-free.dev"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -59,8 +59,14 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        
-        <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+
+        <meta-data
+            android:name="enableOnBackInvokedCallback"
+            android:value="true" />
+
+        <meta-data
+            android:name="flutter_deeplinking_enabled"
+            android:value="true" />
     </application>
 
     <!-- Required to query activities that can process text -->

@@ -37,9 +37,9 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
       appBar: ShowWorkspacesAppBar.workspacesAppBar(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          NavigationService().pushNamed(
+          NavigationService().push(
             context,
-            createUpdateWorkspacePageName,
+            createUpdateWorkspacePageRoute,
             args: {'workspaceCubit': BlocProvider.of<WorkspaceCubit>(context)},
           );
         },

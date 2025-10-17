@@ -6,26 +6,18 @@ import '../../../core/functions/navigation_functions.dart';
 import '../../../data/models/tasks/fetch_tasks_model.dart';
 
 class TasksGanttChart extends StatefulWidget {
-  const TasksGanttChart({super.key});
+  final List<FetchTasksModel> tasks;
+  const TasksGanttChart({required this.tasks, super.key});
 
   @override
   State<TasksGanttChart> createState() => _TasksGanttChartState();
 }
 
 class _TasksGanttChartState extends State<TasksGanttChart> {
-  List<FetchTasksModel>? tasks;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    tasks = args['tasks'];
-  }
 
   @override
   Widget build(BuildContext context) {
-    final valid = tasks!
+    final valid = widget.tasks
         .where((t) => t.startDate != null && t.dueDate != null)
         .toList()
       ..sort((a, b) => a.startDate!.compareTo(b.startDate!));

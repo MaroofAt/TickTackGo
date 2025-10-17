@@ -7,33 +7,23 @@ import 'package:pr1/presentation/screen/inbox/inbox_bottom_navigation_bar.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class InboxInfoPage extends StatefulWidget {
-  const InboxInfoPage({super.key});
+  final InboxTasksModel inboxTasksModel;
+  final InboxCubit inboxCubit;
+
+  const InboxInfoPage(
+      {required this.inboxCubit, required this.inboxTasksModel, super.key});
 
   @override
   State<InboxInfoPage> createState() => _InboxInfoPageState();
 }
 
 class _InboxInfoPageState extends State<InboxInfoPage> {
-  InboxTasksModel? inboxTasksModel;
-
-  late InboxCubit inboxCubit;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    inboxTasksModel = args['inboxTasksModel'];
-    inboxCubit = args['inboxCubit'];
-  }
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop && result != null) {
-          inboxCubit.fetchInboxTask();
+          widget.inboxCubit.fetchInboxTask();
         }
       },
       child: SafeArea(
@@ -43,7 +33,7 @@ class _InboxInfoPageState extends State<InboxInfoPage> {
             child: InboxBottomNavigationBar(
               'Change task Info',
               true,
-              inboxTasksModel: inboxTasksModel,
+              inboxTasksModel: widget.inboxTasksModel,
             ),
           ),
           body: Container(
@@ -56,13 +46,13 @@ class _InboxInfoPageState extends State<InboxInfoPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MyText.text1(
-                    inboxTasksModel!.title,
+                    widget.inboxTasksModel.title,
                     textColor: white,
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                   MyText.text1(
-                    inboxTasksModel!.description,
+                    widget.inboxTasksModel.description,
                     textColor: Colors.white60,
                     fontSize: 18,
                     overflow: TextOverflow.visible,
