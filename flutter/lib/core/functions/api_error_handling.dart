@@ -2,14 +2,14 @@ import 'package:dio/dio.dart';
 
 String handleDioError(DioException e) {
   if (e.response != null) {
-    if(e.response.runtimeType == Response<dynamic>) {
-      return e.response!.data["detail"];
+    if (e.response.runtimeType == Response<dynamic>) {
+      return e.response!.data["detail"] ?? e.response!.data["message"];
     }
-    return (e.response.runtimeType is! Map<String,dynamic>)
-      ? 'something went wrong please Try again later'
-      : e.response!.data["detail"] ??
-        e.response!.data["message"] ??
-        'something went wrong please Try again later';
+    return (e.response.runtimeType is! Map<String, dynamic>)
+        ? 'something went wrong please Try again later'
+        : e.response!.data["detail"] ??
+            e.response!.data["message"] ??
+            'something went wrong please Try again later';
   }
 
   switch (e.type) {

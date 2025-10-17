@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr1/business_logic/invite_link_cubit/invite_link_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
@@ -78,12 +79,27 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                             buildShowInvitesText(context),
                             MyGestureDetector.gestureDetector(
                               onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const CreateInvitationLinkDialog();
-                                  },
-                                );
+                                if (isAdmin(retrieveWorkspace!.owner!.id)) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return BlocProvider(
+                                        create: (context) => InviteLinkCubit(),
+                                        child: CreateInvitationLinkDialog(
+                                          workspaceId: retrieveWorkspace!.id,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  showSnackBar(
+                                    context,
+                                    'You are not the owner of this workspace',
+                                    backgroundColor: Colors.red,
+                                    seconds: 1,
+                                    milliseconds: 500,
+                                  );
+                                }
                               },
                               child: Container(
                                 color: transparent,

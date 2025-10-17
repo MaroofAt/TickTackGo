@@ -11,29 +11,38 @@ part 'invite_link_state.dart';
 class InviteLinkCubit extends Cubit<InviteLinkState> {
   InviteLinkCubit() : super(InviteLinkInitial());
 
-  Future<void> getInviteLink(workspaceId) async {
+  Future<void> getInviteLink(int workspaceId) async {
     emit(GettingInviteLinkState());
 
     GetInviteLinkModel getInviteLinkModel =
         await InviteLink.getInviteLInk(workspaceId, token);
 
     if (getInviteLinkModel.errorMessage.isEmpty) {
+      getInviteLinkModel.link =
+          convertBaseUrlInInvitationLink(getInviteLinkModel.link);
       emit(GettingInviteLinkSucceededState(getInviteLinkModel));
     } else {
       emit(GettingInviteLinkFailedState(getInviteLinkModel.errorMessage));
     }
   }
 
-  Future<void> createInviteLink(workspaceId) async {
+  Future<void> createInviteLink(int workspaceId) async {
     emit(InviteLinkCreatingState());
 
     CreateInviteLinkModel createInviteLinkModel =
         await InviteLink.createInviteLink(workspaceId, token);
 
     if (createInviteLinkModel.errorMessage.isEmpty) {
+      createInviteLinkModel.link =
+          convertBaseUrlInInvitationLink(createInviteLinkModel.link);
       emit(InviteLinkCreatingSucceededState(createInviteLinkModel));
     } else {
-      emit(InviteLinkCreatingFailedState(createInviteLinkModel.errorMessage));
+      if (createInviteLinkModel.errorMessage
+          .contains('there is already a valid invitation for this workspace')) {
+        getInviteLink(workspaceId);
+      } else {
+        emit(InviteLinkCreatingFailedState(createInviteLinkModel.errorMessage));
+      }
     }
   }
 
@@ -48,5 +57,10 @@ class InviteLinkCubit extends Cubit<InviteLinkState> {
     } else {
       emit(InviteLinkAcceptingFailedState(joinWorkspaceModel.errorMessage));
     }
+  }
+
+  String convertBaseUrlInInvitationLink(String invitationLink) {
+    return invitationLink.replaceFirst('http://127.0.0.1:8000/',
+        'https://tawana-tritheistical-nonconcordantly.ngrok-free.dev/');
   }
 }
