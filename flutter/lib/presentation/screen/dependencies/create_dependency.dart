@@ -106,20 +106,20 @@ class _CreateDependencyState extends State<CreateDependency> {
           child: BlocConsumer<DependencyCubit, DependencyState>(
             listener: (context, state) {
               if (state is CreatingDependencyFailedState) {
-                popScreen(context);
+                NavigationService().popScreen(context);
                 MyAlertDialog.showAlertDialog(
                   context,
                   content: state.errorMessage,
                   firstButtonText: okText,
                   firstButtonAction: () {
-                    popScreen(context);
+                    NavigationService().popScreen(context);
                   },
                   secondButtonText: '',
                   secondButtonAction: () {},
                 );
               }
               if (state is CreatingDependencySucceededState) {
-                popScreen(context, true);
+                NavigationService().popScreen(context, true);
               }
             },
             builder: (context, state) {

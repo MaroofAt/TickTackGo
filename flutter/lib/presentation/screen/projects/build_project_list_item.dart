@@ -75,7 +75,7 @@ class BuildProjectListItem extends StatelessWidget {
                         margin: const EdgeInsets.only(left: 10),
                         child: MyGestureDetector.gestureDetector(
                           onTap: () {
-                            pushNamed(context, allIssuesName, args: {
+                            NavigationService().pushNamed(context, allIssuesName, args: {
                               'projectId': projectsModel.id,
                             });
                           },
@@ -88,7 +88,7 @@ class BuildProjectListItem extends StatelessWidget {
                         margin: const EdgeInsets.only(right: 15.0),
                         child: MyGestureDetector.gestureDetector(
                           onTap: () {
-                            pushNamed(context, projectInfoName, args: {
+                            NavigationService().pushNamed(context, projectInfoName, args: {
                               'projectId': projectsModel.id,
                               'color': color,
                               'workspaceId': workspaceId,

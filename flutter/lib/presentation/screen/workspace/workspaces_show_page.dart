@@ -37,7 +37,7 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
       appBar: ShowWorkspacesAppBar.workspacesAppBar(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          pushNamed(
+          NavigationService().pushNamed(
             context,
             createUpdateWorkspacePageName,
             args: {'workspaceCubit': BlocProvider.of<WorkspaceCubit>(context)},
@@ -57,8 +57,8 @@ class _WorkspacesShowPageState extends State<WorkspacesShowPage> {
                 content: state.errorMessage,
                 firstButtonText: okText,
                 firstButtonAction: () {
-                  popScreen(context);
-                  popScreen(context);
+                  NavigationService().popScreen(context);
+                  NavigationService().popScreen(context);
                 },
                 secondButtonText: '',
                 secondButtonAction: () {},

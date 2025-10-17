@@ -290,7 +290,7 @@ Container buildBottomContainer(
           BlocConsumer<TaskCubit, TaskState>(
             listener: (context, state) {
               if (state is TaskCreatingSucceededState) {
-                popScreen(context, true);
+                NavigationService().popScreen(context, true);
               }
               if (state is TaskCreatingFailedState) {
                 MyAlertDialog.showAlertDialog(
@@ -298,7 +298,7 @@ Container buildBottomContainer(
                   content: state.errorMessage,
                   firstButtonText: okText,
                   firstButtonAction: () {
-                    popScreen(context);
+                    NavigationService().popScreen(context);
                   },
                   secondButtonText: '',
                   secondButtonAction: () {},
@@ -347,7 +347,7 @@ Container buildBottomContainer(
             width: width(context) * 0.3,
             child: MyButtons.primaryButton(
               () {
-                popScreen(context);
+                NavigationService().popScreen(context);
               },
               darkGrey,
               child: Center(

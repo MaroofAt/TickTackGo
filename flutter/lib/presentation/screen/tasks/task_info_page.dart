@@ -109,7 +109,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         BlocConsumer<TaskCubit, TaskState>(
                           listener: (context, state) {
                             if (state is TaskCompletingSucceededState) {
-                              popScreen(context, task!.title);
+                              NavigationService().popScreen(context, task!.title);
                             }
                           },
                           builder: (context, state) {
@@ -179,7 +179,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         BlocConsumer<TaskCubit, TaskState>(
                           listener: (context, state) {
                             if (state is TaskCancelingSucceededState) {
-                              popScreen(context, task!.title);
+                              NavigationService().popScreen(context, task!.title);
                             }
                           },
                           builder: (context, state) {

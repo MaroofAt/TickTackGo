@@ -54,8 +54,8 @@ class _MainInboxPageState extends State<MainInboxPage> {
                 content: state.errorMessage,
                 firstButtonText: okText,
                 firstButtonAction: () {
-                  popScreen(context);
-                  popScreen(context);
+                  NavigationService().popScreen(context);
+                  NavigationService().popScreen(context);
                 },
                 secondButtonText: '',
                 secondButtonAction: () {},

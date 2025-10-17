@@ -142,7 +142,7 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
                                           listener: (context, state) {
                                             if (state
                                                 is AddingMemberToProjectSucceededState) {
-                                              popScreen(context, true);
+                                              NavigationService().popScreen(context, true);
                                             }
                                           },
                                           builder: (context, state) {

@@ -71,7 +71,7 @@ class BuildMembersList extends StatelessWidget {
                                 firstButtonText: okText,
                                 firstButtonAction: () {
                                   selectedId = id;
-                                  popScreen(context);
+                                  NavigationService().popScreen(context);
                                   BlocProvider.of<WorkspaceCubit>(context)
                                       .kickMember(
                                           retrieveWorkspace.id, selectedId);
@@ -79,7 +79,7 @@ class BuildMembersList extends StatelessWidget {
                                 },
                                 secondButtonText: cancelText,
                                 secondButtonAction: () {
-                                  popScreen(context);
+                                  NavigationService().popScreen(context);
                                 },
                               );
                             },

@@ -29,3 +29,12 @@ class GettingInviteLinkFailedState extends InviteLinkState {
     String errorMessage;
     GettingInviteLinkFailedState(this.errorMessage);
 }
+
+class InviteLinkAcceptingState extends InviteLinkState {}
+
+class InviteLinkAcceptingSucceededState extends InviteLinkState {}
+
+class InviteLinkAcceptingFailedState extends InviteLinkState {
+  String errorMessage;
+  InviteLinkAcceptingFailedState(this.errorMessage);
+}

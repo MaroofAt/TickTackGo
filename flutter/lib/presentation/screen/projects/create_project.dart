@@ -69,7 +69,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
           height: height(context) * 0.05,
           width: width(context) * 0.2,
           child: TextButton(
-            onPressed: () => popScreen(context),
+            onPressed: () => NavigationService().popScreen(context),
             child: MyText.text1('Cancel', textColor: Colors.red),
           ),
         ),
@@ -79,20 +79,20 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
           child: BlocConsumer<ProjectsCubit, ProjectsState>(
             listener: (context, state) {
               if (state is ProjectCreatingFailedState) {
-                popScreen(context);
+                NavigationService().popScreen(context);
                 MyAlertDialog.showAlertDialog(
                   context,
                   content: state.errorMessage,
                   firstButtonText: okText,
                   firstButtonAction: () {
-                    popScreen(context);
+                    NavigationService().popScreen(context);
                   },
                   secondButtonText: '',
                   secondButtonAction: () {},
                 );
               }
               if (state is ProjectCreatingSucceededState) {
-                popScreen(context, true);
+                NavigationService().popScreen(context, true);
               }
             },
             builder: (context, state) {
@@ -185,7 +185,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
                   selectedColor = color;
                 });
               },
-              showLabel: false,
+              labelTypes: const [],
               pickerAreaHeightPercent: 0.8,
             ),
           ),
@@ -196,7 +196,7 @@ class _CreateProjectDialogState extends State<CreateProjectDialog> {
               child: TextButton(
                 child: MyText.text1('Select', textColor: white),
                 onPressed: () {
-                  popScreen(context);
+                  NavigationService().popScreen(context);
                 },
               ),
             ),

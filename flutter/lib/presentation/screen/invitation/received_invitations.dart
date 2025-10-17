@@ -46,8 +46,8 @@ class _ReceivedInvitationsState extends State<ReceivedInvitations> {
                 content: state.errorMessage,
                 firstButtonText: 'go back',
                 firstButtonAction: () {
-                  popScreen(context);
-                  popScreen(context);
+                  NavigationService().popScreen(context);
+                  NavigationService().popScreen(context);
                 },
                 secondButtonText: '',
                 secondButtonAction: () {},

@@ -3,6 +3,7 @@ import 'package:pr1/core/functions/api_error_handling.dart';
 import 'package:pr1/core/variables/api_variables.dart';
 import 'package:pr1/data/models/invite_link/create_invite_link.dart';
 import 'package:pr1/data/models/invite_link/get_invite_link.dart';
+import 'package:pr1/data/models/invite_link/join_workspace.dart';
 
 class InviteLink {
   static Future<GetInviteLinkModel> getInviteLInk(
@@ -64,5 +65,36 @@ class InviteLink {
       createInviteLinkModel = CreateInviteLinkModel.error(handleDioError(e));
     }
     return createInviteLinkModel;
+  }
+
+  static Future<JoinWorkspaceModel> joinWorkspace(String inviteToken, String token) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var data = {"token": inviteToken};
+
+    late JoinWorkspaceModel joinWorkspace;
+
+    try {
+      var response = await dio.request(
+        '/workspaces/join_workspace_by_invitation_link/',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        joinWorkspace = JoinWorkspaceModel.onSuccess();
+      } else {
+        joinWorkspace = JoinWorkspaceModel.onError(response.data);
+      }
+    } on DioException catch (e) {
+      joinWorkspace = JoinWorkspaceModel.error(handleDioError(e));
+    }
+    return joinWorkspace;
   }
 }

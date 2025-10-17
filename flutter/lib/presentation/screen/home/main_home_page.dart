@@ -88,7 +88,7 @@ class _MainHomePageState extends State<MainHomePage> {
                           icon: Icons.work,
                           withShimmer: false,
                           onTap: () {
-                            pushNamed(context, workspacesShowPageName);
+                            NavigationService().pushNamed(context, workspacesShowPageName);
                           },
                         ),
                         CardBuilder(
@@ -97,7 +97,7 @@ class _MainHomePageState extends State<MainHomePage> {
                           icon: Icons.event,
                           withShimmer: false,
                           onTap: () {
-                            pushNamed(context, receivedInvitationPageName);
+                            NavigationService().pushNamed(context, receivedInvitationPageName);
                           },
                         ),
                       ],
@@ -110,7 +110,7 @@ class _MainHomePageState extends State<MainHomePage> {
                           icon: Icons.folder_copy,
                           withShimmer: false,
                           onTap: () {
-                            pushNamed(context, mainInboxPageName);
+                            NavigationService().pushNamed(context, mainInboxPageName);
                           },
                         ),
                         CardBuilder(

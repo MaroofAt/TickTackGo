@@ -52,7 +52,7 @@ class _InvitationSearchState extends State<InvitationSearch> {
                     content: state.errorMessage,
                     firstButtonText: okText,
                     firstButtonAction: () {
-                      popScreen(context);
+                      NavigationService().popScreen(context);
                     },
                     secondButtonText: '',
                     secondButtonAction: () {},
@@ -63,8 +63,8 @@ class _InvitationSearchState extends State<InvitationSearch> {
                     content: state.errorMessage,
                     firstButtonText: okText,
                     firstButtonAction: () {
-                      popScreen(context);
-                      popScreen(context);
+                      NavigationService().popScreen(context);
+                      NavigationService().popScreen(context);
                     },
                     secondButtonText: '',
                     secondButtonAction: () {},
@@ -75,8 +75,8 @@ class _InvitationSearchState extends State<InvitationSearch> {
                     content: 'Invite Sent Successfully',
                     firstButtonText: okText,
                     firstButtonAction: () {
-                      popScreen(context);
-                      popScreen(context);
+                      NavigationService().popScreen(context);
+                      NavigationService().popScreen(context);
                     },
                     secondButtonText: '',
                     secondButtonAction: () {},

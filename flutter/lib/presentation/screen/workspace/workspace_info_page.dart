@@ -86,7 +86,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                           ),
                           MyGestureDetector.gestureDetector(
                             onTap: () {
-                              pushNamed(context, invitationSearchName, args: {
+                              NavigationService().pushNamed(context, invitationSearchName, args: {
                                 'senderId': retrieveWorkspace!.owner!.id,
                                 'workspaceId': retrieveWorkspace!.id,
                               });
@@ -145,7 +145,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
   Widget buildShowInvitesText(BuildContext context) {
     return MyGestureDetector.gestureDetector(
       onTap: () {
-        pushNamed(context, sentInvitesPageName, args: {
+        NavigationService().pushNamed(context, sentInvitesPageName, args: {
           'workspaceId': retrieveWorkspace!.id,
           'workspaceTitle': retrieveWorkspace!.title
         });
@@ -167,17 +167,17 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
     return BlocConsumer<WorkspaceCubit, WorkspaceState>(
       listener: (_, state) {
         if (state is DeletingWorkspaceSucceededState) {
-          popScreen(context);
-          popScreen(context, true);
+          NavigationService().popScreen(context);
+          NavigationService().popScreen(context, true);
         }
         if (state is DeletingWorkspaceFailedState) {
-          popScreen(context);
+          NavigationService().popScreen(context);
           MyAlertDialog.showAlertDialog(
             context,
             content: state.errorMessage,
             firstButtonText: okText,
             firstButtonAction: () {
-              popScreen(context);
+              NavigationService().popScreen(context);
             },
             secondButtonText: '',
             secondButtonAction: () {},
@@ -207,7 +207,7 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                 },
                 secondButtonText: cancelText,
                 secondButtonAction: () {
-                  popScreen(context);
+                  NavigationService().popScreen(context);
                 },
               );
             },
