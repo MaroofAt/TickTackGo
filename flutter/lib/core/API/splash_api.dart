@@ -24,6 +24,7 @@ class SplashApi {
         ),
         data: data,
       );
+      print(response.data);
 
       if (response.statusCode == 200) {
         refreshTokenModel = RefreshTokenModel.onSuccess(response.data);

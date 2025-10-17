@@ -56,7 +56,7 @@ class InviteLink {
         data: data,
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         createInviteLinkModel = CreateInviteLinkModel.onSuccess(response.data);
       } else {
         createInviteLinkModel = CreateInviteLinkModel.onError(response.data);
