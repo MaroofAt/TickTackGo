@@ -87,7 +87,7 @@ class _MainShowTasksPageState extends State<MainShowTasksPage> {
               backgroundColor: Colors.red,
               seconds: 1,
             );
-            popScreen(context);
+            NavigationService().popScreen(context);
           }
         },
         builder: (context, state) {

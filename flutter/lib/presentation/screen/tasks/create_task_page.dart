@@ -250,7 +250,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       ),
       actions: [
         TextButton(
-          onPressed: () => popScreen(context),
+          onPressed: () => NavigationService().popScreen(context),
           child: const Text('Done'),
         ),
       ],

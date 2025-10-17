@@ -60,7 +60,8 @@ class BuildListItem extends StatelessWidget {
               children: [
                 MyGestureDetector.gestureDetector(
                   onTap: () {
-                    pushNamed(context, pointsStatisticsName, args: {
+                    NavigationService()
+                        .pushNamed(context, pointsStatisticsName, args: {
                       'workspaceId': fetchWorkspacesModel.id,
                       'workspaceName': fetchWorkspacesModel.title,
                     });

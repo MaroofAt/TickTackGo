@@ -34,12 +34,12 @@ class _SplashScreenState extends State<SplashScreen> {
       String? refresh =
           await BlocProvider.of<SplashCubit>(context).retrieveRefreshToken();
       if (refresh == null) {
-        pushReplacementNamed(context, onboardingMainName);
+        NavigationService().pushReplacementNamed(context, onboardingMainName);
       } else {
         BlocProvider.of<SplashCubit>(context).refreshToken(refresh);
       }
     } else {
-      pushReplacementNamed(context, onboardingMainName);
+      NavigationService().pushReplacementNamed(context, onboardingMainName);
     }
   }
 

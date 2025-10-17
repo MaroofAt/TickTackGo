@@ -51,7 +51,7 @@ class _OnboardingMainState extends State<OnboardingMain> {
                             curve: Curves.easeInOut,
                           );
                         } else {
-                          pushReplacementNamed(context, introQuestionsName);
+                          NavigationService().pushReplacementNamed(context, introQuestionsName);
                         }
                       },
                     ),
@@ -59,7 +59,7 @@ class _OnboardingMainState extends State<OnboardingMain> {
                       context,
                       skipButtonText,
                       () {
-                        pushReplacementNamed(context, introQuestionsName);
+                        NavigationService().pushReplacementNamed(context, introQuestionsName);
                       },
                     ),
                   ],

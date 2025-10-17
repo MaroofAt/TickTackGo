@@ -44,7 +44,7 @@ class WorkspaceInfoHeader extends StatelessWidget {
             ),
             MyGestureDetector.gestureDetector(
               onTap: () {
-                pushNamed(
+                NavigationService().pushNamed(
                   context,
                   createUpdateWorkspacePageName,
                   args: {

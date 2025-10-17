@@ -113,17 +113,17 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                         BlocConsumer<InboxCubit, InboxState>(
                           listener: (context, state) {
                             if (state is InboxCreatingSucceededState) {
-                              popScreen(context, true);
+                              NavigationService().popScreen(context, true);
                             } else if (state
                                 is InboxTaskUpdatingSucceededState) {
-                              popScreen(context, 'updating successfully');
+                              NavigationService().popScreen(context, 'updating successfully');
                             } else if (state is InboxCreatingFailedState) {
                               MyAlertDialog.showAlertDialog(
                                 context,
                                 content: state.errorMessage,
                                 firstButtonText: okText,
                                 firstButtonAction: () {
-                                  popScreen(context);
+                                  NavigationService().popScreen(context);
                                 },
                                 secondButtonText: '',
                                 secondButtonAction: () {},
@@ -134,14 +134,14 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                                 content: state.errorMessage,
                                 firstButtonText: okText,
                                 firstButtonAction: () {
-                                  popScreen(context);
+                                  NavigationService().popScreen(context);
                                 },
                                 secondButtonText: '',
                                 secondButtonAction: () {},
                               );
                             } else if (state
                                 is InboxTaskDestroyingSucceededState) {
-                              popScreen(context, 'destroying successfully');
+                              NavigationService().popScreen(context, 'destroying successfully');
                             } else if (state
                                 is InboxTaskDestroyingFailedState) {
                               MyAlertDialog.showAlertDialog(
@@ -149,7 +149,7 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                                 content: state.errorMessage,
                                 firstButtonText: okText,
                                 firstButtonAction: () {
-                                  popScreen(context);
+                                  NavigationService().popScreen(context);
                                 },
                                 secondButtonText: '',
                                 secondButtonAction: () {},
@@ -183,7 +183,7 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                                       BlocProvider.of<InboxCubit>(context)
                                           .selectedStatus]!,
                             );
-                            popScreen(context);
+                            NavigationService().popScreen(context);
                           } else {
                             BlocProvider.of<InboxCubit>(context)
                                 .createInboxTask(
@@ -202,9 +202,9 @@ class _InboxBottomSheetState extends State<InboxBottomSheet> {
                           if (widget.withDeleteButton) {
                             BlocProvider.of<InboxCubit>(context)
                                 .destroyInboxTask(widget.inboxTasksModel!.id);
-                            popScreen(context);
+                            NavigationService().popScreen(context);
                           } else {
-                            popScreen(context);
+                            NavigationService().popScreen(context);
                           }
                         },
                       ),

@@ -21,7 +21,7 @@ class TaskListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyGestureDetector.gestureDetector(
       onTap: () {
-        pushNamed(
+        NavigationService().pushNamed(
           context,
           taskInfoPageName,
           args: {

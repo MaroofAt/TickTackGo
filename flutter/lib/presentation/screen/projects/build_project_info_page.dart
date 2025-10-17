@@ -50,7 +50,7 @@ class BuildProjectInfoPage extends StatelessWidget {
                   onTap: () async {
                     List<FetchTasksModel> fetchedTasks =
                         await TaskApi.fetchTasks(projectId, token);
-                    pushNamed(context, tasksGanttChartName, args: {
+                    NavigationService().pushNamed(context, tasksGanttChartName, args: {
                       'tasks': fetchedTasks,
                     });
                   },
@@ -93,7 +93,7 @@ class BuildProjectInfoPage extends StatelessWidget {
                               content: state.errorMessage,
                               firstButtonText: okText,
                               firstButtonAction: () {
-                                popScreen(context);
+                                NavigationService().popScreen(context);
                               },
                               secondButtonText: '',
                               secondButtonAction: () {},
@@ -131,7 +131,7 @@ class BuildProjectInfoPage extends StatelessWidget {
                         textColor: white, fontSize: 20),
                     MyGestureDetector.gestureDetector(
                       onTap: () {
-                        pushNamed(context, buildWorkspaceMembersListName, args: {
+                        NavigationService().pushNamed(context, buildWorkspaceMembersListName, args: {
                           'workspaceId': workspaceId,
                           'retrieveProjectModel': retrieveProjectModel,
                           'projectsCubit': context.read<ProjectsCubit>(),

@@ -293,7 +293,7 @@ class AppRouter {
         name: acceptRejectInviteLinkName,
         builder: (context, state) {
           final senderToken = state.pathParameters['token'] ?? state.extra as String;
-          return AcceptRejectInviteLink(senderToken: senderToken);
+          return AcceptRejectInviteLink(inviteToken: senderToken);
         },
       )
     ],

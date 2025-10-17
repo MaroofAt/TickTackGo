@@ -16,7 +16,7 @@ class CreateTaskFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        pushNamed(context, createTaskPageName, args: {
+        NavigationService().pushNamed(context, createTaskPageName, args: {
           'workspaceId': workspaceId,
           'projectId': projectId,
           'tasksTitles': BlocProvider.of<TaskCubit>(context).tasksTitles,

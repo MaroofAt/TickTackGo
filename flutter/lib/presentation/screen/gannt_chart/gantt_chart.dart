@@ -48,7 +48,7 @@ class _TasksGanttChartState extends State<TasksGanttChart> {
       appBar: AppBar(
           backgroundColor: primaryColor,
           leading: IconButton(
-              onPressed: () => popScreen(context),
+              onPressed: () => NavigationService().popScreen(context),
               icon: const Icon(Icons.arrow_back_sharp, color: white)),
           title: const Center(
               child: Text('Gantt Chart',

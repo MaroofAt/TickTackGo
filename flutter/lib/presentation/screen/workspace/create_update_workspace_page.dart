@@ -84,7 +84,7 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                           BlocConsumer<WorkspaceCubit, WorkspaceState>(
                             listener: (context, state) {
                               if (state is CreatedWorkspaceState) {
-                                popScreen(context, true);
+                                NavigationService().popScreen(context, true);
                               }
                               if (state is CreateWorkspaceFailedState) {
                                 MyAlertDialog.showAlertDialog(
@@ -92,7 +92,7 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                                   content: state.errorMessage,
                                   firstButtonText: okText,
                                   firstButtonAction: () {
-                                    popScreen(context);
+                                    NavigationService().popScreen(context);
                                   },
                                   secondButtonText: '',
                                   secondButtonAction: () {},
@@ -134,11 +134,11 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                                             firstButtonText: openSettingsString,
                                             firstButtonAction: () {
                                               openAppSettings();
-                                              popScreen(context);
+                                              NavigationService().popScreen(context);
                                             },
                                             secondButtonText: cancelText,
                                             secondButtonAction: () {
-                                              popScreen(context);
+                                              NavigationService().popScreen(context);
                                             },
                                             reverseColors: true,
                                           );
@@ -150,7 +150,7 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                                                 'something went wrong please try again later',
                                             firstButtonText: okText,
                                             firstButtonAction: () {
-                                              popScreen(context);
+                                              NavigationService().popScreen(context);
                                             },
                                             secondButtonText: '',
                                             secondButtonAction: () {},
