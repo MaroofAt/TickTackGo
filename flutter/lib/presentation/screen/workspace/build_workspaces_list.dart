@@ -29,10 +29,13 @@ class _BuildWorkspacesListState extends State<BuildWorkspacesList> {
               BuildListItem(
                 widget.fetchWorkspacesModel[index],
                 onWorkspaceTap: () {
-                  NavigationService().pushNamed(context, workspaceInfoPageName, args: {
-                    'workspaceId': widget.fetchWorkspacesModel[index].id,
-                    'workspaceCubit': context.read<WorkspaceCubit>(),
-                  });
+                  NavigationService().push(
+                    context,
+                    '$workspaceInfoPageRoute/${widget.fetchWorkspacesModel[index].id}',
+                    args: {
+                      'workspaceCubit': context.read<WorkspaceCubit>(),
+                    },
+                  );
                 },
                 onArrowTap: () {
                   BlocProvider.of<ProjectsCubit>(context)

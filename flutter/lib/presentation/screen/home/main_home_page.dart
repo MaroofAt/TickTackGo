@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/API/user.dart';
 import 'package:pr1/core/constance/colors.dart';
@@ -88,7 +87,7 @@ class _MainHomePageState extends State<MainHomePage> {
                           icon: Icons.work,
                           withShimmer: false,
                           onTap: () {
-                            NavigationService().pushNamed(context, workspacesShowPageName);
+                            NavigationService().push(context, workspacesShowPageRoute);
                           },
                         ),
                         CardBuilder(
@@ -97,7 +96,7 @@ class _MainHomePageState extends State<MainHomePage> {
                           icon: Icons.event,
                           withShimmer: false,
                           onTap: () {
-                            NavigationService().pushNamed(context, receivedInvitationPageName);
+                            NavigationService().push(context, receivedInvitationPageRoute);
                           },
                         ),
                       ],
@@ -110,7 +109,7 @@ class _MainHomePageState extends State<MainHomePage> {
                           icon: Icons.folder_copy,
                           withShimmer: false,
                           onTap: () {
-                            NavigationService().pushNamed(context, mainInboxPageName);
+                            NavigationService().push(context, mainInboxPageRoute);
                           },
                         ),
                         CardBuilder(

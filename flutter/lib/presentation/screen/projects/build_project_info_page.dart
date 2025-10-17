@@ -50,7 +50,7 @@ class BuildProjectInfoPage extends StatelessWidget {
                   onTap: () async {
                     List<FetchTasksModel> fetchedTasks =
                         await TaskApi.fetchTasks(projectId, token);
-                    NavigationService().pushNamed(context, tasksGanttChartName, args: {
+                    NavigationService().push(context, tasksGanttChartRoute, args: {
                       'tasks': fetchedTasks,
                     });
                   },
@@ -131,8 +131,7 @@ class BuildProjectInfoPage extends StatelessWidget {
                         textColor: white, fontSize: 20),
                     MyGestureDetector.gestureDetector(
                       onTap: () {
-                        NavigationService().pushNamed(context, buildWorkspaceMembersListName, args: {
-                          'workspaceId': workspaceId,
+                        NavigationService().push(context, '$buildWorkspaceMembersListRoute/$workspaceId', args: {
                           'retrieveProjectModel': retrieveProjectModel,
                           'projectsCubit': context.read<ProjectsCubit>(),
                         });

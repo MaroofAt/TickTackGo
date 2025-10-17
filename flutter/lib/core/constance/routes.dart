@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
 import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
+import 'package:pr1/business_logic/invite_link_cubit/invite_link_cubit.dart';
 import 'package:pr1/business_logic/issues/issues_cubit.dart';
 import 'package:pr1/business_logic/points_cubit/points_cubit.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
@@ -13,6 +14,9 @@ import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
+import 'package:pr1/data/models/projects/retrieve_project_model.dart';
+import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/screen/auth/sign_in_new.dart';
 import 'package:pr1/presentation/screen/auth/signupnew.dart';
 import 'package:pr1/presentation/screen/auth/verifypage.dart';
@@ -25,7 +29,7 @@ import 'package:pr1/presentation/screen/invitation/invitation_search.dart';
 import 'package:pr1/presentation/screen/invitation/received_invitations.dart';
 import 'package:pr1/presentation/screen/issues/all_issues.dart';
 
-import 'package:pr1/presentation/screen/issues/detalies_issue.dart';
+import 'package:pr1/presentation/screen/issues/details_issue.dart';
 import 'package:pr1/presentation/screen/onboarding/final_onboarding_page.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
 import 'package:pr1/presentation/screen/onboarding/splash_screen.dart';
@@ -172,15 +176,46 @@ class AppRouter {
       GoRoute(
         path: createUpdateWorkspacePageRoute,
         name: createUpdateWorkspacePageName,
-        builder: (context, state) => BlocProvider(
-          create: (context) => ProjectsCubit(),
-          child: const CreateUpdateWorkspacePage(),
-        ),
+        builder: (context, state) {
+          String? title;
+          String? description;
+          String? image;
+          WorkspaceCubit? workspaceCubit;
+          RetrieveWorkspaceModel? retrieveWorkspaceModel;
+          if (state.extra != null) {
+            final arguments = state.extra as Map<String, dynamic>;
+            title = arguments['title'];
+            description = arguments['description'];
+            image = arguments['image'];
+            retrieveWorkspaceModel = arguments['retrieveWorkspaceModel'];
+            workspaceCubit = arguments['workspaceCubit'];
+          }
+          return BlocProvider(
+            create: (context) => WorkspaceCubit(),
+            child: CreateUpdateWorkspacePage(
+              title: title,
+              description: description,
+              image: image,
+              retrieveWorkspaceModel: retrieveWorkspaceModel,
+              workspaceCubit: workspaceCubit,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: inboxInfoPageRoute,
         name: inboxInfoPageName,
-        builder: (context, state) => const InboxInfoPage(),
+        builder: (context, state) {
+          late InboxCubit inboxCubit;
+          late InboxTasksModel inboxTasksModel;
+          final arguments = state.extra as Map<String, dynamic>;
+          inboxTasksModel = arguments['inboxTasksModel'];
+          inboxCubit = arguments['inboxCubit'];
+          return InboxInfoPage(
+            inboxCubit: inboxCubit,
+            inboxTasksModel: inboxTasksModel,
+          );
+        },
       ),
       GoRoute(
         path: '$invitationSearchRoute/:workspaceId/:senderId',
@@ -203,13 +238,14 @@ class AppRouter {
         builder: (context, state) {
           int workspaceId = int.parse(state.pathParameters['workspaceId']!);
           int projectId = int.parse(state.pathParameters['projectId']!);
-          Color? color = state.extra as Color?;
+          final arguments = state.extra as Map<String, dynamic>;
+          Color color = arguments['color'];
           return BlocProvider(
             create: (context) => ProjectsCubit(),
             child: ProjectInfo(
               workspaceId: workspaceId,
               projectId: projectId,
-              color: color ?? lightGrey,
+              color: color,
             ),
           );
         },
@@ -217,10 +253,16 @@ class AppRouter {
       GoRoute(
         path: taskInfoPageRoute,
         name: taskInfoPageName,
-        builder: (context, state) => BlocProvider(
-          create: (context) => TaskCubit(),
-          child: const TaskInfoPage(),
-        ),
+        builder: (context, state) {
+          final arguments = state.extra as Map<String, dynamic>;
+          return BlocProvider(
+            create: (context) => TaskCubit(),
+            child: TaskInfoPage(
+              task: arguments['task'],
+              taskCubit: arguments['taskCubit'],
+            ),
+          );
+        },
       ),
       GoRoute(
         path: '$pointsStatisticsRoute/:workspaceId/:workspaceName',
@@ -229,40 +271,80 @@ class AppRouter {
           String workspaceName = state.pathParameters['workspaceName']!;
           int workspaceId = int.parse(state.pathParameters['workspaceId']!);
           return BlocProvider(
-          create: (context) => PointsCubit(),
-          child: PointsStatistics(
-            workspaceId: workspaceId,
-            workspaceName: workspaceName,
-          ),
-        );
+            create: (context) => PointsCubit(),
+            child: PointsStatistics(
+              workspaceId: workspaceId,
+              workspaceName: workspaceName,
+            ),
+          );
         },
       ),
       GoRoute(
-        path: workspaceInfoPageRoute,
+        path: '$createTaskPageRoute/:workspaceId/:projectId',
+        name: createTaskPageName,
+        builder: (context, state) {
+          final arguments = state.extra as Map<String, dynamic>;
+          final tasksTitles = arguments['tasksTitles'];
+          final assignees = arguments['assignees'];
+          final taskCubit = arguments['taskCubit'];
+          return CreateTaskPage(
+            workspaceId: int.parse(state.pathParameters['workspaceId']!),
+            projectId: int.parse(state.pathParameters['workspaceId']!),
+            tasksTitles: tasksTitles,
+            assignees: assignees,
+            taskCubit: taskCubit,
+          );
+        },
+      ),
+      GoRoute(
+        path: '$workspaceInfoPageRoute/:workspaceId',
         name: workspaceInfoPageName,
-        builder: (context, state) => BlocProvider(
-          create: (context) => WorkspaceCubit(),
-          child: const WorkspaceInfoPage(),
-        ),
+        builder: (context, state) {
+          final arguments = state.extra as Map<String, dynamic>;
+          WorkspaceCubit workspaceCubit = arguments['workspaceCubit'];
+          return BlocProvider(
+            create: (context) => WorkspaceCubit(),
+            child: WorkspaceInfoPage(
+              workspaceId: int.parse(state.pathParameters['workspaceId']!),
+              workspaceCubit: workspaceCubit,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: tasksGanttChartRoute,
         name: tasksGanttChartName,
-        builder: (context, state) => BlocProvider(
-          create: (context) => WorkspaceCubit(),
-          child: const TasksGanttChart(),
-        ),
+        builder: (context, state) {
+          final arguments = state.extra as Map<String, dynamic>;
+          return BlocProvider(
+            create: (context) => WorkspaceCubit(),
+            child: TasksGanttChart(
+              tasks: arguments['tasks'],
+            ),
+          );
+        },
       ),
       GoRoute(
-        path: buildWorkspaceMembersListRoute,
+        path: '$buildWorkspaceMembersListRoute/:workspaceId',
         name: buildWorkspaceMembersListName,
-        builder: (context, state) => MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (c) => ProjectsCubit()),
-            BlocProvider(create: (c) => WorkspaceCubit()),
-          ],
-          child: const BuildWorkspaceMembersList(),
-        ),
+        builder: (context, state) {
+          int workspaceId = int.parse(state.pathParameters['workspaceId']!);
+          final arguments = state.extra as Map<String, dynamic>;
+          ProjectsCubit projectsCubit = arguments['projectsCubit'];
+          RetrieveProjectModel retrieveProjectModel =
+              arguments['retrieveProjectModel'];
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (c) => ProjectsCubit()),
+              BlocProvider(create: (c) => WorkspaceCubit()),
+            ],
+            child: BuildWorkspaceMembersList(
+              workspaceId: workspaceId,
+              projectsCubit: projectsCubit,
+              retrieveProjectModel: retrieveProjectModel,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: '$allIssuesRoute/:projectId',
@@ -270,30 +352,38 @@ class AppRouter {
         builder: (context, state) {
           int projectId = int.parse(state.pathParameters['projectId']!);
           return BlocProvider(
-          create: (context) => IssuesCubit(IssueApi()),
-          child: AllIssues(
-            projectId: projectId,
-          ),
-        );
+            create: (context) => IssuesCubit(IssueApi()),
+            child: AllIssues(
+              projectId: projectId,
+            ),
+          );
         },
       ),
       GoRoute(
-        path: sentInvitesPageRoute,
+        path: '$sentInvitesPageRoute/:workspaceId',
         name: sentInvitesPageName,
         builder: (context, state) {
-          int workspaceId = int.parse(state.pathParameters['workspaceId']!);
           return BlocProvider(
-          create: (context) => WorkspaceCubit(),
-          child: SentInvitesPage(workspaceId: workspaceId),
-        );
+            create: (context) => WorkspaceCubit(),
+            child: SentInvitesPage(
+              workspaceId: int.parse(state.pathParameters['workspaceId']!),
+            ),
+          );
         },
       ),
       GoRoute(
         path: '$acceptRejectInviteLinkRoute/:token',
         name: acceptRejectInviteLinkName,
         builder: (context, state) {
-          final senderToken = state.pathParameters['token'] ?? state.extra as String;
-          return AcceptRejectInviteLink(inviteToken: senderToken);
+          final senderToken =
+              state.pathParameters['token'] ?? state.extra as String;
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => SplashCubit()),
+              BlocProvider(create: (context) => InviteLinkCubit()),
+            ],
+            child: AcceptRejectInviteLink(inviteToken: senderToken),
+          );
         },
       )
     ],

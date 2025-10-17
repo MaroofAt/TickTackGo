@@ -60,11 +60,8 @@ class BuildListItem extends StatelessWidget {
               children: [
                 MyGestureDetector.gestureDetector(
                   onTap: () {
-                    NavigationService()
-                        .pushNamed(context, pointsStatisticsName, args: {
-                      'workspaceId': fetchWorkspacesModel.id,
-                      'workspaceName': fetchWorkspacesModel.title,
-                    });
+                    NavigationService().push(context,
+                        '$pointsStatisticsRoute/${fetchWorkspacesModel.id}/${fetchWorkspacesModel.title}');
                   },
                   child: Container(
                     color: Theme.of(context).scaffoldBackgroundColor,

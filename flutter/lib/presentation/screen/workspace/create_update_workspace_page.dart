@@ -18,7 +18,19 @@ import 'package:pr1/presentation/widgets/text.dart';
 import 'package:pr1/presentation/widgets/text_field.dart';
 
 class CreateUpdateWorkspacePage extends StatefulWidget {
-  const CreateUpdateWorkspacePage({super.key});
+  String? image;
+  String? title;
+  String? description;
+  RetrieveWorkspaceModel? retrieveWorkspaceModel;
+  WorkspaceCubit? workspaceCubit;
+
+  CreateUpdateWorkspacePage({
+    this.image,
+    this.title,
+    this.description,
+    this.retrieveWorkspaceModel,
+    this.workspaceCubit,
+    super.key});
 
   @override
   State<CreateUpdateWorkspacePage> createState() =>
@@ -26,39 +38,20 @@ class CreateUpdateWorkspacePage extends StatefulWidget {
 }
 
 class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
-  String? image;
-  String? title;
-  String? description;
-  RetrieveWorkspaceModel? retrieveWorkspaceModel;
-  WorkspaceCubit? workspaceCubit;
-
   final _titleController = TextEditingController();
 
   final _descriptionController = TextEditingController();
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    workspaceCubit = args['workspaceCubit'];
-
-    title = args['title'];
-    description = args['description'];
-    image = args['image'];
-    retrieveWorkspaceModel = args['retrieveWorkspaceModel'];
-  }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop && result != null) {
-          if (retrieveWorkspaceModel != null) {
-            workspaceCubit!.retrieveWorkspace(retrieveWorkspaceModel!.id);
+          if (widget.retrieveWorkspaceModel != null) {
+            widget.workspaceCubit!.retrieveWorkspace(widget.retrieveWorkspaceModel!.id);
           } else {
-            workspaceCubit!.fetchWorkspaces();
+            widget.workspaceCubit!.fetchWorkspaces();
           }
         }
       },
@@ -74,7 +67,7 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                   Column(
                     children: [
                       SizedBox(height: height(context) * 0.08),
-                      title == null
+                      widget.title == null
                           ? MyText.text1(pageTitle,
                               fontSize: 25, textColor: white)
                           : Container(),
@@ -110,11 +103,11 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                                           file: BlocProvider.of<WorkspaceCubit>(
                                                   context)
                                               .image!)
-                                      : image != null
+                                      : widget.image != null
                                           ? MyCircle.circle(
                                               width(context) * 0.35,
                                               child:
-                                                  MyImages.networkImage(image!))
+                                                  MyImages.networkImage(widget.image!))
                                           : MyCircle.circle(
                                               width(context) * 0.35,
                                               color: white,
@@ -190,7 +183,7 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                                 MyTextField.textField(
                                   context,
                                   _titleController,
-                                  hint: title ?? titleHint,
+                                  hint: widget.title ?? titleHint,
                                   textColor: white,
                                   borderColor: greatMagenda,
                                 ),
@@ -200,7 +193,7 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                                 MyTextField.textField(
                                   context,
                                   _descriptionController,
-                                  hint: description ?? descriptionHint,
+                                  hint: widget.description ?? descriptionHint,
                                   type: TextInputType.multiline,
                                   textColor: white,
                                   minLines: 1,
@@ -240,7 +233,7 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                           }
                           return MyButtons.primaryButton(
                             () {
-                              if (title == null) {
+                              if (widget.title == null) {
                                 BlocProvider.of<WorkspaceCubit>(context)
                                     .createWorkSpace(
                                   _titleController.text,
@@ -249,16 +242,16 @@ class _CreateUpdateWorkspacePageState extends State<CreateUpdateWorkspacePage> {
                               } else {
                                 BlocProvider.of<WorkspaceCubit>(context)
                                     .updateWorkspace(
-                                  retrieveWorkspaceModel!.id,
+                                  widget.retrieveWorkspaceModel!.id,
                                   _titleController.text,
                                   _descriptionController.text,
-                                  retrieveWorkspaceModel!,
+                                  widget.retrieveWorkspaceModel!,
                                 );
                               }
                             },
                             Theme.of(context).secondaryHeaderColor,
                             child: MyText.text1(
-                              title == null ? createButtonText : 'Update',
+                              widget.title == null ? createButtonText : 'Update',
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                               textColor: black,

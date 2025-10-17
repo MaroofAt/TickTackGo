@@ -12,7 +12,15 @@ import 'package:pr1/presentation/widgets/loading_indicator.dart';
 import 'package:pr1/presentation/widgets/text.dart';
 
 class BuildWorkspaceMembersList extends StatefulWidget {
-  const BuildWorkspaceMembersList({super.key});
+  final int workspaceId;
+  final RetrieveProjectModel retrieveProjectModel;
+  final ProjectsCubit projectsCubit;
+
+  const BuildWorkspaceMembersList(
+      {required this.workspaceId,
+      required this.projectsCubit,
+      required this.retrieveProjectModel,
+      super.key});
 
   @override
   State<BuildWorkspaceMembersList> createState() =>
@@ -20,25 +28,14 @@ class BuildWorkspaceMembersList extends StatefulWidget {
 }
 
 class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
-  int? workspaceId;
-  RetrieveProjectModel? retrieveProjectModel;
-  ProjectsCubit? projectsCubit;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    workspaceId = args['workspaceId'];
-    retrieveProjectModel = args['retrieveProjectModel'];
-    projectsCubit = args['projectsCubit'];
+  void initState() {
+    super.initState();
     _getWorkspace();
   }
 
   _getWorkspace() {
-    BlocProvider.of<WorkspaceCubit>(context)
-        .retrieveWorkspace(workspaceId!);
+    BlocProvider.of<WorkspaceCubit>(context).retrieveWorkspace(widget.workspaceId);
   }
 
   @override
@@ -46,7 +43,7 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop && result != null) {
-          projectsCubit!.retrieveProject(retrieveProjectModel!.id);
+          widget.projectsCubit.retrieveProject(widget.retrieveProjectModel.id);
         }
       },
       child: Scaffold(
@@ -59,7 +56,7 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
                 SizedBox(
                   width: width(context),
                   child: MyText.text1(
-                    'add members to ${retrieveProjectModel!.title}',
+                    'add members to ${widget.retrieveProjectModel.title}',
                     textColor: white,
                     fontSize: 20,
                   ),
@@ -69,7 +66,7 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
                     if (state is WorkspaceRetrievingSucceededState) {
                       RetrieveWorkspaceModel retrieveWorkspaceModel =
                           state.retrieveWorkspace;
-                      if (retrieveProjectModel!.members.length == 1) {
+                      if (widget.retrieveProjectModel.members.length == 1) {
                         return Center(
                           child: MyText.text1(
                             '\n\nAdd some member to this workspace so you can add them to this project',
@@ -83,7 +80,7 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
                           itemCount: retrieveWorkspaceModel.members.length,
                           itemBuilder: (context, index) {
                             final isAlreadyMember =
-                                retrieveProjectModel!.members.any((m) =>
+                            widget.retrieveProjectModel.members.any((m) =>
                                     m.member.id ==
                                     retrieveWorkspaceModel
                                         .members[index].member.id);
@@ -129,7 +126,7 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
                                       () {
                                         BlocProvider.of<ProjectsCubit>(context)
                                             .addMemberToProject(
-                                                retrieveProjectModel!.id,
+                                            widget.retrieveProjectModel.id,
                                                 retrieveWorkspaceModel
                                                     .members[index].member.id);
                                       },
@@ -142,7 +139,8 @@ class _BuildWorkspaceMembersListState extends State<BuildWorkspaceMembersList> {
                                           listener: (context, state) {
                                             if (state
                                                 is AddingMemberToProjectSucceededState) {
-                                              NavigationService().popScreen(context, true);
+                                              NavigationService()
+                                                  .popScreen(context, true);
                                             }
                                           },
                                           builder: (context, state) {

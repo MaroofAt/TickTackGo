@@ -47,8 +47,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       if (response.statusCode == 200 && response.data.isNotEmpty) {
-
-        NavigationService().pushNamed(context, verifyName);
+        NavigationService().push(context, verifyRoute);
         emit(OTPSentSuccess());
       } else if (response.statusCode == 400 && response.data.isNotEmpty) {
         final errorData = response.data;

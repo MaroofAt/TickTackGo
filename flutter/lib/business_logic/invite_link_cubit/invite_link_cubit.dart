@@ -44,7 +44,7 @@ class InviteLinkCubit extends Cubit<InviteLinkState> {
         await InviteLink.joinWorkspace(inviteToken, token);
 
     if (joinWorkspaceModel.errorMessage.isEmpty) {
-      emit(InviteLinkAcceptingSucceededState());
+      emit(InviteLinkAcceptedState());
     } else {
       emit(InviteLinkAcceptingFailedState(joinWorkspaceModel.errorMessage));
     }
