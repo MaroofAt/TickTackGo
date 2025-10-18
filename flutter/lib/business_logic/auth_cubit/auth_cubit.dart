@@ -7,7 +7,7 @@ import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/data/models/auth/sign_up_model.dart';
 
 import '../../core/API/notifications_api.dart';
-import '../../core/functions/navigation_functions.dart';
+import '../../core/functions/navigation_service.dart';
 import '../../core/variables/api_variables.dart';
 import '../../core/variables/global_var.dart';
 import '../../core/variables/intro_questions_variables.dart';

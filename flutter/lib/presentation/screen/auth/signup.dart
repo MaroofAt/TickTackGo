@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import '../../../core/constance/colors.dart';
 import '../../widgets/create_text_field.dart';
 

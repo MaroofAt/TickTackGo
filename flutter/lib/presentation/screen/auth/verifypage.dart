@@ -6,7 +6,7 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 
 import '../../../core/constance/strings.dart';
-import '../../../core/functions/navigation_functions.dart';
+import '../../../core/functions/navigation_service.dart';
 
 class VerifyPage extends StatefulWidget {
   const VerifyPage({super.key});

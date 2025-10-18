@@ -5,7 +5,7 @@ import 'package:pr1/core/API/user.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/presentation/screen/home/card_builder.dart';
 import 'package:pr1/presentation/screen/home/main_home_page_shimmer.dart';

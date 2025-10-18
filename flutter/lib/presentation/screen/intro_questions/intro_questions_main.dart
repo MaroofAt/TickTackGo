@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/presentation/screen/intro_questions/intro_questions_header.dart';
 import 'package:pr1/presentation/screen/intro_questions/questions_page_view.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';
