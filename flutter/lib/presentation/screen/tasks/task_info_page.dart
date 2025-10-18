@@ -5,7 +5,7 @@ import 'package:pr1/business_logic/comment_cubit.dart';
 import 'package:pr1/business_logic/task_cubit/task_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/data/models/tasks/task_model.dart';
 import 'package:pr1/presentation/screen/tasks/attachments_dialog.dart';
 import 'package:pr1/presentation/screen/tasks/task_info_app_bar.dart';

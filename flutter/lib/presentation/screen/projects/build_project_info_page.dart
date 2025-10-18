@@ -5,7 +5,7 @@ import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/core/functions/user_functions.dart';
 import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';

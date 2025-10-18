@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gantt_view/gantt_view.dart';
 
 import '../../../core/constance/colors.dart';
-import '../../../core/functions/navigation_functions.dart';
+import '../../../core/functions/navigation_service.dart';
 import '../../../data/models/tasks/fetch_tasks_model.dart';
 
 class TasksGanttChart extends StatefulWidget {

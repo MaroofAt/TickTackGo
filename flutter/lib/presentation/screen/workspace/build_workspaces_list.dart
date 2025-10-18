@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/projects_cubit/projects_cubit.dart';
 import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/constance/strings.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/data/models/workspace/fetch_workspaces_model.dart';
 import 'package:pr1/presentation/screen/projects/build_projects_list.dart';
 import 'package:pr1/presentation/screen/workspace/build_workspaces_list_item.dart';

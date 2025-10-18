@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/invitation_cubit/invitation_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/presentation/screen/invitation/invites_list.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/app_bar.dart';

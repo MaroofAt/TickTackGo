@@ -7,7 +7,7 @@ import 'package:pr1/business_logic/splash_cubit/splash_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/data/local_data/local_data.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';

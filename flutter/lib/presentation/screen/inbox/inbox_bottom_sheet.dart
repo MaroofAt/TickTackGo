@@ -5,7 +5,7 @@ import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/constance/task_constance.dart';
-import 'package:pr1/core/functions/navigation_functions.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
 import 'package:pr1/presentation/widgets/alert_dialog.dart';
 import 'package:pr1/presentation/widgets/buttons.dart';

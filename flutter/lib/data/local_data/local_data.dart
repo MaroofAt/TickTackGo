@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // utils/shared_prefs_helper.dart
 
-const String _userDataKey = 'user_data';
 const String _accessTokenKey = 'access_token';
 const String _refreshTokenKey = 'refresh_token';
 

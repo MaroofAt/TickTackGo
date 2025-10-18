@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
 import 'package:pr1/core/constance/strings.dart';
-import 'package:pr1/presentation/screen/auth/sign_in_new.dart';
 
-import '../../../core/functions/navigation_functions.dart';
+import '../../../core/functions/navigation_service.dart';
 import '../../widgets/create_text_field.dart';
 
 class SignUpNew extends StatefulWidget {
