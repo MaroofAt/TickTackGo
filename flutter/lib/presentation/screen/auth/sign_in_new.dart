@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart' show GoRouterState;
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/constance.dart';
+import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 
 import '../../widgets/create_text_field.dart';
 
@@ -27,7 +30,22 @@ class _SignInNewState extends State<SignInNew> {
     return Scaffold(
       backgroundColor: primaryColor,
       body: SingleChildScrollView(
-        child: BlocBuilder<AuthCubit, AuthState>(
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthAuthenticated) {
+
+              // 1. Check for the 'from' query parameter passed by the redirect.
+              final String? fromRoute = GoRouterState.of(context).uri.queryParameters['from'];
+
+              if (fromRoute != null && fromRoute.isNotEmpty) {
+                // 2. If it exists, navigate the user to their original destination.
+                NavigationService().pushReplacement(context, fromRoute);
+              } else {
+                // 3. If there's no pending route, go to the default home page.
+                NavigationService().pushReplacementNamed(context, mainHomePageName);
+              }
+            }
+          },
           builder: (context, state) {
             bool isLoading = context.read<AuthCubit>().isLoading;
             return Column(

@@ -177,8 +177,7 @@ class AuthCubit extends Cubit<AuthState> {
           print("FCM Token is null, device not registered yet");
         }
 
-        NavigationService().pushReplacementNamed(context, mainHomePageName);
-        emit(SuccessfulyLoginState());
+        emit(AuthAuthenticated());
       } else if (response.statusCode == 401 && response.data.isNotEmpty) {
         final errorDetail = response.data['detail'] ?? 'Invalid credentials';
         emit(FailedLoginState(errorDetail.toString()));

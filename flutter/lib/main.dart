@@ -12,6 +12,8 @@ import 'package:pr1/core/API/comments.dart';
 import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/functions/deep_link_service.dart';
+import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/themes/themes.dart';
 import 'business_logic/replay/replay_cubit.dart';
 import 'firebase_options.dart';
@@ -19,58 +21,63 @@ import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await  initOneSignal()
   // await NotificationApi().getDeviceToken();
   // await NotificationHandel().initNotification();
-  runApp(const MyApp());
+  final appRouter = AppRouter();
+  final deepLinkService = DeepLinkService(appRouter);
+
+  // Initialize deep link service after app starts
+  Future.delayed(Duration.zero, () {
+    deepLinkService.initialize();
+  });
+  runApp(MyApp(appRouter: appRouter, deepLinkService: deepLinkService));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final AppRouter appRouter;
+  final DeepLinkService deepLinkService;
+
+  const MyApp(
+      {required this.appRouter, required this.deepLinkService, super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp>  with WidgetsBindingObserver {
   final _appLinks = AppLinks();
-  final AppRouter _appRouter = AppRouter();
   StreamSubscription<Uri>? _linkSubscription;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _setupDeepLink();
   }
 
   Future<void> _setupDeepLink() async {
     _appLinks.uriLinkStream.listen(
       (Uri? uri) {
-        if(uri != null) {
-          _handleDeepLink(uri);
+        if (uri != null) {
+          DeepLinkService(widget.appRouter).handleDeepLink(uri);
         }
       },
-    );
+    ).onError((e) {
+      NavigationService().pushReplacement(context, splashScreenRoute);
+    });
 
     final Uri? initialLink = await _appLinks.getInitialLink();
-    if(initialLink != null) {
-      _handleDeepLink(initialLink);
-    }
-  }
-
-  void _handleDeepLink(Uri uri) {
-    if(uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'invite-link') {
-      final senderToken = uri.pathSegments[1];
-      if(senderToken.isNotEmpty) {
-        _appRouter.router.go('$acceptRejectInviteLinkRoute/$senderToken');
-      }
+    if (initialLink != null) {
+      DeepLinkService(widget.appRouter).handleDeepLink(initialLink);
     }
   }
 
   @override
   void dispose() {
     _linkSubscription?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -91,7 +98,7 @@ class _MyAppState extends State<MyApp> {
         // theme: ThemeData.dark(),
         // routes: routes,
         // home: const SplashScreen(),
-        routerConfig: _appRouter.router,
+        routerConfig: widget.appRouter.router,
       ),
     );
   }

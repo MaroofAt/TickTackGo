@@ -24,6 +24,21 @@ class AcceptRejectInviteLink extends StatefulWidget {
 }
 
 class _AcceptRejectInviteLinkState extends State<AcceptRejectInviteLink> {
+  bool _isMounted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isMounted = true;
+  }
+
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
+  }
+
   Future<String?> _getRefreshToken() async {
     final String? refresh = await getRefreshToken();
     return refresh;
@@ -63,8 +78,10 @@ class _AcceptRejectInviteLinkState extends State<AcceptRejectInviteLink> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 BlocConsumer<SplashCubit, SplashState>(
-                  listener: (context, state) {
-                    if (state is RefreshTokenSucceededState) {
+                  listener: (_, splashState) {
+                    if (!_isMounted) return;
+                    if (splashState is RefreshTokenSucceededState) {
+                      if (!_isMounted) return;
                       BlocProvider.of<InviteLinkCubit>(context)
                           .joinWorkspace(widget.inviteToken);
                     }
@@ -72,9 +89,10 @@ class _AcceptRejectInviteLinkState extends State<AcceptRejectInviteLink> {
                   builder: (context, state) {
                     return BlocConsumer<InviteLinkCubit, InviteLinkState>(
                       listener: (context, state) {
+                        if (!_isMounted) return;
                         if (state is InviteLinkAcceptedState) {
                           NavigationService()
-                              .pushReplacement(context, splashScreenLogoPath);
+                              .pushReplacement(context, splashScreenRoute);
                         }
                         if (state is InviteLinkAcceptingFailedState) {
                           MyAlertDialog.showAlertDialog(
@@ -112,7 +130,7 @@ class _AcceptRejectInviteLinkState extends State<AcceptRejectInviteLink> {
                 MyButtons.primaryButton(
                   () {
                     NavigationService()
-                        .pushReplacement(context, splashScreenLogoPath);
+                        .pushReplacement(context, splashScreenRoute);
                   },
                   Theme.of(context).primaryColor,
                   child: Center(
