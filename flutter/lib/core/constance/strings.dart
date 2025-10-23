@@ -83,7 +83,7 @@ const String createTaskPageName = 'CreateTaskPage';
 const String sentInvitesPageRoute = '/SentInvitesPage';
 const String sentInvitesPageName = 'SentInvitesPage';
 
-const String acceptRejectInviteLinkRoute = '/acceptRejectInviteLink';
+const String acceptRejectInviteLinkRoute = '/invite-link';
 const String acceptRejectInviteLinkName = 'acceptRejectInviteLink';
 
 ///Splash screen strings

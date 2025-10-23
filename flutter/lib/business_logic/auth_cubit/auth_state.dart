@@ -4,6 +4,12 @@ part of 'auth_cubit.dart';
 sealed class AuthState {}
 /////login state
 final class AuthInitial extends AuthState {}
+
+// THIS IS THE KEY CHANGE: A unified state for any authenticated user.
+final class AuthAuthenticated extends AuthState {}
+
+final class AuthUnauthenticated extends AuthState {}
+
 final class LoginLoadingState extends AuthState{}
 final class SuccessfulyLoginState extends AuthState{}
 final class FailedLoginState extends AuthState {

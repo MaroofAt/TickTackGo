@@ -14,6 +14,7 @@ import 'package:pr1/business_logic/workspace_cubit/workspace_cubit.dart';
 import 'package:pr1/core/API/issues.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/data/local_data/local_data.dart';
 import 'package:pr1/data/models/inbox/inbox_tasks_model.dart';
 import 'package:pr1/data/models/projects/retrieve_project_model.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
@@ -49,6 +50,11 @@ import '../../business_logic/auth_cubit/auth_cubit.dart';
 
 class AppRouter {
   static final AppRouter _appRouter = AppRouter._internal();
+  bool? _authenticated;
+
+  Future<void> _checkUserAuthenticated() async {
+    _authenticated = (await getAccessToken() != null);
+  }
 
   factory AppRouter() {
     return _appRouter;
@@ -56,7 +62,7 @@ class AppRouter {
 
   AppRouter._internal();
 
-  final GoRouter _router = GoRouter(
+  late final GoRouter _router = GoRouter(
     initialLocation: splashScreenRoute,
     routes: [
       GoRoute(
@@ -372,20 +378,26 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '$acceptRejectInviteLinkRoute/:token',
+        path: '$acceptRejectInviteLinkRoute/:inviteToken/join-us',
         name: acceptRejectInviteLinkName,
+        redirect: (context, state) async {
+          await _checkUserAuthenticated();
+          final String loginUri = Uri(path: signInRoute, queryParameters: {
+            'from': state.uri.toString(),
+          }).toString();
+
+          _authenticated ??= false;
+          if (!_authenticated!) return loginUri;
+          return null;
+        },
         builder: (context, state) {
-          final senderToken =
-              state.pathParameters['token'] ?? state.extra as String;
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (context) => SplashCubit()),
-              BlocProvider(create: (context) => InviteLinkCubit()),
-            ],
-            child: AcceptRejectInviteLink(inviteToken: senderToken),
+          final inviteToken = state.pathParameters['inviteToken'] ?? '';
+          return BlocProvider(
+            create: (context) => InviteLinkCubit(),
+            child: AcceptRejectInviteLink(inviteToken: inviteToken),
           );
         },
-      )
+      ),
     ],
   );
 

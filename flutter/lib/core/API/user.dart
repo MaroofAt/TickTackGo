@@ -9,9 +9,10 @@ Future<void> getUser() async {
   try {
     final userId = getUserIdFromToken(token);
 
-    final response = await dio.get(
+    final response = await dio.request(
       '/users/$userId/',
       options: Options(
+        method: 'GET',
         headers: {
           'Authorization': 'Bearer $token',
           'accept': 'application/json',

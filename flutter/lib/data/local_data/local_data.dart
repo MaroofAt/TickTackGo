@@ -20,7 +20,7 @@ Future<String?> getAccessToken() async {
 
 Future<String?> getRefreshToken() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(_refreshTokenKey);
+  return await prefs.getString(_refreshTokenKey);
 }
 
 Future<void> clearTokens() async {
