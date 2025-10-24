@@ -52,8 +52,12 @@ class BuildListItem extends StatelessWidget {
                           ),
                   ),
                 ),
-                MyText.text1(fetchWorkspacesModel.title,
-                    fontSize: 18, textColor: white),
+                SizedBox(
+                  width: width(context) * 0.4,
+                  height: width(context) * 0.1,
+                  child: MyText.text1(fetchWorkspacesModel.title,
+                      fontSize: 18, textColor: white, overflow: TextOverflow.ellipsis),
+                ),
               ],
             ),
             Row(

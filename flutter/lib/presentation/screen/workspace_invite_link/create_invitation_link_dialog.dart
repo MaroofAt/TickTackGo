@@ -38,7 +38,7 @@ class _CreateInvitationLinkDialogState
     return AlertDialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: SizedBox(
-        height: height(context) * 0.05,
+        height: height(context) * 0.08,
         width: width(context) * 0.1,
         child: MyText.text1('Create Invitation Link Here', textColor: white),
       ),

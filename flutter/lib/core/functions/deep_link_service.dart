@@ -54,7 +54,7 @@ class DeepLinkService {
       try {
         _appRouter.router.push('$acceptRejectInviteLinkRoute/$inviteToken/join-us', extra: inviteToken);
       } catch (e2) {
-        print('Failed again after retry: $e2');
+        rethrow;
       }
     }
   }
