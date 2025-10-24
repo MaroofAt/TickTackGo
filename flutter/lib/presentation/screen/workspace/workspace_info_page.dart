@@ -73,43 +73,52 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                       const SizedBox(height: 20),
                       SizedBox(
                         width: width(context),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
                           children: [
-                            buildShowInvitesText(context),
-                            MyGestureDetector.gestureDetector(
-                              onTap: () {
-                                if (isAdmin(retrieveWorkspace!.owner!.id)) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return BlocProvider(
-                                        create: (context) => InviteLinkCubit(),
-                                        child: CreateInvitationLinkDialog(
-                                          workspaceId: retrieveWorkspace!.id,
-                                        ),
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  showSnackBar(
-                                    context,
-                                    'You are not the owner of this workspace',
-                                    backgroundColor: Colors.red,
-                                    seconds: 1,
-                                    milliseconds: 500,
-                                  );
-                                }
-                              },
-                              child: Container(
-                                color: transparent,
-                                child: MyText.text1(
-                                  'create invitation link?',
-                                  textColor: Colors.blue,
-                                  fontSize: 18,
-                                ),
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                buildShowInvitesText(context),
+                              ],
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                MyGestureDetector.gestureDetector(
+                                  onTap: () {
+                                    if (isAdmin(retrieveWorkspace!.owner!.id)) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return BlocProvider(
+                                            create: (context) => InviteLinkCubit(),
+                                            child: CreateInvitationLinkDialog(
+                                              workspaceId: retrieveWorkspace!.id,
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      showSnackBar(
+                                        context,
+                                        'You are not the owner of this workspace',
+                                        backgroundColor: Colors.red,
+                                        seconds: 1,
+                                        milliseconds: 500,
+                                      );
+                                    }
+                                  },
+                                  child: Container(
+                                    color: transparent,
+                                    child: MyText.text1(
+                                      'create invitation link?',
+                                      textColor: Colors.blue,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),
