@@ -1,6 +1,10 @@
-from rest_framework.parsers import MultiPartParser, JSONParser
+import os
+import zipfile
+from io import BytesIO
+from django.http import FileResponse
 from django.utils import timezone
 
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework import viewsets , status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -513,6 +517,42 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         return super().partial_update(request, pk, *args, **kwargs)
     
+    @extend_schema(
+        summary="Download Attachments As Zip",
+        operation_id="download_attachments_as_zip",
+        description="installing all the Task specified attachments by one link as .zip file",
+        tags=["Tasks"]
+    )
+    @action(detail=True, methods=['get'])
+    def download_attachments_as_zip(self, request, pk, *args, **kwargs):
+        task:Task = self.get_object()
+
+        attachments = task.attachments.all()
+
+        if not attachments:
+            return Response(
+                {'detail': 'this task has no attachments. not found!'},
+                status=status.HTTP_404_NOT_FOUND                
+            )
+
+        zip_buffer = BytesIO()
+
+        with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
+            for attachment in attachments:
+                file_path = attachment.file.path()
+                if os.path.exists(file_path):
+                    zip_file.write(file_path , os.path.basename(file_path))
+        
+        zip_buffer.seek(0)
+        
+        response = FileResponse(
+            zip_buffer,
+            content_type= 'application/zip',
+            filename=f'task-{pk}-attachments.zip'
+        )
+        response['Content-Disposition'] = f'attachment; filename="task-{pk}-attachments.zip"'
+        return response
+
     @extend_schema(exclude=True)
     def destroy(self, request, *args, **kwargs):
         return method_not_allowed()
