@@ -1,3 +1,4 @@
+from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -7,6 +8,7 @@ from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
+from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
@@ -18,7 +20,7 @@ from drf_spectacular.utils import extend_schema
 from datetime import timedelta
 
 from .models import User , User_OTP , Device
-from .serializers import UserSerializer , RegisterSerializer , NotificationSerializer , DeviceSerializer
+from .serializers import UserSerializer , RegisterSerializer , NotificationSerializer , DeviceSerializer, CustomTokenObtainPairSerializer
 from django.utils import timezone
 from .utils import send_otp_email_to_user
 from .filters import UserFilter , UserSearchFilter
@@ -217,7 +219,8 @@ class UserViewSet(viewsets.ModelViewSet):
         summary="Register Device",
         operation_id="register_device",
         description="Register the device to send notification to the device",
-        tags=["User/Device"]
+        tags=["User/Device"],
+        exclude=True # because we will not use it
     )
     @action(detail=False , methods=['post'] , serializer_class=DeviceSerializer)
     def register_device(self, request):
@@ -376,8 +379,31 @@ class UserViewSet(viewsets.ModelViewSet):
             return exception_response(e)
         
 
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
-              
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        
+        if serializer.is_valid():
+            response_data = serializer.validated_data
+
+            with transaction.atomic():
+                same_device = Device.objects.filter(registration_id = request.data.get('device_id'))
+                if same_device:
+                    same_device.delete()
+
+                device_serializer = DeviceSerializer(data= {
+                    'registration_id': request.data.get('device_id'),
+                    'device_type': request.data.get('device_type'),
+                    'user': User.objects.filter(email = request.data.get('email')).first().id
+                })
+                if device_serializer.is_valid():
+                    device_serializer.save()
+                    return Response(device_serializer.data , status=status.HTTP_201_CREATED)
+            return Response(device_serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
 
 
 class GoogleAuthView(APIView):

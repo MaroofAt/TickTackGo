@@ -1,9 +1,28 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db import transaction
+from django.core.exceptions import ValidationError
 from social_django.models import UserSocialAuth
 
 from .models import User , Device
 
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True,required=True,style={'input_type': 'password'})
+    device_id = serializers.CharField(required=True)
+    device_type = serializers.CharField(required=True)
+    
+    def validate(self, attrs):
+        device_id = attrs.get('device_id' , None)
+        if not device_id:
+            raise ValidationError({'detail': 'device_id is required in login!!!'})
+        device_type = attrs.get('device_type' , None)
+        if not device_type:
+            raise ValidationError({'detail': 'device_type is required in login!!!'})
+        return super().validate(attrs)
+    
+    
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -95,10 +114,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
-        fields = ['registration_id', 'device_type']
+        fields = ['registration_id', 'device_type' , 'user']
         extra_kwargs = {
             'registration_id': {'required': True},
-            'device_type': {'required': False}
+            'device_type': {'required': False},
+            'user': {'required': True}
         }
 
 class NotificationSerializer(serializers.Serializer):

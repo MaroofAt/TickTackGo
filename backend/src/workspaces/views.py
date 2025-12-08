@@ -15,6 +15,7 @@ from rest_framework.exceptions import ValidationError
 
 from tools.responses import method_not_allowed, exception_response, required_response
 from tools.roles_check import is_workspace_owner , is_workspace_member
+from tools.notify import send
 
 from projects.models import Project_Membership , Project
 from tasks.models import Task, Assignee
@@ -228,6 +229,18 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         status=status.HTTP_400_BAD_REQUEST
     )
     
+    # Notifications
+
+    @action(detail=True, methods=['post'])
+    def start_video_call_notification(self, request, pk):
+        members = Workspace_Membership.objects.filter(workspace = pk)
+        result = send(users=members , title="Video Call Started!", body=f"{request.user.username} Has started a Meeting (Video Call) in Workspace: {Workspace.objects.filter(id=pk).first().title}")
+        if not result['success']:
+            try:
+                raise Exception({"detail": "An Error Happened While Using The Firebase Notification Service ! Please Try Later "})
+            except Exception as e:
+                exception_response(e)
+        return Response(result , status=status.HTTP_200_OK)
     # Points
 
     @extend_schema(

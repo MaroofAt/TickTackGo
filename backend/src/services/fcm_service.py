@@ -16,7 +16,8 @@ class NotificationService:
         try:
             
             credentials = service_account.Credentials.from_service_account_file(
-                os.path.join(settings.BASE_DIR, 'config', 'taskmanagment-ab14e-firebase-adminsdk-fbsvc-956ece5f7c.json'),
+                # os.path.join(settings.BASE_DIR, 'config', 'taskmanagment-ab14e-firebase-adminsdk-fbsvc-956ece5f7c.json'),
+                settings.SERVICE_ACCOUNT_FILE,
                 scopes=['https://www.googleapis.com/auth/firebase.messaging']
             )
             credentials = credentials.with_scopes(['https://www.googleapis.com/auth/firebase.messaging'])

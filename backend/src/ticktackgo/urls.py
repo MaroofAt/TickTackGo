@@ -21,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
+from users.views import CustomTokenObtainPairView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from drf_spectacular.utils import extend_schema , extend_schema_view
 from django.views.static import serve
@@ -38,11 +39,13 @@ api_patterns = [
                     'type':'object',
                     'properties':{
                         'email':{'type':'string', 'example':'m@m.com'},
-                        'password':{'type':'string', 'example':'12345678'}
+                        'password':{'type':'string', 'example':'12345678'},
+                        'device_id': {'type':'string', 'example':'The FCM Token'},
+                        'device_type': {'type':'string', 'example':'Android'}
                     }
                 }
             }
-        ))(TokenObtainPairView.as_view()) , name='token_obtain_pair'),
+        ))(CustomTokenObtainPairView.as_view()) , name='token_obtain_pair'),
     path('users/token/refresh/' , extend_schema_view(post=extend_schema(tags=['Users/Auth'], summary="Refresh Token"))(TokenRefreshView.as_view()) , name='token_refresh'),
     path('' , include('users.urls') ),
     path('' , include('workspaces.urls') ),
