@@ -1,5 +1,5 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pr1/business_logic/inbox_cubit/inbox_cubit.dart';
 import 'package:pr1/business_logic/intro_questions_cubit/intro_questions_cubit.dart';
@@ -29,7 +29,6 @@ import 'package:pr1/presentation/screen/intro_questions/intro_questions_main.dar
 import 'package:pr1/presentation/screen/invitation/invitation_search.dart';
 import 'package:pr1/presentation/screen/invitation/received_invitations.dart';
 import 'package:pr1/presentation/screen/issues/all_issues.dart';
-
 import 'package:pr1/presentation/screen/issues/details_issue.dart';
 import 'package:pr1/presentation/screen/onboarding/final_onboarding_page.dart';
 import 'package:pr1/presentation/screen/onboarding/onboarding_main.dart';
@@ -45,6 +44,7 @@ import 'package:pr1/presentation/screen/workspace/workspace_info_page.dart';
 import 'package:pr1/presentation/screen/workspace/workspaces_show_page.dart';
 import 'package:pr1/presentation/screen/workspace_invite_link/accept_reject_invite_link.dart';
 import 'package:pr1/presentation/screen/workspace_points/points_statistics.dart';
+import 'package:pr1/presentation/screens/group_video_call_page.dart';
 
 import '../../business_logic/auth_cubit/auth_cubit.dart';
 
@@ -395,6 +395,26 @@ class AppRouter {
           return BlocProvider(
             create: (context) => InviteLinkCubit(),
             child: AcceptRejectInviteLink(inviteToken: inviteToken),
+          );
+        },
+      ),
+      GoRoute(
+        path: groupCallPageRoute,
+        name: groupCallPageName,
+        builder: (context, state) {
+          final arguments = state.extra as Map<String, dynamic>;
+          final String currentUserID = arguments['currentUserID'];
+          final String currentUserName = arguments['currentUserName'];
+          final List<String> targetUserIDs =
+              List<String>.from(arguments['targetUserIDs'] ?? []);
+          final String callID = arguments['callID'];
+          final String? workspaceName = arguments['workspaceName'];
+          return GroupVideoCallPage(
+            currentUserID: currentUserID,
+            currentUserName: currentUserName,
+            targetUserIDs: targetUserIDs,
+            callID: callID,
+            workspaceName: workspaceName,
           );
         },
       ),

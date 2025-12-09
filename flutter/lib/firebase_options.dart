@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,9 +28,15 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -40,49 +49,20 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDaAHbYi0m84Sj_VTkKJyQbnRPDjvTWQHk',
-    appId: '1:189709970345:web:36f04ca3faa99e182df2b8',
-    messagingSenderId: '189709970345',
-    projectId: 'taskmanagment-ab14e',
-    authDomain: 'taskmanagment-ab14e.firebaseapp.com',
-    storageBucket: 'taskmanagment-ab14e.firebasestorage.app',
-    measurementId: 'G-9YT15XFVRV',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDY1LX-PUnaDnpTFNTwXTXIDf579DbNZg8',
-    appId: '1:189709970345:android:34ee9929531166d92df2b8',
-    messagingSenderId: '189709970345',
-    projectId: 'taskmanagment-ab14e',
-    storageBucket: 'taskmanagment-ab14e.firebasestorage.app',
+    apiKey: 'AIzaSyCrzqY69IK_RZNMwEUvX1OQISFjNnf1J4E',
+    appId: '1:541144383328:android:cd1b3990fb1ce739a2e805',
+    messagingSenderId: '541144383328',
+    projectId: 'ticktackgo-9c800',
+    storageBucket: 'ticktackgo-9c800.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAbV0xSLkQSZXFXj750Z_kRSIPc3vtULvg',
-    appId: '1:189709970345:ios:91ef56372739b64f2df2b8',
-    messagingSenderId: '189709970345',
-    projectId: 'taskmanagment-ab14e',
-    storageBucket: 'taskmanagment-ab14e.firebasestorage.app',
+    apiKey: 'AIzaSyAs4JBsSZrhMLzKZroGB2G9_QkI2Sqz2co',
+    appId: '1:541144383328:ios:0835d934fa58fca6a2e805',
+    messagingSenderId: '541144383328',
+    projectId: 'ticktackgo-9c800',
+    storageBucket: 'ticktackgo-9c800.firebasestorage.app',
     iosBundleId: 'com.tickTackGo.pr1',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAbV0xSLkQSZXFXj750Z_kRSIPc3vtULvg',
-    appId: '1:189709970345:ios:91ef56372739b64f2df2b8',
-    messagingSenderId: '189709970345',
-    projectId: 'taskmanagment-ab14e',
-    storageBucket: 'taskmanagment-ab14e.firebasestorage.app',
-    iosBundleId: 'com.tickTackGo.pr1',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDaAHbYi0m84Sj_VTkKJyQbnRPDjvTWQHk',
-    appId: '1:189709970345:web:a43a3d7a0e357a7e2df2b8',
-    messagingSenderId: '189709970345',
-    projectId: 'taskmanagment-ab14e',
-    authDomain: 'taskmanagment-ab14e.firebaseapp.com',
-    storageBucket: 'taskmanagment-ab14e.firebasestorage.app',
-    measurementId: 'G-GFJ3S48X1T',
   );
 }
