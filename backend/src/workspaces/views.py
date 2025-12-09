@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
-from drf_spectacular.utils import extend_schema , OpenApiExample , OpenApiParameter
+from drf_spectacular.utils import extend_schema , OpenApiExample , OpenApiParameter, OpenApiResponse
+from drf_spectacular.types import OpenApiTypes
 
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
@@ -240,7 +241,25 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
                 'type': 'object',
                 'properties': {}
             }
-        }
+        },
+        responses={
+            200: OpenApiResponse(
+                response=OpenApiTypes.OBJECT,
+                description="Video call notification response",
+                examples=[
+                    OpenApiExample(
+                        'Response Example',
+                        value= {
+                            'user_id': 1,
+                            'title': 'message title',
+                            'body': 'message body',
+                            'data': 'extra data (client don\'t need it)'
+                        }
+                    )
+                    
+                ]
+            )
+        },
     )
     @action(detail=True, methods=['post'])
     def start_video_call_notification(self, request, pk):
