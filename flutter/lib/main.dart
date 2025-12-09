@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/business_logic/auth_cubit/auth_cubit.dart';
@@ -14,19 +15,18 @@ import 'package:pr1/core/constance/routes.dart';
 import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/deep_link_service.dart';
 import 'package:pr1/core/functions/navigation_service.dart';
+import 'package:pr1/firebase_options.dart';
 import 'package:pr1/themes/themes.dart';
+
 import 'business_logic/replay/replay_cubit.dart';
-import 'firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await  initOneSignal()
-  // await NotificationApi().getDeviceToken();
-  // await NotificationHandel().initNotification();
   final appRouter = AppRouter();
   final deepLinkService = DeepLinkService(appRouter);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize deep link service after app starts
   Future.delayed(Duration.zero, () {
@@ -46,7 +46,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp>  with WidgetsBindingObserver {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _appLinks = AppLinks();
   StreamSubscription<Uri>? _linkSubscription;
 
@@ -68,9 +68,14 @@ class _MyAppState extends State<MyApp>  with WidgetsBindingObserver {
       NavigationService().pushReplacement(context, splashScreenRoute);
     });
 
-    final Uri? initialLink = await _appLinks.getInitialLink();
-    if (initialLink != null) {
-      DeepLinkService(widget.appRouter).handleDeepLink(initialLink);
+    try {
+      final Uri? initialLink = await _appLinks.getInitialLink();
+      if (initialLink != null) {
+        DeepLinkService(widget.appRouter).handleDeepLink(initialLink);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      NavigationService().pushReplacement(context, splashScreenRoute);
     }
   }
 
@@ -95,9 +100,6 @@ class _MyAppState extends State<MyApp>  with WidgetsBindingObserver {
         builder: DevicePreview.appBuilder,
         debugShowCheckedModeBanner: false,
         theme: theme(),
-        // theme: ThemeData.dark(),
-        // routes: routes,
-        // home: const SplashScreen(),
         routerConfig: widget.appRouter.router,
       ),
     );

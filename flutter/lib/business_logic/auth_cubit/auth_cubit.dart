@@ -1,12 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr1/core/constance/colors.dart';
 import 'package:pr1/core/constance/strings.dart';
+import 'package:pr1/core/services/notification_service.dart';
 import 'package:pr1/data/models/auth/sign_up_model.dart';
 
-import '../../core/API/notifications_api.dart';
 import '../../core/functions/navigation_service.dart';
 import '../../core/variables/api_variables.dart';
 import '../../core/variables/global_var.dart';
@@ -17,6 +16,7 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
+  NotificationService _notificationApi = NotificationService();
   bool isLoading = false;
 
   ///////////SignUp
@@ -150,6 +150,8 @@ class AuthCubit extends Cubit<AuthState> {
     emit(LoginLoadingState());
 
     try {
+      await _notificationApi.initNotification();
+      // TODO send FCM token with login request when backend supports it
       final response = await dio.post(
         '/users/token/',
         options: Options(
@@ -168,15 +170,6 @@ class AuthCubit extends Cubit<AuthState> {
         await saveTokens(accessToken, refreshToken);
         token = accessToken;
         refresh = refreshToken;
-        if (FCMuserToken != null && deviceType != null) {
-          NotificationApi().registerDevice(
-            registrationId: FCMuserToken!,
-            deviceType: deviceType!,
-          );
-        } else {
-          print("FCM Token is null, device not registered yet");
-        }
-
         emit(AuthAuthenticated());
       } else if (response.statusCode == 401 && response.data.isNotEmpty) {
         final errorDetail = response.data['detail'] ?? 'Invalid credentials';
@@ -238,37 +231,5 @@ class AuthCubit extends Cubit<AuthState> {
         ],
       ),
     );
-  }
-
-  //// Sign in with google
-  Future<void> signInWithGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: ['email'],
-        serverClientId:
-            "189709970345-kd9qm46btja8ciid052a15r7paditavm.apps.googleusercontent.com");
-
-    try {
-      final GoogleSignInAccount? account = await googleSignIn.signIn();
-
-      if (account == null) {
-        print('Login canceled');
-        return;
-      }
-
-      final auth = await account.authentication;
-      final idToken = auth.idToken;
-
-      if (idToken == null) {
-        print('ID Token is null');
-        return;
-      }
-      print('Email: ${account.email}');
-      print('Display Name: ${account.displayName}');
-      print('Auth object: $auth');
-
-      print('Google ID Token: $idToken');
-    } catch (e) {
-      print('Sign-in error: $e');
-    }
   }
 }

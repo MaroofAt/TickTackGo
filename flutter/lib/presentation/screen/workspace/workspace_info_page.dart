@@ -8,6 +8,8 @@ import 'package:pr1/core/constance/strings.dart';
 import 'package:pr1/core/functions/navigation_service.dart';
 import 'package:pr1/core/functions/show_snack_bar.dart';
 import 'package:pr1/core/functions/user_functions.dart';
+import 'package:pr1/core/services/incoming_call_notification_service.dart';
+import 'package:pr1/core/variables/global_var.dart';
 import 'package:pr1/data/models/workspace/get_workspace_model.dart';
 import 'package:pr1/presentation/screen/workspace/build_members_list.dart';
 import 'package:pr1/presentation/screen/workspace/workspace_info_header.dart';
@@ -31,6 +33,8 @@ class WorkspaceInfoPage extends StatefulWidget {
 
 class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
   RetrieveWorkspaceModel? retrieveWorkspace;
+  final Set<int> selectedMemberIDs =
+      {}; // Track selected members for multi-call
 
   @override
   void initState() {
@@ -91,9 +95,11 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                                         context: context,
                                         builder: (context) {
                                           return BlocProvider(
-                                            create: (context) => InviteLinkCubit(),
+                                            create: (context) =>
+                                                InviteLinkCubit(),
                                             child: CreateInvitationLinkDialog(
-                                              workspaceId: retrieveWorkspace!.id,
+                                              workspaceId:
+                                                  retrieveWorkspace!.id,
                                             ),
                                           );
                                         },
@@ -126,11 +132,65 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          MyText.text1(
-                            membersText,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            textColor: Colors.white,
+                          Row(
+                            spacing: 10,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              MyText.text1(
+                                membersText,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                textColor: Colors.white,
+                              ),
+                              MyGestureDetector.gestureDetector(
+                                onTap: () {
+                                  if (retrieveWorkspace == null) {
+                                    showSnackBar(
+                                      context,
+                                      'Workspace not found',
+                                      backgroundColor: Colors.red,
+                                      seconds: 1,
+                                      milliseconds: 500,
+                                    );
+                                    return;
+                                  }
+                                  if (isAdmin(retrieveWorkspace!.owner!.id)) {
+                                    if (retrieveWorkspace!.members.isEmpty) {
+                                      showSnackBar(
+                                        context,
+                                        'No members in this workspace to call',
+                                        backgroundColor: Colors.orange,
+                                        seconds: 1,
+                                        milliseconds: 500,
+                                      );
+                                      return;
+                                    }
+                                    _showMembersDialog(context);
+                                  } else {
+                                    showSnackBar(
+                                      context,
+                                      'You are not the owner of this workspace',
+                                      backgroundColor: Colors.red,
+                                      seconds: 1,
+                                      milliseconds: 500,
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.video_call,
+                                      color: white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           MyGestureDetector.gestureDetector(
                             onTap: () {
@@ -198,6 +258,132 @@ class _WorkspaceInfoPageState extends State<WorkspaceInfoPage> {
         ),
       ),
     );
+  }
+
+  void _showMembersDialog(BuildContext context) {
+    selectedMemberIDs.clear(); // Reset selection
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text('Select members to call'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: retrieveWorkspace!.members.length,
+                        itemBuilder: (context, index) {
+                          final member = retrieveWorkspace!.members[index];
+                          final isSelected =
+                              selectedMemberIDs.contains(member.member.id);
+                          return CheckboxListTile(
+                            title: MyText.text1(
+                              member.member.username,
+                              textColor: white,
+                            ),
+                            subtitle: Text(member.member.email),
+                            value: isSelected,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                if (value ?? false) {
+                                  selectedMemberIDs.add(member.member.id);
+                                } else {
+                                  selectedMemberIDs.remove(member.member.id);
+                                }
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Selected: ${selectedMemberIDs.length} member(s)',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: selectedMemberIDs.isEmpty
+                      ? null
+                      : () {
+                          Navigator.pop(dialogContext);
+                          _startGroupVideoCall(context);
+                        },
+                  child: const Text('Start Call'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _startGroupVideoCall(BuildContext context) async {
+    if (user == null) {
+      showSnackBar(
+        context,
+        'User not authenticated',
+        backgroundColor: Colors.red,
+        seconds: 1,
+        milliseconds: 500,
+      );
+      return;
+    }
+
+    final String callID = '${DateTime.now().millisecondsSinceEpoch}';
+    final List<String> targetUserIDs =
+        selectedMemberIDs.map((id) => id.toString()).toList();
+
+    try {
+      // Send incoming call notifications to selected members
+      await IncomingCallNotificationService.sendIncomingCallNotification(
+        callerID: user!.id.toString(),
+        callerName: user!.username,
+        callID: callID,
+        recipientIDs: targetUserIDs,
+      );
+
+      showSnackBar(
+        context,
+        'Calling ${selectedMemberIDs.length} member(s)...',
+        backgroundColor: Colors.green,
+        seconds: 1,
+        milliseconds: 800,
+      );
+
+      // Navigate to group call page
+      if (mounted) {
+        NavigationService()
+            .push(context, groupCallPageRoute, args: <String, dynamic>{
+          'currentUserID': user!.id.toString(),
+          'currentUserName': user!.username,
+          'targetUserIDs': targetUserIDs,
+          'callID': callID,
+          'workspaceName': retrieveWorkspace?.title,
+        });
+      }
+    } catch (e) {
+      showSnackBar(
+        context,
+        'Error starting group call: $e',
+        backgroundColor: Colors.red,
+        seconds: 2,
+        milliseconds: 0,
+      );
+    }
   }
 
   Widget buildShowInvitesText(BuildContext context) {
