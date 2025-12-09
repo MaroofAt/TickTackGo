@@ -239,7 +239,10 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         request={
             'application/json': {
                 'type': 'object',
-                'properties': {}
+                'properties': {
+                    'call_id': {"type": "string" , "example": "03120d03042g"}
+                },
+                'required': ['call_id']
             }
         },
         responses={
@@ -263,8 +266,15 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     )
     @action(detail=True, methods=['post'])
     def start_video_call_notification(self, request, pk):
-        members = Workspace_Membership.objects.filter(workspace = pk)
-        result = send(users=members , title="Video Call Started!", body=f"{request.user.username} Has started a Meeting (Video Call) in Workspace: {Workspace.objects.filter(id=pk).first().title}")
+        if not request.data.get('call_id'):
+            return required_response('call_id')
+        
+        members_ids = Workspace_Membership.objects.filter(workspace = pk)
+        members = []
+        for id in members_ids:
+            members.append(User.objects.filter(id=id))
+
+        result = send(users=members , title="Video Call Started!", body=f"{request.user.username} Has started a Meeting (Video Call)\n{request.data.get('call_id')}\nWorkspace: {Workspace.objects.filter(id=pk).first().title}")
         if not result['success']:
             try:
                 raise Exception({"detail": "An Error Happened While Using The Firebase Notification Service ! Please Try Later "})
