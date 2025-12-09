@@ -230,7 +230,18 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
     )
     
     # Notifications
-
+    @extend_schema(
+        summary="Start Video Call Notification",
+        operation_id="start_video_call_notification",
+        description="Sending a notification to all members in the workspace that a meeting has started by specific user",
+        tags=["Workspaces"],
+        request={
+            'application/json': {
+                'type': 'object',
+                'properties': {}
+            }
+        }
+    )
     @action(detail=True, methods=['post'])
     def start_video_call_notification(self, request, pk):
         members = Workspace_Membership.objects.filter(workspace = pk)
