@@ -75,7 +75,7 @@ class NotificationService:
         
         try:
             response = requests.post(
-                'https://fcm.googleapis.com/v1/projects/taskmanagment-ab14e/messages:send',
+                settings.FIREBASE_POST_REQUEST_URL,
                 headers=headers,
                 data=json.dumps(message)
             )
