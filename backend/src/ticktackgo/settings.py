@@ -275,12 +275,12 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET' 
 
 #firebase notification
 # Firebase settings
-FIREBASE_CONFIG = os.getenv('FIREBASE_CONFIG') # TODO Ask Ali about this
+FIREBASE_CONFIG = os.getenv('FIREBASE_CONFIG')
 
 SERVICE_ACCOUNT_FILE = BASE_DIR / "secrets" / os.getenv('SERVICE_ACCOUNT_FILE')
 FIREBASE_POST_REQUEST_URL = os.getenv('FIREBASE_POST_REQUEST_URL')
 
-INTERNAL_IPS = [ # TODO Ask Ali about this too
+INTERNAL_IPS = [
     # ...
     "127.0.0.1",
     # ...
