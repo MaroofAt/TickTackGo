@@ -16,7 +16,7 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
-  NotificationService _notificationApi = NotificationService();
+  final NotificationService _notificationApi = NotificationService();
   bool isLoading = false;
 
   ///////////SignUp
@@ -161,10 +161,12 @@ class AuthCubit extends Cubit<AuthState> {
         data: {
           'email': email,
           'password': password,
+          'device_id': FCMToken,
+          'device_type': 'Android',
         },
       );
 
-      if (response.statusCode == 200 && response.data.isNotEmpty) {
+      if (response.statusCode == 201 && response.data.isNotEmpty) {
         final accessToken = response.data['access'];
         final refreshToken = response.data['refresh'];
         await saveTokens(accessToken, refreshToken);

@@ -58,7 +58,7 @@ class NotificationService {
         FCMToken = value ?? '';
       },
     );
-    await initLocalNotification();
+    // await initLocalNotification();
     await initPushNotification();
   }
 
