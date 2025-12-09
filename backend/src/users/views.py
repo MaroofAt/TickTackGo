@@ -400,7 +400,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 })
                 if device_serializer.is_valid():
                     device_serializer.save()
-                    return Response(device_serializer.data , status=status.HTTP_201_CREATED)
+                    return Response(response_data , status=status.HTTP_201_CREATED)
             return Response(device_serializer.errors , status=status.HTTP_400_BAD_REQUEST)
         
         return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
