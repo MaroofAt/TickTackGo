@@ -38,7 +38,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         self.permission_classes = [IsAuthenticated]
         if self.action == 'retrieve':
             self.permission_classes.append(IsWorkspaceMember)
-        if self.action == 'kick_member' or self.action == 'get_user_points':
+        if self.action == 'kick_member' or self.action == 'get_user_points' or self.action == 'start_video_call_notification':
             self.permission_classes.append(IsWorkspaceOwner)
 
         return super().get_permissions()
@@ -253,10 +253,8 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
                     OpenApiExample(
                         'Response Example',
                         value= {
-                            'user_id': 1,
-                            'title': 'message title',
-                            'body': 'message body',
-                            'data': 'extra data (client don\'t need it)'
+                            "success": True,
+                            "message": "some message"
                         }
                     )
                     
@@ -269,12 +267,12 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         if not request.data.get('call_id'):
             return required_response('call_id')
         
-        members_ids = Workspace_Membership.objects.filter(workspace = pk)
-        members = []
-        for id in members_ids:
-            members.append(User.objects.filter(id=id))
+        memberships = Workspace_Membership.objects.filter(workspace = pk)
+        users_ids = []
+        for membership in memberships:
+            users_ids.append(membership.member.id)
 
-        result = send(users=members , title="Video Call Started!", body=f"{request.user.username} Has started a Meeting (Video Call)\n{request.data.get('call_id')}\nWorkspace: {Workspace.objects.filter(id=pk).first().title}")
+        result = send(users=users_ids , title="Video Call Started!", body=f"{request.user.username} Has started a Meeting (Video Call)\n{request.data.get('call_id')}\nWorkspace: {Workspace.objects.filter(id=pk).first().title}")
         if not result['success']:
             try:
                 raise Exception({"detail": "An Error Happened While Using The Firebase Notification Service ! Please Try Later "})
