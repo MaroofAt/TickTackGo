@@ -1,0 +1,117 @@
+Analyzing flutter...                                            
+
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:26:5 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\auth_cubit\auth_cubit.dart:48:34 - use_build_context_synchronously
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:52:9 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\auth_cubit\auth_cubit.dart:65:25 - use_build_context_synchronously
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:72:7 - avoid_print
+   info - The variable name 'verify_SignUp' isn't a lowerCamelCase identifier - lib\business_logic\auth_cubit\auth_cubit.dart:88:16 - non_constant_identifier_names
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:91:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:92:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:97:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:116:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:123:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:126:9 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\auth_cubit\auth_cubit.dart:127:50 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\auth_cubit\auth_cubit.dart:128:70 - use_build_context_synchronously
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:131:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:135:7 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\auth_cubit\auth_cubit.dart:174:25 - use_build_context_synchronously
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:177:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:181:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:184:7 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\auth_cubit\auth_cubit.dart:204:48 - use_build_context_synchronously
+   info - Don't invoke 'print' in production code - lib\business_logic\auth_cubit\auth_cubit.dart:206:7 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\auth_cubit\auth_cubit.dart:209:11 - use_build_context_synchronously
+   info - The imported package 'bloc' isn't a dependency of the importing package - lib\business_logic\comment_cubit.dart:1:8 - depend_on_referenced_packages
+   info - The imported package 'meta' isn't a dependency of the importing package - lib\business_logic\comment_cubit.dart:2:8 - depend_on_referenced_packages
+   info - The imported package 'bloc' isn't a dependency of the importing package - lib\business_logic\intro_questions_cubit\auth_cubit.dart:1:8 - depend_on_referenced_packages
+   info - The imported package 'meta' isn't a dependency of the importing package - lib\business_logic\intro_questions_cubit\auth_cubit.dart:2:8 - depend_on_referenced_packages
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\issues\issues_cubit.dart:153:11 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\issues\issues_cubit.dart:176:13 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\issues\issues_cubit.dart:200:13 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\issues\issues_cubit.dart:221:9 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\business_logic\issues\issues_cubit.dart:243:9 - use_build_context_synchronously
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\business_logic\projects_cubit\projects_cubit.dart:40:39 - deprecated_member_use
+   info - The imported package 'bloc' isn't a dependency of the importing package - lib\business_logic\replay\replay_cubit.dart:1:8 - depend_on_referenced_packages
+warning - The value of the local variable 'storageStatus' isn't used - lib\business_logic\task_cubit\task_cubit.dart:32:24 - unused_local_variable
+warning - The value of the local variable 'storageStatus' isn't used - lib\business_logic\workspace_cubit\workspace_cubit.dart:32:24 - unused_local_variable
+   info - Don't invoke 'print' in production code - lib\core\API\comments.dart:29:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\inbox.dart:44:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\inbox.dart:75:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\invitation.dart:91:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:33:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:34:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:36:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:40:7 - avoid_print
+   info - The variable name 'get_All_Issues' isn't a lowerCamelCase identifier - lib\core\API\issues.dart:47:33 - non_constant_identifier_names
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:66:9 - avoid_print
+   info - The variable name 'RetrieveIssue' isn't a lowerCamelCase identifier - lib\core\API\issues.dart:80:27 - non_constant_identifier_names
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:94:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:161:9 - avoid_print
+   info - The variable name 'get_Replie' isn't a lowerCamelCase identifier - lib\core\API\issues.dart:172:28 - non_constant_identifier_names
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:190:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:191:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\issues.dart:192:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\projects.dart:78:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\splash_api.dart:27:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\tasks.dart:59:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\tasks.dart:75:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\tasks.dart:139:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\API\workspace.dart:61:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:13:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:18:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:23:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:30:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:34:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:41:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:47:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:49:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\deep_link_service.dart:50:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\refresh_token.dart:17:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\functions\refresh_token.dart:30:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\services\incoming_call_notification_service.dart:74:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\services\incoming_call_notification_service.dart:79:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\services\zego_auth_integration.dart:38:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\services\zego_auth_integration.dart:52:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\services\zego_call_integration_example.dart:44:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\services\zego_call_integration_example.dart:73:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\services\zego_service.dart:23:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\core\services\zego_service.dart:29:5 - avoid_print
+   info - Uses 'await' on an instance of 'String', which is not a subtype of 'Future' - lib\data\local_data\local_data.dart:23:10 - await_only_futures
+   info - The file name 'sign-up-model-withoutotp.dart' isn't a lower_case_with_underscores identifier - lib\data\models\auth\sign-up-model-withoutotp.dart:1:1 - file_names
+   info - Don't invoke 'print' in production code - lib\presentation\screen\auth\signin.dart:144:29 - avoid_print
+   info - Don't invoke 'print' in production code - lib\presentation\screen\auth\signin.dart:146:29 - avoid_print
+   info - Don't invoke 'print' in production code - lib\presentation\screen\auth\signin.dart:147:29 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screen\auth\signin.dart:230:66 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screen\auth\signin.dart:239:66 - deprecated_member_use
+   info - The file name 'gantt_chart_Table.dart' isn't a lower_case_with_underscores identifier - lib\presentation\screen\gannt_chart\gantt_chart_Table.dart:1:1 - file_names
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screen\gannt_chart\gantt_chart_Table.dart:157:22 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screen\gannt_chart\gantt_chart_Table.dart:159:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screen\gannt_chart\gantt_chart_Table.dart:167:26 - deprecated_member_use
+   info - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre - lib\presentation\screen\inbox\inbox_bottom_sheet.dart:273:23 - deprecated_member_use
+   info - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre - lib\presentation\screen\inbox\inbox_bottom_sheet.dart:274:23 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\issues\all_issues.dart:148:27 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\issues\all_issues.dart:149:42 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\issues\all_list.dart:40:21 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\issues\create_issue.dart:84:31 - use_build_context_synchronously
+   info - The file name 'notSolvedIssue.dart' isn't a lower_case_with_underscores identifier - lib\presentation\screen\issues\notSolvedIssue.dart:1:1 - file_names
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\issues\notSolvedIssue.dart:39:21 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\onboarding\splash_screen.dart:33:44 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\onboarding\splash_screen.dart:35:46 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\onboarding\splash_screen.dart:37:50 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\onboarding\splash_screen.dart:39:38 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\onboarding\splash_screen.dart:42:48 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\projects\build_project_info_page.dart:53:46 - use_build_context_synchronously
+   info - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre - lib\presentation\screen\tasks\create_task_build_methods.dart:109:21 - deprecated_member_use
+   info - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre - lib\presentation\screen\tasks\create_task_build_methods.dart:110:21 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\workspace\workspace_info_page.dart:360:9 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\presentation\screen\workspace\workspace_info_page.dart:370:19 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\presentation\screen\workspace\workspace_info_page.dart:380:9 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\workspace_invite_link\accept_reject_invite_link.dart:50:42 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\presentation\screen\workspace_invite_link\accept_reject_invite_link.dart:53:9 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\incoming_call_alert.dart:66:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\incoming_call_alert.dart:101:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\create_text_field.dart:40:45 - deprecated_member_use
+
+113 issues found. (ran in 11.2s)
