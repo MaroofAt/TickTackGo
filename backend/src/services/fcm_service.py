@@ -57,7 +57,7 @@ class NotificationService:
                 if response.get('error'):
                     device.active = False
                     device.save()
-                return {"success": True, "results": results}
+                return {"success": True, "message": results}
         
         except User.DoesNotExist:
             return {"success": False, "message": "User not found"}
@@ -75,7 +75,7 @@ class NotificationService:
         
         try:
             response = requests.post(
-                settings.FIREBASE_POST_REQUEST_URL,
+                'https://fcm.googleapis.com/v1/projects/ticktackgo-9c800/messages:send',# settings.FIREBASE_POST_REQUEST_URL,
                 headers=headers,
                 data=json.dumps(message)
             )
