@@ -3,6 +3,7 @@ from django.conf import settings
 from users.models import User , Device
 import requests , os
 import json
+from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 
 
@@ -14,15 +15,19 @@ class NotificationService:
     def _get_access_token(self):
         """Get OAuth2 access token using service account"""
         try:
-            
+            # print(f"\n\n{settings.SERVICE_ACCOUNT_FILE}\n\n")
             credentials = service_account.Credentials.from_service_account_file(
-                # os.path.join(settings.BASE_DIR, 'config', 'taskmanagment-ab14e-firebase-adminsdk-fbsvc-956ece5f7c.json'),
                 settings.SERVICE_ACCOUNT_FILE,
                 scopes=['https://www.googleapis.com/auth/firebase.messaging']
             )
-            credentials = credentials.with_scopes(['https://www.googleapis.com/auth/firebase.messaging'])
-            access_token_info = credentials.get_access_token()
-            return access_token_info.token
+            
+            if not credentials.valid:
+                 # Refresh to get the token (this populates credentials.token)
+                request = Request()
+                credentials.refresh(request)
+            # print(f"Token obtained: {credentials.token[:50]}...\n")
+            # print(f"Token expires at: {credentials.expiry}\n")
+            return credentials.token
         except Exception as e:
             print(f"Error getting access token: {e}")
             return None
@@ -32,7 +37,7 @@ class NotificationService:
         try:
             user = User.objects.get(id=user_id)
             devices = Device.objects.filter(user=user, active=True)
-            
+            success = True
             if not devices.exists():
                 return {"success": False, "message": "No active devices found"}
             
@@ -55,9 +60,12 @@ class NotificationService:
                 
                 # Handle failed tokens
                 if response.get('error'):
+                    success = False
                     device.active = False
                     device.save()
-                return {"success": True, "results": results}
+            if success:
+                return {"success": True, "message": results}
+            return {"success": False, "message": results}
         
         except User.DoesNotExist:
             return {"success": False, "message": "User not found"}
