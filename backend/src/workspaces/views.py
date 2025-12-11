@@ -273,11 +273,11 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
             users_ids.append(membership.member.id)
 
         result = send(users=users_ids , title="Video Call Started!", body=f"{request.user.username} Has started a Meeting (Video Call)\n{request.data.get('call_id')}\nWorkspace: {Workspace.objects.filter(id=pk).first().title}")
-        if not result['success']:
+        if result.get('success') == False:
             try:
                 raise Exception({"detail": "An Error Happened While Using The Firebase Notification Service ! Please Try Later "})
             except Exception as e:
-                exception_response(e)
+                return exception_response(e)
         return Response(result , status=status.HTTP_200_OK)
     # Points
 

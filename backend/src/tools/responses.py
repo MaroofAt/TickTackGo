@@ -5,7 +5,7 @@ from rest_framework import status
 def exception_response(e):
     return Response(
         {'Exception': str(e)},
-        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        status=status.HTTP_409_CONFLICT
     )
 
 def required_response(field_name):

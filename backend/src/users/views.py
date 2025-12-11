@@ -1,5 +1,6 @@
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
+from django.core.exceptions import ValidationError
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.decorators import action
@@ -383,27 +384,41 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        
-        if serializer.is_valid():
-            response_data = serializer.validated_data
+        try:
+            serializer = self.get_serializer(data=request.data)
+            
+            if serializer.is_valid():
+                response_data = serializer.validated_data
 
-            with transaction.atomic():
-                same_device = Device.objects.filter(registration_id = request.data.get('device_id'))
-                if same_device:
-                    same_device.delete()
+                with transaction.atomic():
+                    user = User.objects.filter(email = request.data.get('email')).first()
+                    same_devices = Device.objects.filter(registration_id = request.data.get('device_id'))
+                    already_saved = False
+                    if same_devices:
+                        for same_device in same_devices:
+                            if (same_device.user == user) and (same_device.device_type == request.data.get('device_type')):
+                                already_saved = True
+                                continue
+                            same_device.delete()
 
-                device_serializer = DeviceSerializer(data= {
-                    'registration_id': request.data.get('device_id'),
-                    'device_type': request.data.get('device_type'),
-                    'user': User.objects.filter(email = request.data.get('email')).first().id
-                })
-                if device_serializer.is_valid():
-                    device_serializer.save()
-                    return Response(response_data , status=status.HTTP_201_CREATED)
-            return Response(device_serializer.errors , status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+                    if not already_saved:
+                        device_serializer = DeviceSerializer(data= {
+                            'registration_id': request.data.get('device_id'),
+                            'device_type': request.data.get('device_type'),
+                            'user': user.id
+                        })
+                        if device_serializer.is_valid():
+                            device_serializer.save()
+                            return Response(response_data , status=status.HTTP_201_CREATED)
+                        return Response(device_serializer.errors , status=status.HTTP_400_BAD_REQUEST)        
+                    return Response(response_data , status=status.HTTP_200_OK)
+                return Response(device_serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+            
+            return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+        except ValidationError as validation_e:
+            return Response({"detail" : validation_e.message}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return exception_response(e)
 
 
 class GoogleAuthView(APIView):
